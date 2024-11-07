@@ -4,11 +4,21 @@ import multer from 'multer'
 
 const router = express.Router()
 // 指定router變成變數，router是一個方法，處理路由
-const upload = multer()
+
 // 解析傳來的請求，目前我是用 fetch()
 
 // 有撈到了啦 json http://localhost:3005/api/article/1
 // 動態路由記得寫
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination:
+      'C:/Users/iii_student/Desktop/laptopGuru/backend/data/blog/blog-images', // 您的本機路徑
+    filename: (req, file, cb) => {
+      cb(null, file.originalname)
+    },
+  }),
+})
 
 // 查詢後得到的變數是 responseData
 console.log('有進來 blog.js 而已，下一步路由沒有進去，檢查分個路由')
@@ -51,43 +61,68 @@ router.get('/blog-detail/:blog_id', async (req, res) => {
   }
 })
 
-router.post('/blogcreated', async (req, res) => {
+router.get('/bloguseroverview/:blog_id', async (req, res) => {
   try {
-    // 從請求中獲取數據
-    const {
-      blog_title,
-      blog_content,
-      blog_brand,
-      blog_brand_model,
-      blog_image,
-    } = req.body
+    const [blogData] = await db.query(
+      `SELECT * FROM blogoverview WHERE blog_id = ? AND blog_valid_value = 1`,
+      [req.params.blog_id]
+    )
 
-    // 基本驗證
-    if (!blog_title || !blog_content || !blog_brand || !blog_brand_model) {
-      return res.status(400).json({
-        success: false,
-        message: '請填寫所有必要欄位',
-      })
+    if (blogData.length === 0) {
+      return res.json({ status: 'error', message: '查無資料' })
     }
 
-    // 插入資料庫
-    const sql = `
-      INSERT INTO blogoverview 
-      (blog_title, blog_content, blog_brand, blog_brand_model, blog_image) 
-      VALUES (?, ?, ?, ?, ?)
-    `
+    res.json({ status: 'success', data: blogData[0] })
+  } catch (error) {
+    res.status(500).json({ message: '伺服器錯誤' })
+  }
+})
 
-    const values = [
+// 加入 upload.single('blog_image') 中間件
+router.post('/blogcreated', upload.single('blog_image'), async (req, res) => {
+  console.log(req.body.blog_valid_value)
+
+  try {
+    const {
+      blog_type,
       blog_title,
       blog_content,
       blog_brand,
       blog_brand_model,
+      blog_keyword,
+      blog_valid_value,
+      blog_created_date,
+    } = req.body
+
+    // 獲取上傳的圖片路徑
+    const blog_image = req.file ? `/blog-images/${req.file.originalname}` : null
+
+    const sql = `
+    INSERT INTO blogoverview 
+    ( blog_type,
+      blog_title,
+      blog_content,
+      blog_brand,
+      blog_brand_model,
+      blog_keyword,
+      blog_valid_value,
+      blog_created_date, blog_image) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `
+    const values = [
+      blog_type,
+      blog_title,
+      blog_content,
+      blog_brand,
+      blog_brand_model,
+      blog_keyword,
+      blog_valid_value,
+      blog_created_date,
       blog_image,
     ]
 
     const [result] = await db.query(sql, values)
 
-    // 回傳成功訊息
     res.json({
       success: true,
       message: '新增成功',
@@ -102,47 +137,36 @@ router.post('/blogcreated', async (req, res) => {
   }
 })
 
-router.get('/blog_detail/:blog_id', upload.none(), async (req, res, next) => {
-  const blog_id = req.params.blog_id
-  console.log(blog_id)
-
+router.get('/blog_detail/:blog_id', async (req, res) => {
   try {
-    const [overviewData] = await db.query(
-      'SELECT blog_id, blog_user_id, blog_title, blog_content, blog_created_date, blog_brand, blog_brand_model, blog_type, blog_views, blog_url ' +
-        'FROM blogoverview WHERE blog_id = ? AND blog_valid_value = 1',
-      [blog_id]
+    const [overview] = await db.query(
+      'SELECT * FROM blogoverview WHERE blog_id = ?',
+      [req.params.blog_id]
     )
 
-    if (overviewData.length === 0) {
-      return res.json({ status: 'error', message: '查無此文章' })
-    }
-
     const [comments] = await db.query(
-      'SELECT blog_comment_userid, blog_comment_created_time, blog_comment_text FROM blogcomment WHERE blog_id = ? AND blog_valid_value = 1',
-      [blog_id]
+      'SELECT * FROM blogcomment WHERE blog_id = ?',
+      [req.params.blog_id]
     )
 
     const [images] = await db.query(
       'SELECT blog_image FROM blogimage WHERE blog_id = ?',
-      [blog_id]
+      [req.params.blog_id]
     )
 
     const [keywords] = await db.query(
       'SELECT blog_keyword FROM blogkeyword WHERE blog_id = ?',
-      [blog_id]
+      [req.params.blog_id]
     )
 
-    const responseData = {
-      overview: overviewData,
-      comments: comments,
-      images: images,
-      keywords: keywords,
-    }
-
-    res.json({ status: 'success', data: responseData })
+    res.json({
+      overview,
+      comments,
+      images,
+      keywords,
+    })
   } catch (error) {
-    console.error('Error fetching blog details:', error)
-    res.status(500).json({ status: 'error', message: '伺服器錯誤' })
+    res.status(500).json({ message: '伺服器錯誤' })
   }
 })
 

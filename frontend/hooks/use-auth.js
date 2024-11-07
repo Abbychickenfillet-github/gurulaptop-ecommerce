@@ -117,21 +117,49 @@ export const AuthProvider = ({ children }) => {
       console.error('登入失敗：', error)
     }
   }
-  const logout = () => {
-    setAuth({
-      user_id: 0,
-      name: '',
-      phone: '',
-      created_at: '',
-      gender: '',
-      country: '',
-      city: '',
-      district: '',
-      road_name: '',
-      detailed_address: '',
-      birthdate: '',
-    })
-  }
+  const logout = async () => {
+    try {
+      const response = await fetch('http://localhost:3005/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('登出失敗');
+      }
+  
+      const result = await response.json();
+      
+      if (result.status === 'success') {
+        // 清除本地的 auth 狀態
+        setAuth({
+          isAuth: false,
+          user_id: 0,
+          name: '',
+          phone: '',
+          created_at: '',
+          gender: '',
+          country: '',
+          city: '',
+          district: '',
+          road_name: '',
+          detailed_address: '',
+          birthdate: '',
+          
+        })
+        router.push('/');  // 導向首頁
+      }
+  
+    } catch (error) {
+      console.error('登出錯誤:', error);
+      // 處理錯誤
+    }
+  };
+
+  
   // 檢查會員認証用
   // 每次重新到網站中，或重新整理，都會執行這個函式，用於向伺服器查詢取回原本登入會員的資料
   const handleCheckAuth = async () => {

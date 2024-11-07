@@ -5,6 +5,7 @@ import ProductCard from '@/components/product/product-card'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import Image from 'next/image'
+import BackToTop from '@/components/BackToTop/BackToTop'
 export default function List() {
   // 小尺寸時的側邊欄開關
   const [isChecked, setIsChecked] = useState(false)
@@ -41,7 +42,18 @@ export default function List() {
     return percent * sliderWidth
   }
 
-  useEffect(() => {}, [])
+  // 狀態顯示訊息
+
+  const [alertMessage, setAlertMessages] = useState([]) // 使用陣列儲存訊息
+
+  // 新增訊息到陣列
+  const handleShowMessage = (message) => {
+    setAlertMessages((prevMessages) => [...prevMessages, message])
+    setTimeout(() => {
+      // 1 秒後移除最早的訊息
+      setAlertMessages((prevMessages) => prevMessages.slice(1))
+    }, 1000)
+  }
 
   return (
     <>
@@ -440,8 +452,12 @@ export default function List() {
           <main className={`${styles.product_list}`}>
             {
               // 產品卡片
-              [...Array(12).keys()].map((v, i) => (
-                <ProductCard key={i} />
+              [...Array(12)].map((v, i) => (
+                <ProductCard
+                  onSendMessage={handleShowMessage}
+                  key={i}
+                  product_id={275}
+                />
               ))
             }
           </main>
@@ -496,12 +512,27 @@ export default function List() {
             </li>
           </ul>
         </div>
-        <div
-          id="cartAlertContainer"
-          className="position-fixed top-0 end-0 p-3"
-          style={{ zIndex: 1050 }}
-        ></div>
       </div>
+
+      {/* 顯示所有的訊息 */}
+      <div className="alert-container">
+        {alertMessage.map((msg, index) => (
+          <div
+            key={index}
+            className="alert alert-success alert-dismissible fade show"
+            style={{
+              zIndex: 9999,
+              position: 'fixed',
+              top: `${20 + index * 60}px`, // 每次增加 60px，避免重疊
+              right: '20px',
+              width: 'auto',
+            }}
+          >
+            {msg}
+          </div>
+        ))}
+      </div>
+      <BackToTop />
       <MyFooter />
     </>
   )

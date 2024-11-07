@@ -28,41 +28,32 @@ export default function BlogId() {
   return (
     <>
       <ArticleDetailMainArea />
-      <div>
-        <section className="container-fluid ArticleSectionContainer">
-          <div className="container">
-            <div className="row d-flex">
-              <div className="ArticleSectionTitle">
-                <p className="text-light">{blogData.blog_title}</p>
-              </div>
-              <div className="ArticleSectionIntroduction">
-                <p className="text-light h5">{blogData.blog_content}</p>
-              </div>
-            </div>
-          </div>
-        </section>
-        <div className="container mt-5">
+      {/* <div>
+        <div className="mt-5">
           <div className="mb-5">
-            <p className="fs-5 fw-bold">{blogData.blog_brand}</p>
+            <p className="fs-5 fw-bold">購買機型</p>
           </div>
           <div className="mb-5">
-            <p className="fs-5 fw-bold">購買機型型號</p>
+            <p className="fs-5 fw-bold">Swift 14 AI AMD</p>
           </div>
           <div className="w-100 h-25 overflow-hidden m-auto">
             <img
               className="object-fit-cover w-100 h-100"
-              src={blogData.blog_blog_image}
-              alt="..."
+              src="https://images.acer.com/is/image/acer/acer-laptop-swift-14-ai-amd-designed-to-unfold-your-potential:KSP-with-Specs-XL"
+              alt
             />
           </div>
+        </div> */}
+      <section className="BlogDetailSectionContentArea">
+        <div className="d-flex align-items-center justify-content-center mb-5">
+          <img className="w-50 h-50 ratio" src={blogData.blog_image} alt />
         </div>
-        <section className="container BlogDetailSectionContentArea">
-          <p className="fs-5 fw-bold BlogDetailSectionContentAreaTitle">
-            {blogData.blog_title}
-          </p>
-          <p className="BlogDetailText">{blogData.blog_content}</p>
-        </section>
-      </div>
+        <p className="fs-5 fw-bold BlogDetailSectionContentAreaTitle">
+          {blogData.blog_title}
+        </p>
+        <p className="BlogDetailText">{blogData.blog_content}</p>
+        <p className="BlogDetailText">要不要刪除阿</p>
+      </section>
     </>
   )
 }

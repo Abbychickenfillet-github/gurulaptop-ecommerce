@@ -4,8 +4,8 @@ import axios from 'axios'
 import Link from 'next/link'
 import styles from '@/styles/signUpForm.module.scss'
 import { useRouter } from 'next/router'
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
 
 export default function Signup() {
@@ -75,7 +75,7 @@ export default function Signup() {
       }))
     }
   }
-// 表單驗證
+  // 表單驗證
   const validateForm = () => {
     const newErrors = {}
 
@@ -126,10 +126,10 @@ export default function Signup() {
   // 整體來說就是「保留原本errors物件的所有內容，但更新password屬性的值」
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     try {
       setSubmitError('')
-  
+
       // 驗證密碼
       const passwordErrors = validatePassword(user.password)
       if (passwordErrors.length > 0) {
@@ -139,18 +139,18 @@ export default function Signup() {
         }))
         return
       }
-  
+
       // 驗證表單
       if (!validateForm()) {
         return
       }
-  
+
       // 發送註冊請求
       const response = await axios.post(
         'http://localhost:3005/api/signup',
         user
       )
-  
+
       // 檢查回應狀態
       if (response.data.status === 'success') {
         // 清空表單
@@ -162,11 +162,11 @@ export default function Signup() {
           gender: '',
           agree: false,
         })
-  
+
         // 清空錯誤訊息
         setErrors({})
         setSubmitError('')
-  
+
         // 成功訊息
         await Swal.fire({
           title: '註冊成功！',
@@ -175,7 +175,7 @@ export default function Signup() {
           confirmButtonText: '前往登入',
           confirmButtonColor: '#3085d6',
         })
-  
+
         router.push('/member/login')
       } else {
         // 處理錯誤狀態
@@ -188,13 +188,12 @@ export default function Signup() {
         })
         setSubmitError(response.data.message)
       }
-  
     } catch (error) {
       console.error('註冊請求失敗:', error)
-      
+
       // 根據錯誤狀態顯示不同訊息
       const errorMessage = error.response?.data?.message || '註冊過程中發生錯誤'
-      
+
       await Swal.fire({
         title: '註冊失敗',
         text: errorMessage,
@@ -202,7 +201,7 @@ export default function Signup() {
         confirmButtonText: '確定',
         confirmButtonColor: '#3085d6',
       })
-  
+
       setSubmitError(errorMessage)
     }
   }

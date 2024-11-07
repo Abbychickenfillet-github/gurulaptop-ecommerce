@@ -35,11 +35,18 @@ export default function EventCard({
         return 'bg-success'
       case '進行中':
         return 'bg-primary'
+      case '即將開始報名':
+        return 'bg-info'
       case '已結束':
         return 'bg-secondary'
       default:
         return 'bg-info'
     }
+  }
+
+  // 格式化參與人數顯示
+  const formatParticipants = (maxPeople) => {
+    return maxPeople ? `0/${maxPeople}` : '未設定'
   }
 
   return (
@@ -60,27 +67,30 @@ export default function EventCard({
             )}`}
             style={{ zIndex: 3 }}
           >
-            {status || '報名中'}
+            {status || '未定義'}
           </span>
         </div>
         <div className={`${styles.cardBody} bg-dark text-white`}>
-          <h5 className={styles.cardTitle}>{name || '英雄聯盟政大杯第十屆'}</h5>
+          <h5 className={styles.cardTitle}>{name || '活動名稱未設定'}</h5>
           <div className={`d-flex flex-column gap-2 ${styles.infoGroup}`}>
             <div className="d-flex align-items-center gap-2">
               <MdDateRange className={styles.smallIcon} />
-              <small>{formatDate(eventStartTime) || '2024/08/23'}</small>
+              <small>{formatDate(eventStartTime) || '日期未設定'}</small>
             </div>
             <div className="d-flex align-items-center gap-2">
               <IoAccessibility className={styles.smallIcon} />
-              <small>{teamType || '團隊'}</small>
+              <small>{teamType || '參賽方式未設定'}</small>
             </div>
             <div className="d-flex align-items-center gap-2">
               <FaFire className={styles.smallIcon} />
-              <small>{maxPeople ? `0/${maxPeople}` : '48/64'}</small>
+              <small>{formatParticipants(maxPeople)}</small>
             </div>
           </div>
           <div className="mt-auto">
-            <Link href={`/event/${id}`} style={{ textDecoration: 'none' }}>
+            <Link
+              href={`/event/eventDetail/${id}`}
+              style={{ textDecoration: 'none' }}
+            >
               <EventButton>活動詳情</EventButton>
             </Link>
           </div>

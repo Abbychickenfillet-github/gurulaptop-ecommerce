@@ -26,29 +26,31 @@ router.get('/', async (req, res) => {
         et.event_start_time,
         et.event_end_time,
         et.maximum_people,
-        est.status_name as event_status,
         et.valid,
-        et.created_at
+        et.created_at,
+        CASE 
+          WHEN NOW() < et.apply_start_time THEN '即將開始報名'
+          WHEN NOW() BETWEEN et.apply_start_time AND et.apply_end_time THEN '報名中'
+          WHEN NOW() BETWEEN et.apply_end_time AND et.event_end_time THEN '進行中'
+          ELSE '已結束'
+        END as event_status
       FROM event_type et
-      JOIN event_status_type est ON et.status_id = est.status_id
       WHERE et.valid = 1
     `
 
     let countQuery = `
       SELECT COUNT(*) as total 
       FROM event_type et
-      JOIN event_status_type est ON et.status_id = est.status_id
       WHERE et.valid = 1
     `
-    let queryParams = []
 
     // 根據狀態篩選
-    if (status !== '所有活動') {
+    if (status !== '所有活動' && status) {
       const statusCondition = {
         進行中: 'NOW() BETWEEN et.apply_end_time AND et.event_end_time',
         報名中: 'NOW() BETWEEN et.apply_start_time AND et.apply_end_time',
-        即將開始報名: 'et.apply_start_time > NOW()',
-        已結束: 'et.event_end_time < NOW()',
+        即將開始報名: 'NOW() < et.apply_start_time',
+        已結束: 'NOW() > et.event_end_time',
       }[status]
 
       if (statusCondition) {
@@ -58,8 +60,8 @@ router.get('/', async (req, res) => {
     }
 
     // 加入排序和分頁
-    query += ' ORDER BY et.created_at DESC LIMIT ? OFFSET ?'
-    queryParams.push(parseInt(pageSize), offset)
+    query += ` ORDER BY et.created_at DESC LIMIT ? OFFSET ?`
+    const queryParams = [parseInt(pageSize), offset]
 
     // 執行查詢
     const [events] = await db.query(query, queryParams)
@@ -111,9 +113,13 @@ router.get('/:id', async (req, res) => {
     const query = `
       SELECT 
         et.*,
-        est.status_name as event_status
+        CASE 
+          WHEN NOW() < et.apply_start_time THEN '即將開始報名'
+          WHEN NOW() BETWEEN et.apply_start_time AND et.apply_end_time THEN '報名中'
+          WHEN NOW() BETWEEN et.apply_end_time AND et.event_end_time THEN '進行中'
+          ELSE '已結束'
+        END as event_status
       FROM event_type et
-      JOIN event_status_type est ON et.status_id = est.status_id
       WHERE et.event_id = ? AND et.valid = 1
     `
 
@@ -160,6 +166,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+// 新增活動
 router.post('/', async (req, res) => {
   try {
     const {
@@ -178,25 +185,13 @@ router.post('/', async (req, res) => {
       maxPeople,
     } = req.body
 
-    // 根據時間判斷狀態
-    let statusQuery = `
-      SELECT status_id FROM event_status_type 
-      WHERE status_name = 
-        CASE 
-          WHEN ? > NOW() THEN '即將開始報名'
-          WHEN NOW() BETWEEN ? AND ? THEN '報名中'
-          WHEN NOW() BETWEEN ? AND ? THEN '進行中'
-          ELSE '已結束'
-        END
-    `
-
-    const [statusResult] = await db.query(statusQuery, [
-      applyStartTime,
-      applyStartTime,
-      applyEndTime,
-      applyEndTime,
-      eventEndTime,
-    ])
+    // 基本驗證
+    if (!name || !type || !platform || !content || !rule || !award) {
+      return res.status(400).json({
+        code: 400,
+        message: '缺少必要欄位',
+      })
+    }
 
     const query = `
       INSERT INTO event_type (
@@ -213,10 +208,9 @@ router.post('/', async (req, res) => {
         event_start_time,
         event_end_time,
         maximum_people,
-        status_id,
         valid,
         created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, NOW())
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, NOW())
     `
 
     const [result] = await db.query(query, [
@@ -233,7 +227,6 @@ router.post('/', async (req, res) => {
       eventStartTime,
       eventEndTime,
       maxPeople,
-      statusResult[0].status_id,
     ])
 
     res.json({
@@ -253,6 +246,7 @@ router.post('/', async (req, res) => {
   }
 })
 
+// 更新活動
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params
@@ -272,25 +266,13 @@ router.put('/:id', async (req, res) => {
       maxPeople,
     } = req.body
 
-    // 根據時間判斷狀態
-    let statusQuery = `
-      SELECT status_id FROM event_status_type 
-      WHERE status_name = 
-        CASE 
-          WHEN ? > NOW() THEN '即將開始報名'
-          WHEN NOW() BETWEEN ? AND ? THEN '報名中'
-          WHEN NOW() BETWEEN ? AND ? THEN '進行中'
-          ELSE '已結束'
-        END
-    `
-
-    const [statusResult] = await db.query(statusQuery, [
-      applyStartTime,
-      applyStartTime,
-      applyEndTime,
-      applyEndTime,
-      eventEndTime,
-    ])
+    // 基本驗證
+    if (!name || !type || !platform || !content || !rule || !award) {
+      return res.status(400).json({
+        code: 400,
+        message: '缺少必要欄位',
+      })
+    }
 
     const query = `
       UPDATE event_type
@@ -307,8 +289,7 @@ router.put('/:id', async (req, res) => {
         apply_end_time = ?,
         event_start_time = ?,
         event_end_time = ?,
-        maximum_people = ?,
-        status_id = ?
+        maximum_people = ?
       WHERE event_id = ? AND valid = 1
     `
 
@@ -326,7 +307,6 @@ router.put('/:id', async (req, res) => {
       eventStartTime,
       eventEndTime,
       maxPeople,
-      statusResult[0].status_id,
       id,
     ])
 
@@ -346,6 +326,40 @@ router.put('/:id', async (req, res) => {
     res.status(500).json({
       code: 500,
       message: '更新活動失敗',
+      error: error.message,
+    })
+  }
+})
+
+// 刪除活動（軟刪除）
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const query = `
+      UPDATE event_type
+      SET valid = 0
+      WHERE event_id = ?
+    `
+
+    const [result] = await db.query(query, [id])
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        code: 404,
+        message: '活動不存在',
+      })
+    }
+
+    res.json({
+      code: 200,
+      message: '活動刪除成功',
+    })
+  } catch (error) {
+    console.error('Error deleting event:', error)
+    res.status(500).json({
+      code: 500,
+      message: '刪除活動失敗',
       error: error.message,
     })
   }

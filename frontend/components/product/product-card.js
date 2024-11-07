@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import styles from '@/styles/product-card.module.scss'
+import Image from 'next/image'
 
-export default function ProductCard({ product_id = 1 }) {
+export default function ProductCard({ onSendMessage, product_id }) {
+  // 產品卡片的 key 值，用於比較功能的 checkbox
+  const key = Math.random()
   // 從後端撈取資料
   const [data, setData] = useState(null)
 
   useEffect(() => {
-    async function fetchProduct() {
+    async function init() {
+      //偵測使用者是否登入
+      const token = localStorage.getItem('jwt')
+    }
+    async function fetchProduct(product_id) {
       if (product_id) {
         try {
           const response = await fetch(
@@ -19,17 +26,40 @@ export default function ProductCard({ product_id = 1 }) {
         }
       }
     }
-    fetchProduct()
+    fetchProduct(product_id)
   }, [product_id]) // 加入依賴陣列，確保在 product_id 改變時重新執行
 
-  // 切換收藏狀態的範例函數
-  const toggleHeart = () => {
-    console.log('Heart icon toggled')
+  //比較按鈕的狀態
+  const [isCompared, setIsCompared] = useState(false)
+  const toggleCompare = () => {
+    // 點擊按鈕時傳送訊息到父元件
+    if (isCompared) {
+      onSendMessage('取消比較！')
+      setIsCompared(false)
+    } else {
+      onSendMessage('加入比較！')
+      setIsCompared(true)
+    }
   }
 
-  // 加入購物車的範例函數
-  const showCartAlert = () => {
-    alert('Added to cart')
+  // 收藏按鈕的狀態
+  const [isChecked, setIsChecked] = useState(false) // 用來控制 checkbox 狀態
+
+  const toggleHeart = () => {
+    // 點擊按鈕時傳送訊息到父元件
+    if (isChecked) {
+      onSendMessage('取消收藏！')
+      setIsChecked(false)
+    } else {
+      onSendMessage('收藏成功！')
+      setIsChecked(true)
+    }
+  }
+
+  // 加入購物車
+  const addToCart = () => {
+    // 點擊按鈕時傳送訊息到父元件
+    onSendMessage('加入購物車成功！')
   }
 
   return (
@@ -37,21 +67,23 @@ export default function ProductCard({ product_id = 1 }) {
       <div className={styles.product_card_img}>
         <input
           type="checkbox"
-          id="productCompareCheck"
+          id={`productCompareCheck_${key}`}
+          onClick={toggleCompare}
+          checked={isCompared}
           className={styles.product_compare_checkbox}
         />
         <label
-          htmlFor="productCompareCheck"
+          htmlFor={`productCompareCheck_${key}`}
           className={styles.product_compare_label}
-        ></label>
+        >
+          {''}
+        </label>
         <span className={styles.product_compare_text}>比較</span>
-        <img
-          src={
-            data
-              ? `/data/${data.product_img_path}`
-              : '/images/product/product.png'
-          }
+        <Image
+          src={data ? `/product/${data.product_img_path}` : ''}
           alt="Product"
+          width={200}
+          height={200}
         />
       </div>
       <div className={styles.product_card_content}>
@@ -63,6 +95,7 @@ export default function ProductCard({ product_id = 1 }) {
           <input
             type="checkbox"
             id="heartCheckbox"
+            checked={isChecked}
             className={styles.product_collection_checkbox}
           />
           <svg
@@ -84,10 +117,12 @@ export default function ProductCard({ product_id = 1 }) {
               strokeLinejoin="round"
             />
           </svg>
-          <img
-            onClick={showCartAlert}
+          <Image
+            onClick={addToCart}
             src="/images/product/cart.svg"
             alt="cart"
+            width={20}
+            height={20}
           />
         </div>
       </div>
@@ -97,6 +132,7 @@ export default function ProductCard({ product_id = 1 }) {
         </span>
         <span className={styles.arrow}>→</span>
       </div>
+      {/* 顯示 alert */}
     </div>
   )
 }

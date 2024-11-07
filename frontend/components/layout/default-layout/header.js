@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 
 export default function Header(props) {
-  const { auth } = useAuth() // 獲取 auth 對象
+  const { auth, logout } = useAuth() // 獲取 auth 對象
   const { isAuth } = auth // 獲取 isAuth
 
   return (
@@ -32,19 +32,25 @@ export default function Header(props) {
                 </div>
               </Link>
               <Link href="/cart">
-                <div className="cart">
+                <div className="cart me-3">
                   <img src="/cart.svg" />
                 </div>
+              </Link>
+              <Link href="/">
+                <button className="header-logout" onClick={logout}>登出</button>
               </Link>
             </>
           ) : (
             <>
               <Link href="/member/login">
-                <button className="btn btn-primary me-3">登入</button>
+                <button className="btn btn-primary text-white me-3">
+                  登入
+                </button>
               </Link>
               <Link href="/member/signup">
-                <button className="btn btn-primary">註冊</button>
+                <button className="btn btn-primary text-white">註冊</button>
               </Link>
+
             </>
           )}
         </div>

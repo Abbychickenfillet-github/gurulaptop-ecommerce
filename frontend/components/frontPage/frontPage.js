@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import BackToTop from '../BackToTop/BackToTop'
+import Header from '@/components/layout/default-layout/header'
+import MyFooter from '@/components/layout/default-layout/my-footer'
 
 export default function FrontPage(props) {
   return (
     <>
+        <div className="position-relative" style={{ zIndex: 1 }}>
+        <Header />
+        </div>
+
       <div className="blob-outer-container">
         <div className="blob-inner-container">
           <div className="blob"></div>
@@ -303,25 +309,25 @@ export default function FrontPage(props) {
             <div className="home-pic-body">
               <title className="home-title">新品介紹</title>
               <div className="home-pic">
-                <div className='home-pic-box1'>
+                <div className="home-pic-box1">
                   <div className="home-content">
                     <h3>產品標題</h3>
                     <p>產品描述內容</p>
                   </div>
                 </div>
-                <div className='home-pic-box2'>
+                <div className="home-pic-box2">
                   <div className="home-content">
                     <h3>產品標題 2</h3>
                     <p>產品描述內容 2</p>
                   </div>
                 </div>
-                <div className='home-pic-box3'>
+                <div className="home-pic-box3">
                   <div className="home-content">
                     <h3>產品標題 3</h3>
                     <p>產品描述內容 3</p>
                   </div>
                 </div>
-                <div className='home-pic-box4'>
+                <div className="home-pic-box4">
                   <div className="home-content">
                     <h3>產品標題 4</h3>
                     <p>產品描述內容 4</p>
@@ -504,6 +510,10 @@ export default function FrontPage(props) {
             </div>
           </div>
         </div>
+        <div className="position-relative mt-5">
+        <MyFooter />
+        </div>
+
         <BackToTop />
       </div>
     </>

@@ -225,10 +225,8 @@ import MyFooter from '@/components/layout/default-layout/my-footer'
 export default function Home() {
   return (
     <>
-    <Header/>
     <FrontPage/>
-    <MyFooter/>
     </>
   )
 }
-Home.getLayout = (page) => page
+Home.getLayout = (page) => <>{page}</>

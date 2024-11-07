@@ -3,10 +3,11 @@ import EventCard from '@/components/event/EventCard'
 import Carousel from '@/components/event/Carousel'
 import EventNavbar from '@/components/event/EventNavbar'
 import axios from 'axios'
+import EventManagement from '@/components/event/EventManagement'
+import GroupManagement from '@/components/group/GroupManagement'
 
 // 分頁標籤組件
 const EventTabs = ({ activeTab, setActiveTab, onTabChange }) => {
-  // 新增「即將開始報名」到標籤列表
   const tabs = ['所有活動', '進行中', '即將開始報名', '報名中', '已結束']
 
   return (
@@ -128,7 +129,7 @@ export default function Event() {
         params: {
           page,
           pageSize: 12,
-          status: status === '即將開始報名' ? 'upcoming' : status,
+          status: status === '所有活動' ? '' : status,
         },
       })
 
@@ -204,6 +205,7 @@ export default function Event() {
                     eventStartTime={event.eventStartTime}
                     maxPeople={event.maxPeople}
                     status={event.status}
+                    teamType={event.teamType}
                   />
                 ))}
               </div>
@@ -216,6 +218,8 @@ export default function Event() {
                 onPageChange={handlePageChange}
               />
             )}
+            <EventManagement />
+            <GroupManagement />
           </div>
         </main>
       </div>

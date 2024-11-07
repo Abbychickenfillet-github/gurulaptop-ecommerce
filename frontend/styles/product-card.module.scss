@@ -20,11 +20,17 @@
   background: linear-gradient(0deg, #432aba 0%, #1f1e2e 100%);
   /* 圖片背景顏色 */
   position: relative;
+  width: 100%;
+  height: auto;
 }
 
 .product_card_img img {
-  max-width: 200px; /* 圖片最大寬度 */
-  margin: 0 auto; /* 圖片置中 */
+  // 置中
+  display: block;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* 比較按鈕 */

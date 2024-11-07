@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import UserSection from '@/components/user/common/user-section'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import styles from './index.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -16,7 +15,7 @@ export default function UserInfo() {
     <>
       <UserSection titleCN="個人資訊" titleENG="Information">
         <div
-          className={`${styles.basicInformation} row d-flex justify-content-between`}
+          className={`${styles.basicInformation} row d-flex justify-content-center`}
         >
           <div className={`col-9 ${styles.textArea}`}>
             <div>
