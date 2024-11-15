@@ -1354,6 +1354,111 @@
   border-color: rgba(255, 255, 255, 0.1);
 box-shadow: 0px 4px 75px 0px #805AF5 inset;}
 
+// 這裡
+// .home-article-container {
+//   position: relative;
+//   height: 400px; 
+//   overflow: hidden; 
+// }
+
+// .home-articles-wrapper {
+//   position: relative;
+//   width: 100%;
+// }
+
+// .home-article {
+//   height: 400px; 
+//   margin-bottom: 0; 
+// }
+
+.home-article-btn {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0px 0px 20px 2px #8c6fe5;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  position: absolute;
+  bottom: 35%;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* 按鈕動畫效果 */
+.home-article-btn:hover {
+  background-color: #5b2cb9;
+  transform: translate(-50%, 5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 添加滾動動畫 */
+.home-articles-wrapper {
+  transition: transform 0.5s ease-in-out;
+}
+
+.home-article-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+.home-articles-wrapper {
+  position: relative;
+  width: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+/* 確保文章容器佔滿寬度 */
+.home-article {
+  display: flex;
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px; /* 文章之間的間距 */
+}
+
+.home-article-body {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  flex-direction: row;
+}
+
+/* 確保圖片和內容各佔一半 */
+.home-article-img {
+  width: 50%;
+  height: 400px;
+  overflow: hidden;
+}
+
+.home-article-content {
+  width: 50%;
+  height: 400px;
+  background-color: #000000;
+}
+
+/* RWD 調整 */
+@media (max-width: 768px) {
+  .home-article-body {
+    flex-direction: column;
+  }
+
+  .home-article-img,
+  .home-article-content {
+    width: 100%;
+    height: 300px;
+  }
+
+  .home-article {
+    margin-bottom: 40px;
+  }
+}
+
+//到這裡
 @media screen and (max-width: 1200px) {
   .home-article-img,
   .home-article-content {

@@ -13,6 +13,9 @@ export default function BuyList(order) {
   const order_id = order.order.order_id
   const order_date = order.order.create_time
   const coupon_id = order.order.coupon_id
+  const receiver = order.order.receiver
+  const phone = order.order.phone
+  const address = order.order.address
 
   const getOrderDetail = async () => {
     const res = await fetch(
@@ -93,9 +96,16 @@ export default function BuyList(order) {
           </Accordion.Header>
           <Accordion.Body>
             <div className="row mb-3">
-              <div className="col-6">訂單日期: {order_date}</div>
-              <div className="col">訂單金額: {order.order.order_amount}元</div>
-              <div className="">本筆訂單使用優惠券: {coupon_code}</div>
+              <div className="col-6">訂單日期： {order_date}</div>
+              <div className="col">
+                訂單金額： NT {order.order.order_amount.toLocaleString()}元
+              </div>
+              <div className="">
+                本筆訂單使用優惠券： {coupon_code == 0 ? '無' : coupon_code}
+              </div>
+              <div className="col-6">收件人： {receiver}</div>
+              <div className="col-6">聯絡電話： {phone}</div>
+              <div className="">收件地址： {address}</div>
             </div>
             {orderDetail.map((item, index) => {
               return <BuyItemCard key={index} item={item} />

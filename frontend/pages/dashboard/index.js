@@ -92,6 +92,12 @@ export default function Test1() {
     }
   }
 
+  useEffect(() => {
+    if (refresh) {
+      setRefresh(false)
+    }
+  }, [refresh])
+
   return (
     <>
     <LoadingSpinner loading={isLoading} />
@@ -119,14 +125,14 @@ export default function Test1() {
                 style={{ width: '70px', height: '70px', objectFit: 'cover' }}
               />
               <h5 className="mb-2">{auth?.userData?.name}</h5>
-              <Link href=''>
-              <button
-                className="btn btn-outline-primary btn-sm mb-3"
-                style={{ color: '#805AF5', borderColor: '#805AF5' }}
-              >
-                <FaPenFancy />
-                編輯個人簡介
-              </button>
+              <Link href="">
+                <button
+                  className="btn btn-outline-primary btn-sm mb-3"
+                  style={{ color: '#805AF5', borderColor: '#805AF5' }}
+                >
+                  <FaPenFancy />
+                  編輯個人簡介
+                </button>
               </Link>
             </div>
 

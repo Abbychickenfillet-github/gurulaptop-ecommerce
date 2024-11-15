@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-11-13 07:05:19
+-- 產生時間： 2024-11-14 07:49:12
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -41,9 +41,9 @@ CREATE TABLE `order_detail` (
 --
 
 INSERT INTO `order_detail` (`id`, `user_id`, `order_id`, `product_id`, `product_price`, `quantity`) VALUES
-(1, 2, '7a80d1b3-4892-46f6-bfb9-ceaf0e6621c4', 275, 105900, 1),
-(4, 2, '595c1954-5e4b-4643-9e42-d2e7a74e16bb', 275, 105900, 1),
-(5, 2, '20002a31-1aba-45fb-b615-a8050eefe590', 275, 105900, 1);
+(1, 2, '493149fc-c865-46a2-ae8b-27c33a1e84b1', 269, 23900, 1),
+(2, 2, '8e1adadf-5f4b-4f29-bc84-b756cfcb208b', 270, 25900, 1),
+(3, 2, 'bc1bf194-54cc-4887-ac7c-82bb6c82f5a4', 270, 25900, 1);
 
 --
 -- 已傾印資料表的索引
@@ -63,7 +63,7 @@ ALTER TABLE `order_detail`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `order_detail`
 --
 ALTER TABLE `order_detail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

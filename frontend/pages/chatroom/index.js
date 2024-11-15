@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Container } from 'react-bootstrap'
+import { useRouter } from 'next/router'
 import ChatRoom from '@/components/chatroom/ChatRoom'
 import CreateRoomForm from '@/components/chatroom/CreateRoomForm'
 import UserList from '@/components/chatroom/UserList'
@@ -15,45 +16,97 @@ export default function Chat() {
   const [currentUser, setCurrentUser] = useState(null)
   const [showCreateRoom, setShowCreateRoom] = useState(false)
   const [message, setMessage] = useState('')
+  const router = useRouter()
 
-  // 初始化 WebSocket 連接和事件監聽
+  // 身份驗證檢查
   useEffect(() => {
-    // 假設從 localStorage 或 context 獲取用戶ID
-    const userId = localStorage.getItem('userId') || 1
-    setCurrentUser(userId)
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('http://localhost:3005/api/auth/check', {
+          credentials: 'include',
+        })
 
-    // 連接 WebSocket
-    websocketService.connect(userId)
+        if (!response.ok) {
+          console.error('User not authenticated')
+          router.push('/login')
+          return
+        }
 
-    // 註冊監聽器
-    websocketService.on('registered', handleRegistered)
-    websocketService.on('message', handleNewMessage)
-    websocketService.on('roomCreated', handleRoomCreated)
-    websocketService.on('userJoined', handleUserJoined)
-    websocketService.on('userLeft', handleUserLeft)
+        const userData = await response.json()
+        console.log('User authentication:', userData)
 
-    // 載入初始數據
-    fetchInitialData()
-
-    // 清理函數
-    return () => {
-      websocketService.disconnect()
+        // 設置用戶ID並觸發數據加載
+        if (userData.status === 'success' && userData.data.user) {
+          const userId = userData.data.user.user_id
+          setCurrentUser(userId)
+          localStorage.setItem('userId', userId)
+          // 初始化 WebSocket 連接
+          initializeWebSocket(userId)
+          // 加載初始數據
+          fetchInitialData(userId)
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error)
+        router.push('/login')
+      }
     }
-  }, [])
+
+    checkAuth()
+  }, [router])
+
+  // 初始化 WebSocket 連接
+  const initializeWebSocket = (userId) => {
+    console.log('Initializing WebSocket with userId:', userId)
+    if (!userId) {
+      console.error('No user ID for WebSocket initialization')
+      return
+    }
+
+    try {
+      websocketService.connect(userId)
+
+      // 註冊監聽器
+      websocketService.on('registered', handleRegistered)
+      websocketService.on('message', handleNewMessage)
+      websocketService.on('roomCreated', handleRoomCreated)
+      websocketService.on('userJoined', handleUserJoined)
+      websocketService.on('userLeft', handleUserLeft)
+    } catch (error) {
+      console.error('WebSocket connection failed:', error)
+    }
+  }
 
   // 獲取初始數據
-  const fetchInitialData = async () => {
+  const fetchInitialData = async (userId) => {
+    if (!userId) {
+      console.error('No user ID for fetching data')
+      return
+    }
+
     try {
-      const [usersResponse, roomsResponse] = await Promise.all([
-        fetch('http://localhost:3005/api/chat/users'),
-        fetch('http://localhost:3005/api/chat/rooms'),
-      ])
+      // 只獲取用戶群組，不需要獲取所有聊天室
+      const groupsResponse = await fetch(
+        'http://localhost:3005/api/chat/user/groups',
+        {
+          credentials: 'include',
+        }
+      )
 
-      const usersData = await usersResponse.json()
-      const roomsData = await roomsResponse.json()
+      const groupsData = await groupsResponse.json()
 
-      if (usersData.status === 'success') setUsers(usersData.data)
-      if (roomsData.status === 'success') setRooms(roomsData.data)
+      if (groupsData.status === 'success') {
+        // 設置房間數據
+        setRooms(
+          groupsData.data.map((group) => ({
+            id: group.chatRoomId,
+            name: group.name,
+            memberCount: group.memberCount,
+            maxMembers: group.maxMembers,
+            image: group.image,
+            isGroup: true,
+          }))
+        )
+      }
     } catch (error) {
       console.error('獲取初始數據失敗:', error)
     }
@@ -61,10 +114,14 @@ export default function Chat() {
 
   // WebSocket 事件處理函數
   const handleRegistered = (data) => {
-    setRooms(data.roomAry || [])
+    console.log('Registered event received:', data)
+    if (data.rooms) {
+      setRooms(data.rooms)
+    }
   }
 
   const handleNewMessage = (data) => {
+    console.log('New message received:', data)
     setMessages((prev) => [
       ...prev,
       {
@@ -78,40 +135,90 @@ export default function Chat() {
   }
 
   const handleRoomCreated = (data) => {
-    setRooms((prev) => [...prev, data.room])
+    console.log('Room created:', data)
+    if (data.room) {
+      setRooms((prev) => [...prev, data.room])
+    }
   }
 
   const handleUserJoined = (data) => {
-    setUsers((prev) => [...prev, data.user])
+    console.log('User joined:', data)
+    if (data.user) {
+      setUsers((prev) => [...prev, data.user])
+    }
   }
 
   const handleUserLeft = (data) => {
-    setUsers((prev) =>
-      prev.map((user) =>
-        user.id === data.userId ? { ...user, online: false } : user
+    console.log('User left:', data)
+    if (data.userId) {
+      setUsers((prev) =>
+        prev.map((user) =>
+          user.id === data.userId ? { ...user, online: false } : user
+        )
       )
-    )
+    }
   }
 
   // 用戶交互處理函數
   const handlePrivateChat = (userId) => {
+    console.log('Opening private chat with user:', userId)
     setCurrentRoom(null)
-    // 開啟私人聊天
     websocketService.send({
       type: 'openPrivateChat',
       targetUserId: userId,
-      fromId: currentUser,
+      fromID: currentUser,
     })
   }
 
-  const handleRoomSelect = (roomId) => {
+  const handleRoomSelect = async (roomId) => {
+    console.log('Selecting room:', roomId)
     setCurrentRoom(roomId)
+
     if (roomId) {
+      const selectedRoom = rooms.find((r) => r.id === roomId)
+      console.log('Selected room:', selectedRoom)
+
+      if (!selectedRoom) {
+        console.error('Room not found:', roomId)
+        return
+      }
+
+      // 加入聊天室
       websocketService.send({
         type: 'joinRoom',
         roomID: roomId,
         fromID: currentUser,
+        isGroup: selectedRoom.isGroup,
+        groupId: selectedRoom.groupId,
       })
+
+      try {
+        // 獲取訊息
+        const endpoint = selectedRoom.isGroup
+          ? `http://localhost:3005/api/chat/groups/${selectedRoom.groupId}/messages`
+          : `http://localhost:3005/api/chat/rooms/${roomId}/messages`
+
+        const response = await fetch(endpoint, {
+          credentials: 'include',
+        })
+        const data = await response.json()
+
+        if (data.status === 'success') {
+          console.log('Messages loaded:', data.data)
+          // 格式化訊息
+          const formattedMessages = data.data.map((msg) => ({
+            id: msg.id,
+            fromID: msg.senderId || msg.sender_id,
+            content: msg.content || msg.message,
+            roomID: roomId,
+            senderName: msg.senderName || msg.sender_name,
+            timestamp: msg.createdAt || msg.created_at,
+          }))
+          setMessages(formattedMessages)
+        }
+      } catch (error) {
+        console.error('載入訊息失敗:', error)
+      }
     }
   }
 
@@ -119,19 +226,47 @@ export default function Chat() {
     e.preventDefault()
     if (!message.trim()) return
 
+    const selectedRoom = rooms.find((r) => r.id === currentRoom)
+    console.log('Sending message:', { message, selectedRoom })
+
     websocketService.send({
       type: 'message',
       fromID: currentUser,
       message: message,
       roomID: currentRoom,
+      isGroup: selectedRoom?.isGroup,
+      groupId: selectedRoom?.groupId,
     })
+
+    // 立即更新本地訊息
+    setMessages((prev) => [
+      ...prev,
+      {
+        fromID: currentUser,
+        content: message,
+        roomID: currentRoom,
+        timestamp: new Date(),
+        isGroup: selectedRoom?.isGroup,
+      },
+    ])
 
     setMessage('')
   }
 
+  // 檢查當前用戶是否已設置
+  if (!currentUser) {
+    return <div>Loading...</div>
+  }
+
   return (
     <Container fluid className={styles.container}>
-      <h3 className={styles.chatTitle}>聊天室</h3>
+      <h3 className={styles.chatTitle}>
+        聊天室
+        {currentRoom &&
+          rooms.find((r) => r.id === currentRoom) &&
+          ` - ${rooms.find((r) => r.id === currentRoom).name}`}
+      </h3>
+
       <div className={styles.chatLayout}>
         <UserList
           users={users}

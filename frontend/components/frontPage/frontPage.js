@@ -4,6 +4,7 @@ import MyFooter from '@/components/layout/default-layout/my-footer'
 import HomeSection from './HomeSection'
 import Section4 from './Section4'
 import BackToTop from '../BackToTop/BackToTop'
+import ArticleSlider from './ArticleSlider'
 
 export default function FrontPage(props) {
   return (
@@ -375,6 +376,8 @@ export default function FrontPage(props) {
               </div>
             </div>
           </section>
+
+          {/* 這裡 */}
           <section className="home-section5">
             <title className="home-title">◇品牌文章</title>
             <div className="home-article-container">
@@ -432,6 +435,8 @@ export default function FrontPage(props) {
               </article>
             </div>
           </section>
+          {/* 到這裡 */}
+          <ArticleSlider />
         </div>
 
         <div className="home-activity-section6">
@@ -531,9 +536,8 @@ export default function FrontPage(props) {
         <div className="position-relative mt-5">
           <MyFooter />
         </div>
+        <BackToTop />
       </div>
-      <BackToTop />
-
     </>
   )
 }

@@ -215,7 +215,6 @@ export default function UserProfile() {
     }
   }, [user_id])
 
-
   const handleInputChange = (e) => {
     const { name, value } = e.target
     console.log('輸入值型別:', typeof value) // 檢查型別
@@ -356,7 +355,7 @@ export default function UserProfile() {
       )
 
       if (response.data.status === 'success') {
-        setUploadStatus('頭像更新成功！')//有文字算true,沒有算none? 
+        setUploadStatus('頭像更新成功！') //有文字算true,沒有算none?
         //除非想防風報攻擊才需要寫得很認真@@
         Swal.fire('成功', '頭像更新成功', 'success')
       }
@@ -707,7 +706,7 @@ export default function UserProfile() {
                         >
                           更新
                         </button>
-{/*  */}
+                        {/*  */}
                         {uploadStatus && (
                           <div className="alert alert-success mt-3">
                             {uploadStatus}

@@ -35,4 +35,16 @@ const nextConfig = {
   // },
 }
 
+module.exports = {
+  async redirects() {
+    return [
+      {
+        source: '/chatroom',
+        destination: '/chat',
+        permanent: true,
+      },
+    ]
+  },
+}
+
 module.exports = nextConfig

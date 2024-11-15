@@ -280,6 +280,28 @@ router.post('/', checkAuth, upload.single('group_img'), async (req, res) => {
       [groupResult.insertId, creator_id, 'accepted']
     )
 
+    // 建立對應的聊天室
+    const [chatRoomResult] = await connection.query(
+      'INSERT INTO chat_rooms (name, creator_id) VALUES (?, ?)',
+      [group_name.trim(), creator_id]
+    )
+
+    if (!chatRoomResult.insertId) {
+      throw new Error('聊天室建立失敗')
+    }
+
+    // 將創建者加入聊天室
+    await connection.query(
+      'INSERT INTO chat_room_members (room_id, user_id) VALUES (?, ?)',
+      [chatRoomResult.insertId, creator_id]
+    )
+
+    // 在 group 表中記錄關聯的聊天室 ID（需要先在 group 表添加 chat_room_id 欄位）
+    await connection.query(
+      'UPDATE `group` SET chat_room_id = ? WHERE group_id = ?',
+      [chatRoomResult.insertId, groupResult.insertId]
+    )
+
     await connection.commit()
 
     res.json({
@@ -287,6 +309,7 @@ router.post('/', checkAuth, upload.single('group_img'), async (req, res) => {
       message: '群組建立成功',
       data: {
         group_id: groupResult.insertId,
+        chat_room_id: chatRoomResult.insertId,
         group_name: group_name.trim(),
         description: description.trim(),
         creator_id,
@@ -505,6 +528,184 @@ router.use((err, req, res, next) => {
     status: 'error',
     message: err.message || '伺服器錯誤',
   })
+})
+
+// 發送群組申請
+router.post('/requests', checkAuth, async (req, res) => {
+  let connection
+  try {
+    connection = await db.getConnection()
+    await connection.beginTransaction()
+
+    const { groupId, gameId, description } = req.body
+    const senderId = req.user.user_id
+
+    // 檢查群組是否存在
+    const [group] = await connection.query(
+      'SELECT creator_id, group_name FROM `group` WHERE group_id = ?',
+      [groupId]
+    )
+
+    if (!group.length) {
+      throw new Error('找不到該群組')
+    }
+
+    // 檢查是否已經是成員
+    const [existingMember] = await connection.query(
+      'SELECT 1 FROM group_members WHERE group_id = ? AND member_id = ?',
+      [groupId, senderId]
+    )
+
+    if (existingMember.length) {
+      throw new Error('您已經是群組成員')
+    }
+
+    // 檢查是否已有待處理的申請
+    const [existingRequest] = await connection.query(
+      'SELECT 1 FROM group_requests WHERE group_id = ? AND sender_id = ? AND status = "pending"',
+      [groupId, senderId]
+    )
+
+    if (existingRequest.length) {
+      throw new Error('您已有待處理的申請')
+    }
+
+    // 新增申請記錄
+    const [requestResult] = await connection.query(
+      `INSERT INTO group_requests 
+       (group_id, sender_id, creator_id, game_id, description) 
+       VALUES (?, ?, ?, ?, ?)`,
+      [groupId, senderId, group[0].creator_id, gameId, description]
+    )
+
+    await connection.commit()
+
+    res.json({
+      status: 'success',
+      message: '申請已送出',
+      data: { requestId: requestResult.insertId },
+    })
+  } catch (error) {
+    if (connection) await connection.rollback()
+    console.error('發送群組申請錯誤:', error)
+    res.status(400).json({
+      status: 'error',
+      message: error.message || '發送申請失敗',
+    })
+  } finally {
+    if (connection) connection.release()
+  }
+})
+
+// 處理群組申請
+router.patch('/requests/:requestId', checkAuth, async (req, res) => {
+  let connection
+  try {
+    connection = await db.getConnection()
+    await connection.beginTransaction()
+
+    const { requestId } = req.params
+    const { status } = req.body // 'accepted' or 'rejected'
+    const userId = req.user.user_id
+
+    // 獲取申請詳情
+    const [request] = await connection.query(
+      `SELECT gr.*, g.chat_room_id
+       FROM group_requests gr
+       JOIN \`group\` g ON gr.group_id = g.group_id
+       WHERE gr.id = ? AND gr.status = 'pending'`,
+      [requestId]
+    )
+
+    if (!request.length) {
+      throw new Error('找不到該申請或已處理')
+    }
+
+    if (request[0].creator_id !== userId) {
+      throw new Error('只有群組創建者可以處理申請')
+    }
+
+    // 更新申請狀態
+    await connection.query(
+      'UPDATE group_requests SET status = ? WHERE id = ?',
+      [status, requestId]
+    )
+
+    if (status === 'accepted') {
+      // 加入群組成員
+      await connection.query(
+        'INSERT INTO group_members (group_id, member_id, status) VALUES (?, ?, "accepted")',
+        [request[0].group_id, request[0].sender_id]
+      )
+
+      // 如果有聊天室，也加入聊天室成員
+      if (request[0].chat_room_id) {
+        await connection.query(
+          'INSERT INTO chat_room_members (room_id, user_id) VALUES (?, ?)',
+          [request[0].chat_room_id, request[0].sender_id]
+        )
+      }
+    }
+
+    await connection.commit()
+
+    res.json({
+      status: 'success',
+      message: status === 'accepted' ? '已接受申請' : '已拒絕申請',
+      data: { status },
+    })
+  } catch (error) {
+    if (connection) await connection.rollback()
+    console.error('處理群組申請錯誤:', error)
+    res.status(400).json({
+      status: 'error',
+      message: error.message || '處理申請失敗',
+    })
+  } finally {
+    if (connection) connection.release()
+  }
+})
+
+// 獲取群組申請列表
+router.get('/requests/:groupId', checkAuth, async (req, res) => {
+  try {
+    const { groupId } = req.params
+    const userId = req.user.user_id
+
+    // 驗證訪問權限
+    const [group] = await db.query(
+      'SELECT 1 FROM `group` WHERE group_id = ? AND creator_id = ?',
+      [groupId, userId]
+    )
+
+    if (!group.length) {
+      return res.status(403).json({
+        status: 'error',
+        message: '無權訪問該群組的申請列表',
+      })
+    }
+
+    // 獲取申請列表
+    const [requests] = await db.query(
+      `SELECT gr.*, u.name as sender_name, u.image_path as sender_image
+       FROM group_requests gr
+       JOIN users u ON gr.sender_id = u.user_id
+       WHERE gr.group_id = ?
+       ORDER BY gr.created_at DESC`,
+      [groupId]
+    )
+
+    res.json({
+      status: 'success',
+      data: requests,
+    })
+  } catch (error) {
+    console.error('獲取群組申請列表錯誤:', error)
+    res.status(500).json({
+      status: 'error',
+      message: '獲取申請列表失敗',
+    })
+  }
 })
 
 export default router

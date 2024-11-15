@@ -10,6 +10,7 @@ import { useJumpingLetters } from '@/hooks/jumping-letters-hook'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai' // 記得引入
+import { useLoader } from '@/hooks/use-loader'
 
 
 export default function LogIn(props) {
@@ -20,11 +21,13 @@ export default function LogIn(props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({ error: ' ' })
+  const { showLoader, hideLoader } = useLoader()
 
   // 以上還是不太確定為什麼需要用狀態管理。登入頁不就送出帳密比對主要這功能就好了嗎？
   const handleSubmit = async (e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
+    showLoader() // 開始載入時顯示
 
     try {
       const response = await fetch(`http://localhost:3005/api/login`, {
@@ -39,14 +42,11 @@ export default function LogIn(props) {
         }),
       })
       const result = await response.json()
-
+  
       if (result.status === 'success') {
         console.log('登入前端接上後端成功')
-        // 可以添加登入成功後的導向
-
         router.push('/dashboard')
       } else {
-        // 處理錯誤情況
         setErrors({
           message: result.message,
         })
@@ -60,6 +60,8 @@ export default function LogIn(props) {
         confirmButtonText: '確定',
         confirmButtonColor: '#3085d6',
       })
+    } finally {
+      hideLoader() // 不管成功失敗都要關閉 loader
     }
   }
 
@@ -84,7 +86,7 @@ export default function LogIn(props) {
               </h4>
               <br />
               <h3 className={`text-white ${styles['guru-laptop']}`}>
-                {renderJumpingText('Laptop Guru', 'company-name')}
+                {renderJumpingText('LaptopGuru', 'company-name')}
               </h3>
             </div>
             <div className={`${styles.right} col`}>
@@ -195,7 +197,7 @@ export default function LogIn(props) {
                     onClick={() => {
                       login
                     }}
-                    className={`text-white ${styles.button} ${styles.hover}`}
+                    className={`text-white border-0 ${styles.button} `}
                     type="submit"
                   >
                     送出

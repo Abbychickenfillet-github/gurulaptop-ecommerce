@@ -159,6 +159,22 @@ export default function GroupCreat() {
 
       if (result.status === 'success') {
         setSuccess('群組建立成功！')
+
+        // 儲存聊天室 ID 並確保它被正確設置
+        if (result.data.chat_room_id) {
+          console.log('Setting chat room ID:', result.data.chat_room_id)
+          localStorage.setItem('currentChatRoomId', result.data.chat_room_id)
+
+          // 延遲跳轉前確認數據已經儲存
+          setTimeout(() => {
+            const savedId = localStorage.getItem('currentChatRoomId')
+            console.log('Saved chat room ID before redirect:', savedId)
+            router.push('/chatroom')
+          }, 1500)
+        } else {
+          console.error('No chat room ID received from server')
+        }
+
         // 清空表單
         setFormData({
           group_name: '',
@@ -169,11 +185,6 @@ export default function GroupCreat() {
           event_id: null,
         })
         setImagePreview('')
-
-        // 延遲跳轉
-        setTimeout(() => {
-          router.push('/group')
-        }, 1500)
       } else {
         throw new Error(result.message || '建立群組失敗')
       }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Form, Modal } from 'react-bootstrap'
 import EventButton from '@/components/event/EventButton'
 import styles from '@/styles/Chat.module.css'
+import websocketService from '@/services/websocketService'
 
 export default function CreateRoomForm({ show, onHide, ws, currentUser }) {
   const [roomName, setRoomName] = useState('')
@@ -10,13 +11,11 @@ export default function CreateRoomForm({ show, onHide, ws, currentUser }) {
     e.preventDefault()
     if (!roomName.trim()) return
 
-    ws.send(
-      JSON.stringify({
-        type: 'createRoom',
-        roomName: roomName,
-        fromID: currentUser,
-      })
-    )
+    websocketService.send({
+      type: 'createRoom',
+      roomName: roomName,
+      fromID: currentUser,
+    })
 
     setRoomName('')
     onHide()

@@ -10,6 +10,9 @@ const db = mysql.createPool({
   port: process.env.DB_PORT,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
   dateStrings: true, // 轉換日期字串格式用
 })
 // 測試連線

@@ -169,11 +169,11 @@ router.get('/:userId', async (req, res) => {
 })
 
 // 修改更新優惠券狀態路由
-router.put('/update/:userId', async (req, res) => {
+router.put('/update/:userId/:coupon_id', async (req, res) => {
   let connection
   try {
-    const userId = parseInt(req.params.userId)
-    const { coupon_id } = req.body
+    const userId = req.params.userId
+    const coupon_id = req.params.coupon_id
 
     if (!userId || !coupon_id) {
       return res.status(400).json({

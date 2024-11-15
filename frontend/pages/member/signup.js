@@ -7,9 +7,11 @@ import MyFooter from '@/components/layout/default-layout/my-footer'
 import styles from '@/styles/signUpForm.module.scss'
 import { useRouter } from 'next/router'
 import Swal from 'sweetalert2'
+import { useJumpingLetters } from '@/hooks/jumping-letters-hook'
 
 export default function Signup() {
   // 處理失焦
+  const { renderJumpingText } = useJumpingLetters()
 
   
   const validatePassword = (password) => {
@@ -187,9 +189,16 @@ export default function Signup() {
         <div className="container">
           <div className="row d-flex justify-content-center align-items-center">
             <div className={`${styles.left} col`}>
-              <h4 className={`text-white ${styles.welcome}`}>Welcome to</h4>
+              {/* <h4 className={`text-white ${styles.welcome}`}>Welcome to</h4>
               <h3 className={`text-white ${styles['guru-laptop']}`}>
-                GURU Laptop
+                GURU Laptop */}
+              {/* </h3> */}
+              <h4 className={styles.white}>
+                {renderJumpingText('Welcome to', 'welcome-text')}
+              </h4>
+              <br />
+              <h3 className={`text-white ${styles['guru-laptop']}`}>
+                {renderJumpingText('LaptopGuru', 'company-name')}
               </h3>
             </div>
             <div

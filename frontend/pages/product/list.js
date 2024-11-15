@@ -5,9 +5,9 @@ import ProductCard from '@/components/product/product-card'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import Image from 'next/image'
-import BackToTop from '@/components/BackToTop/BackToTop'
+import BackToTop2 from '@/components/BackToTop/BackToTop2'
 import { useRouter } from 'next/router'
-import { set } from 'lodash'
+
 export default function List() {
   // 利用網址列的參數來過濾產品
   const router = useRouter()
@@ -73,6 +73,9 @@ export default function List() {
     if (result.status === 'success') {
       setProducts(result.data.products)
       setTotalPages(result.data.totalPages)
+    } else if (result.status === 'error') {
+      setProducts([])
+      setTotalPages(0)
     }
   }
 
@@ -983,7 +986,9 @@ export default function List() {
           </aside>
           {/* 產品列表 */}
           <main className={`${styles.product_list}`}>
-            {
+            {totalPages === 0 ? (
+              <div className={`${styles.product_not_found}`}>查無產品</div>
+            ) : (
               // 產品卡片
               products.map((product) => (
                 <ProductCard
@@ -992,30 +997,35 @@ export default function List() {
                   onSendMessage={handleShowMessage}
                 />
               ))
-            }
+            )}
           </main>
         </div>
         <div className={`${styles.product_pagination}`}>
           <ul className={`${styles.product_pagination}`}>
-            {/* 左箭頭 */}
-            <li className={`${styles.page_item}`}>
-              <a
-                onClick={(e) => {
-                  e.preventDefault() // 阻止預設的 href 跳轉
-                  handleButtonClick({
-                    page: 1,
-                    category: tmpCategory,
-                    category_value: tmpCategoryValue,
-                    search: tmpSearch,
-                    price: tmpPrice,
-                  })
-                }}
-                href=""
-                className={`${styles.product_page_link}`}
-              >
-                <span aria-hidden="true">&lt;</span>
-              </a>
-            </li>
+            {/* 顯示頁碼 */}
+            {totalPages > 0 && (
+              <>
+                {/* 左箭頭 */}
+                <li className={`${styles.page_item}`}>
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault() // 阻止預設的 href 跳轉
+                      handleButtonClick({
+                        page: 1,
+                        category: tmpCategory,
+                        category_value: tmpCategoryValue,
+                        search: tmpSearch,
+                        price: tmpPrice,
+                      })
+                    }}
+                    href=""
+                    className={`${styles.product_page_link}`}
+                  >
+                    <span aria-hidden="true">&lt;</span>
+                  </a>
+                </li>
+              </>
+            )}
             {/* 頁碼 */}
             {Array.from({ length: totalPages }).map((_, index) => {
               const isPageInRange = Math.abs(currentPage - index) <= 5 // 當前頁的前後 5 頁
@@ -1046,26 +1056,29 @@ export default function List() {
               // 不顯示不在範圍內的頁碼
               return null
             })}
-
-            {/* 右箭頭 */}
-            <li className={`${styles.product_page_item}`}>
-              <a
-                onClick={(e) => {
-                  e.preventDefault() // 阻止預設的 href 跳轉
-                  handleButtonClick({
-                    page: totalPages,
-                    category: tmpCategory,
-                    category_value: tmpCategoryValue,
-                    search: tmpSearch,
-                    price: tmpPrice,
-                  })
-                }}
-                href=""
-                className={`${styles.product_page_link}`}
-              >
-                <span aria-hidden="true">&gt;</span>
-              </a>
-            </li>
+            {totalPages > 0 && (
+              <>
+                {/* 右箭頭 */}
+                <li className={`${styles.product_page_item}`}>
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault() // 阻止預設的 href 跳轉
+                      handleButtonClick({
+                        page: totalPages,
+                        category: tmpCategory,
+                        category_value: tmpCategoryValue,
+                        search: tmpSearch,
+                        price: tmpPrice,
+                      })
+                    }}
+                    href=""
+                    className={`${styles.product_page_link}`}
+                  >
+                    <span aria-hidden="true">&gt;</span>
+                  </a>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>
@@ -1088,7 +1101,9 @@ export default function List() {
           </div>
         ))}
       </div>
-      {/* <BackToTop /> */}
+
+      <BackToTop2 />
+
       <MyFooter />
     </>
   )

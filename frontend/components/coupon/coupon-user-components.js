@@ -169,6 +169,7 @@ export default function CouponUser() {
                 borderColor: '#805AF5',
                 color: 'white',
               }}
+              className="me-2"
             >
               搜尋
             </Button>

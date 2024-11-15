@@ -28,9 +28,9 @@ export default function BuyItemCard(item) {
             </div>
           </div>
           <div className="col-4">{product_name}</div>
-          <div className="col-2">{price} 元</div>
+          <div className="col-2"> NT {price.toLocaleString()} 元</div>
           <div className="col-2">{quantity}</div>
-          <div className="col-2">{subtotal}元</div>
+          <div className="col-2"> NT {subtotal.toLocaleString()}元</div>
         </div>
       </div>
     </>

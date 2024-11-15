@@ -16,6 +16,7 @@ import eventsRouter from './routes/events.js'
 import couponRouter from './routes/coupon.js'
 import couponUserRouter from './routes/coupon-user.js'
 import chatRoutes from './routes/chat.js'
+import GroupRequests from './routes/group-request.js'
 
 import forgotPasswordRouter from './routes/forgot-password.js'
 // 使用檔案的session store，存在sessions資料夾
@@ -146,5 +147,6 @@ if (!fs.existsSync(uploadDir)) {
 
 // 使用聊天室路由
 app.use('/api/chat', chatRoutes)
+app.use('/api/', GroupRequests)
 
 export default app

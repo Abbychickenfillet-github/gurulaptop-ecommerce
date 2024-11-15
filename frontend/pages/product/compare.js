@@ -6,6 +6,7 @@ import MyFooter from '@/components/layout/default-layout/my-footer'
 import Image from 'next/image'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import BackToTop2 from '@/components/BackToTop/BackToTop2'
 export default function Compare() {
   const [compareProduct, setCompareProduct] = useState([])
   const [productDataFirst, setProductDataFirst] = useState([])
@@ -60,6 +61,7 @@ export default function Compare() {
         <nav className={`${styles.compare_breadcrumb}`}>
           <NextBreadCrumbLight isHomeIcon={true} bgClass="transparent" />
         </nav>
+
         <main className={`${styles.container} ${styles.active}`}>
           <div
             className={`${styles.compare_box} ${
@@ -94,7 +96,12 @@ export default function Compare() {
               <p>型號： {productDataFirst.model}</p>
               <p>廠牌： {productDataFirst.product_brand}</p>
 
-              <p>價格： {productDataFirst.list_price}</p>
+              <p>
+                價格：{' '}
+                {`NT ${new Intl.NumberFormat('zh-TW').format(
+                  productDataFirst.list_price
+                )}元`}
+              </p>
 
               <p>處理器： {productDataFirst.product_CPU}</p>
 
@@ -168,7 +175,12 @@ export default function Compare() {
               <p>型號： {productDataSecond.model}</p>
               <p>廠牌： {productDataSecond.product_brand}</p>
 
-              <p>價格： {productDataSecond.list_price}</p>
+              <p>
+                價格：{' '}
+                {`NT ${new Intl.NumberFormat('zh-TW').format(
+                  productDataSecond.list_price
+                )}元`}
+              </p>
 
               <p>處理器： {productDataSecond.product_CPU}</p>
 
@@ -209,7 +221,22 @@ export default function Compare() {
             </div>
           </div>
         </main>
+        {/* 清除cookies */}
+        <button
+          className={`${styles.clear_compare} ${
+            compareProduct.length !== 0 ? styles.active : ''
+          } `}
+          onClick={() => {
+            localStorage.setItem('compareProduct', '')
+            setCompareProduct([])
+            setProductDataFirst([])
+            setProductDataSecond([])
+          }}
+        >
+          清除比較
+        </button>
       </div>
+      <BackToTop2 />
       <MyFooter />
     </>
   )

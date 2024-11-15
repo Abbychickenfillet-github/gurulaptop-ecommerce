@@ -18,7 +18,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
   // 初始化
   const init = async () => {
     const response = await fetch(
-      `http://localhost:3005/api/favorites/${userData.user_id}/${product_id}`
+      `http://localhost:3005/api/favorites/${userData?.user_id}/${product_id}`
     )
     const result = await response.json()
     if (result.status === 'success') {
@@ -239,7 +239,9 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
       </div>
       <div className={styles.price_button}>
         <span className={styles.price}>
-          {data ? `$${data.list_price}` : '$0'}
+          {data
+            ? `NT ${new Intl.NumberFormat('zh-TW').format(data.list_price)}元`
+            : '$0'}
         </span>
         <span
           onClick={() =>

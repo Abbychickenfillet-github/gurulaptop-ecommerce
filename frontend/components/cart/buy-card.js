@@ -86,8 +86,8 @@ export default function BuyCard({ item, onDataChange }) {
               />
             </div>
           </div>
-          <div className="col-3">{item.model}</div>
-          <div className="col-2">{item.list_price}元</div>
+          <div className="col-3">{item.product_name}</div>
+          <div className="col-2">NT {item.list_price.toLocaleString()}元</div>
           <div className="col-2">
             <input
               type="number"
@@ -104,7 +104,7 @@ export default function BuyCard({ item, onDataChange }) {
               }}
             />
           </div>
-          <div className="col-2">{price}元</div>
+          <div className="col-2">NT {price.toLocaleString()}元</div>
           <div className="col-1">
             <button
               className={`btn btn-light`}

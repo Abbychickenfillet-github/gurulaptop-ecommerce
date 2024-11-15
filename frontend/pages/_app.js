@@ -10,6 +10,8 @@ import '@/styles/footer.scss'
 
 // 首頁
 import '@/styles/frontPage.scss'
+//會員註冊
+// import '@/styles/transitions_Abby.scss'
 
 // 文章/部落格用 css
 import '@/styles/ArticleDetail.scss'
@@ -42,6 +44,8 @@ import '../styles/group.scss'
 // groupCreat的scss
 import '../styles/groupCreat.scss'
 
+import { GroupAuthProvider } from '@/context/GroupAuthContext'
+
 export default function MyApp({ Component, pageProps }) {
   // 導入bootstrap的JS函式庫
   useEffect(() => {
@@ -56,7 +60,9 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <AuthProvider>
       <LoaderProvider close={2} CustomLoader={CatLoader}>
-        <CartProvider>{getLayout(<Component {...pageProps} />)}</CartProvider>
+        <GroupAuthProvider>
+          <CartProvider>{getLayout(<Component {...pageProps} />)}</CartProvider>
+        </GroupAuthProvider>
       </LoaderProvider>
     </AuthProvider>
   )

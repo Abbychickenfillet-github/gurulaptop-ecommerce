@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-11-13 07:05:04
+-- 產生時間： 2024-11-14 07:48:59
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -45,9 +45,9 @@ CREATE TABLE `order_list` (
 --
 
 INSERT INTO `order_list` (`id`, `user_id`, `order_id`, `order_amount`, `coupon_id`, `receiver`, `phone`, `address`, `already_pay`, `create_time`) VALUES
-(1, 2, '7a80d1b3-4892-46f6-bfb9-ceaf0e6621c4', 104400, 1, 'test', '0987654321', '台北市大同區民生西路343號345號', 1, '2024-11-13 12:44:58'),
-(3, 2, '595c1954-5e4b-4643-9e42-d2e7a74e16bb', 105900, 0, 'test', '0987654321', '台灣台北市中正區八德路１段1號', 0, '2024-11-13 13:39:20'),
-(4, 2, '20002a31-1aba-45fb-b615-a8050eefe590', 105900, 0, 'test', '0987654321', '台灣台北市中正區八德路１段1號', 0, '2024-11-13 13:40:59');
+(1, 2, '493149fc-c865-46a2-ae8b-27c33a1e84b1', 23900, 0, 'test', '0987654321', '台灣台北市中正區八德路１段1號', 1, '2024-11-14 10:03:09'),
+(2, 2, '8e1adadf-5f4b-4f29-bc84-b756cfcb208b', 24400, 1, 'test', '0987654321', '台灣台北市中正區八德路１段1號', 1, '2024-11-14 10:29:40'),
+(3, 2, 'bc1bf194-54cc-4887-ac7c-82bb6c82f5a4', 24400, 1, 'test', '0987654321', '台灣台北市中正區八德路１段1號', 1, '2024-11-14 14:36:10');
 
 --
 -- 已傾印資料表的索引
@@ -67,7 +67,7 @@ ALTER TABLE `order_list`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `order_list`
 --
 ALTER TABLE `order_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

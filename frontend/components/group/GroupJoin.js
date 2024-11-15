@@ -1,50 +1,104 @@
-import React, { useState } from 'react';
-import styles from './GroupJoin.module.css';
-import { X, User, MessageSquare } from 'lucide-react';
-// 要記得安裝 lucide-react
+import React, { useState, useEffect } from 'react'
+import styles from './GroupJoin.module.css'
+import { X, User, MessageSquare } from 'lucide-react'
+import { useAuth } from '@/hooks/use-auth'
+import websocketService from '../../services/websocketService'
 
 const GroupJoin = ({ onClose, groupData }) => {
+  const { auth } = useAuth()
   const [formData, setFormData] = useState({
     gameId: '',
-    description: ''
-  });
+    description: '',
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (auth.isAuth) {
+      websocketService.connect(auth.user_id)
+    }
+  }, [auth.isAuth])
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+      [e.target.name]: e.target.value,
+    })
+    setError('')
+  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log({
-      groupId: groupData.id,
-      ...formData
-    });
-    onClose();
-  };
-
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!auth.isAuth) {
+      setError('請先登入')
+      return
     }
-  };
+
+    setIsSubmitting(true)
+    setError('')
+
+    try {
+      // 使用 credentials: 'include' 來傳遞 cookies
+      const response = await fetch('http://localhost:3005/api/group/requests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // 添加此行
+        body: JSON.stringify({
+          groupId: groupData.group_id,
+          gameId: formData.gameId,
+          description: formData.description,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || '申請發送失敗')
+      }
+
+      // WebSocket 訊息發送
+      websocketService.send({
+        type: 'groupRequest',
+        fromID: auth.user_id,
+        groupId: groupData.group_id,
+        gameId: formData.gameId,
+        description: formData.description,
+      })
+
+      onClose()
+      alert('申請已成功送出！')
+    } catch (err) {
+      console.error('Error:', err)
+      setError(err.message || '申請發送失敗，請稍後再試')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
-    <div className={styles.modalBackdrop} onClick={handleBackdropClick}>
+    <div
+      className={styles.modalBackdrop}
+      role="button"
+      tabIndex={0}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClose()}
+    >
       <div className={styles.customModal}>
-        <button 
+        <button
           className={styles.closeButton}
           onClick={onClose}
           aria-label="關閉視窗"
         >
           <X size={24} />
         </button>
-        
+
         <div className={styles.modalContent}>
           <h2 className={styles.modalTitle}>申請加入揪團</h2>
-          <h3 className={styles.eventTitle}>{groupData.title}</h3>
+          <h3 className={styles.eventTitle}>{groupData.group_name}</h3>
+
+          {error && <div className={styles.error}>{error}</div>}
 
           <form onSubmit={handleSubmit} className={styles.formSection}>
             <div className={styles.inputGroup}>
@@ -58,6 +112,7 @@ const GroupJoin = ({ onClose, groupData }) => {
                   placeholder="遊戲ID"
                   className={styles.input}
                   required
+                  disabled={isSubmitting}
                 />
               </label>
             </div>
@@ -73,18 +128,23 @@ const GroupJoin = ({ onClose, groupData }) => {
                   className={styles.textarea}
                   rows={4}
                   required
+                  disabled={isSubmitting}
                 />
               </label>
             </div>
 
-            <button type="submit" className={styles.submitButton}>
-              送出申請
+            <button
+              type="submit"
+              className={styles.submitButton}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? '處理中...' : '送出申請'}
             </button>
           </form>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default GroupJoin;
+export default GroupJoin

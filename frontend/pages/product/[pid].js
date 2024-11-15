@@ -1,6 +1,5 @@
 import React from 'react'
 import styles from '@/styles/product-lease.module.scss'
-import BackToTop from '@/components/BackToTop/BackToTop'
 import Header from '@/components/layout/default-layout/header'
 import Footer from '@/components/layout/default-layout/my-footer'
 import NextBreadCrumbLight from '@/components/common/next-breadcrumb-light'
@@ -10,6 +9,7 @@ import { useEffect, useState } from 'react'
 import ProductCard from '@/components/product/product-card'
 import { useAuth } from '@/hooks/use-auth'
 import { forEach } from 'lodash'
+import BackToTop2 from '@/components/BackToTop/BackToTop2'
 export default function Detail() {
   // 從網址列的參數取得商品ID，並透過ID取得商品資料
   const router = useRouter()
@@ -395,7 +395,7 @@ export default function Detail() {
                 <div className={styles.project}>
                   <div className={styles.project2}>
                     <span className={styles.price}>
-                      {isLoading ? 'Loading...' : data?.list_price}
+                      {isLoading ? 'Loading...' : `NT ${new Intl.NumberFormat('zh-TW').format(data.list_price)}元`}
                     </span>
                   </div>
                 </div>
@@ -538,7 +538,7 @@ export default function Detail() {
               ))}
             </div>
           </section>
-          {/* <BackToTop /> */}
+          <BackToTop2 />
         </div>
         {/* 顯示所有的訊息 */}
         <div className="alert-container">
