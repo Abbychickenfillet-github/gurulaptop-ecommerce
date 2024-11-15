@@ -193,6 +193,11 @@ export default function LogIn(props) {
                       <div className="error">{errors.message}</div>
                     )}
                   </div>
+                  <div className="d-flex justify-content-center">
+                  <Link href="./member/forget-password">
+                  忘記密碼</Link>
+                  </div>
+
                   <button
                     onClick={() => {
                       login
