@@ -45,17 +45,22 @@
 .glow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, 
-    rgba(255,255,255,0.1) 0%,
-    rgba(0,0,0,0) 70%);
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(0, 0, 0, 0) 70%
+  );
   animation: pulse 4s ease-in-out infinite;
 }
 
 .particles {
   position: absolute;
   inset: 0;
-  background-image: 
-    radial-gradient(circle at 20% 30%, #fff 1px, transparent 1px),
+  background-image: radial-gradient(
+      circle at 20% 30%,
+      #fff 1px,
+      transparent 1px
+    ),
     radial-gradient(circle at 80% 40%, #fff 1px, transparent 1px),
     radial-gradient(circle at 40% 70%, #fff 1px, transparent 1px),
     radial-gradient(circle at 60% 20%, #fff 1px, transparent 1px);
@@ -74,7 +79,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.3;
   }
   50% {
@@ -118,7 +124,8 @@
   bottom: 70px;
   right: 0;
   z-index: 2;
-  animation: slideInRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards 0.3s;
+  animation: slideInRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards
+    0.3s;
   opacity: 0;
 }
 
@@ -134,7 +141,8 @@
   bottom: 0;
   right: 0;
   z-index: 2;
-  animation: slideInRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards 0.3s;
+  animation: slideInRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards
+    0.3s;
   opacity: 0;
 }
 
@@ -146,7 +154,6 @@
   font-weight: 100;
   letter-spacing: 12px;
 }
-
 
 @keyframes slideInLeft {
   from {
@@ -169,7 +176,6 @@
     opacity: 1;
   }
 }
-
 
 @media screen and (max-width: 992px) {
   .home-welcome,
@@ -299,7 +305,7 @@
   gap: 10px;
   flex-shrink: 0;
   position: relative;
-  overflow: hidden; 
+  overflow: hidden;
   border-radius: 10px;
 }
 
@@ -314,7 +320,7 @@
 .home-one:hover img {
   transform: scale(1.1);
   filter: brightness(1.1) contrast(1.1);
- }
+}
 
 .home-two,
 .home-three,
@@ -383,7 +389,8 @@
       rgba(154, 122, 204, 0.9) 0%,
       rgba(154, 122, 204, 0.9) 100%
     ),
-    url(/images/index/laptop-banner.jpg) lightgray -684.93px 0px / 1495.391% 100% no-repeat;
+    url(/images/index/laptop-banner.jpg) lightgray -684.93px 0px / 1495.391% 100%
+      no-repeat;
 }
 
 .home-three {
@@ -392,8 +399,8 @@
       rgba(110, 50, 203, 0.9) 0%,
       rgba(110, 50, 203, 0.9) 100%
     ),
-    url(/images/index/laptop-banner.jpg) lightgray -1191.113px -65.651px / 1495.391%
-      100% no-repeat;
+    url(/images/index/laptop-banner.jpg) lightgray -1191.113px -65.651px /
+      1495.391% 100% no-repeat;
 }
 
 .home-four {
@@ -402,7 +409,8 @@
       rgba(101, 32, 239, 0.9) 0%,
       rgba(101, 32, 239, 0.9) 100%
     ),
-    url(/images/index/laptop-banner.jpg) lightgray -684.93px 0px / 1495.391% 100% no-repeat;
+    url(/images/index/laptop-banner.jpg) lightgray -684.93px 0px / 1495.391% 100%
+      no-repeat;
 }
 
 /* RWD 設置 */
@@ -670,6 +678,19 @@
   flex-direction: column;
   align-items: flex-start;
 }
+.title-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-start;
+}
+.home-title-diamond {
+  width: 15px;
+  height: 15px;
+  transform: rotate(45deg);
+  border: 2px solid #805af5;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
 
 .home-title {
   display: flex;
@@ -794,8 +815,8 @@
 
 /* Hover 效果 */
 .home-pic div:hover::before {
-  opacity: 1;
-  transform: translateY(0);
+  // opacity: 1;
+  // transform: translateY(0);
 }
 
 .home-pic div:hover .home-content {
@@ -808,19 +829,108 @@
   transform: translateY(0);
 }
 
+// 新品 這裡
+.home-pic {
+  width: 100%;
+  height: 480px;
+  margin: 20px 0;
+}
+
+.home-pic-box {
+  position: relative;
+  height: 480px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.slide-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.3s ease;
+}
+
+.home-pic-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.7),
+    rgba(128, 90, 245, 0.7)
+  );
+  opacity: 0;
+  transition: all 0.3s ease;
+  transform: translateY(100%);
+  z-index: 1;
+}
+
+.home-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  transform: translate(-50%, -30%);
+  color: white;
+  text-align: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+/* Hover Effects */
+.home-pic-box:hover::before {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.home-pic-box:hover .home-content {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.home-pic-box:hover .slide-background {
+  transform: scale(1.1);
+}
+
+.swiper-slide {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+// 到這裡
+
 @media screen and (min-width: 1200px) {
-  .home-pic div {
+  .home-pic-box {
     min-width: 450px;
+    height: 480px;
   }
 }
 
 @media screen and (max-width: 1199px) {
   .home-pic {
-    grid-template-columns: repeat(3, 1fr);
+    height: 400px;
   }
 
-  .home-pic div {
+  .swiper-slide {
     height: 400px;
+  }
+
+  .home-pic-box {
+    height: 400px;
+  }
+
+  .swiper {
+    slidesperview: 2;
   }
 }
 
@@ -830,11 +940,15 @@
   }
 
   .home-pic {
-    grid-template-columns: repeat(2, 1fr);
+    height: 350px;
   }
 
-  .home-pic div {
+  .home-pic-box {
     height: 350px;
+  }
+
+  .swiper {
+    slidesperview: 2;
   }
 
   .home-title {
@@ -843,22 +957,20 @@
 }
 
 @media screen and (max-width: 767px) {
-  .home-container-body {
-    padding: 0 15px;
-  }
-
   .home-section3 {
     padding: 30px 0;
   }
 
   .home-pic {
-    grid-template-columns: 1fr;
-    gap: 15px;
+    height: 300px;
   }
 
-  .home-pic div {
-    min-width: 100%;
+  .home-pic-box {
     height: 300px;
+  }
+
+  .swiper {
+    slidesperview: 1;
   }
 
   .home-title {
@@ -876,7 +988,11 @@
     padding: 20px 0;
   }
 
-  .home-pic div {
+  .home-pic {
+    height: 250px;
+  }
+
+  .home-pic-box {
     height: 250px;
   }
 
@@ -890,15 +1006,15 @@
   display: flex;
   padding: 68px 20px;
   flex-direction: column;
-  align-items: center; /* 改為center，原本是flex-start */
+  align-items: center;
   gap: 10px;
-  width: 100%; /* 添加width:100% */
+  width: 100%;
 }
 
 .home-pic-body2 {
-  display: flex;
+  // display: flex;
   flex-direction: column;
-  align-items: center; /* 改為center，原本是flex-start */
+  align-items: center;
   gap: 32px;
   max-width: 1440px;
   width: 100%;
@@ -974,7 +1090,7 @@
   border-bottom: 10px solid transparent;
   border-right: 15px solid #805af5;
   margin-right: 5px;
-  transition: all 0.3s ease; 
+  transition: all 0.3s ease;
 }
 
 /* 右三角形 */
@@ -998,6 +1114,91 @@
   border-left-color: #6337e4; /* 深紫色 */
   transform: translateX(2px); /* 向右移動 */
 }
+// 熱門產品
+.home-section4 {
+  display: flex;
+  padding: 68px 20px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.home-slider-container {
+  width: 100%;
+  position: relative;
+}
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-laptop-item img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.home-nav-arrows {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.home-arrow-left,
+.home-arrow-right {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  pointer-events: auto;
+}
+
+.home-laptop-item {
+  position: relative;
+}
+
+.product-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+.product-title h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.home-laptop-item {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.home-laptop-item img {
+  transition: transform 0.3s ease;
+}
+.home-laptop-item:hover img {
+  transform: scale(1.1);
+}
+// 到這裡
 
 /* RWD 適配 */
 @media screen and (max-width: 768px) {
@@ -1196,6 +1397,12 @@
 }
 
 /* 品牌文章 */
+.home-article-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  width: 100%;
+}
 .home-section5 {
   display: flex;
   flex-direction: column;
@@ -1230,10 +1437,11 @@
   backdrop-filter: blur(5px);
   transition: all 0.3s ease;
   position: absolute;
-  bottom: 35%;
+  bottom: 5%;
   left: 50%;
   transform: translateX(-50%);
   cursor: pointer;
+  z-index: 10;
 }
 
 .home-article-btn:hover {
@@ -1251,6 +1459,7 @@
   width: 100%;
   align-items: center;
   flex-direction: row;
+  cursor: pointer;
 }
 
 .home-article-img {
@@ -1308,7 +1517,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  
+
   background: radial-gradient(
     circle at center,
     rgba(183, 0, 255, 0.1) 0%,
@@ -1352,13 +1561,14 @@
 
 .home-article:hover .home-article-content::after {
   border-color: rgba(255, 255, 255, 0.1);
-box-shadow: 0px 4px 75px 0px #805AF5 inset;}
+  box-shadow: 0px 4px 75px 0px #805af5 inset;
+}
 
 // 這裡
 // .home-article-container {
 //   position: relative;
-//   height: 400px; 
-//   overflow: hidden; 
+//   height: 400px;
+//   overflow: hidden;
 // }
 
 // .home-articles-wrapper {
@@ -1367,26 +1577,9 @@ box-shadow: 0px 4px 75px 0px #805AF5 inset;}
 // }
 
 // .home-article {
-//   height: 400px; 
-//   margin-bottom: 0; 
+//   height: 400px;
+//   margin-bottom: 0;
 // }
-
-.home-article-btn {
-  width: 60px;
-  height: 60px;
-  border: none;
-  border-radius: 100px;
-  background: rgba(255, 255, 255, 0.6);
-  box-shadow: 0px 0px 20px 2px #8c6fe5;
-  backdrop-filter: blur(5px);
-  transition: all 0.3s ease;
-  position: absolute;
-  bottom: 35%;
-  left: 50%;
-  transform: translateX(-50%);
-  cursor: pointer;
-  z-index: 10;
-}
 
 /* 按鈕動畫效果 */
 .home-article-btn:hover {
@@ -1418,7 +1611,6 @@ box-shadow: 0px 4px 75px 0px #805AF5 inset;}
   display: flex;
   width: 100%;
   height: auto;
-  margin-bottom: 20px; /* 文章之間的間距 */
 }
 
 .home-article-body {
@@ -1476,7 +1668,7 @@ box-shadow: 0px 4px 75px 0px #805AF5 inset;}
 
 @media screen and (max-width: 768px) {
   .home-section5 {
-    padding: 30px 0%;
+    padding: 30px 1%;
     width: 90%;
   }
 
@@ -1546,13 +1738,14 @@ box-shadow: 0px 4px 75px 0px #805AF5 inset;}
   max-width: 1920px;
   margin: 0 auto;
   flex-direction: column;
-  align-items: center;
+  // align-items: center;
   max-width: 1440px;
   width: 100%;
   justify-content: center;
   margin: 0 auto;
   padding: 0 20px;
   position: relative;
+  padding-top: 40px;
 }
 
 .home-activity-container {
@@ -1573,6 +1766,7 @@ box-shadow: 0px 4px 75px 0px #805AF5 inset;}
   flex-direction: column;
   border-radius: 8px;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .home-activity-card-3 {
@@ -1592,13 +1786,13 @@ box-shadow: 0px 4px 75px 0px #805AF5 inset;}
   min-height: 300px;
 }
 
-.home-activity-frame-left{
+.home-activity-frame-left {
   background-image: url(/images/index/banner_10.jpg);
   background-size: cover;
   background-position: center;
 }
 
-.home-activity-frame-right{
+.home-activity-frame-right {
   background-image: url(/images/index/banner_14.jpg);
   background-size: cover;
   background-position: center;
@@ -1655,17 +1849,21 @@ box-shadow: 0px 4px 75px 0px #805AF5 inset;}
   background-color: #000000;
   border-radius: 8px;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .home-activity-btn {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border: none;
   border-radius: 100px;
   background: rgba(255, 255, 255, 0.6);
   box-shadow: 0px 0px 20px 2px #8c6fe5;
   backdrop-filter: blur(5px);
   transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .home-activity-btn img {
@@ -1700,12 +1898,12 @@ box-shadow: 0px 4px 75px 0px #805AF5 inset;}
   overflow: hidden;
 }
 
-.home-activity-card3-left{
+.home-activity-card3-left {
   background-image: url(/images/index/banner_12.jpg);
   background-size: 100% 100%;
 }
 
-.home-activity-card3-right{
+.home-activity-card3-right {
   background-image: url(/images/index/banner_15.jpg);
   background-size: 100% 100%;
 }
@@ -1733,7 +1931,11 @@ box-shadow: 0px 4px 75px 0px #805AF5 inset;}
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--Linear-6, linear-gradient(270deg, #8678C9 0%, #00013A 49%, #00013A 100%));  opacity: 0;
+  background: var(
+    --Linear-6,
+    linear-gradient(270deg, #8678c9 0%, #00013a 49%, #00013a 100%)
+  );
+  opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 0;
 }
@@ -1790,11 +1992,6 @@ box-shadow: 0px 4px 75px 0px #805AF5 inset;}
   justify-content: flex-end;
 }
 
-.home-activity-btn {
-  width: 50px;
-  height: 50px;
-}
-
 // .home-back-to-top {
 //   position: fixed;
 //   bottom: 30px;
@@ -1825,11 +2022,6 @@ box-shadow: 0px 4px 75px 0px #805AF5 inset;}
 .card-content3 {
   padding: 15px;
   gap: 60px;
-}
-
-.home-activity-btn {
-  width: 50px;
-  height: 50px;
 }
 
 .home-activity-card-1,
@@ -1917,7 +2109,7 @@ box-shadow: 0px 4px 75px 0px #805AF5 inset;}
 
 .home-activity-btn {
   position: relative;
-  z-index: 3; 
+  z-index: 3;
   transition: all 0.3s ease;
 }
 

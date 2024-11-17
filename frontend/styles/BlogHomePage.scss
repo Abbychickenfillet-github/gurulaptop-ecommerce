@@ -1,11 +1,15 @@
-.ArticleSectionContainer {
-  // background-color: rgb(230, 52, 52);
-  background-image: url('../public/images/blog/razer-viper-v3-pro-sentinels-homepage-desktop2x.jpg');
+.BlogSectionContainer {
+  background-image: url('../public/images/blog/artical2.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 28rem;
+  background-size: cover;
+  width: 100%;
+  padding-top: 4%;
+  padding-bottom: 4%;
+  // height: 999rem !important;
 }
+
 /*  --------------------------ArticleSection -------------------------- */
 .BlogHomePageSectionContainer {
   background-color: rgb(0, 0, 0);
@@ -38,7 +42,8 @@
 }
 
 .BlogMain {
-  // margin-bottom: 14.75rem;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .BlogSearchInputStyle {
@@ -84,7 +89,7 @@
 .ArticleBrandSearch {
   /* width: 90rem; */
   padding-top: 6rem;
-  padding-bottom: 10rem;
+  padding-bottom: 3rem;
 }
 
 // .ArticleSmallTitle {
@@ -238,6 +243,9 @@
   width: 35rem;
   border-radius: 1rem 0 1rem 0;
 }
+.BlogCard:hover {
+  animation: pulse 1s;
+}
 .BlogCardImg {
   border-radius: 1rem 0 1rem 0;
   background-color: #fff;
@@ -287,7 +295,18 @@
     #271948 100%
   );
 }
-
+.ArticleSectionTitle {
+  color: #fff;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-family: Khula;
+  font-size: 7rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 48.75px;
+  margin-top: 4rem;
+  margin-bottom: 5rem;
+}
 /* ------------------------------------------------Blog 小卡------------------------------------------------ */
 
 /* BlogHomePageSmallerCard */
@@ -416,6 +435,12 @@
 
 .BlogIndexCreatedButton:hover {
   background: linear-gradient(180deg, #a793e9 0%, #423db0 50%, #2e256a 100%);
+}
+
+.ArticleSectionIntroduction {
+  letter-spacing: 2rem;
+  width: 100%;
+  font-size: 2.5rem;
 }
 
 @media (max-width: 430px) {

@@ -1,30 +1,14 @@
-.BlogEditAlignAllItems {
-  width: 50%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 6rem;
-}
+// .BlogEditAlignAllItems {
+//   width: 50%;
+//   height: auto;
+//   display: flex;
+//   flex-direction: column;
+//   gap: 6rem;
+// }
 .BlogEditSmallTitle {
   width: 15rem;
   font-size: 2rem;
   color: #805af5;
-}
-
-.BlogEditBrandSelected:hover {
-  background: linear-gradient(180deg, #a793e9 0%, #423db0 50%, #2e256a 100%);
-}
-
-.BlogEditBrandSelected.focus {
-  background: linear-gradient(180deg, #a793e9 0%, #423db0 50%, #2e256a 100%);
-}
-
-.BlogEditBrandSelectedActive {
-  background: linear-gradient(180deg, #a793e9 0%, #423db0 50%, #2e256a 100%);
-}
-
-.BlogEditTypeSelectedActive {
-  background: linear-gradient(180deg, #a793e9 0%, #423db0 50%, #2e256a 100%);
 }
 
 .TitleDiamond {
@@ -45,36 +29,8 @@
 .fa-arrow-up-from-bracket {
   font-size: 8rem;
 }
-.BlogEditBrandSelected {
-  width: 16.625rem;
-  height: 3.75rem;
-  background-color: #805af5;
-  border-radius: 20px 0px;
-  font-size: 2rem;
-  font-weight: 400;
-  color: #fff;
-}
 .BlogEditTypeSelected {
   width: 34.375rem;
-  height: 3.75rem;
-  background-color: #805af5;
-  border-radius: 20px 0px;
-  font-size: 2rem;
-  font-weight: 400;
-  color: #fff;
-}
-.BlogEditButtonSubmit {
-  width: 16.625rem;
-  height: 3.75rem;
-  background-color: transparent;
-  border: 0.5px solid #805af5;
-  border-radius: 20px 0px;
-  font-size: 2rem;
-  font-weight: 400;
-  color: #805af5;
-}
-.BlogEditButtonDelete {
-  width: 16.625rem;
   height: 3.75rem;
   background-color: #805af5;
   border-radius: 20px 0px;

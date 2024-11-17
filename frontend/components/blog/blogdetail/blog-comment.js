@@ -91,7 +91,10 @@ export default function BlogComment({ blog_id }) {
   return (
     <>
       {blogComment.map((comment, index) => (
-        <div key={comment.blog_comment_id} className="mb-5 BlogDetailComment">
+        <div
+          key={comment.blog_comment_id}
+          className="mb-5 BlogDetailComment container"
+        >
           <div className="m-4">
             <p>#{index + 1}</p>
             <hr />
@@ -115,7 +118,7 @@ export default function BlogComment({ blog_id }) {
       ))}
 
       {isAuth && userData && (
-        <div className="mb-5 BlogDetailComment">
+        <div className="mb-5 BlogDetailComment container">
           <div className="m-5">
             <p className="fs-5">新增你的留言，留下你的寶貴意見！</p>
             <hr />

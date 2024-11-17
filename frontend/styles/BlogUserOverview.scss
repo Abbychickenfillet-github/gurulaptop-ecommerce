@@ -5,6 +5,9 @@
   border-radius: 1rem 0 1rem 0;
   cursor: pointer;
 }
+.BlogUserOverviewCard:hover {
+  animation: fadeIn 0.5s;
+}
 
 .BlogUserOverviewCard:hover {
   background: linear-gradient(

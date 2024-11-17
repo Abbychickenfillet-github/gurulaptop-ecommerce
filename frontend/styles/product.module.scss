@@ -249,7 +249,7 @@
 
 /* 當 checkbox 被選取時顯示選單 */
 .menu_toggle:checked + .menu_toggle_wrapper + .menu_content {
-  max-height: 400px; /* 設定展開的最大高度 */
+  max-height: 600px; /* 設定展開的最大高度 */
 }
 
 .menu_content a {

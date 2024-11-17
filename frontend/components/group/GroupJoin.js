@@ -38,16 +38,15 @@ const GroupJoin = ({ onClose, groupData }) => {
     setError('')
 
     try {
-      // 使用 credentials: 'include' 來傳遞 cookies
       const response = await fetch('http://localhost:3005/api/group/requests', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // 添加此行
+        credentials: 'include',
         body: JSON.stringify({
           groupId: groupData.group_id,
-          gameId: formData.gameId,
+          gameId: formData.gameId, // 這將被用於系統訊息
           description: formData.description,
         }),
       })
@@ -58,12 +57,11 @@ const GroupJoin = ({ onClose, groupData }) => {
         throw new Error(data.message || '申請發送失敗')
       }
 
-      // WebSocket 訊息發送
       websocketService.send({
         type: 'groupRequest',
         fromID: auth.user_id,
         groupId: groupData.group_id,
-        gameId: formData.gameId,
+        gameId: formData.gameId, // 確保傳送 gameId
         description: formData.description,
       })
 

@@ -31,6 +31,30 @@ const upload = multer({
 //   res.send('Test endpoint is working') // 回應 Postman 字串
 // })
 
+router.get('/', async (req, res) => {
+  const { page = 1, limit = 2 } = req.query
+  const offset = (page - 1) * limit
+
+  try {
+    const [[{ total }]] = await db.query(
+      'SELECT COUNT(*) as total FROM blogoverview WHERE blog_valid_value = 1'
+    )
+
+    const [blogs] = await db.query(
+      `SELECT * FROM blogoverview 
+       WHERE blog_valid_value = 1
+       ORDER BY blog_created_date DESC 
+       LIMIT ? OFFSET ?`,
+      [Number(limit), offset]
+    )
+
+    res.json({ blogs, total })
+  } catch (error) {
+    console.error('Latest blogs error:', error)
+    res.status(500).json({ message: '伺服器錯誤' })
+  }
+})
+
 router.get('/blogcardgroup', async (req, res) => {
   const { page = 1, limit = 6 } = req.query
   const offset = (page - 1) * limit
@@ -280,25 +304,6 @@ router.put('/blog-delete/:blog_id', async (req, res) => {
     res.status(500).json({ error: '刪除失敗' })
   }
 })
-
-//重複的
-// router.get('/blog_detail/:blog_id', async (req, res) => {
-//   try {
-//     const [blogDetail] = await db.query(
-//       'SELECT * FROM blogoverview WHERE blog_id = ?',
-//       [req.params.blog_id]
-//     )
-
-//     if (!blogDetail) {
-//       return res.status(404).json({ message: '找不到該文章' })
-//     }
-
-//     res.json(blogDetail)
-//   } catch (error) {
-//     console.error('部落格查詢錯誤:', error)
-//     res.status(500).json({ message: '伺服器錯誤' })
-//   }
-// })
 
 router.get('/blog_user_overview/:user_id', async (req, res) => {
   try {

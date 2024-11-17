@@ -39,8 +39,27 @@ export default function BlogUserOverview({ specificUserId = null }) {
       </div>
     )
   }
+  console.log(blogData)
 
-  return (
+  let hasData = false
+
+  if (
+    blogData &&
+    blogData?.length > 0 &&
+    blogData[0]?.message !== '找不到該文章'
+  ) {
+    hasData = true
+  }
+
+  return !hasData ? (
+    <div className="container text-center mt-5">
+      <p className="fs-4">沒有部落格，新增一下！</p>
+      <Link href="/blog/blog-created">
+        <button className="BlogEditButtonSubmit mt-3">立即新增部落格</button>
+      </Link>
+    </div>
+  ) : (
+    // 如果有資料，顯示部落格列表
     <div className="container d-flex flex-column gap-5">
       {blogData.map((blog) => (
         <Link

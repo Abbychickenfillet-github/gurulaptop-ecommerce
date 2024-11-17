@@ -1,92 +1,110 @@
 import WebSocket from 'ws'
+import db from '../configs/mysql.js'
+import ChatRoom from '../models/ChatRoom.js'
 
 class WebSocketService {
   constructor() {
-    this.ws = null
-    this.listeners = {}
+    this.socket = null
+    this.isConnected = false
+    this.messageQueue = []
     this.reconnectAttempts = 0
     this.maxReconnectAttempts = 5
-    this.isConnecting = false
+    this.listeners = new Map()
   }
 
   connect(userId) {
-    if (this.isConnecting) return
-    this.isConnecting = true
+    if (this.socket?.readyState === WebSocket.OPEN) {
+      return
+    }
 
-    try {
-      console.log('Connecting to WebSocket server...')
-      this.ws = new WebSocket('ws://localhost:3005')
+    this.socket = new WebSocket('ws://localhost:3005')
 
-      this.ws.onopen = () => {
-        console.log('WebSocket connected successfully')
-        this.isConnecting = false
-        this.reconnectAttempts = 0
+    this.socket.onopen = () => {
+      console.log('WebSocket connected')
+      this.isConnected = true
+      this.reconnectAttempts = 0
 
-        // 建立連接後立即發送註冊訊息
-        this.send({
-          type: 'register',
-          userID: userId,
-        })
+      // 連接成功後註冊用戶
+      this.send({
+        type: 'register',
+        userID: userId,
+      })
+
+      // 發送佇列中的訊息
+      while (this.messageQueue.length > 0) {
+        const message = this.messageQueue.shift()
+        this.send(message)
       }
+    }
 
-      this.ws.onclose = () => {
-        console.log('WebSocket connection closed')
-        this.isConnecting = false
-        this.ws = null
+    this.socket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data)
+        console.log('Received message:', data)
 
-        if (this.reconnectAttempts < this.maxReconnectAttempts) {
-          setTimeout(() => {
-            this.reconnectAttempts++
-            this.connect(userId)
-          }, 3000)
-        }
+        // 通知所有監聽器
+        const listeners = this.listeners.get(data.type) || []
+        listeners.forEach((callback) => callback(data))
+      } catch (error) {
+        console.error('Error processing message:', error)
       }
+    }
 
-      this.ws.onerror = (error) => {
-        console.error('WebSocket error:', error)
-        this.isConnecting = false
+    this.socket.onclose = () => {
+      console.log('WebSocket disconnected')
+      this.isConnected = false
+
+      // 嘗試重新連接
+      if (this.reconnectAttempts < this.maxReconnectAttempts) {
+        this.reconnectAttempts++
+        setTimeout(() => this.connect(userId), 1000 * this.reconnectAttempts)
       }
+    }
 
-      this.ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data)
-          console.log('Received WebSocket message:', data)
-
-          // 觸發對應的事件監聽器
-          if (this.listeners[data.type]) {
-            this.listeners[data.type](data)
-          }
-        } catch (error) {
-          console.error('WebSocket message parsing error:', error)
-        }
-      }
-    } catch (error) {
-      console.error('WebSocket connection error:', error)
-      this.isConnecting = false
+    this.socket.onerror = (error) => {
+      console.error('WebSocket error:', error)
     }
   }
-
   send(message) {
-    if (this.ws?.readyState === WebSocket.OPEN) {
-      console.log('Sending message:', message)
-      this.ws.send(JSON.stringify(message))
-    } else {
-      console.error('WebSocket is not connected')
+    if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+      console.log('WebSocket not connected, queueing message')
+      this.messageQueue.push(message)
+      // 如果斷線，嘗試重新連接
+      if (this.reconnectAttempts < this.maxReconnectAttempts) {
+        this.connect(message.fromID || message.userID)
+      }
+      return
+    }
+
+    try {
+      this.socket.send(JSON.stringify(message))
+    } catch (error) {
+      console.error('Error sending message:', error)
+      this.messageQueue.push(message)
     }
   }
 
   on(type, callback) {
-    this.listeners[type] = callback
+    if (!this.listeners.has(type)) {
+      this.listeners.set(type, [])
+    }
+    this.listeners.get(type).push(callback)
   }
 
-  off(type) {
-    delete this.listeners[type]
+  off(type, callback) {
+    if (!this.listeners.has(type)) return
+    const listeners = this.listeners.get(type)
+    const index = listeners.indexOf(callback)
+    if (index > -1) {
+      listeners.splice(index, 1)
+    }
   }
 
   disconnect() {
-    if (this.ws) {
-      this.ws.close()
-      this.ws = null
+    if (this.socket) {
+      this.socket.close()
+      this.socket = null
+      this.isConnected = false
     }
   }
 }
