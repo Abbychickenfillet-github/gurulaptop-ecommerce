@@ -4,6 +4,8 @@ import MyFooter from '@/components/layout/default-layout/my-footer'
 import HomeSection from './HomeSection'
 import Section4 from './Section4'
 import BackToTop from '../BackToTop/BackToTop'
+import NewProducts from './NewProducts'
+import HotProducts from './HotProducts'
 import ArticleSlider from './ArticleSlider'
 
 export default function FrontPage(props) {
@@ -307,9 +309,12 @@ export default function FrontPage(props) {
         </div>
 
         <div className="home-container-body">
-          <section className="home-section3">
+          {/* <section className="home-section3">
             <div className="home-pic-body">
-              <title className="home-title">◇新品介紹</title>
+              <div className="title-body">
+                <div className="home-title-diamond">◇</div>
+                <title className="home-title">新品介紹</title>
+              </div>
               <div className="home-pic">
                 <div className="home-pic-box1">
                   <div className="home-content">
@@ -337,9 +342,10 @@ export default function FrontPage(props) {
                 </div>
               </div>
             </div>
-          </section>
+          </section> */}
+          <NewProducts />
 
-          <section className="home-section4">
+          {/* <section className="home-section4">
             <div className="home-pic-body2">
               <title className="home-title">◇熱門商品</title>
               <div className="home-card1">
@@ -375,10 +381,11 @@ export default function FrontPage(props) {
                 </p>
               </div>
             </div>
-          </section>
+          </section> */}
+          <HotProducts />
 
-          {/* 這裡 */}
-          <section className="home-section5">
+          {/* 文章這裡 */}
+          {/* <section className="home-section5">
             <title className="home-title">◇品牌文章</title>
             <div className="home-article-container">
               <article className="home-article">
@@ -434,13 +441,16 @@ export default function FrontPage(props) {
                 </div>
               </article>
             </div>
-          </section>
+          </section> */}
           {/* 到這裡 */}
           <ArticleSlider />
         </div>
 
         <div className="home-activity-section6">
-          <title className="home-title">◇活動資訊</title>
+          <div className="title-body">
+            <div className="home-title-diamond">◇</div>
+            <title className="home-title">活動資訊</title>
+          </div>
           <div className="home-activity-div">
             <div className="home-activity-container">
               <div className="home-activity-card-1">
@@ -450,9 +460,12 @@ export default function FrontPage(props) {
                     <p>活動數據以及描述內容...</p>
                   </div>
                   <div className="home-activity-card-footer1">
-                    <button className="home-activity-btn">
+                    <a
+                      href="https://www.bilibili.com/video/BV1Vq4GenE2j/?spm_id_from=333.337.search-card.all.click&vd_source=1b25005216ba454333811619f6788cea"
+                      className="home-activity-btn"
+                    >
                       <img src="/images/index/arrow.svg" alt />
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -463,9 +476,12 @@ export default function FrontPage(props) {
                     <p>活動數據以及描述內容...</p>
                   </div>
                   <div className="home-activity-card-footer1">
-                    <button className="home-activity-btn">
+                    <a
+                      href="https://www.bilibili.com/video/BV1Vq4GenE2j/?spm_id_from=333.337.search-card.all.click&vd_source=1b25005216ba454333811619f6788cea"
+                      className="home-activity-btn"
+                    >
                       <img src="/images/index/arrow.svg" alt />
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -477,9 +493,12 @@ export default function FrontPage(props) {
                     <p>活動數據以及描述內容...</p>
                   </div>
                   <div className="home-activity-card-footer2">
-                    <button className="home-activity-btn">
+                    <a
+                      href="https://www.bilibili.com/video/BV1Vq4GenE2j/?spm_id_from=333.337.search-card.all.click&vd_source=1b25005216ba454333811619f6788cea"
+                      className="home-activity-btn"
+                    >
                       <img src="/images/index/arrow.svg" alt />
-                    </button>
+                    </a>
                   </div>
                 </div>
                 <div className="home-activity-frame home-activity-frame-bottom">
@@ -488,9 +507,12 @@ export default function FrontPage(props) {
                     <p>活動數據以及描述內容...</p>
                   </div>
                   <div className="home-activity-card-footer2">
-                    <button className="home-activity-btn">
+                    <a
+                      href="https://www.bilibili.com/video/BV1Vq4GenE2j/?spm_id_from=333.337.search-card.all.click&vd_source=1b25005216ba454333811619f6788cea"
+                      className="home-activity-btn"
+                    >
                       <img src="/images/index/arrow.svg" alt />
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -503,9 +525,12 @@ export default function FrontPage(props) {
                   <p>活動數據以及描述內容...</p>
                 </div>
                 <div className="home-activity-card-footer3">
-                  <button className="home-activity-btn">
+                  <a
+                    href="https://www.bilibili.com/video/BV1Vq4GenE2j/?spm_id_from=333.337.search-card.all.click&vd_source=1b25005216ba454333811619f6788cea"
+                    className="home-activity-btn"
+                  >
                     <img src="/images/index/arrow.svg" alt />
-                  </button>
+                  </a>
                 </div>
               </div>
               <div className="home-activity-card3 home-activity-card3-right">
@@ -514,9 +539,12 @@ export default function FrontPage(props) {
                   <p>活動數據以及描述內容...</p>
                 </div>
                 <div className="home-activity-card-footer3">
-                  <button className="home-activity-btn">
+                  <a
+                    href="https://www.bilibili.com/video/BV1Vq4GenE2j/?spm_id_from=333.337.search-card.all.click&vd_source=1b25005216ba454333811619f6788cea"
+                    className="home-activity-btn"
+                  >
                     <img src="/images/index/arrow.svg" alt />
-                  </button>
+                  </a>
                 </div>
               </div>
               <div className="home-activity-card4">
@@ -525,9 +553,12 @@ export default function FrontPage(props) {
                   <p />
                 </div>
                 <div className="home-activity-card-footer3">
-                  <button className="home-activity-btn">
+                  <a
+                    href="https://www.bilibili.com/video/BV1Vq4GenE2j/?spm_id_from=333.337.search-card.all.click&vd_source=1b25005216ba454333811619f6788cea"
+                    className="home-activity-btn"
+                  >
                     <img src="/images/index/arrow.svg" alt />
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>

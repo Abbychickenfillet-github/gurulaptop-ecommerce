@@ -3,6 +3,7 @@ import styles from '@/styles/Chat.module.css'
 import { Nav, ListGroup } from 'react-bootstrap'
 import Image from 'next/image'
 import websocketService from '@/services/websocketService'
+import { getGroupImage } from '@/utils/imageUtils'
 
 export default function UserList({
   users,
@@ -12,10 +13,11 @@ export default function UserList({
   onPrivateChat,
   onRoomSelect,
 }) {
-  const [showTab, setShowTab] = useState('private') // 預設顯示私人訊息
+  const [showTab, setShowTab] = useState('private')
   const [myPrivateChats, setMyPrivateChats] = useState([])
   const [myGroups, setMyGroups] = useState([])
   const [requests, setRequests] = useState([])
+  const [requestHistory, setRequestHistory] = useState([])
 
   useEffect(() => {
     if (currentUser) {
@@ -26,38 +28,54 @@ export default function UserList({
 
   const fetchInitialData = async () => {
     try {
-      // 獲取群組申請
-      const requestsResponse = await fetch(
-        'http://localhost:3005/api/group/requests',
+      // 獲取待處理申請
+      const pendingResponse = await fetch(
+        'http://localhost:3005/api/chat/requests/pending',
         {
           credentials: 'include',
         }
       )
-      const requestsData = await requestsResponse.json()
-      if (requestsData.status === 'success') {
-        setRequests(requestsData.data)
+      const pendingData = await pendingResponse.json()
+      if (pendingData.status === 'success') {
+        setRequests(pendingData.data)
       }
 
-      // 獲取私人聊天用戶
+      // 獲取申請歷史
+      const historyResponse = await fetch(
+        'http://localhost:3005/api/chat/requests/history',
+        {
+          credentials: 'include',
+        }
+      )
+      const historyData = await historyResponse.json()
+      if (historyData.status === 'success') {
+        setRequestHistory(historyData.data)
+      }
+
+      // 獲取私人聊天記錄
       const chatsResponse = await fetch(
         'http://localhost:3005/api/chat/messages/private',
         {
           credentials: 'include',
         }
       )
-      const chatsData = await chatsResponse.json()
-      if (chatsData.status === 'success') {
-        const chatUsers = new Set()
-        chatsData.data.forEach((msg) => {
-          if (msg.sender_id === currentUser) {
-            chatUsers.add(msg.recipient_id)
-          } else if (msg.recipient_id === currentUser) {
-            chatUsers.add(msg.sender_id)
-          }
-        })
+      if (chatsResponse.ok) {
+        const chatsData = await chatsResponse.json()
+        if (chatsData.status === 'success') {
+          const chatUsers = new Set()
+          chatsData.data.forEach((msg) => {
+            if (msg.sender_id === currentUser) {
+              chatUsers.add(msg.recipient_id)
+            } else if (msg.recipient_id === currentUser) {
+              chatUsers.add(msg.sender_id)
+            }
+          })
 
-        const activeUsers = users.filter((user) => chatUsers.has(user.user_id))
-        setMyPrivateChats(activeUsers)
+          const activeUsers = users.filter((user) =>
+            chatUsers.has(user.user_id)
+          )
+          setMyPrivateChats(activeUsers)
+        }
       }
 
       // 獲取群組
@@ -67,9 +85,11 @@ export default function UserList({
           credentials: 'include',
         }
       )
-      const groupsData = await groupsResponse.json()
-      if (groupsData.status === 'success') {
-        setMyGroups(groupsData.data)
+      if (groupsResponse.ok) {
+        const groupsData = await groupsResponse.json()
+        if (groupsData.status === 'success') {
+          setMyGroups(groupsData.data)
+        }
       }
     } catch (error) {
       console.error('獲取資料失敗:', error)
@@ -90,6 +110,11 @@ export default function UserList({
           status: 'pending',
         },
       ])
+      websocketService.on('groupMemberUpdate', (data) => {
+        console.log('群組成員更新:', data)
+        // 重新獲取群組資料
+        fetchInitialData()
+      })
     })
 
     // 監聽申請結果
@@ -105,9 +130,8 @@ export default function UserList({
 
   const handleRequest = async (requestId, status) => {
     try {
-      console.log('處理申請:', requestId, status)
       const response = await fetch(
-        `http://localhost:3005/api/group/requests/${requestId}`,
+        `http://localhost:3005/api/chat/requests/${requestId}`,
         {
           method: 'PATCH',
           headers: {
@@ -119,29 +143,30 @@ export default function UserList({
       )
 
       if (!response.ok) {
-        throw new Error('處理申請失敗')
+        const errorData = await response.json()
+        throw new Error(errorData.message || '處理申請失敗')
       }
 
       const data = await response.json()
-      console.log('申請處理結果:', data)
 
       if (data.status === 'success') {
-        // 更新本地狀態
         setRequests((prev) =>
           prev.map((req) => (req.id === requestId ? { ...req, status } : req))
         )
 
-        // 發送 WebSocket 通知
         websocketService.send({
           type: 'groupRequestResponse',
           requestId,
           status,
           fromID: currentUser,
         })
+
+        // 重新獲取申請列表
+        fetchInitialData()
       }
     } catch (error) {
       console.error('處理申請失敗:', error)
-      alert('處理申請失敗，請稍後再試')
+      alert(error.message || '處理申請失敗，請稍後再試')
     }
   }
 
@@ -176,8 +201,13 @@ export default function UserList({
           </Nav.Link>
         </Nav.Item>
       </Nav>
-
-      <div className={styles.userListContent}>
+      <div
+        className={styles.userListContent}
+        style={{
+          maxHeight: 'calc(100vh - 200px)',
+          overflowY: 'auto',
+        }}
+      >
         {showTab === 'private' && (
           <>
             {requests.filter((r) => r.status === 'pending').length > 0 && (
@@ -186,7 +216,10 @@ export default function UserList({
                 {requests
                   .filter((request) => request.status === 'pending')
                   .map((request) => (
-                    <div key={request.id} className={styles.requestItem}>
+                    <div
+                      key={`request-${request.id}`}
+                      className={styles.requestItem}
+                    >
                       <p>申請者：{request.sender_name || '未知用戶'}</p>
                       <p>遊戲ID：{request.game_id}</p>
                       <p>自我介紹：{request.description}</p>
@@ -214,7 +247,7 @@ export default function UserList({
                 <ListGroup>
                   {myPrivateChats.map((user) => (
                     <ListGroup.Item
-                      key={user.user_id}
+                      key={`private-${user.user_id}`}
                       action
                       onClick={() => onPrivateChat(user.user_id)}
                       className={styles.userItem}
@@ -227,6 +260,12 @@ export default function UserList({
                             width={24}
                             height={24}
                             className={styles.userImage}
+                            onError={(e) => {
+                              console.log('圖片載入失敗:', user.image_path)
+                              e.target.onerror = null
+                              e.target.src =
+                                'http://localhost:3005/uploads/groups/group-default.png'
+                            }}
                           />
                         ) : (
                           <div className={styles.avatarPlaceholder}>
@@ -255,20 +294,26 @@ export default function UserList({
               <ListGroup>
                 {myGroups.map((group) => (
                   <ListGroup.Item
-                    key={group.chatRoomId}
+                    key={`group-${group.chatRoomId || group.id}`}
                     action
                     active={currentRoom === group.chatRoomId}
                     onClick={() => onRoomSelect(group.chatRoomId)}
                     className={styles.roomItem}
                   >
                     <div className={styles.roomAvatar}>
-                      {group.image ? (
+                      {group.group_img ? (
                         <Image
-                          src={group.image}
+                          src={getGroupImage(group.group_img)}
                           alt={group.name}
                           width={24}
                           height={24}
                           className={styles.roomImage}
+                          onError={(e) => {
+                            console.log('圖片載入失敗:', group.group_img)
+                            e.target.onerror = null
+                            e.target.src =
+                              'http://localhost:3005/uploads/groups/group-default.png'
+                          }}
                         />
                       ) : (
                         <div className={styles.avatarPlaceholder}>

@@ -53,7 +53,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
+  width: 500px;
+  height: 500px;
   border-radius: 20px;
   border: 1px solid #181728;
   background: #1e1937;
@@ -61,9 +62,8 @@
 }
 
 .square img {
-  max-width: 80%;
-  max-height: 80%;
-  object-fit: cover;
+  max-width: 400px;
+  max-height: 400px;
 }
 
 .carouselBtn {
@@ -105,7 +105,7 @@
 
 .list {
   width: 150px;
-  height: 120px;
+  height: 150px;
   background: #1e1937;
 }
 

@@ -50,6 +50,37 @@ export const ChatRoom = {
     }
   },
 
+  getUserGroups: async (userId) => {
+    try {
+      const [groups] = await db.execute(
+        `
+        SELECT 
+          g.*,
+          cr.id as chatRoomId,
+          COUNT(DISTINCT gm.member_id) as member_count,
+          u.name as creator_name
+        FROM \`group\` g
+        LEFT JOIN chat_rooms cr ON g.chat_room_id = cr.id
+        LEFT JOIN group_members gm ON g.group_id = gm.group_id 
+           AND gm.status = 'accepted'
+        LEFT JOIN users u ON g.creator_id = u.user_id
+        WHERE (g.creator_id = ? OR EXISTS (
+          SELECT 1 
+          FROM group_members 
+          WHERE group_id = g.group_id 
+          AND member_id = ? 
+          AND status = 'accepted'
+        ))
+        GROUP BY g.group_id`,
+        [userId, userId]
+      )
+      return groups
+    } catch (error) {
+      console.error('獲取使用者群組錯誤:', error)
+      throw error
+    }
+  },
+
   getGroupById: async (groupId) => {
     try {
       const [groups] = await db.execute(
@@ -65,6 +96,16 @@ export const ChatRoom = {
 
   addMember: async (roomId, userId) => {
     try {
+      // 檢查是否已經是成員
+      const [existingMember] = await db.execute(
+        'SELECT 1 FROM chat_room_members WHERE room_id = ? AND user_id = ?',
+        [roomId, userId]
+      )
+
+      if (existingMember.length > 0) {
+        return existingMember[0].id
+      }
+
       const [result] = await db.execute(
         'INSERT INTO chat_room_members (room_id, user_id) VALUES (?, ?)',
         [roomId, userId]
@@ -72,30 +113,6 @@ export const ChatRoom = {
       return result.insertId
     } catch (error) {
       console.error('加入成員錯誤:', error)
-      throw error
-    }
-  },
-
-  addGroupMember: async (groupId, userId) => {
-    try {
-      await db.execute(
-        'INSERT INTO group_members (group_id, member_id, status) VALUES (?, ?, "accepted")',
-        [groupId, userId]
-      )
-
-      const [room] = await db.execute(
-        'SELECT chat_room_id FROM `group` WHERE group_id = ?',
-        [groupId]
-      )
-
-      if (room[0]?.chat_room_id) {
-        await db.execute(
-          'INSERT INTO chat_room_members (room_id, user_id) VALUES (?, ?)',
-          [room[0].chat_room_id, userId]
-        )
-      }
-    } catch (error) {
-      console.error('添加群組成員錯誤:', error)
       throw error
     }
   },
@@ -129,62 +146,52 @@ export const ChatRoom = {
     }
   },
 
-  saveMessage: async ({
-    roomId,
-    senderId,
-    message,
-    isPrivate = false,
-    recipientId = null,
-  }) => {
+  getPendingRequests: async (userId) => {
     try {
-      const [result] = await db.execute(
-        `INSERT INTO chat_messages 
-         (room_id, sender_id, message, is_private, recipient_id) 
-         VALUES (?, ?, ?, ?, ?)`,
-        [roomId, senderId, message, isPrivate ? 1 : 0, recipientId]
+      const [requests] = await db.execute(
+        `
+        SELECT 
+          gr.*,
+          u.name as sender_name,
+          u.image_path as sender_image,
+          g.group_name,
+          g.creator_id,
+          g.chat_room_id
+        FROM group_requests gr
+        JOIN users u ON gr.sender_id = u.user_id
+        JOIN \`group\` g ON gr.group_id = g.group_id
+        WHERE g.creator_id = ? AND gr.status = 'pending'
+        ORDER BY gr.created_at DESC`,
+        [userId]
       )
-      return result.insertId
+      return requests
     } catch (error) {
-      console.error('儲存訊息錯誤:', error)
+      console.error('獲取待處理申請錯誤:', error)
       throw error
     }
   },
 
-  saveGroupRequest: async ({
-    groupId,
-    senderId,
-    creatorId,
-    gameId,
-    description,
-  }) => {
+  getGroupRequestHistory: async (userId) => {
     try {
-      const [result] = await db.execute(
-        `INSERT INTO group_requests 
-         (group_id, sender_id, creator_id, game_id, description) 
-         VALUES (?, ?, ?, ?, ?)`,
-        [groupId, senderId, creatorId, gameId, description]
+      const [history] = await db.execute(
+        `
+        SELECT 
+          gr.*,
+          u.name as sender_name,
+          u.image_path as sender_image,
+          g.group_name,
+          g.creator_id,
+          g.chat_room_id
+        FROM group_requests gr
+        JOIN users u ON gr.sender_id = u.user_id
+        JOIN \`group\` g ON gr.group_id = g.group_id
+        WHERE gr.sender_id = ? OR g.creator_id = ?
+        ORDER BY gr.created_at DESC`,
+        [userId, userId]
       )
-
-      await db.execute(
-        `INSERT INTO messages 
-         (sender_id, receiver_id, type, content, metadata) 
-         VALUES (?, ?, 'group_request', ?, ?)`,
-        [
-          senderId,
-          creatorId,
-          `申請加入群組`,
-          JSON.stringify({
-            requestId: result.insertId,
-            groupId,
-            gameId,
-            description,
-          }),
-        ]
-      )
-
-      return result.insertId
+      return history
     } catch (error) {
-      console.error('儲存群組申請錯誤:', error)
+      console.error('獲取申請歷史錯誤:', error)
       throw error
     }
   },
@@ -192,8 +199,8 @@ export const ChatRoom = {
   getGroupRequestById: async (requestId) => {
     try {
       const [requests] = await db.execute(
-        `SELECT gr.*, g.chat_room_id, g.group_name,
-                u.name as sender_name
+        `SELECT gr.*, g.chat_room_id, g.group_name, 
+                u.name as sender_name, g.creator_id
          FROM group_requests gr
          JOIN \`group\` g ON gr.group_id = g.group_id
          JOIN users u ON gr.sender_id = u.user_id
@@ -203,40 +210,6 @@ export const ChatRoom = {
       return requests[0]
     } catch (error) {
       console.error('取得群組申請詳情錯誤:', error)
-      throw error
-    }
-  },
-
-  updateGroupRequest: async (requestId, { status }) => {
-    try {
-      const [result] = await db.execute(
-        'UPDATE group_requests SET status = ?, updated_at = NOW() WHERE id = ?',
-        [status, requestId]
-      )
-      return result.affectedRows > 0
-    } catch (error) {
-      console.error('更新群組申請狀態錯誤:', error)
-      throw error
-    }
-  },
-
-  getMessages: async (roomId, limit = 50) => {
-    try {
-      const [messages] = await db.execute(
-        `SELECT 
-         cm.*,
-         u.name as sender_name,
-         u.image_path as sender_image
-         FROM chat_messages cm
-         JOIN users u ON cm.sender_id = u.user_id
-         WHERE cm.room_id = ?
-         ORDER BY cm.created_at DESC
-         LIMIT ?`,
-        [roomId, limit]
-      )
-      return messages.reverse()
-    } catch (error) {
-      console.error('取得聊天記錄錯誤:', error)
       throw error
     }
   },
@@ -254,54 +227,143 @@ export const ChatRoom = {
     }
   },
 
-  getUserGroups: async (userId) => {
+  getMessages: async (roomId, limit = 50) => {
     try {
-      const [groups] = await db.execute(
-        `SELECT 
-         g.*,
-         COUNT(DISTINCT gm.member_id) as member_count
-         FROM \`group\` g
-         LEFT JOIN group_members gm ON g.group_id = gm.group_id
-         WHERE g.creator_id = ? OR gm.member_id = ?
-         GROUP BY g.group_id`,
-        [userId, userId]
+      const [messages] = await db.execute(
+        `
+        SELECT 
+          cm.*,
+          u.name as sender_name,
+          u.image_path as sender_image,
+          g.group_name,
+          g.group_img
+        FROM chat_messages cm
+        JOIN users u ON cm.sender_id = u.user_id
+        LEFT JOIN chat_rooms cr ON cm.room_id = cr.id
+        LEFT JOIN \`group\` g ON cr.id = g.chat_room_id
+        WHERE cm.room_id = ?
+        ORDER BY cm.created_at ASC
+        LIMIT ?
+      `,
+        [roomId, limit]
       )
-      return groups
+
+      return messages.map((msg) => ({
+        id: msg.id,
+        room_id: msg.room_id,
+        sender_id: msg.sender_id,
+        sender_name: msg.sender_name || '未知用戶',
+        sender_image: msg.sender_image,
+        message: msg.message || '',
+        is_private: Boolean(msg.is_private),
+        is_system: Boolean(msg.is_system),
+        created_at: msg.created_at,
+        group_name: msg.group_name,
+        group_img: msg.group_img,
+      }))
     } catch (error) {
-      console.error('獲取使用者群組錯誤:', error)
+      console.error('獲取訊息錯誤:', error)
       throw error
     }
   },
 
-  getGroupPendingRequests: async (groupId) => {
-    try {
-      const [requests] = await db.execute(
-        `SELECT gr.*, 
-         u.name as sender_name,
-         u.image_path as sender_image
-         FROM group_requests gr
-         JOIN users u ON gr.sender_id = u.user_id
-         WHERE gr.group_id = ? AND gr.status = 'pending'
-         ORDER BY gr.created_at DESC`,
-        [groupId]
-      )
-      return requests
-    } catch (error) {
-      console.error('獲取待處理申請錯誤:', error)
-      throw error
-    }
-  },
-
-  isGroupCreator: async (groupId, userId) => {
+  saveMessage: async ({
+    roomId,
+    senderId,
+    message,
+    isPrivate = false,
+    recipientId = null,
+    isSystem = false,
+  }) => {
     try {
       const [result] = await db.execute(
-        'SELECT 1 FROM `group` WHERE group_id = ? AND creator_id = ? LIMIT 1',
+        `INSERT INTO chat_messages 
+         (room_id, sender_id, message, is_private, recipient_id, is_system, created_at) 
+         VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+        [
+          roomId,
+          senderId,
+          message,
+          isPrivate ? 1 : 0,
+          recipientId,
+          isSystem ? 1 : 0,
+        ]
+      )
+      return result.insertId
+    } catch (error) {
+      console.error('儲存訊息錯誤:', error)
+      throw error
+    }
+  },
+
+  getUserById: async (userId) => {
+    try {
+      const [users] = await db.execute(
+        'SELECT * FROM users WHERE user_id = ? AND valid = 1',
+        [userId]
+      )
+      return users[0]
+    } catch (error) {
+      console.error('獲取用戶錯誤:', error)
+      throw error
+    }
+  },
+
+  updateGroupRequest: async (requestId, { status }) => {
+    const connection = await db.getConnection()
+    try {
+      await connection.beginTransaction()
+
+      await connection.execute(
+        'UPDATE group_requests SET status = ?, updated_at = NOW() WHERE id = ?',
+        [status, requestId]
+      )
+
+      await connection.commit()
+      return true
+    } catch (error) {
+      await connection.rollback()
+      throw error
+    } finally {
+      connection.release()
+    }
+  },
+
+  addGroupMember: async (groupId, userId) => {
+    const connection = await db.getConnection()
+    try {
+      await connection.beginTransaction()
+
+      const [existingMember] = await connection.execute(
+        'SELECT 1 FROM group_members WHERE group_id = ? AND member_id = ?',
         [groupId, userId]
       )
-      return result.length > 0
+
+      if (!existingMember.length) {
+        await connection.execute(
+          'INSERT INTO group_members (group_id, member_id, status) VALUES (?, ?, "accepted")',
+          [groupId, userId]
+        )
+
+        const [group] = await connection.execute(
+          'SELECT chat_room_id FROM `group` WHERE group_id = ?',
+          [groupId]
+        )
+
+        if (group[0]?.chat_room_id) {
+          await connection.execute(
+            'INSERT INTO chat_room_members (room_id, user_id) VALUES (?, ?)',
+            [group[0].chat_room_id, userId]
+          )
+        }
+      }
+
+      await connection.commit()
     } catch (error) {
-      console.error('檢查群組創建者錯誤:', error)
+      await connection.rollback()
       throw error
+    } finally {
+      connection.release()
     }
   },
 }

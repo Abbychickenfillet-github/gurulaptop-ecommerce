@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import styles from './GroupRequestList.module.css'
-import { useAuth } from '../../context/AuthContext'
+import { useGroupAuth } from '@/context/GroupAuthContext'
 import websocketService from '../../services/websocketService'
 
 const GroupRequestList = ({ groupId }) => {
-  const { user } = useAuth()
+  const { user } = useGroupAuth()
   const [requests, setRequests] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')

@@ -1,24 +1,7 @@
 /* 標題區 */
-.ArticleSectionContainer {
-  background-color: rgb(0, 0, 0);
-  height: 28rem;
-}
 
 .ArticleDetailMain {
   /* width: 50%; */
-}
-
-.ArticleSectionTitle {
-  color: #fff;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: Khula;
-  font-size: 4.69rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: 48.75px;
-  margin-top: 4rem;
-  margin-bottom: 5rem;
 }
 
 /* 標題區 */
@@ -55,6 +38,14 @@
 }
 
 /* -----------------------------------新 Article 小卡----------------------------------- */
+.ArticleSmallerCard {
+  height: 12.5rem;
+}
+
+.ArticleSmallerCard:hover {
+  animation: pulse 1s infinite; // 溫和的縮放感
+}
+
 .ArticleSmallerCardTitle {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -130,7 +121,7 @@
   height: 2rem;
 }
 .BlogDetailComment {
-  border: 1px solid black;
+  border: 1px solid #6854c7;
 }
 .SmallCircleWidgetToButtom {
   width: 3rem;
@@ -148,6 +139,12 @@
   left: 50%;
   font-size: 2rem;
 }
+.purplelinehr {
+  color: #6854c7;
+  background-color: #6854c7;
+  height: 2px;
+  // border: 1px solid #6854c7;
+}
 
 // 字體陰影
 /* -----------------------------------新 Article 小卡----------------------------------- */
@@ -161,27 +158,6 @@
     font-size: 2rem;
     color: #805af5;
   }
-
-  .ArticleSectionContainer {
-    // background-color: rgb(0, 0, 0);
-    height: 38rem;
-  }
-
-  .ArticleSectionTitle {
-    width: 100%;
-    color: #fff;
-    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    font-family: Khula;
-    font-size: 4.69rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    letter-spacing: 1.5rem;
-    margin: center;
-    margin-left: 1rem;
-    margin-bottom: 3rem;
-    /* padding-bottom:10rem; */
-  }
 }
 
 @media (max-width: 720px) {
@@ -192,25 +168,5 @@
     margin-top: 8.75vh;
     font-size: 2rem;
     color: #805af5;
-  }
-
-  .ArticleSectionContainer {
-    background-color: rgb(0, 0, 0);
-    height: 38rem;
-  }
-
-  .ArticleSectionTitle {
-    width: 100%;
-    color: #fff;
-    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    font-family: Khula;
-    font-size: 4.69rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    letter-spacing: 1.5rem;
-    margin-top: 2.5rem;
-    margin-bottom: 5rem;
-    /* padding-bottom: 5rem; */
   }
 }

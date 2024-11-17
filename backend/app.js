@@ -49,7 +49,7 @@ const app = express()
 app.use(
   cors({
     origin: ['http://localhost:3000', 'https://localhost:9000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   })
 )
@@ -140,7 +140,7 @@ app.use(function (err, req, res, next) {
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')))
 
 // 確保上傳目錄存在
-const uploadDir = path.join(__dirname, 'public', 'uploads', 'groups')
+const uploadDir = path.join(__dirname, 'public', 'uploads')
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true })
 }

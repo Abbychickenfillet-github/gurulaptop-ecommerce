@@ -5,7 +5,7 @@ const router = express.Router()
 router.get('/card/:product_id', async (req, res) => {
   try {
     const [rows] = await db.query(
-      'SELECT product_name,model,list_price,product_img_path FROM product LEFT JOIN product_img ON product_id = img_product_id WHERE product_id = ?',
+      'SELECT product_name,model,list_price,product_img_path FROM product LEFT JOIN product_img ON product_id = img_product_id WHERE product_id = ? AND valid = 1',
       req.params.product_id
     )
     const product = rows[0]
@@ -72,6 +72,10 @@ router.get('/list', async (req, res) => {
       params.push(min, max)
     }
 
+    //用valid = 1 判斷是否上架
+    where.push('valid = 1')
+
+
     // 如果沒有篩選條件，則設置 WHERE 條件為空字串，否則使用 AND 連接條件
     const whereClause = where.length ? `WHERE ${where.join(' AND ')}` : ''
 
@@ -112,7 +116,7 @@ router.get('/:product_id', async (req, res) => {
   try {
     const product_detail = (
       await db.query(
-        'SELECT * FROM product WHERE product_id = ?',
+        'SELECT * FROM product WHERE product_id = ? AND valid = 1',
         req.params.product_id
       )
     )[0][0]
@@ -143,7 +147,7 @@ router.get('/:product_id', async (req, res) => {
 router.get('/related/:product_id', async (req, res) => {
   try {
     const [rows] = await db.query(
-      'SELECT product_name,affordance,product_brand FROM product WHERE product_id = ?',
+      'SELECT product_name,affordance,product_brand FROM product WHERE product_id = ? AND valid = 1',
       req.params.product_id
     )
     const product_detail = rows[0]
@@ -152,7 +156,7 @@ router.get('/related/:product_id', async (req, res) => {
     }
     const fuzzyName = `%${product_detail.product_name}%`
     const [related_products] = await db.query(
-      'SELECT product_id FROM product WHERE  (product_name LIKE ? OR product_brand LIKE ? OR affordance LIKE ?) AND product_id != ? ',
+      'SELECT product_id FROM product WHERE  (product_name LIKE ? OR product_brand LIKE ? OR affordance LIKE ?) AND product_id != ?  AND valid = 1',
       [
         fuzzyName,
         product_detail.product_brand,

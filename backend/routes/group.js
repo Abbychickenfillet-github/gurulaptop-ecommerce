@@ -257,15 +257,22 @@ router.post('/', checkAuth, upload.single('group_img'), async (req, res) => {
       throw new Error('群組描述不能超過500字')
     }
 
+    // 建立聊天室
+    const [chatRoomResult] = await connection.query(
+      'INSERT INTO chat_rooms (name, creator_id) VALUES (?, ?)',
+      [group_name.trim(), creator_id]
+    )
+
     // 新增群組
     const [groupResult] = await connection.query(
-      'INSERT INTO `group` (group_name, description, creator_id, max_members, group_img, creat_time, group_time) VALUES (?, ?, ?, ?, ?, NOW(), ?)',
+      'INSERT INTO `group` (group_name, description, creator_id, max_members, group_img, chat_room_id, creat_time, group_time) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?)',
       [
         group_name.trim(),
         description.trim(),
         creator_id,
         maxMembersNum,
         group_img,
+        chatRoomResult.insertId,
         group_time,
       ]
     )
@@ -279,16 +286,6 @@ router.post('/', checkAuth, upload.single('group_img'), async (req, res) => {
       'INSERT INTO group_members (group_id, member_id, join_time, status) VALUES (?, ?, NOW(), ?)',
       [groupResult.insertId, creator_id, 'accepted']
     )
-
-    // 建立對應的聊天室
-    const [chatRoomResult] = await connection.query(
-      'INSERT INTO chat_rooms (name, creator_id) VALUES (?, ?)',
-      [group_name.trim(), creator_id]
-    )
-
-    if (!chatRoomResult.insertId) {
-      throw new Error('聊天室建立失敗')
-    }
 
     // 將創建者加入聊天室
     await connection.query(

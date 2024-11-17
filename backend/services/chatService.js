@@ -1,18 +1,26 @@
 import WebSocket from 'ws'
 import { ChatRoom } from '../models/ChatRoom.js'
+import db from '../configs/mysql.js'
 
 class ChatService {
   constructor() {
     this.clients = new Map()
     this.rooms = new Map()
+    this.messageQueue = new Map()
   }
 
   handleConnection(ws, req) {
     console.log('新的 WebSocket 連接已建立')
 
+    ws.isAlive = true
+    ws.on('pong', () => {
+      ws.isAlive = true
+    })
+
     ws.on('message', async (message) => {
       try {
         const data = JSON.parse(message.toString())
+        console.log('收到訊息:', data)
         await this.handleMessage(ws, data)
       } catch (error) {
         console.error('處理訊息錯誤:', error)
@@ -20,6 +28,7 @@ class ChatService {
           JSON.stringify({
             type: 'error',
             message: '處理訊息時發生錯誤',
+            error: error.message,
           })
         )
       }
@@ -32,11 +41,19 @@ class ChatService {
     ws.on('error', (error) => {
       console.error('WebSocket 客戶端錯誤:', error)
     })
+
+    // 定期檢查連線狀態
+    const pingInterval = setInterval(() => {
+      if (ws.isAlive === false) {
+        clearInterval(pingInterval)
+        return ws.terminate()
+      }
+      ws.isAlive = false
+      ws.ping()
+    }, 30000)
   }
 
   async handleMessage(ws, data) {
-    console.log('收到訊息:', data)
-
     switch (data.type) {
       case 'register':
         await this.handleRegisterUser(ws, data)
@@ -63,17 +80,104 @@ class ChatService {
 
   async handleRegisterUser(ws, data) {
     const { userID } = data
-    ws.userID = userID
-    this.clients.set(userID, ws)
 
-    ws.send(
-      JSON.stringify({
-        type: 'registered',
-        success: true,
-      })
-    )
+    try {
+      ws.userID = userID
+      this.clients.set(userID, ws)
 
-    console.log(`用戶 ${userID} 已註冊`)
+      // 處理離線訊息
+      const pendingMessages = this.messageQueue.get(userID) || []
+      while (pendingMessages.length > 0) {
+        const message = pendingMessages.shift()
+        ws.send(JSON.stringify(message))
+      }
+      this.messageQueue.delete(userID)
+
+      ws.send(
+        JSON.stringify({
+          type: 'registered',
+          success: true,
+          userId: userID,
+          timestamp: new Date().toISOString(),
+        })
+      )
+
+      console.log(`用戶 ${userID} 已註冊`)
+    } catch (error) {
+      console.error('註冊使用者錯誤:', error)
+      ws.send(
+        JSON.stringify({
+          type: 'error',
+          message: '註冊失敗',
+        })
+      )
+    }
+  }
+
+  async handleChatMessage(ws, data) {
+    const { roomID, message, fromID } = data
+
+    try {
+      const connection = await db.getConnection()
+      try {
+        await connection.beginTransaction()
+
+        // 檢查發送者是否為群組成員
+        const [[memberCheck]] = await connection.execute(
+          `SELECT gm.* 
+           FROM group_members gm
+           JOIN \`group\` g ON gm.group_id = g.group_id
+           WHERE g.chat_room_id = ? AND gm.member_id = ? 
+           AND gm.status = 'accepted'`,
+          [roomID, fromID]
+        )
+
+        if (!memberCheck) {
+          throw new Error('您不是該群組的成員')
+        }
+
+        // 儲存訊息
+        const [result] = await connection.execute(
+          'INSERT INTO chat_messages (room_id, sender_id, message, is_private, is_system) VALUES (?, ?, ?, 0, 0)',
+          [roomID, fromID, message]
+        )
+
+        // 獲取發送者資訊
+        const [[userData]] = await connection.execute(
+          'SELECT name as sender_name, image_path as sender_image FROM users WHERE user_id = ?',
+          [fromID]
+        )
+
+        await connection.commit()
+
+        const messageData = {
+          type: 'message',
+          id: result.insertId,
+          room_id: roomID,
+          sender_id: fromID,
+          sender_name: userData.sender_name || '未知用戶',
+          sender_image: userData.sender_image,
+          message: message,
+          created_at: new Date().toISOString(),
+        }
+
+        // 廣播訊息給房間所有成員
+        this.broadcastToRoom(roomID, messageData)
+      } catch (error) {
+        await connection.rollback()
+        throw error
+      } finally {
+        connection.release()
+      }
+    } catch (error) {
+      console.error('處理群組訊息錯誤:', error)
+      ws.send(
+        JSON.stringify({
+          type: 'error',
+          message: error.message || '發送訊息失敗',
+        })
+      )
+    }
   }
 
   async handleGroupRequest(ws, { fromID, groupId, gameId, description }) {
@@ -132,27 +236,72 @@ class ChatService {
 
       await ChatRoom.updateGroupRequest(requestId, { status })
 
-      if (status === 'accepted') {
-        await ChatRoom.addGroupMember(request.group_id, request.sender_id)
+      const connection = await db.getConnection()
+      try {
+        await connection.beginTransaction()
 
-        if (request.chat_room_id) {
-          await ChatRoom.addMember(request.chat_room_id, request.sender_id)
+        if (status === 'accepted') {
+          // 加入群組成員
+          await ChatRoom.addGroupMember(request.group_id, request.sender_id)
+
+          // 獲取申請者資訊
+          const [[userData]] = await connection.execute(
+            'SELECT name, game_id FROM group_requests WHERE id = ?',
+            [requestId]
+          )
+
+          // 獲取群組聊天室 ID
+          const [[groupData]] = await connection.execute(
+            'SELECT chat_room_id FROM `group` WHERE group_id = ?',
+            [request.group_id]
+          )
+
+          if (groupData.chat_room_id) {
+            // 新增系統訊息
+            const systemMessage = JSON.stringify({
+              type: 'system',
+              content: `${userData.game_id || '使用者'} 已加入群組`,
+            })
+
+            // 儲存系統訊息
+            await connection.execute(
+              'INSERT INTO chat_messages (room_id, sender_id, message, is_system) VALUES (?, 0, ?, 1)',
+              [groupData.chat_room_id, systemMessage]
+            )
+
+            // 廣播系統訊息
+            this.broadcastToRoom(groupData.chat_room_id, {
+              type: 'system',
+              content: `${userData.game_id || '使用者'} 已加入群組`,
+              created_at: new Date().toISOString(),
+            })
+          }
         }
-      }
 
-      const applicantWs = this.clients.get(request.sender_id)
-      if (applicantWs?.readyState === WebSocket.OPEN) {
-        applicantWs.send(
-          JSON.stringify({
-            type: 'groupRequestResult',
-            status,
-            groupId: request.group_id,
-            message:
-              message ||
-              (status === 'accepted' ? '您的申請已被接受' : '您的申請已被拒絕'),
-            timestamp: new Date().toISOString(),
-          })
-        )
+        await connection.commit()
+
+        // 通知申請者結果
+        const applicantWs = this.clients.get(request.sender_id)
+        if (applicantWs?.readyState === WebSocket.OPEN) {
+          applicantWs.send(
+            JSON.stringify({
+              type: 'groupRequestResult',
+              requestId,
+              status,
+              message:
+                message ||
+                (status === 'accepted'
+                  ? '您的申請已被接受'
+                  : '您的申請已被拒絕'),
+              timestamp: new Date().toISOString(),
+            })
+          )
+        }
+      } catch (error) {
+        await connection.rollback()
+        throw error
+      } finally {
+        connection.release()
       }
     } catch (error) {
       console.error('處理群組申請回應錯誤:', error)
@@ -165,97 +314,122 @@ class ChatService {
     }
   }
 
-  async handleChatMessage(ws, data) {
-    const { roomId, message, senderId, isPrivate, recipientId } = data
-
+  async handleJoinRoom(ws, { roomID, fromID }) {
     try {
-      // 儲存訊息
-      const messageId = await ChatRoom.saveMessage({
-        roomId,
-        senderId,
-        message,
-        isPrivate,
-        recipientId,
-      })
+      const connection = await db.getConnection()
+      try {
+        // 檢查是否為群組成員
+        const [[memberCheck]] = await connection.execute(
+          `SELECT gm.* 
+           FROM group_members gm
+           JOIN \`group\` g ON gm.group_id = g.group_id
+           WHERE g.chat_room_id = ? AND gm.member_id = ? 
+           AND gm.status = 'accepted'`,
+          [roomID, fromID]
+        )
 
-      const messageData = {
-        type: 'message',
-        messageId,
-        senderId,
-        message,
-        timestamp: new Date().toISOString(),
-        roomId,
-      }
-
-      if (isPrivate && recipientId) {
-        const recipientWs = this.clients.get(recipientId)
-        if (recipientWs?.readyState === WebSocket.OPEN) {
-          recipientWs.send(JSON.stringify(messageData))
+        if (!memberCheck) {
+          throw new Error('您不是該群組的成員')
         }
-      } else {
-        this.broadcastToRoom(roomId, messageData, ws)
-      }
-    } catch (error) {
-      console.error('處理聊天訊息錯誤:', error)
-      ws.send(
-        JSON.stringify({
-          type: 'error',
-          message: '發送訊息失敗',
-        })
-      )
-    }
-  }
 
-  async handleJoinRoom(ws, { roomId, userId }) {
-    try {
-      if (!this.rooms.has(roomId)) {
-        this.rooms.set(roomId, new Set())
-      }
+        // 將用戶加入房間
+        if (!this.rooms.has(roomID)) {
+          this.rooms.set(roomID, new Set())
+        }
 
-      this.rooms.get(roomId).add(ws)
-      ws.roomId = roomId
+        const room = this.rooms.get(roomID)
+        room.add(ws)
+        ws.roomID = roomID
 
-      const members = await ChatRoom.getMembers(roomId)
-      ws.send(
-        JSON.stringify({
-          type: 'roomJoined',
-          roomId,
-          members,
-        })
-      )
+        // 獲取房間資訊和成員
+        const [[groupInfo]] = await connection.execute(
+          `SELECT 
+            g.*, 
+            COUNT(gm.member_id) as member_count
+           FROM \`group\` g
+           LEFT JOIN group_members gm ON g.group_id = gm.group_id
+           WHERE g.chat_room_id = ? AND gm.status = 'accepted'
+           GROUP BY g.group_id`,
+          [roomID]
+        )
 
-      this.broadcastToRoom(
-        roomId,
-        {
+        // 獲取歷史訊息
+        const [messages] = await connection.execute(
+          `SELECT 
+            cm.*,
+            u.name as sender_name,
+            u.image_path as sender_image
+           FROM chat_messages cm
+           JOIN users u ON cm.sender_id = u.user_id
+           WHERE cm.room_id = ?
+           ORDER BY cm.created_at ASC
+           LIMIT 50`,
+          [roomID]
+        )
+
+        // 發送加入成功訊息
+        ws.send(
+          JSON.stringify({
+            type: 'roomJoined',
+            roomId: roomID,
+            groupInfo: {
+              id: groupInfo.group_id,
+              name: groupInfo.group_name,
+              memberCount: groupInfo.member_count,
+              maxMembers: groupInfo.max_members,
+            },
+            messages: messages.map((msg) => ({
+              id: msg.id,
+              sender_id: msg.sender_id,
+              sender_name: msg.sender_name,
+              sender_image: msg.sender_image,
+              message: msg.message,
+              created_at: msg.created_at,
+              is_system: msg.is_system,
+            })),
+            timestamp: new Date().toISOString(),
+          })
+        )
+
+        // 廣播成員加入訊息
+        this.broadcastToRoom(roomID, {
           type: 'memberJoined',
-          userId,
-          roomId,
-        },
-        ws
-      )
+          userId: fromID,
+          roomId: roomID,
+          timestamp: new Date().toISOString(),
+        })
+      } finally {
+        connection.release()
+      }
     } catch (error) {
       console.error('加入房間錯誤:', error)
       ws.send(
         JSON.stringify({
           type: 'error',
-          message: '加入房間失敗',
+          message: error.message || '加入房間失敗',
         })
       )
     }
   }
 
-  async handleLeaveRoom(ws, { roomId, userId }) {
+  async handleLeaveRoom(ws, { roomID, fromID }) {
     try {
-      const roomClients = this.rooms.get(roomId)
-      if (roomClients) {
-        roomClients.delete(ws)
-        delete ws.roomId
+      const room = this.rooms.get(roomID)
+      if (room) {
+        room.delete(ws)
+        delete ws.roomID
 
-        this.broadcastToRoom(roomId, {
+        // 廣播成員離開訊息
+        this.broadcastToRoom(roomID, {
           type: 'memberLeft',
-          userId,
-          roomId,
+          userId: fromID,
+          roomId: roomID,
+          timestamp: new Date().toISOString(),
         })
+
+        if (room.size === 0) {
+          this.rooms.delete(roomID)
+        }
       }
     } catch (error) {
       console.error('離開房間錯誤:', error)
@@ -266,14 +440,19 @@ class ChatService {
     if (ws.userID) {
       this.clients.delete(ws.userID)
 
-      if (ws.roomId) {
-        const roomClients = this.rooms.get(ws.roomId)
-        if (roomClients) {
-          roomClients.delete(ws)
-          this.broadcastToRoom(ws.roomId, {
+      if (ws.roomID) {
+        const room = this.rooms.get(ws.roomID)
+        if (room) {
+          room.delete(ws)
+          this.broadcastToRoom(ws.roomID, {
             type: 'memberDisconnected',
             userId: ws.userID,
+            timestamp: new Date().toISOString(),
           })
+
+          if (room.size === 0) {
+            this.rooms.delete(ws.roomID)
+          }
         }
       }
 
@@ -281,15 +460,49 @@ class ChatService {
     }
   }
 
-  broadcastToRoom(roomId, message, excludeWs = null) {
-    const messageStr = JSON.stringify(message)
-    const roomClients = this.rooms.get(roomId)
-    if (roomClients) {
-      roomClients.forEach((client) => {
-        if (client !== excludeWs && client.readyState === WebSocket.OPEN) {
-          client.send(messageStr)
+  broadcastToRoom(roomId, message) {
+    const room = this.rooms.get(roomId)
+    if (room) {
+      const messageStr = JSON.stringify(message)
+      room.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          try {
+            client.send(messageStr)
+          } catch (error) {
+            console.error('發送訊息失敗:', error)
+          }
         }
       })
+    }
+  }
+
+  handleMemberUpdate(ws, data) {
+    const { groupId, chatRoomId } = data
+    this.broadcastToRoom(chatRoomId, {
+      type: 'groupMemberUpdate',
+      ...data,
+      timestamp: new Date().toISOString(),
+    })
+  }
+
+  async sendSystemMessage(roomId, content) {
+    const connection = await db.getConnection()
+    try {
+      const [result] = await connection.execute(
+        'INSERT INTO chat_messages (room_id, sender_id, message, is_system) VALUES (?, 0, ?, 1)',
+        [roomId, content]
+      )
+
+      this.broadcastToRoom(roomId, {
+        type: 'system',
+        id: result.insertId,
+        content,
+        created_at: new Date().toISOString(),
+      })
+    } catch (error) {
+      console.error('發送系統訊息錯誤:', error)
+    } finally {
+      connection.release()
     }
   }
 }

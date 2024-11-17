@@ -3,6 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiamond } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/hooks/use-auth'
+import Header from '@/components/layout/default-layout/header'
+import MyFooter from '@/components/layout/default-layout/my-footer'
+import BlogDetailMainArea from '@/components/blog/bloghomepage/articlehomepage-mainarea'
+import Link from 'next/link'
+import { IoArrowBackCircleOutline } from 'react-icons/io5'
 
 export default function BlogUserEdit() {
   const router = useRouter()
@@ -143,209 +148,232 @@ export default function BlogUserEdit() {
   }
 
   return (
-    <div className="BlogEditAlignAllItems mt-5">
-      <div className="">
-        <div className="BlogEditSmallTitle text-nowrap">
-          <p>
-            <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
-            {'\u00A0 '}
-            新增封面圖片
-          </p>
-        </div>
-      </div>
-
-      <div
-        className="BlogImgUploadDiv d-flex align-items-center justify-content-center"
-        onClick={() => document.getElementById('imageInput').click()}
-      >
-        {formData.blog_image || formData.originalImage ? (
-          <img
-            src={
-              formData.blog_image instanceof File
-                ? URL.createObjectURL(formData.blog_image)
-                : `http://localhost:3005${
-                    formData.originalImage || formData.blog_image
-                  }`
-            }
-            alt="預覽圖片"
-            className="object-fit-cover w-100 h-100"
-          />
-        ) : (
-          <>
-            <i className="fa-solid fa-arrow-up-from-bracket" />
-            <div style={{ cursor: 'pointer' }}>點擊上傳圖片</div>
-          </>
-        )}
-        <input
-          type="file"
-          onChange={(e) => handleChange('blog_image', e.target.files[0])}
-          style={{ display: 'none' }}
-          id="imageInput"
-        />
-      </div>
-
-      <form onSubmit={handleSubmit}>
-        <div className="d-flex align-items-start justify-content-start">
-          <div className="BlogEditSmallTitle text-nowrap col-4">
-            <p>
-              <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
-              {'\u00A0 '}
-              標題
+    <>
+      <Header />
+      <BlogDetailMainArea />
+      <div className="container">
+        <div className="mt-5 mb-5">
+          <Link href="/dashboard" className="text-decoration-none fs-5">
+            <p className="fs-5 fw-bold">
+              <IoArrowBackCircleOutline /> 返回使用者總覽
             </p>
-          </div>
-          <div className="col-8 col-lg-8 col-md-10">
-            <input
-              className="form-control form-control-lg"
-              type="text"
-              placeholder="標題"
-              style={{ width: '200%' }}
-              value={formData.blog_title || ''}
-              onChange={(e) => handleChange('blog_title', e.target.value)}
-            />
-          </div>
+          </Link>
         </div>
+      </div>
 
-        <div className="d-flex align-items-start justify-content-start mb-5 mt-5">
+      <div className="container-lg container-fluid d-flex h-auto flex-column gap-5 mt-5 col-lg-5 col-md-8 col-12">
+        {/* 圖片上傳區塊 */}
+        <div className="">
           <div className="BlogEditSmallTitle text-nowrap">
             <p>
               <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
               {'\u00A0 '}
-              內文
+              新增封面圖片
             </p>
-          </div>
-          <div>
-            <textarea
-              className="form-control"
-              value={formData.blog_content || ''}
-              onChange={(e) => handleChange('blog_content', e.target.value)}
-              style={{ width: '430%' }}
-              rows="20"
-              placeholder="請輸入內文"
-            />
           </div>
         </div>
 
-        <div className="d-flex flex-row justify-content-between align-items-start col-12 mb-5">
-          <div className="BlogSmallTitleAlign d-flex justify-content-start align-items-start col-6">
-            <div className="BlogEditSmallTitle text-nowrap">
+        <div
+          className="BlogImgUploadDiv d-flex align-items-center justify-content-center"
+          onClick={() => document.getElementById('imageInput').click()}
+        >
+          {formData.blog_image || formData.originalImage ? (
+            <img
+              src={
+                formData.blog_image instanceof File
+                  ? URL.createObjectURL(formData.blog_image)
+                  : `http://localhost:3005${
+                      formData.originalImage || formData.blog_image
+                    }`
+              }
+              alt="預覽圖片"
+              className="object-fit-cover w-100 h-100"
+            />
+          ) : (
+            <>
+              <i className="fa-solid fa-arrow-up-from-bracket" />
+              <div style={{ cursor: 'pointer' }}></div>
+            </>
+          )}
+          <input
+            type="file"
+            onChange={(e) => handleChange('blog_image', e.target.files[0])}
+            style={{ display: 'none' }}
+            id="imageInput"
+          />
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="container-fluid d-flex flex-lg-row flex-column align-items-start justify-content-start">
+            <div className="BlogEditSmallTitle text-nowrap col-lg-2 col-12">
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
                 {'\u00A0 '}
-                筆電品牌
+                標題
               </p>
             </div>
+            <div className="col-lg-10 col-12">
+              <input
+                className="form-control form-control-lg"
+                type="text"
+                placeholder="標題"
+                value={formData.blog_title || ''}
+                onChange={(e) => handleChange('blog_title', e.target.value)}
+              />
+            </div>
           </div>
-          <div className="d-flex flex-row gap-5 justify-content-center">
-            {brands.map((column, columnIndex) => (
-              <div key={columnIndex} className="d-flex flex-column gap-5">
-                {column.map((brand) => (
-                  <div
-                    key={brand}
-                    className={`BlogEditBrandSelected d-flex justify-content-center align-items-center ${
-                      brand === formData.blog_brand
-                        ? 'BlogEditBrandSelectedActive'
-                        : ''
-                    }`}
-                    onClick={() => handleChange('blog_brand', brand)}
-                  >
-                    <p className="m-0">{brand}</p>
-                  </div>
-                ))}
+
+          <div className="container-lg container-fluid-md  d-flex flex-lg-row flex-column  align-items-start justify-content-start mb-5 mt-5">
+            <div className="BlogEditSmallTitle text-nowrap col-2">
+              <p>
+                <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                {'\u00A0 '}
+                內文
+              </p>
+            </div>
+            <div className="col-10">
+              <textarea
+                className="form-control w-100"
+                value={formData.blog_content || ''}
+                onChange={(e) => handleChange('blog_content', e.target.value)}
+                rows="20"
+                placeholder="請輸入內文"
+              />
+            </div>
+          </div>
+
+          <div className="container-lg container-fluid  flex-lg-row flex-column justify-content-between align-items-start mb-5 gap-xxl-5 gap-xl-5 gap-lg-4 gap-md-3 gap-sm-2 gap-xs-2 gap-1">
+            <div className="BlogSmallTitleAlign d-flex justify-content-start align-items-start">
+              <div className="BlogEditSmallTitle text-nowrap">
+                <p>
+                  <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                  {'\u00A0 '}
+                  筆電品牌
+                </p>
               </div>
-            ))}
+            </div>
+            <div className="container-lg container-fluid d-flex flex-row justify-content-center mb-5 mt-5 gap-xxl-5 gap-xl-5 gap-lg-4 gap-md-3 gap-sm-2 gap-xs-2 gap-1">
+              {brands.map((column, columnIndex) => (
+                <div
+                  key={columnIndex}
+                  className="d-flex flex-column gap-xxl-5  gap-xl-5 gap-lg-4 gap-md-3 gap-sm-2 gap-xs-2 gap-1"
+                >
+                  {column.map((brand) => (
+                    <div
+                      key={brand}
+                      className={`BlogEditBrandSelected shadow d-flex justify-content-center align-items-center ${
+                        brand === formData.blog_brand
+                          ? 'BlogEditBrandSelectedActive'
+                          : ''
+                      }`}
+                      onClick={() => handleChange('blog_brand', brand)}
+                    >
+                      <p className="m-0">{brand}</p>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="d-flex align-items-start justify-content-start mt-5 mb-5">
-          <div className="BlogEditSmallTitle text-nowrap col-4">
-            <p>
-              <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
-              {'\u00A0 '}
-              筆電型號
-            </p>
-          </div>
-          <div className="col-8 col-lg-8 col-md-10">
-            <input
-              className="form-control form-control-lg"
-              type="text"
-              placeholder="型號"
-              value={formData.blog_brand_model || ''}
-              onChange={(e) => handleChange('blog_brand_model', e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="d-flex flex-row justify-content-between align-items-start col-12 mb-5">
-          <div className="BlogEditSmallTitle text-nowrap col-10">
-            <p>
-              <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
-              {'\u00A0 '}
-              類別
-            </p>
-          </div>
-          <div className="d-flex flex-column gap-5 col-9">
-            {['購買心得', '開箱文', '疑難雜症', '活動心得'].map((v) => (
-              <div
-                key={v}
-                className={`BlogEditBrandSelected d-flex justify-content-center align-items-center ${
-                  v === formData.blog_type ? 'BlogEditBrandSelectedActive' : ''
-                }`}
-                onClick={() => handleChange('blog_type', v)}
-              >
-                <p>{v}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="d-flex align-items-start justify-content-start">
-          <div className="BlogEditSmallTitle text-nowrap col-4">
-            <p>
-              <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
-              {'\u00A0 '}
-              關鍵字
-            </p>
-          </div>
-          <div className="col-8 col-lg-8 col-md-10">
-            <input
-              className="form-control form-control-lg"
-              type="text"
-              placeholder="輸入一組你喜歡的關鍵字！"
-              value={formData.blog_keyword || ''}
-              onChange={(e) => handleChange('blog_keyword', e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="d-flex flex-row justify-content-around align-items-center mt-5">
-          <button className="BlogEditButtonSubmit" type="submit">
-            送出
-          </button>
-          <button
-            className="BlogEditButtonDelete"
-            type="button"
-            onClick={async () => {
-              if (window.confirm('確定要刪除這篇文章嗎？')) {
-                try {
-                  const res = await fetch(
-                    `http://localhost:3005/api/blog/blog-delete/${blog_id}`,
-                    {
-                      method: 'PUT',
-                    }
-                  )
-                  if (res.ok) {
-                    router.push('/blog/blog-delete-success')
-                  }
-                } catch (error) {
-                  console.error('刪除失敗:', error)
+          <div className="container d-flex flex-lg-row flex-column align-items-start justify-content-start mt-5 mb-5">
+            <div className="BlogEditSmallTitle text-nowrap col-2">
+              <p>
+                <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                {'\u00A0 '}
+                筆電型號
+              </p>
+            </div>
+            <div className="col-10">
+              <input
+                className="form-control form-control-lg"
+                type="text"
+                placeholder="型號"
+                value={formData.blog_brand_model || ''}
+                onChange={(e) =>
+                  handleChange('blog_brand_model', e.target.value)
                 }
-              }
-            }}
-          >
-            刪除
-          </button>
-        </div>
-      </form>
-    </div>
+              />
+            </div>
+          </div>
+
+          <div className="container d-flex justify-content-start align-items-start mb-5 flex-lg-row flex-column col-12">
+            <div className="BlogEditSmallTitle text-nowrap col-10">
+              <p>
+                <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                {'\u00A0 '}
+                類別
+              </p>
+            </div>
+            <div className="w-25 h-25"></div>
+            <div className="d-flex flex-column gap-xxl-5 gap-xl-5 gap-lg-4 gap-md-3 gap-sm-2 gap-xs-2 gap-1 col-2">
+              {['購買心得', '開箱文', '疑難雜症', '活動心得'].map((v) => (
+                <div
+                  key={v}
+                  className={`BlogEditBrandSelected shadow d-flex justify-content-center align-items-center ${
+                    v === formData.blog_type
+                      ? 'BlogEditBrandSelectedActive'
+                      : ''
+                  }`}
+                  onClick={() => handleChange('blog_type', v)}
+                >
+                  <p>{v}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="d-flex align-items-start justify-content-start">
+            <div className="BlogEditSmallTitle text-nowrap col-4">
+              <p>
+                <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                {'\u00A0 '}
+                關鍵字
+              </p>
+            </div>
+            <div className="col-8 col-lg-8 col-md-10">
+              <input
+                className="form-control form-control-lg"
+                type="text"
+                placeholder="輸入一組你喜歡的關鍵字！"
+                value={formData.blog_keyword || ''}
+                onChange={(e) => handleChange('blog_keyword', e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="d-flex flex-row justify-content-around align-items-center mt-5 mb-5">
+            <button className="BlogEditButtonSubmit shadow" type="submit">
+              送出
+            </button>
+            <button
+              className="BlogEditButtonDelete shadow"
+              type="button"
+              onClick={async () => {
+                if (window.confirm('確定要刪除這篇文章嗎？')) {
+                  try {
+                    const res = await fetch(
+                      `http://localhost:3005/api/blog/blog-delete/${blog_id}`,
+                      {
+                        method: 'PUT',
+                      }
+                    )
+                    if (res.ok) {
+                      router.push('/blog/blog-delete-success')
+                    }
+                  } catch (error) {
+                    console.error('刪除失敗:', error)
+                  }
+                }
+              }}
+            >
+              刪除
+            </button>
+          </div>
+        </form>
+      </div>
+      <MyFooter />
+    </>
   )
 }
+BlogUserEdit.getLayout = (page) => page
