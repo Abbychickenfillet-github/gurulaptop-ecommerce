@@ -15,20 +15,23 @@ export default function Signup() {
 
   
   const validatePassword = (password) => {
+    //函式內宣告2個變數
     const rules = {
       minLength: password.length >= 8,
-      hasUpperCase: /[A-Z]/.test(password),
+      hasUpperCase: /[A-Z]/.test(password),//2
       hasLowerCase: /[a-z]/.test(password),
       hasNumber: /\d/.test(password),
     }
 
     const messages = {
       minLength: '密碼至少需要8個字元',
-      hasUpperCase: '需要包含大寫字母',
+      hasUpperCase: '需要包含大寫字母', //2
       hasLowerCase: '需要包含小寫字母',
       hasNumber: '需要包含數字',
     }
 
+    // 函式的返回值
+    //  Object.entries() 是產生新的陣列，不會影響到原物件
     return Object.entries(rules)
       .filter(([rule, valid]) => !valid)
       // !valid 意思是找出值是 false 的規則

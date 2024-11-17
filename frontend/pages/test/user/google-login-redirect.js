@@ -105,7 +105,7 @@ export default function GoogleLoginRedirect() {
   return (
     <>
       <h1>Google Login重定向測試頁</h1>
-      <p>會員狀態:{auth.isAuth ? '已登入' : '未登入'}</p>
+      <p>會員狀態:{auth?.isAuth ? '已登入' : '未登入'}</p>
       <button onClick={() => loginGoogleRedirect()}>
         <GoogleLogo /> Google登入
       </button>
