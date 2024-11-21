@@ -8,6 +8,7 @@ import styles from '@/styles/dashboard.module.scss'
 export default function UserProfile() {
   const { auth, setAuth, logout } = useAuth()
   const user_id = auth?.userData?.user_id
+  // useEffect(,[])
   const [editableUser, setEditableUser] = useState({
     name: '',
     gender: '',
@@ -472,6 +473,7 @@ export default function UserProfile() {
                             value={editableUser.gender}
                             onChange={handleInputChange}
                           >
+                            <option value="">請選擇</option>
                             <option value="male">男</option>
                             <option value="female">女</option>
                             <option value="undisclosed">不公開</option>

@@ -1,13 +1,16 @@
 footer {
-  background-color: #000;
-  width: 100%;
+  background: radial-gradient(135.76% 131.62% at 50% 158.38%, #5A2D98 0%, #000 100%);
+      width: 100%;
 }
 
 .footer-logo {
-  height: 80px;
+  height: 65px;
 
   & img {
     height: 100%;
   }
 }
 
+.footer-side{
+  padding: 60px 0px;
+}
