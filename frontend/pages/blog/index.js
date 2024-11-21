@@ -7,6 +7,7 @@ import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import NextBreadCrumb from '@/components/common/next-breadcrumb'
 import Head from 'next/head'
+import { Search } from 'lucide-react'
 
 export default function BlogSearchPage() {
   const [blogs, setBlogs] = useState([])
@@ -114,7 +115,11 @@ export default function BlogSearchPage() {
               placeholder="Search"
             />
             <button className="btn" onClick={(e) => e.preventDefault()}>
-              <i className="fa-solid fa-magnifying-glass" />
+              <Search
+                className="SearchIcon"
+                size={20}
+                onClick={(e) => e.preventDefault()}
+              />
             </button>
           </div>
         </div>
