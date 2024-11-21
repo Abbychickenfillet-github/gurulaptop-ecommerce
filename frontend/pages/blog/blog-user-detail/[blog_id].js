@@ -6,6 +6,7 @@ import { IoArrowBackCircleOutline } from 'react-icons/io5'
 import { useAuth } from '@/hooks/use-auth'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
+import Head from 'next/head'
 
 export default function BlogUserDetail() {
   const router = useRouter()
@@ -56,6 +57,9 @@ export default function BlogUserDetail() {
 
   return (
     <>
+      <Head>
+        <title>編輯{blogData.blog_title}</title>
+      </Head>
       <Header />
       <BlogDetailMainArea />
       <div className="container">

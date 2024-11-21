@@ -11,6 +11,7 @@ import { IoArrowBackCircleOutline } from 'react-icons/io5'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
+import Head from 'next/head'
 
 export default function BlogUserEdit() {
   const router = useRouter()
@@ -157,6 +158,9 @@ export default function BlogUserEdit() {
 
   return (
     <>
+      <Head>
+        <title>編輯部落格</title>
+      </Head>
       <Header />
       <BlogDetailMainArea />
       <div className="container">
@@ -358,7 +362,20 @@ export default function BlogUserEdit() {
               className="BlogEditButtonDelete shadow"
               type="button"
               onClick={async () => {
-                if (window.confirm('確定要刪除這篇文章嗎？')) {
+                // 顯示確認對話框並等待用戶響應
+                const result = await MySwal.fire({
+                  icon: 'warning',
+                  title: '確定要刪除部落格嗎？',
+                  text: '刪除後將無法復原！',
+                  showCancelButton: true, // 顯示取消按鈕
+                  confirmButtonText: '確定刪除',
+                  cancelButtonText: '取消',
+                  confirmButtonColor: '#d33', // 確認按鈕的顏色
+                  cancelButtonColor: '#3085d6', // 取消按鈕的顏色
+                })
+
+                // 如果用戶點擊確認
+                if (result.isConfirmed) {
                   try {
                     const res = await fetch(
                       `http://localhost:3005/api/blog/blog-delete/${blog_id}`,
@@ -366,11 +383,27 @@ export default function BlogUserEdit() {
                         method: 'PUT',
                       }
                     )
+
                     if (res.ok) {
+                      // 刪除成功後顯示成功訊息
+                      await MySwal.fire({
+                        icon: 'success',
+                        title: '刪除成功！',
+                        showConfirmButton: false,
+                        timer: 1500,
+                      })
+
                       router.push('/blog/blog-delete-success')
                     }
                   } catch (error) {
+                    // 發生錯誤時顯示錯誤訊息
                     console.error('刪除失敗:', error)
+                    MySwal.fire({
+                      icon: 'error',
+                      title: '刪除失敗',
+                      text: '請稍後再試',
+                      showConfirmButton: true,
+                    })
                   }
                 }
               }}

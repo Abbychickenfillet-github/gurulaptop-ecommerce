@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/hooks/use-auth'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 
 export default function BlogComment({ blog_id }) {
   const [blogComment, setBlogComment] = useState([])
@@ -73,13 +76,28 @@ export default function BlogComment({ blog_id }) {
         const newData = await response.json()
         setBlogComment((prevComments) => [...prevComments, newData])
         setNewComment('')
-        alert('留言成功！')
+        MySwal.fire({
+          icon: 'success',
+          title: '留言新增成功',
+          showConfirmButton: false,
+          timer: 1500,
+        })
       } else {
-        alert('留言失敗，請稍後再試！')
+        MySwal.fire({
+          icon: 'error',
+          title: '留言新增失敗',
+          showConfirmButton: false,
+          timer: 1500,
+        })
       }
     } catch (error) {
       console.error('Error posting comment:', error)
-      alert('發生錯誤，請稍後再試！')
+      MySwal.fire({
+        icon: 'error',
+        title: '留言新增失敗',
+        showConfirmButton: false,
+        timer: 1500,
+      })
     }
   }
 
@@ -103,7 +121,9 @@ export default function BlogComment({ blog_id }) {
                 <img
                   className="w-100 h-100 object-fit-cover"
                   src={
-                    comment.image_path
+                    comment.image_path?.startsWith('data:image')
+                      ? comment.image_path
+                      : comment.image_path
                       ? `http://localhost:3005${comment.image_path}`
                       : 'https://th.bing.com/th/id/R.88c444f63f40cfa9b49801f826befa80?rik=QAme0H3xbxieEQ&pid=ImgRaw&r=0'
                   }

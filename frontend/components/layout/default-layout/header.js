@@ -81,7 +81,7 @@ export default function Header() {
     return () => {
       document.body.style.paddingTop = '0px'
     }
-  }, [user_id])
+  }, [user_id, auth?.userData?.image_path])
 
   useEffect(() => {
     if (userData && userData.user_id) {

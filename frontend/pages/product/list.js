@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import styles from '@/styles/product.module.scss'
-import NextBreadCrumbLight from '@/components/common/next-breadcrumb-light'
 import ProductCard from '@/components/product/product-card'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'

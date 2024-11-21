@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import EventButton from '@/components/event/EventButton'
 import styles from '@/styles/individualRegistration.module.css'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const IndividualRegistration = () => {
   const router = useRouter()
@@ -19,13 +20,10 @@ const IndividualRegistration = () => {
     agreeToTerms: false,
   })
 
-  // 新增 loading、錯誤和成功狀態
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState('')
-  const [showSuccess, setShowSuccess] = useState(false)
 
   // 表單驗證函式
-  const validateForm = () => {
+  const validateForm = async () => {
     // 驗證個人資訊
     if (
       !formData.participant.name.trim() ||
@@ -33,27 +31,51 @@ const IndividualRegistration = () => {
       !formData.participant.phone.trim() ||
       !formData.participant.email.trim()
     ) {
-      setError('請填寫所有必填欄位')
+      await Swal.fire({
+        icon: 'warning',
+        title: '提示',
+        text: '請填寫所有必填欄位',
+        showConfirmButton: false,
+        timer: 1500,
+      })
       return false
     }
 
     // 驗證電子郵件格式
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.participant.email)) {
-      setError('請輸入有效的電子郵件地址')
+      await Swal.fire({
+        icon: 'warning',
+        title: '提示',
+        text: '請輸入有效的電子郵件地址',
+        showConfirmButton: false,
+        timer: 1500,
+      })
       return false
     }
 
     // 驗證電話號碼格式（台灣手機號碼格式）
     const phoneRegex = /^09\d{8}$/
     if (!phoneRegex.test(formData.participant.phone)) {
-      setError('請輸入有效的手機號碼（格式：09xxxxxxxx）')
+      await Swal.fire({
+        icon: 'warning',
+        title: '提示',
+        text: '請輸入有效的手機號碼（格式：09xxxxxxxx）',
+        showConfirmButton: false,
+        timer: 1500,
+      })
       return false
     }
 
     // 驗證同意條款
     if (!formData.agreeToTerms) {
-      setError('請同意活動相關規定及條款')
+      await Swal.fire({
+        icon: 'warning',
+        title: '提示',
+        text: '請同意活動相關規定及條款',
+        showConfirmButton: false,
+        timer: 1500,
+      })
       return false
     }
 
@@ -63,7 +85,6 @@ const IndividualRegistration = () => {
   // 處理輸入變更
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target
-    setError('') // 清除錯誤訊息
 
     if (name.startsWith('participant.')) {
       const field = name.split('.')[1]
@@ -92,17 +113,25 @@ const IndividualRegistration = () => {
     e.preventDefault()
 
     // 驗證表單
-    if (!validateForm()) {
+    if (!(await validateForm())) {
       return
     }
 
     // 確認提交
-    if (!window.confirm('確定要提交報名嗎？')) {
+    const confirmResult = await Swal.fire({
+      icon: 'question',
+      title: '確認提交',
+      text: '確定要提交報名嗎？',
+      showCancelButton: true,
+      confirmButtonText: '確定',
+      cancelButtonText: '取消',
+    })
+
+    if (!confirmResult.isConfirmed) {
       return
     }
 
     setIsSubmitting(true)
-    setError('')
 
     try {
       const response = await axios.post(
@@ -124,19 +153,32 @@ const IndividualRegistration = () => {
       )
 
       if (response.data.code === 200) {
-        setShowSuccess(true)
+        await Swal.fire({
+          icon: 'success',
+          title: '報名成功！',
+          text: '即將返回活動詳情頁面...',
+          showConfirmButton: false,
+          timer: 1500,
+        })
         setTimeout(() => {
           router.push(`/event/eventDetail/${eventId}`)
-        }, 2000)
+        }, 1500)
       }
     } catch (error) {
+      let errorMessage = '報名失敗，請稍後再試'
       if (error.response) {
-        setError(error.response.data.message || '報名失敗，請稍後再試')
+        errorMessage = error.response.data.message || errorMessage
       } else if (error.request) {
-        setError('網路連線異常，請檢查網路狀態')
-      } else {
-        setError('報名失敗，請稍後再試')
+        errorMessage = '網路連線異常，請檢查網路狀態'
       }
+
+      await Swal.fire({
+        icon: 'error',
+        title: '錯誤',
+        text: errorMessage,
+        showConfirmButton: false,
+        timer: 2000,
+      })
       console.error('Registration error:', error)
     } finally {
       setIsSubmitting(false)
@@ -156,20 +198,6 @@ const IndividualRegistration = () => {
               >
                 個人賽報名表單
               </h2>
-
-              {/* 成功訊息 */}
-              {showSuccess && (
-                <div className="alert alert-success text-center" role="alert">
-                  報名成功！即將返回活動詳情頁面...
-                </div>
-              )}
-
-              {/* 錯誤訊息 */}
-              {error && (
-                <div className="alert alert-danger text-center" role="alert">
-                  {error}
-                </div>
-              )}
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
@@ -248,7 +276,6 @@ const IndividualRegistration = () => {
                   </div>
                 </div>
 
-                {/* 同意條款 */}
                 <div className="mb-4">
                   <div className="form-check">
                     <input

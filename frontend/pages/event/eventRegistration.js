@@ -3,16 +3,15 @@ import { useRouter } from 'next/router'
 import EventButton from '@/components/event/EventButton'
 import PlayerInfo from '@/components/event/PlayerInfo'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const EventRegistration = () => {
   const router = useRouter()
   const { eventId } = router.query
 
-  // 新增活動資訊狀態
   const [eventInfo, setEventInfo] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // 表單狀態管理
   const [formData, setFormData] = useState({
     teamName: '',
     captain: {
@@ -27,11 +26,8 @@ const EventRegistration = () => {
     agreeToTerms: false,
   })
 
-  // 其他狀態管理
   const [visiblePlayers, setVisiblePlayers] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState('')
-  const [showSuccess, setShowSuccess] = useState(false)
 
   // 獲取活動資訊
   useEffect(() => {
@@ -49,14 +45,23 @@ const EventRegistration = () => {
 
         // 檢查活動類型
         if (eventData.teamType !== '團體') {
-          setError('此活動不是團體賽')
-          setTimeout(() => {
-            router.push(`/event/eventDetail/${eventId}`)
-          }, 2000)
+          await Swal.fire({
+            icon: 'warning',
+            title: '提示',
+            text: '此活動不是團體賽',
+            showConfirmButton: false,
+            timer: 2000,
+          })
+          router.push(`/event/eventDetail/${eventId}`)
         }
       } catch (error) {
-        console.error('Error fetching event info:', error)
-        setError(error.response?.data?.message || '無法載入活動資訊')
+        Swal.fire({
+          icon: 'error',
+          title: '錯誤',
+          text: error.response?.data?.message || '無法載入活動資訊',
+          showConfirmButton: false,
+          timer: 2000,
+        })
       } finally {
         setLoading(false)
       }
@@ -65,32 +70,16 @@ const EventRegistration = () => {
     fetchEventInfo()
   }, [eventId, router])
 
-  // 載入中顯示
-  if (loading) {
-    return (
-      <div className="container text-center py-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    )
-  }
-
-  // 如果不是團體賽，顯示錯誤訊息
-  if (eventInfo && eventInfo.teamType !== '團體') {
-    return (
-      <div className="container">
-        <div className="alert alert-warning text-center mt-5" role="alert">
-          此活動不是團體賽
-        </div>
-      </div>
-    )
-  }
-
   // 表單驗證函式
-  const validateForm = () => {
+  const validateForm = async () => {
     if (!formData.teamName.trim()) {
-      setError('請輸入隊伍名稱')
+      await Swal.fire({
+        icon: 'warning',
+        title: '提示',
+        text: '請輸入隊伍名稱',
+        showConfirmButton: false,
+        timer: 1500,
+      })
       return false
     }
 
@@ -100,32 +89,62 @@ const EventRegistration = () => {
       !formData.captain.phone.trim() ||
       !formData.captain.email.trim()
     ) {
-      setError('請填寫完整的隊長資訊')
+      await Swal.fire({
+        icon: 'warning',
+        title: '提示',
+        text: '請填寫完整的隊長資訊',
+        showConfirmButton: false,
+        timer: 1500,
+      })
       return false
     }
 
     const phoneRegex = /^09\d{8}$/
     if (!phoneRegex.test(formData.captain.phone)) {
-      setError('請輸入有效的手機號碼（格式：09xxxxxxxx）')
+      await Swal.fire({
+        icon: 'warning',
+        title: '提示',
+        text: '請輸入有效的手機號碼（格式：09xxxxxxxx）',
+        showConfirmButton: false,
+        timer: 1500,
+      })
       return false
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.captain.email)) {
-      setError('請輸入有效的電子郵件地址')
+      await Swal.fire({
+        icon: 'warning',
+        title: '提示',
+        text: '請輸入有效的電子郵件地址',
+        showConfirmButton: false,
+        timer: 1500,
+      })
       return false
     }
 
     for (let i = 1; i <= visiblePlayers; i++) {
       const player = formData.players[i]
       if (!player || !player.name.trim() || !player.gameId.trim()) {
-        setError('請確認所有隊員資訊都已填寫完整')
+        await Swal.fire({
+          icon: 'warning',
+          title: '提示',
+          text: '請確認所有隊員資訊都已填寫完整',
+          showConfirmButton: false,
+          timer: 1500,
+        })
         return false
       }
     }
 
     if (!formData.agreeToTerms) {
-      setError('請同意活動相關規定及條款')
+      await Swal.fire({
+        icon: 'warning',
+        title: '提示',
+        text: '請同意活動相關規定及條款',
+        showConfirmButton: false,
+        timer: 1500,
+      })
       return false
     }
 
@@ -135,7 +154,6 @@ const EventRegistration = () => {
   // 處理隊伍名稱和隊長資訊變更
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target
-    setError('')
 
     if (name.startsWith('captain.')) {
       const field = name.split('.')[1]
@@ -161,7 +179,6 @@ const EventRegistration = () => {
 
   // 處理隊員資訊變更
   const handlePlayerChange = (playerNumber, field, value) => {
-    setError('')
     setFormData((prev) => ({
       ...prev,
       players: {
@@ -175,10 +192,16 @@ const EventRegistration = () => {
   }
 
   // 處理新增隊員
-  const handleAddPlayer = () => {
+  const handleAddPlayer = async () => {
     const maxTeamSize = eventInfo?.maxPeople || 6
     if (visiblePlayers >= maxTeamSize) {
-      setError('已達人數上限 (6 人)')
+      await Swal.fire({
+        icon: 'warning',
+        title: '提示',
+        text: '已達人數上限 (6 人)',
+        showConfirmButton: false,
+        timer: 1500,
+      })
       return
     }
 
@@ -194,34 +217,51 @@ const EventRegistration = () => {
   }
 
   // 處理移除隊員
-  const handleRemovePlayer = (playerNumber) => {
+  const handleRemovePlayer = async (playerNumber) => {
     if (visiblePlayers <= 1) {
-      setError('至少需要一名隊員')
+      await Swal.fire({
+        icon: 'warning',
+        title: '提示',
+        text: '至少需要一名隊員',
+        showConfirmButton: false,
+        timer: 1500,
+      })
       return
     }
 
-    setVisiblePlayers((prev) => prev - 1)
-    setFormData((prev) => {
-      const newPlayers = { ...prev.players }
-      delete newPlayers[playerNumber]
-      const sortedPlayers = {}
-      let index = 1
-      Object.values(newPlayers).forEach((player) => {
-        sortedPlayers[index] = player
-        index++
-      })
-      return {
-        ...prev,
-        players: sortedPlayers,
-      }
+    const result = await Swal.fire({
+      icon: 'question',
+      title: '確認移除',
+      text: '確定要移除此隊員嗎？',
+      showCancelButton: true,
+      confirmButtonText: '確定',
+      cancelButtonText: '取消',
     })
+
+    if (result.isConfirmed) {
+      setVisiblePlayers((prev) => prev - 1)
+      setFormData((prev) => {
+        const newPlayers = { ...prev.players }
+        delete newPlayers[playerNumber]
+        const sortedPlayers = {}
+        let index = 1
+        Object.values(newPlayers).forEach((player) => {
+          sortedPlayers[index] = player
+          index++
+        })
+        return {
+          ...prev,
+          players: sortedPlayers,
+        }
+      })
+    }
   }
 
   // 處理表單提交
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!validateForm()) {
+    if (!(await validateForm())) {
       return
     }
 
@@ -229,17 +269,31 @@ const EventRegistration = () => {
     for (let i = 0; i < teamMembers.length; i++) {
       const player = teamMembers[i]
       if (!player.name.trim() || !player.gameId.trim()) {
-        setError('請確認所有隊員資訊都已填寫完整')
+        await Swal.fire({
+          icon: 'warning',
+          title: '提示',
+          text: '請確認所有隊員資訊都已填寫完整',
+          showConfirmButton: false,
+          timer: 1500,
+        })
         return
       }
     }
 
-    if (!window.confirm('確定要提交報名嗎？')) {
+    const confirmResult = await Swal.fire({
+      icon: 'question',
+      title: '確認提交',
+      text: '確定要提交報名嗎？',
+      showCancelButton: true,
+      confirmButtonText: '確定',
+      cancelButtonText: '取消',
+    })
+
+    if (!confirmResult.isConfirmed) {
       return
     }
 
     setIsSubmitting(true)
-    setError('')
 
     try {
       const response = await axios.post(
@@ -258,23 +312,56 @@ const EventRegistration = () => {
       )
 
       if (response.data.code === 200) {
-        setShowSuccess(true)
-        setTimeout(() => {
-          router.push(`/event/eventDetail/${eventId}`)
-        }, 2000)
+        await Swal.fire({
+          icon: 'success',
+          title: '報名成功！',
+          text: '即將返回活動詳情頁面...',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        router.push(`/event/eventDetail/${eventId}`)
       }
     } catch (error) {
+      let errorMessage = '報名失敗，請稍後再試'
       if (error.response) {
-        setError(error.response.data.message || '報名失敗，請稍後再試')
+        errorMessage = error.response.data.message || errorMessage
       } else if (error.request) {
-        setError('網路連線異常，請檢查網路狀態')
-      } else {
-        setError('報名失敗，請稍後再試')
+        errorMessage = '網路連線異常，請檢查網路狀態'
       }
+
+      await Swal.fire({
+        icon: 'error',
+        title: '錯誤',
+        text: errorMessage,
+        showConfirmButton: false,
+        timer: 2000,
+      })
       console.error('Registration error:', error)
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  // 載入中顯示
+  if (loading) {
+    return (
+      <div className="container text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    )
+  }
+
+  // 如果不是團體賽，顯示錯誤訊息
+  if (eventInfo && eventInfo.teamType !== '團體') {
+    return (
+      <div className="container">
+        <div className="alert alert-warning text-center mt-5" role="alert">
+          此活動不是團體賽
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -286,19 +373,6 @@ const EventRegistration = () => {
               <h2 className="eventRegistration-title text-center mb-4">
                 團體賽報名表單
               </h2>
-
-              {showSuccess && (
-                <div className="alert alert-success text-center" role="alert">
-                  報名成功！即將返回活動詳情頁面...
-                </div>
-              )}
-
-              {error && (
-                <div className="alert alert-danger text-center" role="alert">
-                  {error}
-                </div>
-              )}
-
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <h3 className="eventRegistration-subtitle">隊伍資訊</h3>

@@ -66,7 +66,6 @@ export default function DashboardIndex() {
     }
   }
 
-
   const renderHome = (key) => {
     switch (key) {
       case 'profile':
@@ -100,7 +99,7 @@ export default function DashboardIndex() {
             }}
           >
             {/* Left Sidebar */}
-            <div className="col-md-3">
+            <div className="col-md-2">
               <div className="text-center">
                 <img
                   src={
@@ -150,7 +149,7 @@ export default function DashboardIndex() {
             </div>
 
             {/* Main Content Area */}
-            <div className="col-md-9">
+            <div className="col-md-10">
               {/* 上方導航 */}
               <Nav
                 variant="tabs"
@@ -182,7 +181,7 @@ export default function DashboardIndex() {
               </Nav>
 
               {/* 內容區域 */}
-              <Tab.Content>
+              <Tab.Content className="mb-5">
                 <Tab.Pane eventKey="home">
                   <div className="row justify-content-end">
                     {renderHome(subActiveKey)}

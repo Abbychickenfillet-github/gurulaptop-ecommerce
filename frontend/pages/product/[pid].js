@@ -275,7 +275,7 @@ export default function Detail() {
   return (
     <>
       <Head>
-        <title>{`商品細節`}</title>
+        <title>{data?.product_name}</title>
       </Head>
       <Header />
       <div className={styles.customBody}>

@@ -85,7 +85,7 @@ export const AuthProvider = ({ children }) => {
   const loginRoute = '/member/login'
   // 隱私頁面路由，未登入時會，檢查後跳轉至登入頁
   const protectedRoutes = [
-    '/dashboard/index',
+    '/dashboard',
     '/coupon/coupon-user'
   ]
   const login = async (email, password) => {
@@ -193,6 +193,7 @@ export const AuthProvider = ({ children }) => {
     if (router.isReady && !auth.isAuth) {
       handleCheckAuth()
     }
+    
     // 下面加入router.pathname，是為了要在向伺服器檢查後，
     // 如果有比對到是隱私路由，就執行跳轉到登入頁面工作
     // 注意有可能會造成向伺服器要求多次，此為簡單的實作範例

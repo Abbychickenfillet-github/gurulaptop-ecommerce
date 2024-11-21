@@ -10,13 +10,13 @@ router.post('/', upload.none(), async (req, res, next) => {
     const { email, password, phone, birthdate, gender } = req.body
 
     // 2. 看解構後的值
-    // console.log('解構後的值:', {
-    //   email,
-    //   password,
-    //   phone,
-    //   birthdate,
-    //   gender,
-    // })
+    console.log('解構後的值:', {
+      email,
+      password,
+      phone,
+      birthdate,
+      gender,
+    })
 
     // 3. 特別檢查 password
     // console.log('password 型別:', typeof password)
@@ -62,11 +62,11 @@ router.post('/', upload.none(), async (req, res, next) => {
       hashedPassword, // 使用加密後的密碼
       phone || null,
       birthdate || null,
-      gender,
+      gender === '' ? null : gender,  // 明確檢查空字串
     ]
 
     const [result] = await db.query(sql, params)
-    // console.log('插入結果:', result)
+    console.log('插入結果:', result)
 
     if (result.affectedRows === 1) {
       // 成功插入

@@ -4,9 +4,9 @@ export default function MyFooter() {
   return (
     <footer>
       <div className="container footer-side">
-        <div className="row m-3 border-bottom border-secondary">
+        <div className="row m-3 border-bottom border-secondary footer-row">
 
-          <div className="col-2">
+          <div className="footer-link col-2">
             <Link
               className="text-secondary mb-3 d-block text-decoration-none"
               href=""
@@ -26,7 +26,7 @@ export default function MyFooter() {
               最新優惠
             </Link>
           </div>
-          <div className="col-2">
+          <div className="footer-link col-2">
             <Link
               className="text-secondary mb-3 d-block text-decoration-none"
               href=""
@@ -46,7 +46,7 @@ export default function MyFooter() {
               比看看
             </Link>
           </div>
-          <div className="col">
+          <div className="footer-link col">
             <Link
               className="text-secondary mb-3 d-block text-decoration-none"
               href=""
@@ -60,20 +60,20 @@ export default function MyFooter() {
               來揪團
             </Link>
           </div>
-          <div className="col-3 d-flex justify-content-end">
+          <div className="col-3 d-flex justify-content-end footer-logo-container">
             <div className="footer-logo">
               <img src="/logo2.svg" alt="網站 Logo" />
             </div>
           </div>
           <div className="mb-4" />
         </div>
-        <div className="row p-3">
+        <div className="row p-3 footer-row">
           <div className="col">
             <Link className="text-secondary mb-2 text-decoration-none" href="">
-              <img src="/Icon-fb.svg" alt="Facebook 圖標" className="me-3" />
+              <img src="/Icon-fb2.svg" alt="Facebook 圖標" className="me-3" />
             </Link>
             <Link className="text-secondary mb-2 text-decoration-none" href="">
-              <img src="/Icon-ig.svg" alt="Instagram 圖標" />
+              <img src="/Icon-ig2.svg" alt="Instagram 圖標" />
             </Link>
           </div>
           <div className="col text-secondary text-end">© 2024 Hello, Inc.</div>

@@ -11,6 +11,7 @@ import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai' // 記得引入
 import { useLoader } from '@/hooks/use-loader'
+import Head from 'next/head'
 
 export default function LogIn(props) {
   const [showpassword, setShowpassword] = useState(false)
@@ -65,6 +66,9 @@ export default function LogIn(props) {
 
   return (
     <>
+      <Head>
+        <title>登入</title>
+      </Head>
       <Header />
       <div className={`${styles['gradient-bg']} ${styles['login-bg']}`}>
         <Image
@@ -103,10 +107,7 @@ export default function LogIn(props) {
                   註冊
                 </Link>
               </div>
-              <form
-                className="mt-5 position-relative"
-                onSubmit={handleSubmit}
-              >
+              <form className="mt-5 position-relative" onSubmit={handleSubmit}>
                 <div className={styles['inputs-group']}>
                   <div className="inputs position-relative">
                     <div className="position-relative mt-5">

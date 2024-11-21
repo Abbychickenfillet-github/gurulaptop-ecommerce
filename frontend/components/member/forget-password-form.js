@@ -68,6 +68,7 @@ export default function ForgetPasswordForm() {
   }
 
   return (
+
     <main className={`form-member w-100 m-auto text-center`}>
       <h2 className="text-center mb-5">重設密碼</h2>
       <p className={`text-center mb-3 ${styles['text-note']}`}>

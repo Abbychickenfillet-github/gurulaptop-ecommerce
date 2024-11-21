@@ -8,6 +8,7 @@ import styles from '@/styles/dashboard.module.scss'
 export default function UserProfile() {
   const { auth, setAuth, logout } = useAuth()
   const user_id = auth?.userData?.user_id
+  // useEffect(,[])
   const [editableUser, setEditableUser] = useState({
     name: '',
     gender: '',
@@ -26,7 +27,12 @@ export default function UserProfile() {
   })
 
   const [profilePic, setProfilePic] = useState(
-    editableUser.image_path || 'signup_login/undraw_profile_1.svg'
+    editableUser.image_path || 
+  (editableUser.gender === 'male' 
+    ? 'signup_login/undraw_profile_2.svg'
+    : editableUser.gender === 'female'
+    ? 'signup_login/undraw_profile_1.svg'
+    : '/Vector.svg')
   )
   const [uploadStatus, setUploadStatus] = useState('')
   // 沒有寫就是false
@@ -467,6 +473,7 @@ export default function UserProfile() {
                             value={editableUser.gender}
                             onChange={handleInputChange}
                           >
+                            <option value="">請選擇</option>
                             <option value="male">男</option>
                             <option value="female">女</option>
                             <option value="undisclosed">不公開</option>
