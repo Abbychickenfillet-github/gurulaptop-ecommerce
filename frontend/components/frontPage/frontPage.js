@@ -565,7 +565,7 @@ export default function FrontPage(props) {
             </div>
           </div>
         </div>
-        <div className="position-relative mt-5">
+        <div className="position-relative frontpage-footer ">
           <MyFooter />
         </div>
         <BackToTop />
