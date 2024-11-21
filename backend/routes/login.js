@@ -12,19 +12,27 @@ const router = express.Router()
 /* GET home page. */
 router.post('/', upload.none(), async (req, res, next) => {
   try {
-    console.log(req.body)
+    // console.log(req.body)
     const { email, password } = req.body
 
     const [row] = await db.query(
-      'SELECT user_id, email, password FROM users WHERE email = ?',
+      'SELECT * FROM users WHERE email = ? AND valid = 1',
       [email]
     )
+    const user = row[0]
     // 這邊實際上是帳號錯誤
     if (row.length === 0) {
-      return res.json({ status: 'error', message: '帳號或密碼錯誤' })
+      return res.json({
+        status: 'error',
+        message: '帳號或密碼錯誤。或已停用本帳號，請聯繫客服',
+      })
     }
-
-    const user = row[0]
+    if (user.valid !== 1) {
+      return res.json({
+        status: 'error',
+        message: '此帳號已被停用',
+      })
+    }
     // compareHash比對輸入與資料庫中的密碼~
     const passwordMatch = await compareHash(password, user.password)
     //  這邊實際上是密碼錯誤
@@ -62,7 +70,7 @@ router.post('/', upload.none(), async (req, res, next) => {
     console.error('登入錯誤:', error)
     res.status(500).json({
       status: 'error',
-      message: '系統錯誤',
+      message: '系統錯誤或帳號已停用',
     })
   }
 })
@@ -75,7 +83,7 @@ router.post('/logout', authenticate, (req, res) => {
 
 router.post('/status', checkToken, (req, res) => {
   const user = req.decoded
-  console.log('user', user)
+  // console.log('user', user)
   if (user) {
     const token = jsonwebtoken.sign(
       {

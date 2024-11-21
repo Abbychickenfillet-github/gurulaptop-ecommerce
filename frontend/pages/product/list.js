@@ -1,12 +1,100 @@
 import { useEffect, useState } from 'react'
 import styles from '@/styles/product.module.scss'
-import NextBreadCrumbLight from '@/components/common/next-breadcrumb-light'
 import ProductCard from '@/components/product/product-card'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import Image from 'next/image'
-import BackToTop from '@/components/BackToTop/BackToTop'
+import BackToTop2 from '@/components/BackToTop/BackToTop2'
+import { useRouter } from 'next/router'
+import Head from 'next/head'
+
 export default function List() {
+  // 利用網址列的參數來過濾產品
+  const router = useRouter()
+  const location = router.query
+  const [products, setProducts] = useState([])
+  const [totalPages, setTotalPages] = useState(1)
+  const currentPage = location?.page ? parseInt(location.page) : 1
+  // 保存新的查詢參數
+  const tmpCategory = location?.category
+  const tmpCategoryValue = location?.category_value
+  const tmpSearch = location?.search
+  const tmpPrice = location?.price
+
+  // 監聽網址變化並更新查詢內容
+  useEffect(() => {
+    const page = location?.page ? parseInt(location.page) : 1
+    const category = location?.category
+    const categoryValue = location?.category_value
+    const price = location?.price
+    const search = location?.search
+    // 從網址列更新價格範圍
+    setPriceMin(price ? Number(price.split('-')[0]) : 5000)
+    setPriceMax(price ? Number(price.split('-')[1]) : 200000)
+    fetchProducts({
+      page,
+      category,
+      categoryValue,
+      price,
+      search,
+    })
+  }, [location])
+
+  // 從後端撈取資料
+  const fetchProducts = async ({
+    page,
+    category,
+    categoryValue,
+    price,
+    search,
+  }) => {
+    let where = ''
+
+    if (page) {
+      where += `page=${page}`
+    }
+    if (category) {
+      where += `&category=${category}`
+    }
+    if (categoryValue) {
+      where += `&category_value=${categoryValue}`
+    }
+    if (price) {
+      where += `&price=${price}`
+    }
+    if (search) {
+      where += `&search=${search}`
+    }
+
+    const response = await fetch(
+      `http://localhost:3005/api/products/list?${where}`
+    )
+    const result = await response.json()
+    if (result.status === 'success') {
+      setProducts(result.data.products)
+      setTotalPages(result.data.totalPages)
+    } else if (result.status === 'error') {
+      setProducts([])
+      setTotalPages(0)
+    }
+  }
+
+  // 當按下按鈕時更新網址列的參數
+  const handleButtonClick = (newParams) => {
+    const searchParams = new URLSearchParams(location.search)
+    Object.entries(newParams).forEach(([key, value]) => {
+      if (value) {
+        searchParams.set(key, value)
+      }
+    })
+
+    // 使用 router.push 更新 URL 並防止頁面刷新後往上捲動
+    // router.push(`?${searchParams.toString()}`)
+    router.push({ pathname: '/product/list', query: newParams }, undefined, {
+      scroll: false,
+    })
+  }
+
   // 小尺寸時的側邊欄開關
   const [isChecked, setIsChecked] = useState(false)
   const handleToggle = (event) => {
@@ -45,10 +133,17 @@ export default function List() {
   // 狀態顯示訊息
 
   const [alertMessage, setAlertMessages] = useState([]) // 使用陣列儲存訊息
-
+  const [alertType, setAlertType] = useState() // 設定訊息類型
   // 新增訊息到陣列
-  const handleShowMessage = (message) => {
-    setAlertMessages((prevMessages) => [...prevMessages, message])
+  const handleShowMessage = (message, type) => {
+    if (type === 'success') {
+      setAlertType('alert-success')
+      setAlertMessages((prevMessages) => [...prevMessages, message])
+    } else {
+      setAlertType('alert-danger')
+      setAlertMessages((prevMessages) => [...prevMessages, message])
+    }
+
     setTimeout(() => {
       // 1 秒後移除最早的訊息
       setAlertMessages((prevMessages) => prevMessages.slice(1))
@@ -57,6 +152,10 @@ export default function List() {
 
   return (
     <>
+      <Head>
+        <title>產品列表</title>
+        <meta name="description" content="Product List" />
+      </Head>
       <Header />
       <div className={`${styles.product_container}`}>
         <div className={`${styles.product_banner}`}>
@@ -69,9 +168,7 @@ export default function List() {
             </div>
           </div>
         </div>
-        <nav className={`${styles.product_breadcrumb}`}>
-          <NextBreadCrumbLight bgClass="transparent" isHomeIcon="true" />
-        </nav>
+        <nav className={`${styles.product_breadcrumb}`}></nav>
         <input
           type="checkbox"
           id="product_aside_toggle"
@@ -102,8 +199,19 @@ export default function List() {
             <div className={`${styles.product_aside_content}`}>
               <input
                 type="text"
+                id="search"
                 className={`${styles.product_search}`}
                 placeholder="Search"
+                onInput={(e) =>
+                  handleButtonClick({
+                    page: 1,
+                    category: tmpCategory,
+                    category_value: tmpCategoryValue,
+                    search: e.target.value,
+                    price: tmpPrice,
+                  })
+                }
+                value={tmpSearch}
               />
               <Image
                 src="/images/product/search.svg"
@@ -119,11 +227,30 @@ export default function List() {
                 type="range"
                 min={5000}
                 max={200000}
-                defaultValue={5000}
                 value={priceMin}
-                onInput={handleMinChange}
+                onChange={handleMinChange}
                 onMouseEnter={() => setTooltipMinVisible(true)}
                 onMouseLeave={() => setTooltipMinVisible(false)}
+                onMouseUp={() => {
+                  handleButtonClick({
+                    page: 1,
+                    category: tmpCategory,
+                    category_value: tmpCategoryValue,
+                    search: tmpSearch,
+                    price: `${priceMin}-${priceMax}`,
+                  })
+                }}
+                onTouchStart={() => setTooltipMinVisible(true)}
+                onTouchEnd={() => {
+                  setTooltipMinVisible(false)
+                  handleButtonClick({
+                    page: 1,
+                    category: tmpCategory,
+                    category_value: tmpCategoryValue,
+                    search: tmpSearch,
+                    price: `${priceMin}-${priceMax}`,
+                  })
+                }}
                 className={`${styles.product_slider}`}
                 id="slider-1"
               />
@@ -148,11 +275,30 @@ export default function List() {
                 type="range"
                 min={5000}
                 max={200000}
-                defaultValue={200000}
                 value={priceMax}
-                onInput={handleMaxChange}
+                onChange={handleMaxChange}
                 onMouseEnter={() => setTooltipMaxVisible(true)}
                 onMouseLeave={() => setTooltipMaxVisible(false)}
+                onMouseUp={() => {
+                  handleButtonClick({
+                    page: 1,
+                    category: tmpCategory,
+                    category_value: tmpCategoryValue,
+                    search: tmpSearch,
+                    price: `${priceMin}-${priceMax}`,
+                  })
+                }}
+                onTouchStart={() => setTooltipMaxVisible(true)}
+                onTouchEnd={() => {
+                  setTooltipMaxVisible(false)
+                  handleButtonClick({
+                    page: 1,
+                    category: tmpCategory,
+                    category_value: tmpCategoryValue,
+                    search: tmpSearch,
+                    price: `${priceMin}-${priceMax}`,
+                  })
+                }}
                 className={`${styles.product_slider}`}
                 id="slider-2"
               />
@@ -196,28 +342,140 @@ export default function List() {
               <div className={`${styles.menu_content}`}>
                 <ul>
                   <li>
-                    <a href="">ACER</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_brand',
+                          category_value: 'ACER',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      ACER
+                    </a>
                   </li>
                   <li>
-                    <a href="">ASUS</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_brand',
+                          category_value: 'ASUS',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      ASUS
+                    </a>
                   </li>
                   <li>
-                    <a href="">DELL</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_brand',
+                          category_value: 'DELL',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      DELL
+                    </a>
                   </li>
                   <li>
-                    <a href="">GIGABYTE</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_brand',
+                          category_value: '技嘉',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      GIGABYTE
+                    </a>
                   </li>
                   <li>
-                    <a href="">HP</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_brand',
+                          category_value: 'HP',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      HP
+                    </a>
                   </li>
                   <li>
-                    <a href="">MSI</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_brand',
+                          category_value: 'MSI',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      MSI
+                    </a>
                   </li>
                   <li>
-                    <a href="">RAZER</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_brand',
+                          category_value: 'RAZER',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      RAZER
+                    </a>
                   </li>
                   <li>
-                    <a href="">ROG</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_brand',
+                          category_value: 'ROG',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      ROG
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -244,13 +502,55 @@ export default function List() {
               <div className={`${styles.menu_content}`}>
                 <ul>
                   <li>
-                    <a href="">文書</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'affordance',
+                          category_value: '文書',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      文書
+                    </a>
                   </li>
                   <li>
-                    <a href="">商務</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'affordance',
+                          category_value: '商務',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      商務
+                    </a>
                   </li>
                   <li>
-                    <a href="">電競</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'affordance',
+                          category_value: '電競',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      電競
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -277,19 +577,89 @@ export default function List() {
               <div className={`${styles.menu_content}`}>
                 <ul>
                   <li>
-                    <a href="">14吋</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_size',
+                          category_value: '13',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      13吋
+                    </a>
                   </li>
                   <li>
-                    <a href="">15吋</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_size',
+                          category_value: '14',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      14吋
+                    </a>
                   </li>
                   <li>
-                    <a href="">15.6吋</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_size',
+                          category_value: '15',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      15吋
+                    </a>
                   </li>
                   <li>
-                    <a href="">16吋</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_size',
+                          category_value: '16',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      16吋
+                    </a>
                   </li>
                   <li>
-                    <a href="">17吋</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_size',
+                          category_value: '17',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      17吋
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -316,22 +686,89 @@ export default function List() {
               <div className={`${styles.menu_content}`}>
                 <ul>
                   <li>
-                    <a href="">4050</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_display_card',
+                          category_value: '4050',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      4050
+                    </a>
                   </li>
                   <li>
-                    <a href="">4060</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_display_card',
+                          category_value: '4060',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      4060
+                    </a>
                   </li>
                   <li>
-                    <a href="">4070</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_display_card',
+                          category_value: '4070',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      4070
+                    </a>
                   </li>
                   <li>
-                    <a href="">4080</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_display_card',
+                          category_value: '4080',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      4080
+                    </a>
                   </li>
                   <li>
-                    <a href="">4090</a>
-                  </li>
-                  <li>
-                    <a href="">其他</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_display_card',
+                          category_value: '4090',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      4090
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -358,16 +795,72 @@ export default function List() {
               <div className={`${styles.menu_content}`}>
                 <ul>
                   <li>
-                    <a href="">i3</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_CPU',
+                          category_value: 'i3',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      i3
+                    </a>
                   </li>
                   <li>
-                    <a href="">i5</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_CPU',
+                          category_value: 'i5',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      i5
+                    </a>
                   </li>
                   <li>
-                    <a href="">i7</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_CPU',
+                          category_value: 'i7',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      i7
+                    </a>
                   </li>
                   <li>
-                    <a href="">其他</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_CPU',
+                          category_value: 'i9',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      i9
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -394,16 +887,89 @@ export default function List() {
               <div className={`${styles.menu_content}`}>
                 <ul>
                   <li>
-                    <a href="">8G</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_RAM',
+                          category_value: '8',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      8G
+                    </a>
                   </li>
                   <li>
-                    <a href="">16G</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_RAM',
+                          category_value: '16',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      16G
+                    </a>
                   </li>
                   <li>
-                    <a href="">32G</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_RAM',
+                          category_value: '32',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      32G
+                    </a>
                   </li>
                   <li>
-                    <a href="">64G</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_RAM',
+                          category_value: '64',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      64G
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_RAM',
+                          category_value: '128',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      128G
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -430,19 +996,72 @@ export default function List() {
               <div className={`${styles.menu_content}`}>
                 <ul>
                   <li>
-                    <a href="">256G</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_hardisk_volume',
+                          category_value: '512',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      512G
+                    </a>
                   </li>
                   <li>
-                    <a href="">512G</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_hardisk_volume',
+                          category_value: '1T',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      1T
+                    </a>
                   </li>
                   <li>
-                    <a href="">1T</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_hardisk_volume',
+                          category_value: '2T',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      2T
+                    </a>
                   </li>
                   <li>
-                    <a href="">2T</a>
-                  </li>
-                  <li>
-                    <a href="">其他</a>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: 1,
+                          category: 'product_hardisk_volume',
+                          category_value: '4T',
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                    >
+                      4T
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -450,66 +1069,99 @@ export default function List() {
           </aside>
           {/* 產品列表 */}
           <main className={`${styles.product_list}`}>
-            {
+            {totalPages === 0 ? (
+              <div className={`${styles.product_not_found}`}>查無產品</div>
+            ) : (
               // 產品卡片
-              [...Array(12)].map((v, i) => (
+              products.map((product) => (
                 <ProductCard
+                  key={product.product_id}
+                  product_id={product.product_id}
                   onSendMessage={handleShowMessage}
-                  key={i}
-                  product_id={275}
                 />
               ))
-            }
+            )}
           </main>
         </div>
         <div className={`${styles.product_pagination}`}>
           <ul className={`${styles.product_pagination}`}>
-            {/* 左箭頭 */}
-            <li className={`${styles.page_item}`}>
-              <a
-                className={`${styles.product_page_link}`}
-                href="#"
-                aria-label="Previous"
-              >
-                <span aria-hidden="true">&lt;</span>
-              </a>
-            </li>
+            {/* 顯示頁碼 */}
+            {totalPages > 0 && (
+              <>
+                {/* 左箭頭 */}
+                <li className={`${styles.page_item}`}>
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault() // 阻止預設的 href 跳轉
+                      handleButtonClick({
+                        page: 1,
+                        category: tmpCategory,
+                        category_value: tmpCategoryValue,
+                        search: tmpSearch,
+                        price: tmpPrice,
+                      })
+                    }}
+                    href=""
+                    className={`${styles.product_page_link}`}
+                  >
+                    <span aria-hidden="true">&lt;</span>
+                  </a>
+                </li>
+              </>
+            )}
             {/* 頁碼 */}
-            <li className={`${styles.product_page_item}`}>
-              <a className={`${styles.product_page_link}`} href="">
-                1
-              </a>
-            </li>
-            <li className={`${styles.product_page_item}`}>
-              <a className={`${styles.product_page_link}`} href="">
-                2
-              </a>
-            </li>
-            <li className={`${styles.product_page_item}`}>
-              <a className={`${styles.product_page_link}`} href="">
-                ...
-              </a>
-            </li>
-            <li className={`${styles.product_page_item}`}>
-              <a className={`${styles.product_page_link}`} href="">
-                29
-              </a>
-            </li>
-            <li className={`${styles.product_page_item}`}>
-              <a className={`${styles.product_page_link}`} href="">
-                30
-              </a>
-            </li>
-            {/* 右箭頭 */}
-            <li className={`${styles.product_page_item}`}>
-              <a
-                className={`${styles.product_page_link}`}
-                href="#"
-                aria-label="Next"
-              >
-                <span aria-hidden="true">&gt;</span>
-              </a>
-            </li>
+            {Array.from({ length: totalPages }).map((_, index) => {
+              const isPageInRange = Math.abs(currentPage - index) <= 3 // 當前頁的前後 5 頁
+
+              if (isPageInRange) {
+                return (
+                  <li key={index} className={`${styles.product_page_item}`}>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault() // 阻止預設的 href 跳轉
+                        handleButtonClick({
+                          page: index + 1,
+                          category: tmpCategory,
+                          category_value: tmpCategoryValue,
+                          search: tmpSearch,
+                          price: tmpPrice,
+                        })
+                      }}
+                      href=""
+                      className={`${styles.product_page_link}`}
+                    >
+                      {index + 1}
+                    </a>
+                  </li>
+                )
+              }
+
+              // 不顯示不在範圍內的頁碼
+              return null
+            })}
+            {totalPages > 0 && (
+              <>
+                {/* 右箭頭 */}
+                <li className={`${styles.product_page_item}`}>
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault() // 阻止預設的 href 跳轉
+                      handleButtonClick({
+                        page: totalPages,
+                        category: tmpCategory,
+                        category_value: tmpCategoryValue,
+                        search: tmpSearch,
+                        price: tmpPrice,
+                      })
+                    }}
+                    href=""
+                    className={`${styles.product_page_link}`}
+                  >
+                    <span aria-hidden="true">&gt;</span>
+                  </a>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>
@@ -519,7 +1171,7 @@ export default function List() {
         {alertMessage.map((msg, index) => (
           <div
             key={index}
-            className="alert alert-success alert-dismissible fade show"
+            className={`alert ${alertType} alert-dismissible fade show`}
             style={{
               zIndex: 9999,
               position: 'fixed',
@@ -532,7 +1184,9 @@ export default function List() {
           </div>
         ))}
       </div>
-      <BackToTop />
+
+      <BackToTop2 />
+
       <MyFooter />
     </>
   )

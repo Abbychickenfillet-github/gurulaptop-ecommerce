@@ -10,26 +10,26 @@ router.post('/', upload.none(), async (req, res, next) => {
     const { email, password, phone, birthdate, gender } = req.body
 
     // 2. 看解構後的值
-    console.log('解構後的值:', {
-      email,
-      password,
-      phone,
-      birthdate,
-      gender,
-    })
+    // console.log('解構後的值:', {
+    //   email,
+    //   password,
+    //   phone,
+    //   birthdate,
+    //   gender,
+    // })
 
     // 3. 特別檢查 password
-    console.log('password 型別:', typeof password)
-    console.log('password 長度:', password ? password.length : 'undefined')
+    // console.log('password 型別:', typeof password)
+    // console.log('password 長度:', password ? password.length : 'undefined')
 
     if (!password) {
       throw new Error('密碼未接收到')
     }
 
     // 4. 看要執行的 SQL 值
-    console.log('準備插入的值:', [email, password, phone, birthdate, gender])
+    // console.log('準備插入的值:', [email, password, phone, birthdate, gender])
     // 檢查是否已經有相同的email
-    console.log('開始資料庫操作')
+    // console.log('開始資料庫操作')
 
     const [existingUsers] = await db.query(
       'SELECT * FROM users WHERE email = ?',
@@ -66,7 +66,7 @@ router.post('/', upload.none(), async (req, res, next) => {
     ]
 
     const [result] = await db.query(sql, params)
-    console.log('插入結果:', result)
+    // console.log('插入結果:', result)
 
     if (result.affectedRows === 1) {
       // 成功插入

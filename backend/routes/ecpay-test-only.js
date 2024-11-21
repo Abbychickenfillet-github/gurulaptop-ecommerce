@@ -5,6 +5,8 @@ import * as crypto from 'crypto'
 /* GET home page. */
 router.get('/', function (req, res, next) {
   const amount = req.query.amount
+  const Id = req.query.orderId
+
   //綠界全方位金流技術文件：
   // https://developers.ecpay.com.tw/?p=2856
   // 信用卡測試卡號：4311-9522-2222-2222 安全碼 222
@@ -17,11 +19,11 @@ router.get('/', function (req, res, next) {
   let isStage = true // 測試環境： true；正式環境：false
 
   //二、輸入參數
-  const TotalAmount = amount
+  const TotalAmount = 1000
   const TradeDesc = '商店線上付款'
-  const ItemName = 'xx商店購買一批'
+  const ItemName = '線上付款'
   const ReturnURL = 'https://www.ecpay.com.tw'
-  const OrderResultURL = 'http://localhost:3000/payment/callback' //前端成功頁面
+  const OrderResultURL = `http:localhost:3000/cart/checkout/?ID=${Id}` //前端成功頁面
   const ChoosePayment = 'ALL'
 
   ////////////////////////以下參數不用改////////////////////////

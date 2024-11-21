@@ -47,29 +47,69 @@
 
 .store-name {
   font-size: 12px; /* 從 12px 放大到 16px */
-  color: #2D3748;
-  margin-bottom: 15px; /* 從 10px 放大到 13px */
+  color: #2d3748;
+}
+
+.store-name2 {
+  font-size: 12px; /* 從 12px 放大到 16px */
+  color: #9b9b9b;
 }
 
 .offer-text {
   font-size: 14px; /* 從 9px 放大到 12px */
-  color: #4A5568;
-  // margin-bottom: 20px; 
+  color: #4a5568;
+  margin-bottom: 10px;
+}
+
+.offer-text2 {
+  font-size: 14px; /* 從 9px 放大到 12px */
+  color: #9b9b9b;
+  margin-bottom: 10px;
 }
 
 .coupon-code {
-  background: #6B46C1;
+  background: #6b46c1;
   color: white;
   padding: 8px 13px; /* 從 6px 10px 放大到 8px 13px */
   border-radius: 5px; /* 從 4px 放大到 5px */
   font-size: 12px; /* 從 8px 放大到 11px */
-  margin-bottom: 13px; /* 從 10px 放大到 13px */
+  margin-bottom: 5px; /* 從 10px 放大到 13px */
   text-align: center;
+}
+
+.coupon-code2 {
+  background: #9b9b9b;
+  color: white;
+  padding: 8px 13px; /* 從 6px 10px 放大到 8px 13px */
+  border-radius: 5px; /* 從 4px 放大到 5px */
+  font-size: 12px; /* 從 8px 放大到 11px */
+  margin-bottom: 5px; /* 從 10px 放大到 13px */
+  text-align: center;
+}
+
+.coupon_discount {
+  font-size: 12px; /* 從 8px 放大到 11px */
+  color: #6b46c1;
+  margin-bottom: 13px;
+}
+
+.coupon_discount2 {
+  font-size: 12px; /* 從 8px 放大到 11px */
+  color: #9b9b9b;
+  margin-bottom: 13px;
 }
 
 .expiry-date {
   font-size: 9px; /* 從 7px 放大到 9px */
   color: #718096;
+  // margin-top: 20px;
+  margin-right: 15px;
+  text-align: right;
+}
+
+.expiry-date2 {
+  font-size: 9px; /* 從 7px 放大到 9px */
+  color: #9b9b9b;
   // margin-top: 20px;
   margin-right: 15px;
   text-align: right;
@@ -82,30 +122,109 @@
   width: calc(60% - 27px);
 }
 
-
 /* 平板 (≥768px) */
 @media (min-width: 768px) and (max-width: 991px) {
 }
 
 /* 手機 (<768px) */
 @media (max-width: 767px) {
-  
   .coupon-code {
     padding: 5px 8px;
     font-size: 10px;
     margin-bottom: 8px;
   }
-  
+
   .expiry-date {
     font-size: 6px;
     margin-top: 12px;
     margin-right: 20px;
   }
+
 }
-
-
-
-
+@media (min-width: 768px) and (max-width: 991px) {
+  .coupon-wrapper {
+    max-width: 450px;
+  }
+  
+  .coupon-content {
+    right: 25px;
+  }
+ 
+  .store-name, .store-name2 {
+    font-size: 11px;
+  }
+ 
+  .offer-text, .offer-text2 {
+    font-size: 12px;
+  }
+ 
+  .coupon-code, .coupon-code2 {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+ 
+  .coupon_discount, .coupon_discount2 {
+    font-size: 11px;
+  }
+ 
+  .expiry-date, .expiry-date2 {
+    font-size: 8px;
+  }
+ }
+ 
+ /* Mobile (<768px) */
+ @media (max-width: 767px) {
+  .coupon-wrapper {
+    max-width: 350px;
+  }
+ 
+  .coupon-content {
+    right: 20px;
+    top: 8px;
+  }
+ 
+  .store-name, .store-name2 {
+    font-size: 10px;
+  }
+ 
+  .offer-text, .offer-text2 {
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+ 
+  .coupon-code, .coupon-code2 {
+    padding: 5px 8px;
+    font-size: 9px;
+    margin-bottom: 5px;
+  }
+ 
+  .coupon_discount, .coupon_discount2 {
+    font-size: 9px;
+    margin-bottom: 0px;
+  }
+ 
+  .expiry-date, .expiry-date2 {
+    font-size: 6px;
+    margin-right: 10px;
+    margin-top: 0px;
+  }
+ }
+ 
+ /* Small Mobile (<576px) */
+ @media (max-width: 575px) {
+  .coupon-wrapper {
+    max-width: 300px;
+  }
+  
+  .store-name, .store-name2 {
+    font-size: 9px;
+  }
+ 
+  .offer-text, .offer-text2 {
+    font-size: 9px;
+    margin-bottom: 5px;
+  }
+ }
 
 /* 篩選器按鈕樣式 */
 .filter-section button {
@@ -116,20 +235,20 @@
 
 .filter-section button:hover,
 .filter-section button.active {
-  background-color: #6B46C1;
-  border-color: #6B46C1;
+  background-color: #6b46c1;
+  border-color: #6b46c1;
   color: white;
 }
 
 /* 分頁樣式 */
 .pagination .page-link {
-  color: #6B46C1;
-  border-color: #6B46C1;
+  color: #6b46c1;
+  border-color: #6b46c1;
 }
 
 .pagination .page-item.active .page-link {
-  background-color: #6B46C1;
-  border-color: #6B46C1;
+  background-color: #6b46c1;
+  border-color: #6b46c1;
 }
 
 /* 響應式調整 */
@@ -138,8 +257,18 @@
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .filter-section span {
     margin-bottom: 10px;
   }
+}
+
+//優惠卷hover效果
+.coupon-item {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.coupon-item:hover {
+  transform: scale(1.02);
 }

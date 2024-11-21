@@ -1,18 +1,15 @@
 .gradient-bg {
   position: relative;
+  z-index: 1;
   background-image: url(../assets/signup_login/andras-vas-Bd7gNnWJBkU-unsplash.jpg);
-  // background: linear-gradient(135deg, #3c007a, #000);
-  background-repeat: repeat;
-  background-size: cover;
-  margin-inline: auto;
+  background: linear-gradient(135deg, #3c007a, #000);
+  background-repeat: no-repeat;
+  background-size: cover ;  /* 改用 cover */
+  background-position: center bottom;  
+  display: flex;
+  flex-direction: column;
 }
 
-.gradient-bg .row{
-  // height: 100%;
-  padding-top: 80px;
-  padding-bottom: 200px;
-  position: relative; /* 添加這一行以固定blur */
-}
 .blur {
   /* background: rgba(255, 255, 255, 0.626);*/
   /* width: 400px; 固定寬度 */
@@ -38,13 +35,10 @@
     background: linear-gradient(135deg, #8d70f1, #3c007a);
   }
 }
-.white {
-  color: white;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
+
 .left {
   // position: relative;
-  z-index: 1;  /* 確保在其他元素上方 */
+  z-index: 20;  /* 確保在其他元素上方 */
   // min-width: 200px;  /* 給予最小寬度 */
   padding: 20px;    /* 給予一些內邊距 */
 }
@@ -75,17 +69,22 @@
   color: white; 
   background-color: transparent; 
   font-size: 16px; 
-  font-family: Khula; 
+  // font-family: Khula; 
   font-weight: 400; 
   letter-spacing: 3.20px; 
   word-wrap: break-word; 
   border-radius: 10px;
-padding-left: 23px; padding-right: 23px; padding-top: 17px; padding-bottom: 17px; background: rgba(30, 25, 55, 0.30); border-radius: 10px; overflow: hidden; justify-content: flex-start; align-items: center; gap: 10px; display: inline-flex
+  padding-left: 23px; padding-right: 23px; padding-top: 17px; 
+  padding-bottom: 17px; 
+  background: rgba(30, 25, 55, 0.30); 
+  border-radius: 10px; 
+  overflow: hidden; 
+  align-items: center; gap: 10px; 
 }
 .inputs::placeholder {
   font-size: 10px; /* 設置文字大小 */
   color: #888; /* 設置文字顏色 */
-  font-family: 'Arial', sans-serif; /* 設置字體 */
+  // font-family: 'Arial', sans-serif; 
   font-weight: normal; /* 設置字重 */   
 }
 
@@ -104,21 +103,24 @@ padding-left: 23px; padding-right: 23px; padding-top: 17px; padding-bottom: 17px
 }
 
 .button{
-  background: -webkit-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246d8e 100%);
-  background: -o-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
-  background: -moz-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
-  background: linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
+  // background: -webkit-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246d8e 100%);
+  // background: -o-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
+  // background: -moz-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
+  // background: linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
   width: 90%;
-  border-radius: 20px;
+  // border-radius: 20px;
   margin: 25px;
 }
 .welcome{
   letter-spacing: 9.6px;
   word-wrap: break-word;
-  color: white; font-size: 48px; font-family: Khula;
+  color: white; font-size: 48px; 
+  // font-family: Khula;
 }
 .guru-laptop{
-  font-size: 64px; font-family: Khula; font-weight: 400; letter-spacing: 12.80px; 
+  font-size: 64px; 
+  // font-family: Khula;
+  font-weight: 400; letter-spacing: 12.80px; 
 }
 .custom-label{
   letter-spacing: 4px;
@@ -169,4 +171,11 @@ padding-left: 23px; padding-right: 23px; padding-top: 17px; padding-bottom: 17px
 .signup-right{
   margin-block: 40px;
   margin-right:40px;
+}
+
+
+.content-row {
+  // height: calc(100vh - 385px);
+  position: relative;
+  z-index: 2;
 }

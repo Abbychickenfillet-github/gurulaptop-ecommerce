@@ -1,24 +1,19 @@
-import nodemailer from 'nodemailer'
 // 導入dotenv 使用 .env 檔案中的設定值 process.env
 import 'dotenv/config.js'
-
-let transport = null
+import nodemailer from 'nodemailer'
+// let transport = null
 
 // 定義所有email的寄送伺服器位置
-transport = {
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true, // use TLS
-  //在專案的 .env 檔案中定義關於寄送郵件的 process.env 變數
-  auth: {
-    user: process.env.SMTP_TO_EMAIL,
-    pass: process.env.SMTP_TO_PASSWORD,
-  },
-  tls: {
-    servername: 'smtp.gmail.com',
-    rejectUnauthorized: false,
+const transport = {
+  service:'gmail',
+  port:587,
+  secure:false,
+  auth:{
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD//
   },
 }
+
 
 // 呼叫transport函式
 const transporter = nodemailer.createTransport(transport)

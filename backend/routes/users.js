@@ -19,6 +19,8 @@ import { compareHash } from '#db-helpers/password-hash.js'
 import path from 'path'
 import multer from 'multer'
 
+import db from '../configs/mysql.js'
+
 // multer的設定值 - START
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
@@ -294,4 +296,94 @@ router.delete('/:id', async function (req, res) {
   return res.json({ status: 'success', data: null })
 })
 
+// === 聊天室相關的使用者路由 === //
+// 獲取所有使用者 (用於聊天室)
+router.get('/chat/users', async (req, res) => {
+  try {
+    const [users] = await db.execute(`
+      SELECT 
+        user_id, 
+        name, 
+        email, 
+        image_path,
+        created_at
+      FROM users 
+      WHERE valid = 1
+    `)
+
+    res.json({
+      status: 'success',
+      data: users.map((user) => ({
+        user_id: user.user_id,
+        name: user.name,
+        email: user.email,
+        image: user.image_path,
+        createdAt: user.created_at,
+        online: false, // 預設離線狀態
+      })),
+    })
+  } catch (error) {
+    console.error('獲取使用者列表錯誤:', error)
+    res.status(500).json({
+      status: 'error',
+      message: '獲取使用者列表失敗',
+    })
+  }
+})
+
+// 獲取單一使用者 (用於聊天室)
+router.get('/chat/users/:userId', authenticate, async function (req, res) {
+  try {
+    const { userId } = req.params
+    const [users] = await db.execute(
+      'SELECT user_id, name, email, image_path, created_at FROM users WHERE user_id = ? AND valid = 1',
+      [userId]
+    )
+
+    if (users.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: '找不到該使用者',
+      })
+    }
+
+    const user = users[0]
+    res.json({
+      status: 'success',
+      data: {
+        id: user.user_id,
+        name: user.name,
+        email: user.email,
+        image: user.image_path,
+        created_at: user.created_at,
+      },
+    })
+  } catch (error) {
+    console.error('獲取使用者資料錯誤:', error)
+    res.status(500).json({
+      status: 'error',
+      message: '獲取使用者資料失敗',
+    })
+  }
+})
+
+// 獲取使用者在線狀態
+router.get('/chat/users/status', authenticate, async function (req, res) {
+  try {
+    // 這裡可以實現獲取使用者在線狀態的邏輯
+    // 可以使用 Redis 或其他方式來儲存使用者在線狀態
+    res.json({
+      status: 'success',
+      data: {
+        // 返回在線使用者列表
+      },
+    })
+  } catch (error) {
+    console.error('獲取使用者在線狀態錯誤:', error)
+    res.status(500).json({
+      status: 'error',
+      message: '獲取使用者在線狀態失敗',
+    })
+  }
+})
 export default router

@@ -1,0 +1,86 @@
+// membership-levels.module.scss
+
+.membershipContainer {
+    background: linear-gradient(135deg, #6C4CCE 0%, #805AF5 100%);
+    padding: 2rem;
+    min-height: 100vh; // 確保最小高度
+  
+    .sectionTitle {
+      margin-bottom: 3rem;
+      
+      h2 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+  
+      h3 {
+        font-size: 1.5rem;
+        opacity: 0.9;
+      }
+    }
+  
+    .statusInfo {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+  
+      .amount {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+  
+      .nextLevel {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 1.5rem;
+      }
+  
+      // 進度條樣式
+      .progressBar {
+        height: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        margin-bottom: 2rem;
+      }
+    }
+    .membershipCard{
+      
+    }
+    .membershipCards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      
+      .card {
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+  
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+          border-color: rgba(255, 255, 255, 0.3);
+        }
+  
+        h3 {
+          font-size: 1.5rem;
+          font-weight: bold;
+          margin-bottom: 1.5rem;
+          padding-bottom: 1rem;
+          border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+  
+        p {
+          font-size: 1rem;
+          line-height: 1.6;
+          opacity: 0.9;
+        }
+      }
+    }
+  }

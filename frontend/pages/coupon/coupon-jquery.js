@@ -1,5 +1,5 @@
 import React from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css'
+// import 'bootstrap/dist/css/bootstrap.min.css'
 import Link from 'next/link'
 import { FaPenFancy } from 'react-icons/fa'
 import { Nav, Tab } from 'react-bootstrap'
@@ -7,12 +7,12 @@ import CardExample from '@/components/bootstrap/cards'
 import Coupon from '@/components/coupon'
 import UserProfile from '@/components/dashboard/userInfoEdit'
 import Paginationcomponent from '@/components/paginationcomponent/paginationcomponent'
-import CouponQuery from '@/components/coupon/coupon-query-components'
+import CouponList from '@/components/coupon/coupon-list-components'
 import { useRouter } from 'next/router'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-const MySwal = withReactContent(Swal)
 
+const MySwal = withReactContent(Swal)
 
 export default function CouponPageJquery() {
   const router = useRouter()
@@ -40,16 +40,16 @@ export default function CouponPageJquery() {
           </div>
           <div className="list-group list-group-flush">
             <Link
+              href={`/coupon/coupon-user`}
+              className="list-group-item list-group-item-action text-center"
+            >
+              優惠卷
+            </Link>
+            <Link
               href="coupon-jquery"
               className="list-group-item list-group-item-action text-center"
             >
               領取優惠卷
-            </Link>
-            <Link
-              href={`/coupon/${id}`}
-              className="list-group-item list-group-item-action text-center"
-            >
-              優惠卷
             </Link>
           </div>
         </div>
@@ -111,19 +111,12 @@ export default function CouponPageJquery() {
               {/* 優惠卷 */}
               <Tab.Pane eventKey="coupon-record">
                 <div className="container">
-                  <CouponQuery />
-                  <div className="row g-4">
-                    <div
-                      className="col-md-6"
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Coupon />
-                    </div>
-                  </div>
+                  {/* <CouponQuery /> */}
+                  <CouponList />
                   {/* 分頁 */}
-                  <div className="pagination-section mt-4">
+                  {/* <div className="pagination-section mt-4">
                     <Paginationcomponent />
-                  </div>
+                  </div> */}
                 </div>
               </Tab.Pane>
 

@@ -1,31 +1,36 @@
 import express from 'express'
 const router = express.Router()
 import multer from 'multer'
-import db from '##/configs/mysql.js'
+import db from '../configs/mysql.js'
 import jsonwebtoken from 'jsonwebtoken'
-import authenticate from '#middlewares/authenticate.js'
+import authenticate from '../middlewares/authenticate.js'
 import 'dotenv/config.js'
-import { compareHash, generateHash } from '#db-helpers/password-hash.js'
+import { compareHash, generateHash } from '../db-helpers/password-hash.js'
 const upload = multer()
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 
-// 檢查登入狀態
+// seeion? -> 真的? 隔一段時間丟進伺服器做驗證
+// 檢查登入狀態 每次一打開頁面
 router.get('/check', authenticate, async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM users WHERE user_id=?', [
       req.user.user_id,
     ])
+    if (!rows.length) {
+      return res.status(404).json({ status: 'error', message: '找不到使用者' })
+    }
     const user = rows[0]
     delete user.password
     return res.json({ status: 'success', data: { user } })
   } catch (error) {
     console.error('檢查失敗:', error)
-    return res.json({ status: 'error', message: '檢查失敗' })
+    return res.status(500).json({ status: 'error', message: '檢查失敗' })
   }
 })
+
+// 註冊
 router.post('/', upload.none(), async (req, res) => {
-  // 移除未使用的 next 參數
   try {
     const { email, password, phone, birthdate, gender } = req.body
 
@@ -53,7 +58,6 @@ router.post('/', upload.none(), async (req, res) => {
     // 密碼加密
     const hashedPassword = await generateHash(password)
 
-    // SQL 查詢
     const sql = `
       INSERT INTO users (
         email, password, phone, birthdate, gender,
@@ -98,24 +102,33 @@ router.post('/', upload.none(), async (req, res) => {
 })
 
 // 登入
-router.post('/login', async (req, res) => {
-  const loginUser = req.body
+router.post('/login', upload.none(), async (req, res) => {
+  const { email, password } = req.body
 
-  if (!loginUser.email || !loginUser.password) {
-    return res.json({ status: 'fail', message: '缺少必要資料' })
+  if (!email || !password) {
+    return res.status(400).json({ status: 'error', message: '缺少必要資料' })
   }
 
   try {
-    const [rows] = await db.query(
-      'SELECT * FROM users WHERE email = ? AND password = ?',
-      [loginUser.email, loginUser.password]
-    )
-// 有雜湊碼的情況
+    const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [
+      email,
+    ])
+
     if (rows.length === 0) {
-      return res.json({ status: 'error', message: '老師的帳號或密碼錯誤' })
+      return res
+        .status(401)
+        .json({ status: 'error', message: '帳號或密碼錯誤' })
     }
 
     const user = rows[0]
+    const passwordMatch = await compareHash(password, user.password)
+
+    if (!passwordMatch) {
+      return res
+        .status(401)
+        .json({ status: 'error', message: '帳號或密碼錯誤' })
+    }
+
     const tokenData = {
       user_id: user.user_id,
       email: user.email,
@@ -130,23 +143,48 @@ router.post('/login', async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
     })
 
     return res.json({
       status: 'success',
-      data: { accessToken ,   message: '老師版本的登入成功'  
-      },
+      data: { accessToken, message: '登入成功' },
     })
   } catch (error) {
     console.error('登入失敗:', error)
-    return res.json({ status: 'error', message: '登入失敗' })
+    return res.status(500).json({ status: 'error', message: '登入失敗' })
   }
 })
 
 // 登出
 router.post('/logout', authenticate, (req, res) => {
-  res.clearCookie('accessToken', { httpOnly: true })
-  return res.json({ status: 'success', data: null })
+  res.clearCookie('accessToken')
+  return res.json({ status: 'success', message: '登出成功' })
 })
+
+// 身份驗證中間件
+export const checkAuth = (req, res, next) => {
+  try {
+    const token =
+      req.headers.authorization?.split(' ')[1] || req.cookies.accessToken
+
+    if (!token) {
+      return res.status(401).json({
+        status: 'error',
+        message: '請先登入',
+      })
+    }
+
+    const decoded = jsonwebtoken.verify(token, accessTokenSecret)
+    req.user = decoded
+    next()
+  } catch (error) {
+    console.error('認證錯誤:', error)
+    return res.status(401).json({
+      status: 'error',
+      message: '認證失敗，請重新登入',
+    })
+  }
+}
 
 export default router

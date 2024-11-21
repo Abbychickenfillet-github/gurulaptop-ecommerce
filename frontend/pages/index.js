@@ -219,13 +219,15 @@
 // }
 import React from 'react'
 import FrontPage from '@/components/frontPage/frontPage'
-import Header from '@/components/layout/default-layout/header'
-import MyFooter from '@/components/layout/default-layout/my-footer'
+import Head from 'next/head'
 
 export default function Home() {
   return (
     <>
-    <FrontPage/>
+      <Head>
+        <title>Laptop Guru</title>
+      </Head>
+      <FrontPage />
     </>
   )
 }

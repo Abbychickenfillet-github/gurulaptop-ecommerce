@@ -1,0 +1,158 @@
+.container {
+    /* font-family: Khula, Montserrat, "Noto Sans TC", sans-serif; */
+    font-weight: bold;
+    color: #ffffff;
+    display: flex;
+    flex-wrap: wrap; /* 允許文字換行 */
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .word {
+    display: inline-flex;
+    gap: 2px;
+  }
+  
+  .alphabet {
+    display: inline-block;
+    transform-origin: center bottom;
+  }
+  
+  .alphabet.active {
+    animation: jumpLetter 1.5s cubic-bezier(0.165, 0.85, 0.45, 1);
+  }
+  
+  /* 更現代的配色方案，配合紫色/粉色背景 */
+  .alphabet:nth-child(5n+1).active {
+    animation-name: jumpNeon1;  /* 霓虹粉 #FF61E6 */
+  }
+  .alphabet:nth-child(5n+2).active {
+    animation-name: jumpNeon2;  /* 電光紫 #B84FFF */
+  }
+  .alphabet:nth-child(5n+3).active {
+    animation-name: jumpNeon3;  /* 螢光藍 #5CE1FF */
+  }
+  .alphabet:nth-child(5n+4).active {
+    animation-name: jumpNeon4;  /* 霓虹黃 #FFE345 */
+  }
+  .alphabet:nth-child(5n+5).active {
+    animation-name: jumpNeon5;  /* 電光白 #EEFCFF */
+  }
+  
+  @keyframes jumpNeon1 {
+    0%, 100% {
+      transform: translateY(0) scale(1, 1);
+      color: #ffffff;
+      text-shadow: none;
+    }
+    25%, 75% {
+      transform: translateY(0) scale(1.2, 0.8);
+      text-shadow: 0 0 5px #FF61E6;
+      color: #ffffff;
+    }
+    50% {
+      transform: translateY(-50px) scale(0.8, 1.2);
+      text-shadow: 0 0 20px #FF61E6, 0 0 30px #FF61E6;
+      color: #FF61E6;
+    }
+  }
+  
+  /* 其他動畫效果類似，只是顏色不同 */
+  @keyframes jumpNeon2 {
+    /* 複製上面的動畫，將 #FF61E6 換成 #B84FFF */
+  }
+  
+  @keyframes jumpNeon3 {
+    /* 複製上面的動畫，將 #FF61E6 換成 #5CE1FF */
+  }
+  
+  @keyframes jumpNeon4 {
+    /* 複製上面的動畫，將 #FF61E6 換成 #FFE345 */
+  }
+  
+  @keyframes jumpNeon5 {
+    /* 複製上面的動畫，將 #FF61E6 換成 #EEFCFF */
+  }
+  .alphabet {
+    display: inline-block;
+    transform-origin: center bottom;
+    /* font-family: Montserrat, "Noto Sans TC", sans-serif; */
+    font-weight: bold;
+    color: #ffffff;
+    font-size: calc(1.5rem + 2vw); /* RWD 文字大小 */
+    padding: 0 2px;
+  }
+  
+  .alphabet.active {
+    animation: jumpLetter 1.5s cubic-bezier(0.165, 0.85, 0.45, 1);
+  }
+  
+  /* 新增霓虹色彩效果 */
+  .alphabet:nth-child(5n+1).active {
+    animation-name: jumpCyber1; /* cyberpunk 粉紅 */
+  }
+  .alphabet:nth-child(5n+2).active {
+    animation-name: jumpCyber2; /* 電光紫 */
+  }
+  .alphabet:nth-child(5n+3).active {
+    animation-name: jumpCyber3; /* 霓虹藍 */
+  }
+  .alphabet:nth-child(5n+4).active {
+    animation-name: jumpCyber4; /* 螢光綠 */
+  }
+  .alphabet:nth-child(5n+5).active {
+    animation-name: jumpCyber5; /* 電漿白 */
+  }
+  
+  @keyframes jumpCyber1 {
+    0%, 100% { 
+      transform: translateY(0) scale(1);
+      color: #ffffff;
+      text-shadow: none;
+    }
+    50% {
+      transform: translateY(-50px) scale(1.1);
+      color: #FF2E93;
+      text-shadow: 0 0 10px #FF2E93,
+                   0 0 20px #FF2E93,
+                   0 0 30px #FF2E93;
+    }
+  }
+  
+  /* 其他動畫效果請依此類推，顏色分別為：
+  jumpCyber2: #B829FF (電光紫)
+  jumpCyber3: #17E7FF (霓虹藍)
+  jumpCyber4: #39FF14 (螢光綠)
+  jumpCyber5: #FFFFFF (電漿白，搭配更強的發光效果)
+  */
+  .welcomeText {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center; 
+    width: 100%;
+  }
+  
+  .companyName {
+    font-size: 3.5rem;
+    font-weight: 800;
+    text-align: center; 
+    width: 100%;
+  }
+  .container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .wordGroup {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .wordWrap {
+    display: inline-flex;
+    white-space: nowrap; /* 防止單字斷行 */
+  }
+  

@@ -1,0 +1,150 @@
+/* 商品列表 */
+
+.product_card {
+  border: 1px solid #ddd; /* 邊框顏色 */
+  border-radius: 25px 0px; /* 圓角邊框 */
+  overflow: hidden; /* 隱藏溢出部分 */
+  transition: transform 0.3s, box-shadow 0.3s; /* 鼠標懸停時的轉換效果 */
+  width: 270px;
+  height: 360px;
+  margin: 0 0 42px 42px; /* 產品卡片間距 */
+}
+
+.product_card:hover {
+  transform: translateY(-5px); /* 鼠標懸停時輕微上移 */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); /* 增強陰影效果 */
+}
+
+.product_card_img {
+  padding: 10px; /* 圖片內邊距 */
+  background: linear-gradient(0deg, #432aba 0%, #1f1e2e 100%);
+  /* 圖片背景顏色 */
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.product_card_img img {
+  // 置中
+  display: block;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 比較按鈕 */
+
+/* 隱藏原生 checkbox */
+.product_compare_checkbox {
+  display: none;
+}
+
+/* 自訂 checkbox 樣式 */
+.product_compare_label {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #ddd;
+  transform: rotate(45deg);
+  top: 15px;
+  right: 50px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Check 樣式 */
+.product_compare_checkbox:checked + .product_compare_label {
+  background-color: #805af5;
+}
+/* 文字樣式 */
+.product_compare_text {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  font-size: 16px;
+}
+.product_ellipsis {
+  white-space: nowrap; /* 不換行 */
+  overflow: hidden; /* 隱藏超出容器的文字 */
+  text-overflow: ellipsis; /* 使用省略號 */
+  width: 180px; /* 設置容器的寬度 */
+}
+/* 名稱、型號、收藏、加入購物車icon */
+
+.product_card_content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.product_icons {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+.product_icons img {
+  top: 0px;
+  margin-left: 8px; /* 圖片之間的間距 */
+}
+.product_card_content {
+  margin-left: 20px;
+  padding: 15px; /* 內容內邊距 */
+  color: black; /* 文字顏色 */
+  font-size: 14px; /* 文字大小 */
+}
+.product_collection_checkbox {
+  display: none; /* 隱藏原生 checkbox */
+}
+
+.product_collection_icon {
+  cursor: pointer; /* 添加指標樣式 */
+  transition: color 0.3s ease; /* 添加過渡效果 */
+  stroke: white; /* 默認顏色 */
+}
+
+.product_collection_checkbox:checked + .product_collection_icon {
+  fill: #805af5; /* 選中顏色 */
+}
+
+/* 價格按鈕 */
+
+.price_button {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 220px;
+  border: 1px solid rgba(0, 0, 0, 0.4); /* 外邊框顏色 */
+  border-radius: 35px; /* 圓角 */
+  color: black;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  cursor: pointer;
+  justify-content: space-between;
+}
+
+.price_button .price {
+  flex-grow: 1;
+
+  padding-left: 20px;
+}
+
+.price_button .arrow {
+  background: #805af5; /* 圓形箭頭背景顏色 */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* 圓形 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+}
+
+.arrow:hover {
+  background: linear-gradient(270deg, #7b65ed 0%, #2c2887 50%, #00013a 100%);
+}

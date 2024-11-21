@@ -32,9 +32,9 @@ const ReactClientBackURL = process.env.ECPAY_ORDER_CALLBACK_URL
 // http://localhost:3005/ecpay?orderId=123123
 router.get('/payment', authenticate, async (req, res, next) => {
   // 從資料庫得到order資料
-  const orderId = req.query.orderId
+  const id = req.query.orderId
   // 從資料庫取得訂單資料
-  const orderRecord = await Purchase_Order.findByPk(orderId, {
+  const orderRecord = await Purchase_Order.findByPk(id, {
     raw: true, // 只需要資料表中資料
   })
 

@@ -1,324 +1,245 @@
 /*  --------------------------ArticleSection -------------------------- */
-.ArticleSectionContainer {
-    background-color: rgb(0, 0, 0);
-    height: 28rem;
-  }
-  
-  .ArticleSectionTitle {
-    color: #fff;
-    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    font-family: Khula;
-    font-size: 4.69rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    letter-spacing: 48.75px;
-    margin-top: 4rem;
-    margin-bottom: 5rem;
-  }
-  
-  .ArticleSectionIntroduction {
-    letter-spacing: 2rem;
-  }
-  /*  --------------------------ArticleSection -------------------------- */
-  
-  /* --------------------------SearchBox-------------------------- */
-  /* --------------------------SearchBox-------------------------- */
-  /* --------------------------SearchBox-------------------------- */
-  .ArticleHomePageSearchBox {
-    padding-top: 10rem;
-    padding-bottom: 10rem;
-    margin-left: -1rem;
-    margin-right: -1rem;
-    background: transparent;
-  }
-  
-  .ArticleMain {
-    margin-bottom: 14.75rem;
-    /* margin-left: -1rem;
+
+/*  --------------------------ArticleSection -------------------------- */
+
+/* --------------------------SearchBox-------------------------- */
+/* --------------------------SearchBox-------------------------- */
+/* --------------------------SearchBox-------------------------- */
+.ArticleHomePageSearchBox {
+  padding-top: 10rem;
+  padding-bottom: 10rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  background: transparent;
+}
+
+.ArticleMain {
+  margin-bottom: 14.75rem;
+  /* margin-left: -1rem;
             margin-right: 10rem; */
-  }
-  
+}
+
+.ArticleHomePageSearchInputStyle {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  /* border-bottom: ; */
+  border-radius: 0;
+  width: 47rem;
+  background-color: rgba(255, 255, 255, 0);
+}
+.ArticleHomePageSearchInputStyle::placeholder {
+  color: white;
+}
+/* --------------點擊 Search 變成漸層-------------- */
+.ArticleHomePageSearchBox:has(.ArticleHomePageSearchInputStyle:focus) {
+  background: linear-gradient(
+    0deg,
+    #a793e9 0%,
+    #5346b6 35%,
+    #34246d 70%,
+    #271948 100%
+  );
+}
+/* --------------點擊 search 變成漸層-------------- */
+
+/* --------------ArticleBrandSearch-------------- */
+
+// .ArticleSmallTitle {
+//   width: 15rem;
+//   margin-left: 15rem;
+//   margin-bottom: 15rem;
+//   margin-top: 8.75rem;
+//   font-size: 2rem;
+//   color: #805af5;
+// }
+.TitleDiamond {
+  color: transparent;
+  border: 0.3rem solid #805af5;
+  transform: rotate(45deg) translate(0.3rem, -1rem);
+  font-size: 0.8rem;
+  top: 0;
+  left: 1.5rem;
+}
+
+.fa-magnifying-glass {
+  color: white;
+}
+.CardBrand {
+  color: #fff;
+  font-size: 0.625rem;
+  letter-spacing: 0.2rem;
+}
+.ArticleCreatedTime {
+  color: #fff;
+}
+
+/* ------------------------------------------ArticleCheckbox + 小菱形 checkbpx------------------------------------------ */
+/* 隱藏預設的 checkbox 行為*/
+.ArticleCheckbox input[type='checkbox'] {
+  display: none;
+}
+
+/* 自定義 checkbox 未選中狀態的樣式 */
+.ArticleCheckbox label {
+  position: relative;
+  cursor: pointer;
+  padding-left: 25px; /* 調整文字和 checkbox 之間的距離 */
+}
+
+.ArticleCheckbox label::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0.4rem;
+  width: 12px;
+  height: 12px;
+  /* checkbox 邊框顏色 */
+  border: 1.5px solid white;
+  /* checkbox 邊框顏色 */
+  /* background-color: transparent; */
+  /* transition: all 0.3s ease; */
+  transform: rotate(45deg);
+}
+
+/* checkbox 勾選後的樣式自定義 */
+.ArticleCheckbox input[type='checkbox']:checked + label::before {
+  background-color: #805af5; /* 填充背景色 */
+  border-color: transparent;
+}
+
+/* checkbox 整體樣式 */
+.ArticleCheckbox {
+  background-color: transparent;
+  width: 11rem;
+}
+/* checkbox 字體顏色 */
+.ArticleCheckbox .ArticleCheckboxLabel {
+  color: white;
+}
+
+/* ------------------------------------------ArticleCheckbox + 小菱形 checkbpx------------------------------------------ */
+/* ------------------------------------------------ArticleCard------------------------------------------------ */
+/* ArticleCard+Hover */
+.ArticleCardStyle {
+  background-color: #ffffff00;
+  position: relative;
+  border-radius: 20px 0px 20px 0px;
+  border: 0.5px solid #b4b4b4;
+  display: flex;
+  width: 21.25rem;
+  height: 37.5rem;
+}
+.ArticleCardType {
+  width: 8rem;
+  color: #fff;
+  letter-spacing: 0.2rem;
+  text-wrap: nowrap;
+}
+.ArticleCardImg {
+  position: relative;
+  border-radius: 20px 0px 0px 0px;
+}
+.ArticleCardImg:hover {
+  opacity: 0.3;
+}
+.ArticleCardTitle {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  color: #fff;
+  letter-spacing: 0.2rem;
+  font-size: 1rem;
+}
+.ArticleCardContent {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  color: #fff;
+  letter-spacing: 0.2rem;
+  font-size: 1rem;
+}
+.CardBrandHover {
+  font-size: 2.5rem;
+}
+.ArticleCardHead {
+  position: relative;
+  margin-left: -0.7rem;
+  margin-right: -0.7rem;
+}
+.HoverBrand {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(204, 168, 245, 0.836);
+  border-radius: 20px 0px 0px 0px;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease;
+}
+.ArticleCardStyle:hover .HoverBrand {
+  opacity: 0.7;
+}
+/* ------------------------------------------------ArticleCard------------------------------------------------ */
+/* ------------------------------------------------RWD------------------------------------------------ */
+
+@media (max-width: 430px) {
   .ArticleHomePageSearchInputStyle {
-    border-top: 0;
-    border-left: 0;
-    border-right: 0;
+    /* border-top: 0;
+        border-left: 0;
+        border-right: 0; */
     /* border-bottom: ; */
     border-radius: 0;
-    width: 47rem;
-    background-color: rgba(255, 255, 255, 0);
+    width: 20rem;
+    background-color: Transparent;
   }
-  .ArticleHomePageSearchInputStyle::placeholder {
-    color: white;
+  .ArticleHomePageSearchBox {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    background: transparent;
   }
-  /* --------------點擊 Search 變成漸層-------------- */
-  .ArticleHomePageSearchBox:has(.ArticleHomePageSearchInputStyle:focus) {
-    background: linear-gradient(
-      0deg,
-      #a793e9 0%,
-      #5346b6 35%,
-      #34246d 70%,
-      #271948 100%
-    );
-  }
-  /* --------------點擊 search 變成漸層-------------- */
-  
-  /* --------------ArticleBrandSearch-------------- */
-  .ArticleBrandSearch {
-    /* width: 90rem; */
-    padding-top: 8rem;
-    padding-bottom: 16rem;
-  }
-  
-  .ArticleSmallTitle {
-    width: 15rem;
-    margin-left: 15rem;
-    margin-bottom: 15rem;
-    margin-top: 8.75rem;
-    font-size: 2rem;
-    color: #805af5;
-  }
-  .TitleDiamond {
-    color: transparent;
-    border: 0.3rem solid #805af5;
-    transform: rotate(45deg) translate(0.3rem, -1rem);
-    font-size: 0.8rem;
-    top: 0;
-    left: 1.5rem;
-  }
-  
-  .fa-magnifying-glass {
-    color: white;
-  }
-  .CardBrand {
-    color: #fff;
-    font-size: 0.625rem;
-    letter-spacing: 0.2rem;
-  }
-  .ArticleCreatedTime {
-    color: #fff;
-  }
-  
-  /* ------------------------------------------ArticleCheckbox + 小菱形 checkbpx------------------------------------------ */
-  /* 隱藏預設的 checkbox 行為*/
-  .ArticleCheckbox input[type='checkbox'] {
-    display: none;
-  }
-  
-  /* 自定義 checkbox 未選中狀態的樣式 */
-  .ArticleCheckbox label {
-    position: relative;
-    cursor: pointer;
-    padding-left: 25px; /* 調整文字和 checkbox 之間的距離 */
-  }
-  
-  .ArticleCheckbox label::before {
-    content: '';
-    position: absolute;
-    left: 0.5rem;
-    top: 0.4rem;
-    width: 12px;
-    height: 12px;
-    /* checkbox 邊框顏色 */
-    border: 1.5px solid white;
-    /* checkbox 邊框顏色 */
-    /* background-color: transparent; */
-    /* transition: all 0.3s ease; */
-    transform: rotate(45deg);
-  }
-  
-  /* checkbox 勾選後的樣式自定義 */
-  .ArticleCheckbox input[type='checkbox']:checked + label::before {
-    background-color: #805af5; /* 填充背景色 */
-    border-color: transparent;
-  }
-  
-  /* checkbox 整體樣式 */
-  .ArticleCheckbox {
-    background-color: transparent;
-    width: 11rem;
-  }
-  /* checkbox 字體顏色 */
-  .ArticleCheckbox .ArticleCheckboxLabel {
-    color: white;
-  }
-  
-  /* ------------------------------------------ArticleCheckbox + 小菱形 checkbpx------------------------------------------ */
-  /* ------------------------------------------------ArticleCard------------------------------------------------ */
-  /* ArticleCard+Hover */
-  .ArticleCardStyle {
-    background-color: #ffffff00;
-    position: relative;
-    border-radius: 20px 0px 20px 0px;
-    border: 0.5px solid #b4b4b4;
-    display: flex;
-    width: 21.25rem;
-    height: 37.5rem;
-  }
-  .ArticleCardType {
-    width: 8rem;
-    color: #fff;
-    letter-spacing: 0.2rem;
-    text-wrap: nowrap;
-  }
-  .ArticleCardImg {
-    position: relative;
-    border-radius: 20px 0px 0px 0px;
-  }
-  .ArticleCardImg:hover {
-    opacity: 0.3;
-  }
-  .ArticleCardTitle {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
-    color: #fff;
-    letter-spacing: 0.2rem;
-    font-size: 1rem;
-  }
-  .ArticleCardContent {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
-    color: #fff;
-    letter-spacing: 0.2rem;
-    font-size: 1rem;
-  }
-  .CardBrandHover {
-    font-size: 2.5rem;
-  }
-  .ArticleCardHead {
-    position: relative;
-    margin-left: -0.7rem;
-    margin-right: -0.7rem;
-  }
-  .HoverBrand {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(204, 168, 245, 0.836);
-    border-radius: 20px 0px 0px 0px;
-    opacity: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.3s ease;
-  }
-  .ArticleCardStyle:hover .HoverBrand {
-    opacity: 0.7;
-  }
-  /* ------------------------------------------------ArticleCard------------------------------------------------ */
-  /* ------------------------------------------------RWD------------------------------------------------ */
-  
-  @media (max-width: 430px) {
-    .ArticleSectionTitle {
-      width: 100%;
-      color: #fff;
-      text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-      font-family: Khula;
-      font-size: 4.69rem;
-      font-style: normal;
-      font-weight: 400;
-      line-height: normal;
-      letter-spacing: 1.5rem;
-      margin: center;
-      margin-left: 1rem;
-      margin-bottom: 3rem;
-      /* padding-bottom:10rem; */
-    }
-    .ArticleSectionIntroduction {
-      letter-spacing: 2rem;
-      width: 100%;
-    }
-    .ArticleSectionContainer {
-      background-color: rgb(0, 0, 0);
-      height: 38rem;
-    }
-    .ArticleHomePageSearchInputStyle {
-      /* border-top: 0;
+
+  // .ArticleSmallTitle {
+  //   margin-left: 5rem;
+  //   margin-bottom: 5rem;
+  //   margin-top: 5rem;
+  //   font-size: 2rem;
+  //   color: #805af5;
+  // }
+}
+
+@media (max-width: 720px) {
+  .ArticleHomePageSearchInputStyle {
+    /* border-top: 0;
         border-left: 0;
         border-right: 0; */
-      /* border-bottom: ; */
-      border-radius: 0;
-      width: 20rem;
-      background-color: Transparent;
-    }
-    .ArticleHomePageSearchBox {
-      padding-top: 3rem;
-      padding-bottom: 3rem;
-      background: transparent;
-    }
-    .ArticleBrandSearch {
-      /* width: 90rem; */
-      padding-top: 5rem;
-      padding-bottom: 0rem;
-    }
-    .ArticleSmallTitle {
-      margin-left: 5rem;
-      margin-bottom: 5rem;
-      margin-top: 5rem;
-      font-size: 2rem;
-      color: #805af5;
-    }
+    /* border-bottom: ; */
+    border-radius: 0;
+    width: 20rem;
+    background-color: Transparent;
   }
-  
-  @media (max-width: 720px) {
-    .ArticleSectionTitle {
-      width: 100%;
-      color: #fff;
-      text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-      font-family: Khula;
-      font-size: 4.69rem;
-      font-style: normal;
-      font-weight: 400;
-      line-height: normal;
-      letter-spacing: 1.5rem;
-      margin-top: 2.5rem;
-      margin-bottom: 5rem;
-      /* padding-bottom: 5rem; */
-    }
-    .ArticleSectionIntroduction {
-      letter-spacing: 2rem;
-      width: 100%;
-    }
-    .ArticleSectionContainer {
-      background-color: rgb(0, 0, 0);
-      height: 38rem;
-    }
-    .ArticleHomePageSearchInputStyle {
-      /* border-top: 0;
-        border-left: 0;
-        border-right: 0; */
-      /* border-bottom: ; */
-      border-radius: 0;
-      width: 20rem;
-      background-color: Transparent;
-    }
-    .ArticleHomePageSearchBox {
-      padding-top: 3rem;
-      padding-bottom: 3rem;
-      background: transparent;
-    }
-    .ArticleBrandSearch {
-      /* width: 90rem; */
-      padding-top: 5rem;
-      padding-bottom: 0rem;
-    }
-    .ArticleSmallTitle {
-      margin-left: 5rem;
-      margin-bottom: 5rem;
-      margin-top: 5rem;
-      font-size: 2rem;
-      color: #805af5;
-    }
+  .ArticleHomePageSearchBox {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    background: transparent;
   }
-  /* ------------------------------------------------RWD------------------------------------------------ */
-  
+
+  // .ArticleSmallTitle {
+  //   margin-left: 5rem;
+  //   margin-bottom: 5rem;
+  //   margin-top: 5rem;
+  //   font-size: 2rem;
+  //   color: #805af5;
+  // }
+}
+/* ------------------------------------------------RWD------------------------------------------------ */

@@ -1,0 +1,131 @@
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(76, 29, 149, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.customModal {
+  position: relative;
+  width: 320px;
+  background: rgba(59, 13, 105, 0.9);
+  border-radius: 12px;
+  border: 2px solid rgba(147, 197, 253, 0.6);
+  box-shadow: 0 8px 32px rgba(76, 29, 149, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+.closeButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: rgba(147, 197, 253, 0.8);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.closeButton:hover {
+  color: #93c5fd;
+  background: rgba(147, 197, 253, 0.2);
+  transform: rotate(90deg);
+}
+
+.modalContent {
+  padding: 24px;
+}
+
+.modalTitle {
+  color: #93c5fd;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-right: 24px;
+}
+
+.formLabel {
+  display: block;
+  color: #93c5fd;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.formInput {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(147, 197, 253, 0.4) !important;
+  color: white !important;
+  transition: all 0.3s ease;
+}
+
+.formInput:focus {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(147, 197, 253, 0.8) !important;
+  box-shadow: 0 0 0 2px rgba(147, 197, 253, 0.2) !important;
+}
+
+.formInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.numberInput {
+  composes: formInput;
+}
+
+.dateTimeInput {
+  composes: formInput;
+}
+
+.dateTimeInput::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.saveButton {
+  width: 40%;
+  padding: 10px;
+  background: linear-gradient(
+    to right,
+    rgba(147, 197, 253, 0.5),
+    rgba(121, 64, 254, 0.8)
+  );
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.saveButton:hover {
+  background: linear-gradient(
+    to right,
+    rgba(147, 197, 253, 0.9),
+    rgba(139, 92, 246, 0.9)
+  );
+  box-shadow: 0 2px 8px rgba(147, 197, 253, 0.3);
+}
+
+.saveButton:active {
+  transform: scale(0.98);
+}

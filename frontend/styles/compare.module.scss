@@ -29,7 +29,7 @@
 .container.active {
   background: black;
   border-radius: 10px;
-  margin-bottom: 200px;
+  margin-bottom: 50px;
 }
 /* Box Style */
 .compare_box {
@@ -86,4 +86,20 @@
 /* Specifications List */
 .compare_specifications {
   line-height: 1.6;
+}
+.clear_compare {
+  display: none;
+  justify-content: center;
+  padding: 10px;
+  cursor: pointer;
+  color: white;
+  font-size: 20px;
+  background-color: #805af5;
+  border-radius: 10px;
+  margin: 0 auto;
+  margin-bottom: 150px;
+  width: 200px;
+}
+.clear_compare.active {
+  display: flex;
 }

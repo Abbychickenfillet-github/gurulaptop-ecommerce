@@ -30,3 +30,4 @@ const verifyToken = (token) => {
 }
 
 export { generateToken, verifyToken }
+//null vs undefined

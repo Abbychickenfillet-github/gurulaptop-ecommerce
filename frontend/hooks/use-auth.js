@@ -2,6 +2,7 @@ import React, { useState, useContext, createContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import axiosInstance from '@/services/axios-instance'
 import { checkAuth, getFavs } from '@/services/user'
+import Swal from 'sweetalert2'
 
 const AuthContext = createContext(null)
 
@@ -45,6 +46,7 @@ export const initUserData = {
   detailed_address: '',
   image_path: '',
   remarks: '',
+  level:0,
 }
 // 可以視為webtoken要押的資料
 // 承接登入以後用的
@@ -55,6 +57,7 @@ export const AuthProvider = ({ children }) => {
   })
 
   // 我的最愛清單使用
+  // 變數 函式後面的函式 更改前面變數的內容
   const [favorites, setFavorites] = useState([])
 
   // 得到我的最愛
@@ -83,9 +86,7 @@ export const AuthProvider = ({ children }) => {
   // 隱私頁面路由，未登入時會，檢查後跳轉至登入頁
   const protectedRoutes = [
     '/dashboard/index',
-    '/test/user/profile',
-    '/test/user/profile-password',
-    '/dashboard',
+    '/coupon/coupon-user'
   ]
   const login = async (email, password) => {
     try {
@@ -110,6 +111,7 @@ export const AuthProvider = ({ children }) => {
           detailed_address: result.data.detailed_address,
           birthdate: result.data.birthdate,
           remarks: result.data.remarks,
+          level:result.data.level,
         })
       }
       console.log(response.json())
@@ -130,7 +132,6 @@ export const AuthProvider = ({ children }) => {
       if (!response.ok) {
         throw new Error('登出失敗');
       }
-  
       const result = await response.json();
       
       if (result.status === 'success') {
@@ -148,9 +149,10 @@ export const AuthProvider = ({ children }) => {
           road_name: '',
           detailed_address: '',
           birthdate: '',
-          
+          level:''
+          // 共13 col
         })
-        router.push('/');  // 導向首頁
+
       }
   
     } catch (error) {
@@ -158,8 +160,6 @@ export const AuthProvider = ({ children }) => {
       // 處理錯誤
     }
   };
-
-  
   // 檢查會員認証用
   // 每次重新到網站中，或重新整理，都會執行這個函式，用於向伺服器查詢取回原本登入會員的資料
   const handleCheckAuth = async () => {

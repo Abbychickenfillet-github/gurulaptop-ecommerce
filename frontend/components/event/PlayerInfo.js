@@ -1,6 +1,11 @@
 import styles from './PlayerInfo.module.css'
 
-export default function PlayerInfo({ number }) {
+export default function PlayerInfo({ number, playerData, onChange }) {
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    onChange(name, value)
+  }
+
   return (
     <div className={styles['eventRegistration-member']}>
       <div className="row">
@@ -10,6 +15,9 @@ export default function PlayerInfo({ number }) {
           </label>
           <input
             type="text"
+            name="name"
+            value={playerData.name}
+            onChange={handleChange}
             className={`form-control ${styles['eventRegistration-input']}`}
             placeholder="請輸入隊員姓名"
             required
@@ -24,7 +32,10 @@ export default function PlayerInfo({ number }) {
           </label>
           <input
             type="text"
+            name="gameId"
             id={`gameId-${number}`}
+            value={playerData.gameId}
+            onChange={handleChange}
             className={`form-control ${styles['eventRegistration-input']}`}
             placeholder="請輸入遊戲ID"
             required

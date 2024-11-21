@@ -13,6 +13,7 @@ export default function EventCard({
   eventStartTime,
   teamType,
   maxPeople,
+  currentParticipants = 0,
   status,
 }) {
   // 格式化日期
@@ -45,21 +46,30 @@ export default function EventCard({
   }
 
   // 格式化參與人數顯示
-  const formatParticipants = (maxPeople) => {
-    return maxPeople ? `0/${maxPeople}` : '未設定'
+  const formatParticipants = (currentParticipants, maxPeople, teamType) => {
+    if (!maxPeople) return '未設定'
+    const currentNum = Number(currentParticipants) || 0
+    const maxNum = Number(maxPeople) || 0
+    const unit = teamType === '個人' ? '人' : '隊'
+    return `${currentNum}/${maxNum}${unit}`
+  }
+
+  // 格式化參賽方式顯示
+  const getTeamTypeDisplay = (teamType) => {
+    return teamType === '個人' ? '個人賽' : '團體賽'
   }
 
   return (
-    <div className="col" style={{ maxWidth: '280px' }}>
-      <div className={`${styles.card} shadow-sm h-100`}>
-        <div className="position-relative">
+    <div className={styles.cardWrapper}>
+      <div className={styles.card}>
+        <div className={styles.cardImgWrapper}>
           <img
-            src={
-              picture ||
-              'https://images.pexels.com/photos/18091667/pexels-photo-18091667.jpeg'
-            }
+            src={picture || '/images/event-default.png'}
             className={styles.cardImg}
             alt={name || '活動圖片'}
+            onError={(e) => {
+              e.target.src = '/images/event-default.png'
+            }}
           />
           <span
             className={`position-absolute top-0 end-0 m-2 badge ${getStatusStyle(
@@ -70,23 +80,25 @@ export default function EventCard({
             {status || '未定義'}
           </span>
         </div>
-        <div className={`${styles.cardBody} bg-dark text-white`}>
+        <div className={styles.cardBody}>
           <h5 className={styles.cardTitle}>{name || '活動名稱未設定'}</h5>
-          <div className={`d-flex flex-column gap-2 ${styles.infoGroup}`}>
-            <div className="d-flex align-items-center gap-2">
+          <div className={styles.infoGroup}>
+            <div className={styles.infoItem}>
               <MdDateRange className={styles.smallIcon} />
               <small>{formatDate(eventStartTime) || '日期未設定'}</small>
             </div>
-            <div className="d-flex align-items-center gap-2">
+            <div className={styles.infoItem}>
               <IoAccessibility className={styles.smallIcon} />
-              <small>{teamType || '參賽方式未設定'}</small>
+              <small>{getTeamTypeDisplay(teamType)}</small>
             </div>
-            <div className="d-flex align-items-center gap-2">
+            <div className={styles.infoItem}>
               <FaFire className={styles.smallIcon} />
-              <small>{formatParticipants(maxPeople)}</small>
+              <small>
+                {formatParticipants(currentParticipants, maxPeople, teamType)}
+              </small>
             </div>
           </div>
-          <div className="mt-auto">
+          <div className={styles.buttonContainer}>
             <Link
               href={`/event/eventDetail/${id}`}
               style={{ textDecoration: 'none' }}

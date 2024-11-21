@@ -1,8 +1,9 @@
 import express from 'express'
 const router = express.Router()
+import db from '##/configs/mysql.js'
 
-import sequelize from '#configs/db.js'
-const { User } = sequelize.models
+// import sequelize from '#configs/db.js'
+// const { User } = sequelize.models
 
 import jsonwebtoken from 'jsonwebtoken'
 // 存取`.env`設定檔案使用
@@ -29,12 +30,38 @@ router.post('/', async function (req, res, next) {
   // 2-2. 不存在 -> 建立一個新會員資料(無帳號與密碼)，只有google來的資料 -> 執行登入工作
 
   // 1. 先查詢資料庫是否有同google_uid的資料
-  const total = await User.count({
-    where: {
-      google_uid,
-    },
-  })
-
+  // const total = await User.count({
+  //   where: {
+  //     google_uid,
+  //   },
+  // })
+  const [rows] = await db.query(
+    'SELECT * FROM users WHERE google_uid = ?',
+    [google_uid]
+  )
+  if (rows.length > 0) {
+    // 使用者存在
+    const user = rows[0]
+    returnUser = {
+      id: user.id,
+      username: user.username,
+      google_uid: user.google_uid,
+      line_uid: user.line_uid
+    }
+  } else {
+    // 建立新使用者
+    const [result] = await db.query(
+      'INSERT INTO users (name, email, google_uid, photo_url) VALUES (?, ?, ?, ?)',
+      [displayName, email, google_uid, photoURL]
+    )
+    
+    returnUser = {
+      id: result.insertId,
+      username: '',
+      google_uid: google_uid,
+      line_uid: null
+    }
+  }
   // 要加到access token中回傳給前端的資料
   // 存取令牌(access token)只需要id和username就足夠，其它資料可以再向資料庫查詢
   let returnUser = {

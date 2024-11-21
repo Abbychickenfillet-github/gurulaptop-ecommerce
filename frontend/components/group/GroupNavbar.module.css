@@ -1,0 +1,79 @@
+.groupNavbar {
+  padding: 1rem 0;
+  background: rgba(46, 16, 101, 0.3) !important;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.containerFluid {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdownWrapper {
+  display: flex;
+  gap: 1rem;
+  flex-grow: 1;
+  flex-wrap: wrap;
+}
+
+.searchForm {
+  margin-left: auto;
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.625rem 1.25rem;
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 6px;
+  min-width: 240px;
+}
+
+.searchInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.searchButton {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0.625rem 1rem;
+  margin-left: -3rem;
+}
+
+.searchIcon {
+  font-size: 1.5rem;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .containerFluid {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .dropdownWrapper {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .searchForm {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+}

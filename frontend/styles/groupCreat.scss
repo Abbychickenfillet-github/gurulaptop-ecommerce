@@ -1,7 +1,7 @@
 .group-creat-wrapper {
   min-height: 100vh;
   background-color: #0a0a0a;
-  background-image: url("../public/images/event/event-bg.jpg");
+  background-image: url('../public/images/event/event-bg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -165,4 +165,33 @@
   background: rgba(255, 255, 255, 0.15);
   border-color: rgba(255, 255, 255, 0.3);
   color: white;
+}
+
+/* 活動時間輸入框樣式 */
+.group-time-input {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  padding: 0.625rem 1rem;
+  width: 100%;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+}
+
+.group-time-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+.group-time-input:focus {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 0 0 0.2rem rgba(5, 42, 255, 0.2) !important;
+  outline: none;
+}
+
+.group-time-input:disabled {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  cursor: not-allowed;
 }

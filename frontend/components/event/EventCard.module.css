@@ -1,19 +1,31 @@
+.cardWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
 .card {
   position: relative;
   background: rgba(46, 16, 101, 0);
   border: 2px solid transparent;
   border-radius: 8px;
-  overflow: visible; 
+  overflow: visible;
+  width: 260px;
+  height: 420px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .card::before {
-  content: "";
+  content: '';
   position: absolute;
   top: -1px;
   left: -1px;
   right: -1px;
   bottom: -1px;
-  border-radius: 8px; 
+  border-radius: 8px;
   padding: 1px;
   background: linear-gradient(45deg, #4834d4, #9b59b6, #e84393);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -21,36 +33,193 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   z-index: 1;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.cardImgWrapper {
+  height: 220px;
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.cardImg {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .cardImg {
+  transform: scale(1.05);
 }
 
 .cardBody {
   background: rgba(77, 42, 142, 0.3) !important;
-  padding: 1.2rem;
+  padding: 1rem;
   position: relative;
   z-index: 4;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  transition: background 0.3s ease;
 }
 
-.cardImg {
-  height: 180px;
-  width: 100%;
-  object-fit: cover;
-  border-radius: 6px 6px 0 0; 
-  position: relative;
-  z-index: 2;
-  overflow: hidden;
+.card:hover .cardBody {
+  background: rgba(77, 42, 142, 0.5) !important;
 }
 
 .cardTitle {
   font-size: 1rem;
-  margin-bottom: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  transition: color 0.3s ease;
+  height: 2.4rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.2;
+}
+
+.card:hover .cardTitle {
+  color: #fff;
 }
 
 .infoGroup {
-  margin: 1rem 0;
+  margin: 0.75rem 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.infoItem small {
+  font-size: 0.875rem;
+  line-height: 1.2;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .smallIcon {
-  font-size: 0.8rem;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.card:hover .smallIcon {
+  color: #e84393;
+}
+
+.buttonContainer {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  width: 100%;
+}
+
+@media (max-width: 1400px) {
+  .card {
+    width: 240px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .card {
+    width: 220px;
+    height: 400px;
+  }
+
+  .cardImgWrapper {
+    height: 200px;
+  }
+
+  .cardTitle {
+    font-size: 0.95rem;
+  }
+
+  .infoItem small {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .card {
+    width: 260px;
+    height: 420px;
+  }
+
+  .cardImgWrapper {
+    height: 220px;
+  }
+
+  .cardTitle {
+    font-size: 1rem;
+  }
+
+  .infoItem small {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .cardImgWrapper {
+    height: 240px;
+  }
+}
+
+@media (max-width: 576px) {
+  .cardWrapper {
+    padding: 0.25rem;
+  }
+
+  .card {
+    width: 100%;
+    max-width: none;
+    height: 400px;
+  }
+
+  .cardImgWrapper {
+    height: 200px;
+  }
+
+  .cardBody {
+    padding: 0.875rem;
+  }
+
+  .infoGroup {
+    gap: 0.5rem;
+  }
+
+  .buttonContainer {
+    padding-top: 0.75rem;
+  }
 }

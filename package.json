@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "animate.css": "^4.1.1",
+    "js-cookie": "^3.0.5",
+    "react-spinners": "^0.14.1",
+    "ws": "^8.18.0"
+  }
+}

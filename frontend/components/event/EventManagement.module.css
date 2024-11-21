@@ -47,21 +47,23 @@
 }
 
 .mobileLayout {
-  display: grid;
-  grid-template-columns: auto 1fr;
+  display: flex;
+  align-items: flex-start;
   gap: 12px;
   padding: 0;
 }
 
 .mobileImgWrapper {
-  align-self: start;
+  flex-shrink: 0;
+  width: 100px;
 }
 
 .mobileInfo {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 0;
+  gap: 8px;
 }
 
 .mobileTitle {
@@ -69,13 +71,13 @@
   color: #333;
   font-weight: 500;
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 .mobileDetails {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
 }
 
@@ -96,6 +98,11 @@
 .mobileStats i {
   font-size: 0.9rem;
   color: #7367f0;
+}
+
+.mobileActions {
+  display: flex;
+  gap: 4px;
 }
 
 .actionBtn {
@@ -119,8 +126,26 @@
 
 @media (max-width: 768px) {
   .groupImg {
-    width: 120px;
-    height: 80px;
+    width: 100px;
+    height: 70px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
+}
+
+.eventLink {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.eventLink:hover {
+  color: #7367f0;
+  text-decoration: none;
+}
+
+.mobileTitle .eventLink {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  display: block;
 }

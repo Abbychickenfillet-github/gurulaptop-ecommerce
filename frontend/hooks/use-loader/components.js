@@ -2,9 +2,10 @@
 import Lottie from 'lottie-react'
 import catAnimation from '@/assets/loader-cat.json'
 import nikeAnimation from '@/assets/loader-nike.json'
+import { PacmanLoader } from "react-spinners";
 
 // 展示用載入元件
-export function DefaultLoader({ show = false }) {
+export function DefaultLoader({ show = true }) {
   return (
     <div className={`semi-loader ${show ? '' : 'semi-loader--hide'}`}></div>
   )

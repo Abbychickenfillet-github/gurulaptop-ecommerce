@@ -9,3 +9,8 @@
   border: #805AF5 solid 1px;
   background-color: aliceblue;
 }
+.profile-button{
+  &:hover{
+    color: white;
+  }
+}

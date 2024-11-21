@@ -1,7 +1,7 @@
 .group-wrapper {
   min-height: 100vh;
   background-color: #0a0a0a;
-  background-image: url("../public/images/event/event-bg.jpg");
+  background-image: url('../public/images/event/event-bg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -69,14 +69,13 @@
   padding-left: 1rem;
 }
 
-
 /* 響應式調整 */
 @media (max-width: 768px) {
   .group-banner-grid {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1rem;
   }
-  
+
   .group-nav-title {
     font-size: 1.25rem;
   }

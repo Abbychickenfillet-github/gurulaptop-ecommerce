@@ -36,7 +36,8 @@ const EventDetail = () => {
       try {
         setLoading(true)
         const response = await axios.get(
-          `http://localhost:3005/api/events/${id}`
+          `http://localhost:3005/api/events/${id}`,
+          { withCredentials: true }
         )
 
         if (response.data.code === 200) {
@@ -45,8 +46,8 @@ const EventDetail = () => {
           setError('獲取活動詳情失敗')
         }
       } catch (err) {
-        setError('獲取活動詳情失敗，請稍後再試')
         console.error('Error fetching event details:', err)
+        setError(err.response?.data?.message || '獲取活動詳情失敗，請稍後再試')
       } finally {
         setLoading(false)
       }
@@ -54,6 +55,67 @@ const EventDetail = () => {
 
     fetchEventDetail()
   }, [id])
+
+  // 獲取參賽方式顯示文字
+  const getTeamTypeDisplay = (teamType) => {
+    return teamType === '個人' ? '個人賽' : '團體賽'
+  }
+
+  // 處理報名按鈕點擊
+  const handleRegistration = () => {
+    // 檢查報名時間
+    const now = new Date()
+    const applyStart = new Date(event.applyStartTime)
+    const applyEnd = new Date(event.applyEndTime)
+
+    if (now < applyStart) {
+      alert('報名尚未開始')
+      return
+    }
+
+    if (now > applyEnd) {
+      alert('報名已結束')
+      return
+    }
+
+    // 檢查人數是否已滿
+    if (event.currentParticipants >= event.maxPeople) {
+      alert('報名人數已達上限')
+      return
+    }
+
+    // 根據 teamType 決定跳轉位置
+    const isIndividual = event.teamType === '個人'
+
+    router.push({
+      pathname: isIndividual
+        ? '/event/individualRegistration'
+        : '/event/eventRegistration',
+      query: {
+        eventId: id,
+        eventName: event.name,
+      },
+    })
+  }
+
+  // 修改後的 handleGroupAction 函數
+  const handleGroupAction = (actionType) => {
+    if (actionType === 'create') {
+      // 跳轉到開團找人頁面，並傳遞活動資訊
+      router.push({
+        pathname: '/group/groupCreat',
+        query: {
+          eventId: id,
+          eventName: event.name,
+          eventStartTime: event.eventStartTime,
+          eventEndTime: event.eventEndTime,
+        },
+      })
+    } else {
+      // 跳轉到揪團列表頁面
+      router.push('/group')
+    }
+  }
 
   if (loading) {
     return (
@@ -79,6 +141,12 @@ const EventDetail = () => {
         找不到活動資訊
       </div>
     )
+  }
+
+  // 安全的處理換行符號轉換
+  const formatRule = (rule) => {
+    if (!rule) return ''
+    return rule.replace(/\n/g, '<br>')
   }
 
   return (
@@ -107,15 +175,26 @@ const EventDetail = () => {
                   </dd>
                   <dt>平台</dt>
                   <dd>{event.platform}</dd>
-                  <dt>隊伍上限</dt>
-                  <dd>{event.maxPeople} 隊</dd>
+                  <dt>參賽方式</dt>
+                  <dd>{getTeamTypeDisplay(event.teamType)}</dd>
+                  <dt>{event.teamType === '個人' ? '參賽人數' : '隊伍數'}</dt>
+                  <dd>
+                    目前 {event.currentParticipants}/{event.maxPeople}{' '}
+                    {event.teamType === '個人' ? '人' : '隊'}
+                  </dd>
                   <dt>獎勵</dt>
                   <dd>{event.award}</dd>
                 </dl>
                 <div className="d-grid gap-2">
-                  <EventButton>報名參加</EventButton>
-                  <EventButton>開團找人</EventButton>
-                  <EventButton>揪團列表</EventButton>
+                  <EventButton onClick={handleRegistration}>
+                    {event.teamType === '個人' ? '個人報名' : '團體報名'}
+                  </EventButton>
+                  <EventButton onClick={() => handleGroupAction('create')}>
+                    開團找人
+                  </EventButton>
+                  <EventButton onClick={() => handleGroupAction('list')}>
+                    揪團列表
+                  </EventButton>
                 </div>
               </div>
             </div>
@@ -126,6 +205,9 @@ const EventDetail = () => {
                 src={event.picture}
                 alt="活動圖片"
                 className="eventDetail-image mb-4"
+                onError={(e) => {
+                  e.target.src = '/images/event-default.png'
+                }}
               />
               <div className="eventDetail-infoBox">
                 <h2 className="h5 mb-3">活動介紹</h2>
@@ -136,7 +218,7 @@ const EventDetail = () => {
                 <div
                   className="eventDetail-rulesList"
                   dangerouslySetInnerHTML={{
-                    __html: event.rule.replace(/\n/g, '<br>'),
+                    __html: formatRule(event.rule),
                   }}
                 />
               </div>

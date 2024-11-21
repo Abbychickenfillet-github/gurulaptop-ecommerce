@@ -7,6 +7,7 @@ import debugLib from 'debug'
 import http from 'http'
 const debug = debugLib('node-express-es6:server')
 import { exit } from 'node:process'
+import { initializeWebSocket } from '../configs/websocket.js'
 
 // 導入dotenv 使用 .env 檔案中的設定值 process.env
 import 'dotenv/config.js'
@@ -27,6 +28,7 @@ var server = http.createServer(app)
 /**
  * Listen on provided port, on all network interfaces.
  */
+initializeWebSocket(server)
 
 server.listen(port)
 server.on('error', onError)
@@ -66,11 +68,11 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges')
+      console.error(`Port ${port} 需要系統管理員權限`)
       exit(1)
       break
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use')
+      console.error(`Port ${port} 已被其他程式使用中`)
       exit(1)
       break
     default:
@@ -86,4 +88,5 @@ function onListening() {
   var addr = server.address()
   var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port
   debug('Listening on ' + bind)
+  console.log(`伺服器啟動成功 http://localhost:${port}`)
 }

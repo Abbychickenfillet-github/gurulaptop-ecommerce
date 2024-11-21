@@ -1,17 +1,9 @@
 .BlogEditAlignAllItems {
-  width: 100%;
+  // width: 100%;
   height: auto;
   display: flex;
   flex-direction: column;
   gap: 6rem;
-}
-.BlogEditSmallTitle {
-  font-size: 2rem;
-  color: #805af5;
-}
-.BlogCreatedTextArea {
-  width: 50rem;
-  margin-left: 6.5vw;
 }
 
 .TitleDiamond {
@@ -45,6 +37,7 @@
 
 .BlogEditBrandSelected:hover {
   background: linear-gradient(180deg, #a793e9 0%, #423db0 50%, #2e256a 100%);
+  animation: pulse 1s infinite;
 }
 
 .BlogEditBrandSelected.focus {
@@ -72,6 +65,7 @@
 
 .BlogEditTypeSelected:hover {
   background: linear-gradient(180deg, #a793e9 0%, #423db0 50%, #2e256a 100%);
+  animation: pulse 1s infinite;
 }
 .BlogEditButtonSubmit {
   width: 16.625rem;
@@ -83,15 +77,25 @@
   font-weight: 400;
   color: #805af5;
 }
+.BlogEditButtonSubmit:hover {
+  animation: heartBeat 0.6s infinite; // 興奮版本
+}
+
 .BlogEditButtonDelete {
   width: 16.625rem;
   height: 3.75rem;
   background-color: #805af5;
+  border: transparent;
   border-radius: 20px 0px;
   font-size: 2rem;
   font-weight: 400;
   color: #fff;
 }
+
+.BlogEditButtonDelete:hover {
+  animation: heartBeat 0.6s infinite; // 興奮版本
+}
+
 .BlogSmallTitleAlign {
   width: 50%;
   height: 100%;

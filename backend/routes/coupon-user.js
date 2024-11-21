@@ -1,62 +1,3 @@
-// import express from 'express'
-// const router = express.Router()
-// import db from '##/configs/mysql.js'
-// import multer from 'multer'
-
-// const upload = multer()
-
-// router.get('/user/:user_id', async (req, res) => {
-//   try {
-//     const user_id = parseInt(req.params.user_id)
-
-//     if (isNaN(user_id) || user_id <= 0) {
-//       return res.status(400).json({
-//         status: 'error',
-//         message: '無效的用戶編號',
-//       })
-//     }
-
-//     const [coupons] = await db.query(
-//       `
-//       SELECT
-//         cu.*,
-//         c.coupon_code,
-//         c.coupon_content,
-//         c.discount_method,
-//         c.coupon_discount,
-//         c.coupon_start_time,
-//         c.coupon_end_time,
-//         c.valid as coupon_valid
-//       FROM coupon_user cu
-//       JOIN coupon c ON cu.coupon_id = c.coupon_id
-//       WHERE cu.user_id = ?
-//       ORDER BY cu.id DESC`,
-//       [user_id]
-//     )
-
-//     if (coupons.length === 0) {
-//       return res.json({
-//         status: 'success',
-//         data: [],
-//         message: '目前沒有優惠券',
-//       })
-//     }
-
-//     res.json({
-//       status: 'success',
-//       data: coupons,
-//     })
-//   } catch (error) {
-//     console.error('Error:', error)
-//     res.status(500).json({
-//       status: 'error',
-//       message: '伺服器錯誤',
-//     })
-//   }
-// })
-
-// export default router
-
 import express from 'express'
 import db from '##/configs/mysql.js'
 import multer from 'multer'
@@ -64,83 +5,129 @@ import multer from 'multer'
 const router = express.Router()
 const upload = multer()
 
-// 新增優惠券
-router.post('/', upload.none(), async (req, res, next) => {
+// 修改新增優惠券路由，使用 userId 參數
+router.post('/add/:userId', upload.none(), async (req, res, next) => {
+  let connection
   try {
-    console.log('請求體:', req.body)
+    console.log('=== 優惠券領取請求 ===')
+    console.log('URL參數:', req.params)
+    console.log('請求內容:', req.body)
 
-    const { user_id, coupon_id } = req.body
+    const userId = parseInt(req.params.userId)
+    const couponId = parseInt(req.body.coupon_id)
 
-    // 基本驗證
-    if (!user_id || !coupon_id) {
+    // 參數驗證
+    if (!userId || !couponId) {
       return res.status(400).json({
         status: 'error',
-        message: '缺少必要參數',
-        receivedData: req.body,
+        message: '無效的參數',
+        data: { userId, couponId },
       })
     }
 
-    // 檢查資料庫連線
-    const [testConnection] = await db.query('SELECT 1')
-    console.log('資料庫連線測試:', testConnection)
+    // 取得資料庫連線並開始交易
+    connection = await db.getConnection()
+    await connection.beginTransaction()
 
-    // 檢查優惠券是否已被領取
-    const [existingCoupons] = await db.query(
-      'SELECT * FROM coupon_user WHERE user_id = ? AND coupon_id = ?',
-      [user_id, coupon_id]
+    // 檢查使用者是否存在且有效
+    const [users] = await connection.query(
+      'SELECT user_id FROM users WHERE user_id = ?',
+      [userId]
     )
-    console.log('既有優惠券查詢結果:', existingCoupons)
+
+    if (users.length === 0) {
+      throw new Error('使用者不存在或已被停用')
+    }
+
+    // 檢查優惠券是否存在且有效
+    const [coupons] = await connection.query(
+      'SELECT coupon_id FROM coupon WHERE coupon_id = ? AND valid = 1',
+      [couponId]
+    )
+
+    if (coupons.length === 0) {
+      throw new Error('優惠券不存在或已失效')
+    }
+
+    // 檢查是否已領取
+    const [existingCoupons] = await connection.query(
+      'SELECT id FROM coupon_user WHERE user_id = ? AND coupon_id = ?',
+      [userId, couponId]
+    )
 
     if (existingCoupons.length > 0) {
-      return res.status(400).json({
-        status: 'error',
-        message: '您已經領取過這張優惠券',
-      })
+      throw new Error('您已經領取過這張優惠券')
     }
 
     // 新增優惠券
-    const [result] = await db.query(
-      'INSERT INTO coupon_user (user_id, coupon_id) VALUES (?, ?)',
-      [user_id, coupon_id]
+    const [result] = await connection.query(
+      'INSERT INTO coupon_user (user_id, coupon_id, valid) VALUES (?, ?, 1)',
+      [userId, couponId]
     )
-    console.log('插入結果:', result)
+
+    await connection.commit()
+    console.log('優惠券領取成功:', result)
 
     res.json({
       status: 'success',
       message: '優惠券領取成功',
       data: {
-        user_id,
-        coupon_id,
+        id: result.insertId,
+        user_id: userId,
+        coupon_id: couponId,
         created_at: new Date(),
       },
     })
   } catch (error) {
-    console.error('詳細錯誤信息:', error)
-    res.status(500).json({
+    if (connection) {
+      try {
+        await connection.rollback()
+      } catch (rollbackError) {
+        console.error('Rollback失敗:', rollbackError)
+      }
+    }
+
+    console.error('錯誤詳情:', error)
+    res.status(error.message.includes('不存在') ? 400 : 500).json({
       status: 'error',
-      message: '系統錯誤',
-      error: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+      message: error.message || '系統錯誤',
     })
+  } finally {
+    if (connection) connection.release()
   }
 })
 
-// 抓取coupon_user valid=1的資料
-router.get('/:user_id', async (req, res) => {
+// 修改取得使用者優惠券路由
+router.get('/:userId', async (req, res) => {
+  let connection
   try {
-    const user_id = parseInt(req.params.user_id)
+    const userId = parseInt(req.params.userId)
 
-    if (isNaN(user_id) || user_id <= 0) {
+    if (!userId || userId <= 0) {
       return res.status(400).json({
         status: 'error',
         message: '無效的用戶編號',
       })
     }
 
-    // 只檢查 coupon_user 的 valid = 1
-    const [validCoupons] = await db.query(
-      `
-      SELECT 
+    connection = await db.getConnection()
+
+    // 檢查用戶是否存在且有效
+    const [userExists] = await connection.query(
+      'SELECT user_id FROM users WHERE user_id = ?',
+      [userId]
+    )
+
+    if (userExists.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: '用戶不存在或已被停用',
+      })
+    }
+
+    // 獲取用戶優惠券
+    const [validCoupons] = await connection.query(
+      `SELECT 
         cu.id,
         cu.user_id,
         cu.coupon_id,
@@ -151,90 +138,90 @@ router.get('/:user_id', async (req, res) => {
         c.coupon_discount,
         c.coupon_start_time,
         c.coupon_end_time,
-        c.valid as coupon_valid
+        c.valid as coupon_valid,
+        u.name as user_name,
+        u.email as user_email,
+        u.phone as user_phone,
+        u.level as user_level
       FROM coupon_user cu
       JOIN coupon c ON cu.coupon_id = c.coupon_id
+      JOIN users u ON cu.user_id = u.user_id
       WHERE cu.user_id = ? 
-      AND cu.valid = 1  /* 只檢查 coupon_user 的 valid */
-      ORDER BY cu.id DESC
-      `,
-      [user_id]
+      AND cu.valid = 1
+      ORDER BY cu.id DESC`,
+      [userId]
     )
-
-    if (validCoupons.length === 0) {
-      return res.json({
-        status: 'success',
-        data: [],
-        message: '目前沒有可用的優惠券',
-      })
-    }
 
     res.json({
       status: 'success',
       data: validCoupons,
-      message: '查詢成功',
+      message: validCoupons.length === 0 ? '目前沒有可用的優惠券' : '查詢成功',
     })
   } catch (error) {
     console.error('Error:', error)
     res.status(500).json({
       status: 'error',
-      message: '伺服器錯誤',
+      message: '系統錯誤',
     })
+  } finally {
+    if (connection) connection.release()
   }
 })
 
-// 修改
-// 更新優惠券使用狀態
-router.put('/', async (req, res) => {
+// 修改更新優惠券狀態路由
+router.put('/update/:userId/:coupon_id', async (req, res) => {
+  let connection
   try {
-    const { user_id, coupon_id, valid } = req.body
+    const userId = req.params.userId
+    const coupon_id = req.params.coupon_id
 
-    console.log('收到的請求資料:', { user_id, coupon_id, valid }) // 記錄收到的資料
-
-    // 基本驗證
-    if (!user_id || !coupon_id) {
+    if (!userId || !coupon_id) {
       return res.status(400).json({
         status: 'error',
         message: '缺少必要參數',
       })
     }
 
-    // 更新優惠券使用狀態
-    const [result] = await db.query(
-      `
-      UPDATE coupon_user 
-      SET valid = ?
-      WHERE user_id = ? AND coupon_id = ?
-      `,
-      [valid, user_id, coupon_id]
+    connection = await db.getConnection()
+    await connection.beginTransaction()
+
+    const [result] = await connection.query(
+      'UPDATE coupon_user SET valid = 0 WHERE user_id = ? AND coupon_id = ?',
+      [userId, coupon_id]
     )
-    console.log('更新結果:', result) // 記錄更新結果
 
     if (result.affectedRows === 0) {
-      return res.status(400).json({
-        status: 'error',
-        message: '更新失敗，找不到符合條件的優惠券',
-      })
+      throw new Error('找不到符合條件的優惠券')
     }
 
-    // 回傳成功結果
+    await connection.commit()
+
     res.json({
       status: 'success',
       message: '優惠券狀態已更新',
       data: {
-        user_id,
+        user_id: userId,
         coupon_id,
-        valid,
         updated_at: new Date(),
       },
     })
   } catch (error) {
-    console.error('詳細錯誤信息:', error)
-    res.status(500).json({
+    if (connection) {
+      try {
+        await connection.rollback()
+      } catch (rollbackError) {
+        console.error('Rollback失敗:', rollbackError)
+      }
+    }
+
+    console.error('錯誤詳情:', error)
+    res.status(error.message.includes('找不到') ? 400 : 500).json({
       status: 'error',
-      message: '系統錯誤',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+      message: error.message || '系統錯誤',
     })
+  } finally {
+    if (connection) connection.release()
   }
 })
+
 export default router

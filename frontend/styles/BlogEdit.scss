@@ -1,24 +1,48 @@
-.BlogEditAlignAllItems {
-    width: 50%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 6rem;
-  }
-  .BlogEditSmallTitle {
-    width: 15rem;
-    font-size: 2rem;
-    color: #805af5;
-  }
-  
-  .TitleDiamond {
-    color: transparent;
-    border: 0.3rem solid #805af5;
-    transform: rotate(45deg) translate(0.3rem, -1rem);
-    font-size: 0.8rem;
-    top: 0;
-    left: 1.5rem;
-  }
+// .BlogEditAlignAllItems {
+//   width: 50%;
+//   height: auto;
+//   display: flex;
+//   flex-direction: column;
+//   gap: 6rem;
+// }
+.BlogEditSmallTitle {
+  width: 15rem;
+  font-size: 2rem;
+  color: #805af5;
+}
+
+.TitleDiamond {
+  color: transparent;
+  border: 0.3rem solid #805af5;
+  transform: rotate(45deg) translate(0.3rem, -1rem);
+  font-size: 0.8rem;
+  top: 0;
+  left: 1.5rem;
+}
+.BlogImgUploadDiv {
+  width: 50vw;
+  height: 31.25rem;
+  background-color: #fff;
+  border: 1px solid black;
+  cursor: pointer;
+}
+.fa-arrow-up-from-bracket {
+  font-size: 8rem;
+}
+.BlogEditTypeSelected {
+  width: 34.375rem;
+  height: 3.75rem;
+  background-color: #805af5;
+  border-radius: 20px 0px;
+  font-size: 2rem;
+  font-weight: 400;
+  color: #fff;
+}
+.BlogSmallTitleAlign {
+  width: 50%;
+  height: 100%;
+}
+@media screen and (max-width: 430px) {
   .BlogImgUploadDiv {
     width: 50vw;
     height: 31.25rem;
@@ -26,57 +50,4 @@
     border: 1px solid black;
     cursor: pointer;
   }
-  .fa-arrow-up-from-bracket {
-    font-size: 8rem;
-  }
-  .BlogEditBrandSelected {
-    width: 16.625rem;
-    height: 3.75rem;
-    background-color: #805af5;
-    border-radius: 20px 0px;
-    font-size: 2rem;
-    font-weight: 400;
-    color: #fff;
-  }
-  .BlogEditTypeSelected {
-    width: 34.375rem;
-    height: 3.75rem;
-    background-color: #805af5;
-    border-radius: 20px 0px;
-    font-size: 2rem;
-    font-weight: 400;
-    color: #fff;
-  }
-  .BlogEditButtonSubmit {
-    width: 16.625rem;
-    height: 3.75rem;
-    background-color: transparent;
-    border: 0.5px solid #805af5;
-    border-radius: 20px 0px;
-    font-size: 2rem;
-    font-weight: 400;
-    color: #805af5;
-  }
-  .BlogEditButtonDelete {
-    width: 16.625rem;
-    height: 3.75rem;
-    background-color: #805af5;
-    border-radius: 20px 0px;
-    font-size: 2rem;
-    font-weight: 400;
-    color: #fff;
-  }
-  .BlogSmallTitleAlign {
-    width: 50%;
-    height: 100%;
-  }
-  @media screen and (max-width: 430px) {
-    .BlogImgUploadDiv {
-      width: 50vw;
-      height: 31.25rem;
-      background-color: #fff;
-      border: 1px solid black;
-      cursor: pointer;
-    }
-  }
-  
+}
