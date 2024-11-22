@@ -329,7 +329,6 @@
     z-index: 1000;
   }
   .product_banner {
-    background-image: url('/images/product/mobile-banner.jpg');
     width: 100%;
     padding-top: 32.5%;
   }
@@ -344,6 +343,9 @@
   }
   .product_list {
     justify-content: center;
+  }
+  .product_pagination {
+    margin-left: 2.5vw;
   }
 }
 .product_list {
