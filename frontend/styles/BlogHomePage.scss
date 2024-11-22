@@ -42,7 +42,9 @@
 }
 
 .BlogMain {
-  margin-bottom: 14.75rem;
+  // margin-bottom: 14.75rem;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .BlogSearchInputStyle {
@@ -53,23 +55,31 @@
   border-radius: 0;
   width: 47rem;
   border-bottom: 1px solid black;
-  background-color: rgba(255, 255, 255, 0);
+  background-color: transparent !important;
 }
 
 .BlogSearchInputStyle::placeholder {
   color: black;
   font-size: 2rem;
+  border-bottom: 1px solid #fff;
+  // background-color: transparent;
+}
+.SearchIcon {
+  color: #fff;
+}
+.BlogSearchBox:has(.SearchIcon) {
+  color: #fff;
 }
 
 .BlogSearchInputStyle:focus {
   outline: none;
   box-shadow: none;
-  border-color: transparent;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #fff;
+  color: #fff;
 }
 
 .BlogSearchInputStyle:focus::placeholder {
-  color: transparent;
+  background-color: transparent;
 }
 
 /* --------------點擊 Search 變成漸層-------------- */
@@ -87,8 +97,8 @@
 
 .ArticleBrandSearch {
   /* width: 90rem; */
-  padding-top: 6rem;
-  padding-bottom: 3rem;
+  // padding-top: 6rem;
+  // padding-bottom: 3rem;
 }
 
 // .ArticleSmallTitle {
@@ -182,8 +192,8 @@
 .BlogTypeSearch {
   /* width: 90rem; */
   // padding-top: 3rem;
-  margin-top: -13rem;
-  padding-bottom: 5rem;
+  // margin-top: -13rem;
+  padding-bottom: 3rem;
 }
 
 /* ------------------------------------------BlogCheckbox + 小菱形 checkbpx------------------------------------------ */
@@ -372,9 +382,9 @@
 }
 .PurpleLine {
   height: 1px;
-  width: 65%;
+  // width: 65%;
   background-color: #805af5;
-  margin: auto;
+  // margin: auto;
 }
 .SmallCircleWidgetToLeft {
   width: 3rem;
