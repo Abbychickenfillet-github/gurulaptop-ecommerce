@@ -9,15 +9,6 @@
   gap: 2.5rem;
 }
 
-/* 菱形 */
-.TitleDiamond {
-  color: transparent;
-  border: 0.15rem solid #805af5;
-  transform: rotate(45deg) translate(0.15rem, -0.6rem);
-  font-size: 0.8rem;
-  margin-right: 0.75rem;
-}
-
 /* 圖片上傳 */
 .BlogImgUploadDiv {
   width: 100%;
@@ -131,12 +122,6 @@
 .BlogSmallTitleAlign {
   width: 100%;
   margin-bottom: 1rem;
-}
-
-.BlogEditSmallTitle {
-  font-size: 1.2rem;
-  color: #2d3748;
-  margin-bottom: 0.75rem;
 }
 
 /* RWD */
