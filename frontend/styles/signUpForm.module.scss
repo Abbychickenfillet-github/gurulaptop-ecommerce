@@ -86,7 +86,8 @@
 }
 .inputs::placeholder {
   font-size: 10px; /* 設置文字大小 */
-  color: #888; /* 設置文字顏色 */
+  color: #888;
+  /* 設置文字顏色 */
   // font-family: 'Arial', sans-serif; 
   font-weight: normal; /* 設置字重 */   
 }
@@ -183,11 +184,8 @@
   // border-radius: 20px;
   margin: 25px;
 }
-.welcome{
-  letter-spacing: 9.6px;
-  word-wrap: break-word;
-  color: white; font-size: 48px; 
-  // font-family: Khula;
+.signup{
+  font-size: 100px;
 }
 .guru-laptop{
   font-size: 64px; 
