@@ -4,7 +4,6 @@ import EventButton from '@/components/event/EventButton'
 import styles from '@/styles/individualRegistration.module.css'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import PrivacyPolicy from '@/components/event/PrivacyPolicy'
 
 const IndividualRegistration = () => {
   const router = useRouter()
@@ -289,8 +288,7 @@ const IndividualRegistration = () => {
                       required
                     />
                     <label className="form-check-label" htmlFor="agreeToTerms">
-                      我同意活動相關規定及
-                      <PrivacyPolicy />
+                      我同意活動相關規定及條款
                     </label>
                   </div>
                 </div>

@@ -4,7 +4,6 @@ import EventButton from '@/components/event/EventButton'
 import PlayerInfo from '@/components/event/PlayerInfo'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import PrivacyPolicy from '@/components/event/PrivacyPolicy'
 
 const EventRegistration = () => {
   const router = useRouter()
@@ -521,8 +520,7 @@ const EventRegistration = () => {
                       required
                     />
                     <label className="form-check-label" htmlFor="agreeToTerms">
-                      我同意活動相關規定及
-                      <PrivacyPolicy />
+                      我同意活動相關規定及條款
                     </label>
                   </div>
                 </div>
