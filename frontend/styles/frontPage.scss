@@ -1857,6 +1857,7 @@
   gap: 20px;
   padding: 20px;
   color: #fff;
+  text-shadow: 0px 4px 4px #000;
 }
 
 .home-activity-container2 {
@@ -1880,6 +1881,8 @@
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
+  width: 452px;
+  height: 286px;
 }
 
 .home-activity-btn {
@@ -1953,23 +1956,6 @@
   transition: all 0.3s ease;
 }
 
-/* 使用偽元素實現漸變背景 */
-.home-activity-card4::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(
-    --Linear-6,
-    linear-gradient(270deg, #8678c9 0%, #00013a 49%, #00013a 100%)
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 0;
-}
-
 .home-activity-card4:hover::before {
   opacity: 1;
 }
@@ -1983,7 +1969,8 @@
 .home-activity-card-title {
   padding: 20px;
   color: #fff;
-  font-size: 18px;
+  font-size: 20px;
+  text-shadow: 0px 4px 4px #000;
 }
 
 .home-activity-card-content1,
@@ -2021,26 +2008,6 @@
   // padding: 0 20px;
   justify-content: flex-end;
 }
-
-// .home-back-to-top {
-//   position: fixed;
-//   bottom: 30px;
-//   right: 30px;
-//   width: 50px;
-//   height: 50px;
-//   background-color: #8b00ff;
-//   color: white;
-//   border: none;
-//   border-radius: 50%;
-//   font-size: 24px;
-//   cursor: pointer;
-//   transition: all 0.3s ease;
-//   z-index: 1000;
-//   border-radius: 100px;
-//   background: rgba(255, 255, 255, 0.52);
-//   box-shadow: 0px 0px 20px 2px #6854c7;
-//   backdrop-filter: blur(5px);
-// }
 
 .home-activity-card-3 {
   display: flex;
@@ -2098,6 +2065,7 @@
 .home-activity-card-footer3 {
   position: relative;
   z-index: 2;
+  text-shadow: 0px 4px 4px #000;
 }
 .home-activity-frame:hover {
   transform: scale(1.05);
@@ -2151,10 +2119,14 @@
 .home-activity-card-title,
 .home-activity-card-content1 {
   transition: transform 0.3s ease;
+  text-shadow: 0px 4px 4px #000;
+
 }
 
 .home-activity-frame:hover .home-activity-card-title {
   transform: translateY(-5px);
+  text-shadow: 0px 4px 4px #000;
+
 }
 
 .home-activity-frame:hover .home-activity-card-content1 {
@@ -2205,6 +2177,8 @@
   .home-activity-card-title {
     font-size: 14px;
     padding: 10px;
+    text-shadow: 0px 4px 4px #000;
+
   }
 
   .home-activity-card-content1,
@@ -2306,4 +2280,74 @@
   .frontpage-footer{
     margin-top: 30px;
   }
+}
+
+/* 基本樣式設定 */
+.home-activity-card-content1,
+.home-activity-card-content2 {  /* 移除 p，直接選擇整個 content 區塊 */
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  color: #fff;
+  text-shadow: 0px 4px 4px #000;
+}
+
+/* hover 時顯示文字 */
+.home-activity-frame:hover .home-activity-card-title,
+.home-activity-frame:hover .home-activity-card-content1,
+.home-activity-card3:hover .home-activity-card-title,
+.home-activity-card3:hover .home-activity-card-content2,  /* 修改這裡，移除 p */
+.home-activity-card4:hover .home-activity-card-content2 {  /* 修改這裡，移除 p */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 確保背景漸層效果 */
+.home-activity-frame::before,
+.home-activity-card3::before,
+.home-activity-card4::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.7)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.home-activity-frame:hover::before,
+.home-activity-card3:hover::before,
+.home-activity-card4:hover::before {  /* 加上 hover */
+  opacity: 1;
+}
+
+/* 確保內容在漸層上層 */
+.home-activity-card-content1,
+.home-activity-card-content2,
+.home-activity-card-title {
+  position: relative;
+  z-index: 2;
+}
+
+.home-activity-card4::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(
+    --Linear-6,
+    linear-gradient(270deg, #8678c9 0%, #00013a 49%, #00013a 100%)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
 }
