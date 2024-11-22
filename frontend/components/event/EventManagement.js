@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import styles from './EventManagement.module.css'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const EventManagement = () => {
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  // 獲取使用者報名的活動列表
   const fetchUserEvents = async () => {
     try {
       const response = await axios.get(
@@ -26,17 +26,24 @@ const EventManagement = () => {
         const events = response.data.data.events || []
         setEvents(events)
       } else {
-        setError(response.data.message || '獲取活動列表失敗')
+        throw new Error(response.data.message || '獲取活動列表失敗')
       }
     } catch (error) {
       console.error('獲取活動失敗:', error)
+      let errorMessage = '獲取活動列表失敗'
       if (error.response) {
-        setError(error.response.data.message || '獲取活動列表失敗')
+        errorMessage = error.response.data.message || errorMessage
       } else if (error.request) {
-        setError('網路連線異常，請檢查網路狀態')
-      } else {
-        setError('獲取活動列表失敗')
+        errorMessage = '網路連線異常，請檢查網路狀態'
       }
+      setError(errorMessage)
+      await Swal.fire({
+        icon: 'error',
+        title: '錯誤',
+        text: errorMessage,
+        timer: 1500,
+        showConfirmButton: false,
+      })
     } finally {
       setLoading(false)
     }
@@ -46,25 +53,43 @@ const EventManagement = () => {
     fetchUserEvents()
   }, [])
 
-  // 處理取消報名
   const handleCancelRegistration = async (eventId) => {
-    if (!window.confirm('確定要取消報名此活動？')) return
+    const result = await Swal.fire({
+      icon: 'warning',
+      title: '確認取消報名',
+      text: '您確定要取消報名此活動嗎？',
+      showCancelButton: true,
+      confirmButtonText: '確定',
+      cancelButtonText: '取消',
+    })
+
+    if (!result.isConfirmed) return
 
     try {
       const response = await axios.delete(
         `http://localhost:3005/api/events/${eventId}/registration`,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       )
 
       if (response.data.code === 200) {
-        alert('已成功取消報名！')
+        await Swal.fire({
+          icon: 'success',
+          title: '取消成功',
+          text: '已成功取消報名！',
+          timer: 1500,
+          showConfirmButton: false,
+        })
         fetchUserEvents()
       }
     } catch (error) {
       console.error('取消報名失敗:', error)
-      alert(error.response?.data?.message || '取消報名失敗')
+      await Swal.fire({
+        icon: 'error',
+        title: '錯誤',
+        text: error.response?.data?.message || '取消報名失敗',
+        timer: 1500,
+        showConfirmButton: false,
+      })
     }
   }
 

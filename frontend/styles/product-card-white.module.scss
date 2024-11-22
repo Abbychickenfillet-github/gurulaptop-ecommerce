@@ -8,6 +8,7 @@
   width: 270px;
   height: 360px;
   margin: 0 0 42px 42px; /* 產品卡片間距 */
+  background-color: #000;
 }
 
 .product_card:hover {
@@ -91,7 +92,7 @@
 .product_card_content {
   margin-left: 20px;
   padding: 15px; /* 內容內邊距 */
-  color: black; /* 文字顏色 */
+  color: white; /* 文字顏色 */
   font-size: 14px; /* 文字大小 */
 }
 .product_collection_checkbox {
@@ -116,12 +117,12 @@
   margin-left: auto;
   margin-right: auto;
   width: 220px;
-  border: 1px solid rgba(0, 0, 0, 0.4); /* 外邊框顏色 */
+  border: 1px solid rgba(255, 255, 255, 0.4); /* 外邊框顏色 */
   border-radius: 35px; /* 圓角 */
-  color: black;
+  color: white;
   font-size: 18px;
-  font-weight: bold;
-  letter-spacing: 3px;
+  font-weight: 400;
+  letter-spacing: 2px;
   cursor: pointer;
   justify-content: space-between;
 }

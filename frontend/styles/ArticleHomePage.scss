@@ -54,12 +54,12 @@
 //   color: #805af5;
 // }
 .TitleDiamond {
-  color: transparent;
-  border: 0.3rem solid #805af5;
-  transform: rotate(45deg) translate(0.3rem, -1rem);
-  font-size: 0.8rem;
-  top: 0;
-  left: 1.5rem;
+  // color: #805af5;
+  // border: 0.1px solid #805af5;
+  font-size: 0.1rem;
+  translate: 0 0.5rem;
+  // translate: 0 0.5rem;
+  // stroke-width: 0.5; /* 數值越小線條越細 */
 }
 
 .fa-magnifying-glass {
