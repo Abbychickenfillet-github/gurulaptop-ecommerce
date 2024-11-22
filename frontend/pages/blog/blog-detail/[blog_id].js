@@ -65,13 +65,6 @@ export default function BlogId() {
           </div>
         </div> */}
       <section className="container BlogDetailSectionContentArea mt-5">
-        <div className="d-flex align-items-center justify-content-center">
-          <img
-            className="w-50 h-50 ratio mb-5"
-            src={`http://localhost:3005${blogData.blog_image}`}
-            alt
-          />
-        </div>
         <div className="d-flex flex-column">
           <div>
             <p className="fs-5 fw-bold text-break  BlogDetailSectionContentAreaTitle">
@@ -102,6 +95,13 @@ export default function BlogId() {
           <p className="fs-5 BlogDetailText text-break">
             {blogData.blog_content}
           </p>
+        </div>
+        <div className="d-flex align-items-center justify-content-center">
+          <img
+            className="w-50 h-50 ratio mb-5"
+            src={`http://localhost:3005${blogData.blog_image}`}
+            alt
+          />
         </div>
       </section>
       <BlogComment blog_id={blog_id} />
