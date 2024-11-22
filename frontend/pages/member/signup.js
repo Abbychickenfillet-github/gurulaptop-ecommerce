@@ -9,10 +9,11 @@ import { useRouter } from 'next/router'
 import Swal from 'sweetalert2'
 import { useJumpingLetters } from '@/hooks/jumping-letters-hook'
 import Head from 'next/head'
-
+import 'animate.css';
+import GlowingText from '@/components/dashboard/glowing-text/glowing-text';
 export default function Signup() {
   // 處理失焦
-  const { renderJumpingText } = useJumpingLetters()
+  // const { renderJumpingText } = useJumpingLetters()
 
   const validatePassword = (password) => {
     //函式內宣告2個變數
@@ -196,25 +197,24 @@ export default function Signup() {
           quality={100}
         />
         <div className="container">
-          <div className="row  align-items-center">
-            <div
-              className={`${styles.left} col d-flex flex-column align-items-start justify-content-start w-100`}
-            >
-              {/* <h4 className={`text-white ${styles.welcome}`}>Welcome to</h4>
-              <h3 className={`text-white ${styles['guru-laptop']}`}>
-                GURU Laptop */}
+          <div className="row align-items-center">
+            <div className={`${styles.left} col d-flex flex-column justify-content-start`}>
+              {/* <i>
+              <h4 className={`text-white  animate__animated animate__zoomIn animate__infinite animate__rubberBand animate__slower	3s ${styles.signup}`}>Sign Up</h4> */}
+                {/* </i> */}
+              {/* <h3 className={`text-white ${styles['guru-laptop']}`}>
+                GURU Laptop </h3>  */}
               {/* </h3> */}
-              <div className={` d-flex  `}>
-                <h4 className={`text-white text-start w-100`}>
-                  {renderJumpingText('Welcome to', 'welcome-text')}
-                </h4>
-
-                <h3
-                  className={`text-white ${styles['guru-laptop']} text-start w-100`}
-                >
-                  {renderJumpingText('LaptopGuru', 'company-name')}
-                </h3>
-              </div>
+              {/* <h4 className={`text-white text-start`}>
+                {/* {renderJumpingText('Welcome to', 'welcome-text')} */}
+                {/* {renderJumpingText('Sign Up to', 'welcome-text')} */}
+              {/* </h4>  */}
+            
+              {/* <h3 className={`text-white ${styles['guru-laptop']}`}> */}
+                {/* {renderJumpingText('LaptopGuru', 'company-name')} */}
+              {/* </h3> */}
+              <i><GlowingText text="Sign Up to"className={`text-white text-md-start`} /></i>
+              <i><GlowingText text="LaptopGuru" className={`text-white text-md-start`}/></i>
             </div>
             <div
               className={`${styles.right} align-item-center col ${styles['signup-right']} text-white`}

@@ -1,60 +1,70 @@
-import { useState, useCallback } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import styles from '@/styles/jumping-letters.module.css'
 
 export const useJumpingLetters = () => {
-  const [activeLetters, setActiveLetters] = useState(new Set())
+  const [totalLetters, setTotalLetters] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isActive, setIsActive] = useState(true)  // 控制動畫開關
 
-  const handleMouseEnter = useCallback((index) => {
-    setActiveLetters((prev) => new Set(prev).add(index))
-  }, [])
+  // 自動跳動效果
+  useEffect(() => {
+    if (!isActive || totalLetters === 0) return;
 
-  const handleAnimationEnd = useCallback((index) => {
-    setActiveLetters((prev) => {
-      const newSet = new Set(prev)
-      newSet.delete(index)
-      return newSet
-    })
-  }, [])
+    const intervalId = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % totalLetters)
+    }, 1000);  // 每200ms跳動一次
 
-  const renderJumpingText = useCallback(
-    (text, className = '') => {
-      // 用來追蹤總字母數
-      let globalLetterIndex = 0;
-      
-      return (
-        <div className={`${styles.container} ${className}`}>
-          <div className={styles.wordGroup}>
-            {text.split(/(\s+)/).map((segment, segmentIndex) => {
-              if (/\s+/.test(segment)) {
-                return <span key={`space-${segmentIndex}`}>&nbsp;</span>;
-              }
-              
-              return (
-                <span key={segmentIndex} className={styles.wordWrap}>
-                  {segment.split('').map((letter, letterIndex) => {
-                    const currentIndex = globalLetterIndex++;
-                    return (
-                      <span
-                        key={`${segmentIndex}-${letterIndex}`}
-                        className={`${styles.alphabet} ${
-                          activeLetters.has(currentIndex) ? styles.active : ''
-                        }`}
-                        onMouseEnter={() => handleMouseEnter(currentIndex)}
-                        onAnimationEnd={() => handleAnimationEnd(currentIndex)}
-                      >
-                        {letter}
-                      </span>
-                    );
-                  })}
-                </span>
-              );
-            })}
-          </div>
+    return () => clearInterval(intervalId);
+  }, [isActive, totalLetters]);
+
+  const renderJumpingText = useCallback((text, className = '') => {
+    let letterCount = 0;
+    
+    // 計算實際字母數（不包含空格）
+    useEffect(() => {
+      const count = text.split('').filter(char => char !== ' ').length;
+      setTotalLetters(count);
+    }, [text]);
+
+    return (
+      <div className={`${styles.container} ${className}`}>
+        <div className={styles.wordGroup}>
+          {text.split(/(\s+)/).map((segment, segmentIndex) => {
+            if (/\s+/.test(segment)) {
+              return <span key={`space-${segmentIndex}`}>&nbsp;</span>;
+            }
+            
+            return (
+              <span key={segmentIndex} className={styles.wordWrap}>
+                {segment.split('').map((letter, letterIndex) => {
+                  const thisIndex = letterCount++;
+                  return (
+                    <span
+                      key={`${segmentIndex}-${letterIndex}`}
+                      className={`${styles.alphabet} ${
+                        thisIndex === currentIndex ? styles.active : ''
+                      }`}
+                    >
+                      {letter}
+                    </span>
+                  );
+                })}
+              </span>
+            );
+          })}
         </div>
-      );
-    },
-    [activeLetters, handleMouseEnter, handleAnimationEnd]
-  );
+      </div>
+    );
+  }, [currentIndex]);
 
-  return { renderJumpingText }
+  // 提供控制動畫的方法
+  const toggleAnimation = useCallback(() => {
+    setIsActive(prev => !prev);
+  }, []);
+
+  return { 
+    renderJumpingText, 
+    isAnimating: isActive, 
+    toggleAnimation 
+  }
 }
