@@ -73,13 +73,6 @@ export default function BlogUserDetail() {
       </div>
 
       <section className="container BlogDetailSectionContentArea mt-5">
-        <div className="d-flex align-items-center justify-content-center mb-5">
-          <img
-            className="w-50 h-50 ratio"
-            src={`http://localhost:3005${blogData.blog_image}`}
-            alt={blogData.blog_title}
-          />
-        </div>
         <div className="d-flex flex-column">
           <div>
             <p className="mb-5 mt-5 fs-5 fw-bold BlogDetailSectionContentAreaTitle text-break">
@@ -104,6 +97,13 @@ export default function BlogUserDetail() {
             <p className="fs-5 BlogDetailText text-break">
               {blogData.blog_content}
             </p>
+          </div>
+          <div className="d-flex align-items-center justify-content-center mb-5">
+            <img
+              className="w-50 h-50 ratio"
+              src={`http://localhost:3005${blogData.blog_image}`}
+              alt={blogData.blog_title}
+            />
           </div>
         </div>
 

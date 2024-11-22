@@ -180,6 +180,7 @@ export default function BlogUserEdit() {
             <p>
               <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
               {'\u00A0 '}
+              {'\u00A0 '}
               新增封面圖片
             </p>
           </div>
@@ -221,10 +222,11 @@ export default function BlogUserEdit() {
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
                 {'\u00A0 '}
+                {'\u00A0 '}
                 標題
               </p>
             </div>
-            <div className="col-lg-10 col-12">
+            <div className="col-lg-10 col-11">
               <input
                 className="form-control form-control-lg"
                 type="text"
@@ -239,6 +241,7 @@ export default function BlogUserEdit() {
             <div className="BlogEditSmallTitle text-nowrap col-2">
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                {'\u00A0 '}
                 {'\u00A0 '}
                 內文
               </p>
@@ -259,6 +262,7 @@ export default function BlogUserEdit() {
               <div className="BlogEditSmallTitle text-nowrap">
                 <p>
                   <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                  {'\u00A0 '}
                   {'\u00A0 '}
                   筆電品牌
                 </p>
@@ -293,6 +297,7 @@ export default function BlogUserEdit() {
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
                 {'\u00A0 '}
+                {'\u00A0 '}
                 筆電型號
               </p>
             </div>
@@ -314,11 +319,12 @@ export default function BlogUserEdit() {
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
                 {'\u00A0 '}
+                {'\u00A0 '}
                 類別
               </p>
             </div>
-            <div className="w-25 h-25"></div>
-            <div className="d-flex flex-column gap-xxl-5 gap-xl-5 gap-lg-4 gap-md-3 gap-sm-2 gap-xs-2 gap-1 col-2">
+
+            <div className="d-flex flex-column  gap-xxl-4 gap-xl-4 gap-lg-3 gap-md-2 gap-sm-1 gap-xs-1 gap-1 col-4 w-50 ms-5">
               {['購買心得', '開箱文', '疑難雜症', '活動心得'].map((v) => (
                 <div
                   key={v}
@@ -335,15 +341,16 @@ export default function BlogUserEdit() {
             </div>
           </div>
 
-          <div className="d-flex align-items-start justify-content-start">
-            <div className="BlogEditSmallTitle text-nowrap col-4">
+          <div className="d-flex align-items-start justify-content-start flex-md-row flex-column">
+            <div className="BlogEditSmallTitle text-nowrap col-1">
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                {'\u00A0 '}
                 {'\u00A0 '}
                 關鍵字
               </p>
             </div>
-            <div className="col-8 col-lg-8 col-md-10">
+            <div className="col-9 col-lg-8 col-md-10">
               <input
                 className="form-control form-control-lg"
                 type="text"
@@ -359,7 +366,7 @@ export default function BlogUserEdit() {
               送出
             </button>
             <button
-              className="BlogEditButtonDelete shadow"
+              className="BlogEditButtonDelete shadow "
               type="button"
               onClick={async () => {
                 // 顯示確認對話框並等待用戶響應
