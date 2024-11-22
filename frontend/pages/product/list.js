@@ -399,7 +399,7 @@ export default function List() {
                         handleButtonClick({
                           page: 1,
                           category: 'product_brand',
-                          category_value: '技嘉',
+                          category_value: 'GIGABYTE',
                           search: tmpSearch,
                           price: tmpPrice,
                         })
