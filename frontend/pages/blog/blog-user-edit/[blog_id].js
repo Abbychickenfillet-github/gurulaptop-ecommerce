@@ -8,6 +8,10 @@ import MyFooter from '@/components/layout/default-layout/my-footer'
 import BlogDetailMainArea from '@/components/blog/bloghomepage/articlehomepage-mainarea'
 import Link from 'next/link'
 import { IoArrowBackCircleOutline } from 'react-icons/io5'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
+import Head from 'next/head'
 
 export default function BlogUserEdit() {
   const router = useRouter()
@@ -139,7 +143,12 @@ export default function BlogUserEdit() {
       )
 
       if (response.ok) {
-        window.alert('編輯成功！') // 加入這行
+        // window.alert('編輯成功！') // 加入這行
+        MySwal.fire({
+          title: '編輯成功！',
+          icon: 'success',
+          confirmButtonText: '確定',
+        })
         router.push('/blog/blog-edit-success') // 改用這個路徑
       }
     } catch (error) {
@@ -149,6 +158,9 @@ export default function BlogUserEdit() {
 
   return (
     <>
+      <Head>
+        <title>編輯部落格</title>
+      </Head>
       <Header />
       <BlogDetailMainArea />
       <div className="container">
@@ -167,6 +179,7 @@ export default function BlogUserEdit() {
           <div className="BlogEditSmallTitle text-nowrap">
             <p>
               <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+              {'\u00A0 '}
               {'\u00A0 '}
               新增封面圖片
             </p>
@@ -209,10 +222,11 @@ export default function BlogUserEdit() {
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
                 {'\u00A0 '}
+                {'\u00A0 '}
                 標題
               </p>
             </div>
-            <div className="col-lg-10 col-12">
+            <div className="col-lg-10 col-11">
               <input
                 className="form-control form-control-lg"
                 type="text"
@@ -227,6 +241,7 @@ export default function BlogUserEdit() {
             <div className="BlogEditSmallTitle text-nowrap col-2">
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                {'\u00A0 '}
                 {'\u00A0 '}
                 內文
               </p>
@@ -247,6 +262,7 @@ export default function BlogUserEdit() {
               <div className="BlogEditSmallTitle text-nowrap">
                 <p>
                   <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                  {'\u00A0 '}
                   {'\u00A0 '}
                   筆電品牌
                 </p>
@@ -281,6 +297,7 @@ export default function BlogUserEdit() {
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
                 {'\u00A0 '}
+                {'\u00A0 '}
                 筆電型號
               </p>
             </div>
@@ -302,11 +319,12 @@ export default function BlogUserEdit() {
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
                 {'\u00A0 '}
+                {'\u00A0 '}
                 類別
               </p>
             </div>
-            <div className="w-25 h-25"></div>
-            <div className="d-flex flex-column gap-xxl-5 gap-xl-5 gap-lg-4 gap-md-3 gap-sm-2 gap-xs-2 gap-1 col-2">
+
+            <div className="d-flex flex-column  gap-xxl-4 gap-xl-4 gap-lg-3 gap-md-2 gap-sm-1 gap-xs-1 gap-1 col-4 w-50 ms-5">
               {['購買心得', '開箱文', '疑難雜症', '活動心得'].map((v) => (
                 <div
                   key={v}
@@ -323,15 +341,16 @@ export default function BlogUserEdit() {
             </div>
           </div>
 
-          <div className="d-flex align-items-start justify-content-start">
-            <div className="BlogEditSmallTitle text-nowrap col-4">
+          <div className="d-flex align-items-start justify-content-start flex-md-row flex-column">
+            <div className="BlogEditSmallTitle text-nowrap col-1">
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                {'\u00A0 '}
                 {'\u00A0 '}
                 關鍵字
               </p>
             </div>
-            <div className="col-8 col-lg-8 col-md-10">
+            <div className="col-9 col-lg-8 col-md-10">
               <input
                 className="form-control form-control-lg"
                 type="text"
@@ -347,10 +366,23 @@ export default function BlogUserEdit() {
               送出
             </button>
             <button
-              className="BlogEditButtonDelete shadow"
+              className="BlogEditButtonDelete shadow "
               type="button"
               onClick={async () => {
-                if (window.confirm('確定要刪除這篇文章嗎？')) {
+                // 顯示確認對話框並等待用戶響應
+                const result = await MySwal.fire({
+                  icon: 'warning',
+                  title: '確定要刪除部落格嗎？',
+                  text: '刪除後將無法復原！',
+                  showCancelButton: true, // 顯示取消按鈕
+                  confirmButtonText: '確定刪除',
+                  cancelButtonText: '取消',
+                  confirmButtonColor: '#d33', // 確認按鈕的顏色
+                  cancelButtonColor: '#3085d6', // 取消按鈕的顏色
+                })
+
+                // 如果用戶點擊確認
+                if (result.isConfirmed) {
                   try {
                     const res = await fetch(
                       `http://localhost:3005/api/blog/blog-delete/${blog_id}`,
@@ -358,11 +390,27 @@ export default function BlogUserEdit() {
                         method: 'PUT',
                       }
                     )
+
                     if (res.ok) {
+                      // 刪除成功後顯示成功訊息
+                      await MySwal.fire({
+                        icon: 'success',
+                        title: '刪除成功！',
+                        showConfirmButton: false,
+                        timer: 1500,
+                      })
+
                       router.push('/blog/blog-delete-success')
                     }
                   } catch (error) {
+                    // 發生錯誤時顯示錯誤訊息
                     console.error('刪除失敗:', error)
+                    MySwal.fire({
+                      icon: 'error',
+                      title: '刪除失敗',
+                      text: '請稍後再試',
+                      showConfirmButton: true,
+                    })
                   }
                 }
               }}

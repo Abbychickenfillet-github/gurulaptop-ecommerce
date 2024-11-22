@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import ProgressBar from 'react-bootstrap/ProgressBar'
 import axios from 'axios'
+import Image from 'next/image'
+import styles from '@/styles/membership-levels.module.scss'
 
 export default function MembershipLevels() {
   const { auth } = useAuth()
@@ -17,7 +19,7 @@ export default function MembershipLevels() {
   const getMembershipLevel = (totalSpent) => {
     // 確保 totalSpent 是數字
     const spent = Number(totalSpent)
-    
+
     if (spent >= 100000) {
       return '鑽石會員'
     } else if (spent >= 70000) {
@@ -90,32 +92,32 @@ export default function MembershipLevels() {
     {
       name: '銅牌會員',
       benefits:
-        '可於文章區發表文章、參加活動、包膜優惠價(打95折，價值1,000的包膜等於省50元)',
-      criteria:'2萬',
+        '可於文章區發表文章、參加活動、包膜優惠價(打95折，價值1,000元的包膜等於省50元)',
+      criteria: '消費金額達2萬',
     },
     {
       name: '銀牌會員',
       benefits:
-        '可於文章區發表文章、參加活動、包膜優惠價(打95折，價值1,000的包膜等於省50元)',
-        criteria:'4萬',
+        '可於文章區發表文章、參加活動、包膜優惠價(打95折，價值1,000元的包膜等於省50元)',
+      criteria: '消費金額達4萬',
     },
     {
       name: '金牌會員',
       benefits:
-        '可於文章區發表文章、參加活動、送免費新機包膜服務、三節打95折(等於購買30,000的電腦可省500)、電腦包客製化姓名刺繡服務(價值120元)',
-        criteria:'7萬',
+        '可於文章區發表文章、參加活動、送免費新機包膜服務、三節打95折(等於購買30,000元的電腦可省500)、電腦包客製化姓名刺繡服務(價值120元)',
+      criteria: '消費金額達7萬',
     },
     {
       name: '鑽石會員',
       benefits:
-        '可於文章區發表文章、參加活動、免費包膜服務(價值1,000)、日後購買新機免費升級延長保固半年、生日禮(抽獎券-可抽筆電支架)',
-        criteria:'10萬',
+        '可於文章區發表文章、參加活動、免費包膜服務(價值1,000元)、日後購買新機免費升級延長保固半年、生日禮(抽獎券-可抽筆電支架)',
+      criteria: '消費金額達10萬',
     },
   ]
 
   return (
     <div
-      className="container py-5"
+      className="container py-5 "
       style={{
         background: 'linear-gradient(135deg, #6C4CCE 0%, #805AF5 100%)',
       }}
@@ -166,18 +168,19 @@ export default function MembershipLevels() {
             會員等級
           </h2>
           <div className="d-flex justify-content-center">
-            <h3 className="text-white">
-              目前是{getMembershipLevel(level_chinese)}
-            </h3>
+            <h3 className="text-white">{getMembershipLevel(level_chinese)}</h3>
           </div>
         </div>
       </div>
 
       <div className="row">
         <div className="col">
-          <h3 className="text-white d-flex justify-content-center">累計消費: ${membershipData.totalSpent}</h3>
+          <h3 className="text-white d-flex justify-content-center">
+            累計消費: ${membershipData.totalSpent}
+          </h3>
           <p className="text-white">
-            距離下一等級還需消費: ${membershipData.nextLevelRequired}
+            距離下一等級還需消費: $
+            {membershipData.nextLevelRequired.toLocaleString()}
           </p>
           <ProgressBar>
             {calculateProgress().map((progress, index) => (
@@ -192,7 +195,7 @@ export default function MembershipLevels() {
         </div>
       </div>
 
-      <div className="row">
+      <div className="row mb-5 mt-5">
         <div className="col">
           <h3 className="text-white d-flex justify-content-center">
             註冊日期: {new Date(membershipData.created_at).toLocaleDateString()}
@@ -223,9 +226,17 @@ export default function MembershipLevels() {
                 level.level === auth?.userData?.level ? 'active-card' : ''
               }`}
             >
-              <h3 className="text-white mb-3">{level.name}</h3>
-              <p className="text-white flex-grow-1">{level.benefits}</p>
-              <p className="text-white flex-grow-1">{level.criteria}</p>
+              <Image
+                src="signup_login/membership.png"
+                alt="background"
+                layout="fill"
+                // objectFit="cover"
+                quality={100}
+              />
+
+              <h3 className="text-white mb-3 z-3">{level.name}</h3>
+              <p className="text-white flex-grow-1 z-2">{level.criteria}</p>
+              <p className="text-white flex-grow-1 z-2">{level.benefits}</p>
             </div>
           </div>
         ))}

@@ -682,7 +682,7 @@ export default function CartIndex() {
                   htmlFor="ecpay"
                   defaultChecked
                 >
-                  綠界付款
+                  綠界代收
                 </label>
               </div>
               <div className="form-check">

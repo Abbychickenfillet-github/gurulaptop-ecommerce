@@ -66,10 +66,11 @@ router.get('/', async (req, res) => {
       type = '',
       platform = '',
       teamType = '',
-      keyword = '', // 改用 keyword 作為搜尋參數
+      keyword = '',
     } = req.query
     const offset = (page - 1) * pageSize
 
+    // 基礎查詢
     let query = `
       SELECT 
         et.*,
@@ -97,46 +98,68 @@ router.get('/', async (req, res) => {
     const queryParams = []
     const countParams = []
 
-    // 關鍵字搜尋條件 - 使用 LIKE 進行模糊匹配
-    if (keyword && keyword.trim()) {
-      const searchCondition = `
-        AND (
-          LOWER(et.event_name) LIKE LOWER(?) OR
-          LOWER(et.event_type) LIKE LOWER(?) OR
-          LOWER(et.event_platform) LIKE LOWER(?) OR
-          LOWER(et.event_content) LIKE LOWER(?)
-        )
-      `
-      const searchTerm = `%${keyword.trim()}%`
-      query += searchCondition
-      countQuery += searchCondition
-      // 將搜尋條件添加到兩個查詢的參數中
-      queryParams.push(searchTerm, searchTerm, searchTerm, searchTerm)
-      countParams.push(searchTerm, searchTerm, searchTerm, searchTerm)
-    }
+    // 條件陣列 - 用於收集所有篩選條件
+    const conditions = []
 
-    // 一般篩選條件
-    if (type) {
-      query += ` AND et.event_type = ?`
-      countQuery += ` AND et.event_type = ?`
+    // 遊戲類型篩選
+    if (type && type !== '全部遊戲' && type !== '全部遊戲') {
+      conditions.push('et.event_type = ?')
       queryParams.push(type)
       countParams.push(type)
     }
 
-    if (platform) {
-      query += ` AND et.event_platform = ?`
-      countQuery += ` AND et.event_platform = ?`
-      queryParams.push(platform)
-      countParams.push(platform)
+    // 平台篩選
+    if (platform && platform !== '平台') {
+      // 處理 Mobile/PC 格式
+      if (platform === 'Mobile') {
+        conditions.push(
+          '(et.event_platform LIKE ? OR et.event_platform LIKE ?)'
+        )
+        queryParams.push('Mobile%', '%Mobile%')
+        countParams.push('Mobile%', '%Mobile%')
+      } else if (platform === 'PC') {
+        conditions.push(
+          '(et.event_platform LIKE ? OR et.event_platform LIKE ?)'
+        )
+        queryParams.push('PC%', '%PC%')
+        countParams.push('PC%', '%PC%')
+      } else {
+        conditions.push('et.event_platform = ?')
+        queryParams.push(platform)
+        countParams.push(platform)
+      }
     }
 
-    if (teamType) {
-      query += ` AND et.individual_or_team = ?`
-      countQuery += ` AND et.individual_or_team = ?`
-      queryParams.push(teamType)
-      countParams.push(teamType)
+    // 個人/團隊篩選
+    if (teamType && teamType !== '個人/團隊') {
+      let dbTeamType
+      if (teamType === '團隊') {
+        dbTeamType = '團體'
+      } else if (teamType === '個人') {
+        dbTeamType = '個人'
+      }
+
+      if (dbTeamType) {
+        conditions.push('et.individual_or_team = ?')
+        queryParams.push(dbTeamType)
+        countParams.push(dbTeamType)
+      }
     }
 
+    // 關鍵字搜尋
+    if (keyword && keyword.trim()) {
+      conditions.push(`(
+        LOWER(et.event_name) LIKE LOWER(?) OR
+        LOWER(et.event_type) LIKE LOWER(?) OR
+        LOWER(et.event_platform) LIKE LOWER(?) OR
+        LOWER(et.event_content) LIKE LOWER(?)
+      )`)
+      const searchTerm = `%${keyword.trim()}%`
+      queryParams.push(searchTerm, searchTerm, searchTerm, searchTerm)
+      countParams.push(searchTerm, searchTerm, searchTerm, searchTerm)
+    }
+
+    // 狀態篩選
     if (status) {
       const statusCondition = {
         進行中: 'NOW() BETWEEN et.apply_end_time AND et.event_end_time',
@@ -146,9 +169,15 @@ router.get('/', async (req, res) => {
       }[status]
 
       if (statusCondition) {
-        query += ` AND ${statusCondition}`
-        countQuery += ` AND ${statusCondition}`
+        conditions.push(statusCondition)
       }
+    }
+
+    // 組合所有條件
+    if (conditions.length > 0) {
+      const whereClause = conditions.join(' AND ')
+      query += ` AND (${whereClause})`
+      countQuery += ` AND (${whereClause})`
     }
 
     // 添加排序和分頁
@@ -156,13 +185,11 @@ router.get('/', async (req, res) => {
     queryParams.push(parseInt(pageSize), offset)
 
     // 執行查詢
-    console.log('Executing query:', query) // 用於調試
-    console.log('Query params:', queryParams) // 用於調試
+    console.log('Executing query:', query, queryParams)
 
     const [events] = await db.query(query, queryParams)
     const [totalRows] = await db.query(countQuery, countParams)
 
-    // 回傳結果
     res.json({
       code: 200,
       message: 'success',
@@ -200,7 +227,6 @@ router.get('/', async (req, res) => {
     })
   }
 })
-
 // 獲取單一活動詳情
 router.get('/:id', async (req, res) => {
   try {

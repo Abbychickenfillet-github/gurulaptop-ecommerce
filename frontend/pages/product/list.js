@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import styles from '@/styles/product.module.scss'
-import NextBreadCrumbLight from '@/components/common/next-breadcrumb-light'
 import ProductCard from '@/components/product/product-card'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
@@ -400,7 +399,7 @@ export default function List() {
                         handleButtonClick({
                           page: 1,
                           category: 'product_brand',
-                          category_value: '技嘉',
+                          category_value: 'GIGABYTE',
                           search: tmpSearch,
                           price: tmpPrice,
                         })

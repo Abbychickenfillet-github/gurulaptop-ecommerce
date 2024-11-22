@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
-import { useAuth, logout } from '@/hooks/use-auth'
+import { useAuth, logout, setAuth } from '@/hooks/use-auth'
 import axios from 'axios'
 import { taiwanData } from '@/data/address/data.js'
 import styles from '@/styles/dashboard.module.scss'
@@ -8,6 +8,7 @@ import styles from '@/styles/dashboard.module.scss'
 export default function UserProfile() {
   const { auth, setAuth, logout } = useAuth()
   const user_id = auth?.userData?.user_id
+ 
   const [editableUser, setEditableUser] = useState({
     name: '',
     gender: '',
@@ -26,7 +27,12 @@ export default function UserProfile() {
   })
 
   const [profilePic, setProfilePic] = useState(
-    editableUser.image_path || 'signup_login/undraw_profile_1.svg'
+    editableUser.image_path || 
+  (editableUser.gender === 'male' 
+    ? 'signup_login/undraw_profile_2.svg'
+    : editableUser.gender === 'female'
+    ? 'signup_login/undraw_profile_1.svg'
+    : '/Vector.svg')
   )
   const [uploadStatus, setUploadStatus] = useState('')
   // 沒有寫就是false
@@ -223,6 +229,24 @@ export default function UserProfile() {
       ...prev,
       [name]: value,
     }))
+
+      // 當性別欄位改變時，且使用者沒有上傳過圖片時才更新預設頭貼
+      // 變更下拉式選單沒有改變預設圖片可能是因為原本就有存圖了
+      if (name === 'gender' && !editableUser.image_path) {
+        let defaultProfilePic;
+        switch (value) {
+          case 'female':
+            defaultProfilePic = '/signup_login/undraw_profile_1.svg';
+            break;
+          case 'male':
+            defaultProfilePic = '/signup_login/undraw_profile_2.svg';
+            break;
+          default:
+            defaultProfilePic = '/Vector.svg';
+        }
+        setProfilePic(defaultProfilePic);
+        setSelectedImg(defaultProfilePic);      
+    };
   }
 
   const handleImageChange = (e) => {
@@ -292,6 +316,7 @@ export default function UserProfile() {
       )
     }
   }
+// 在 userInfoEdit.js 中
 
   const handleDeactivate = async () => {
     // const {logout} = useAuth()
@@ -365,6 +390,16 @@ export default function UserProfile() {
       if (response.data.status === 'success') {
         setUploadStatus('頭像更新成功！') //有文字算true,沒有算none?
         //除非想防風報攻擊才需要寫得很認真@@
+        setAuth((prev) => ({
+          ...prev,
+          userData: {
+            ...prev.userData,
+            image_path: selectedImg
+          }
+        }));
+        const headerResponse = await axios.post('http://localhost:3005/api/header', {
+          user_id: user_id
+        });
         Swal.fire('成功', '頭像更新成功', 'success')
       }
     } catch (error) {
@@ -438,6 +473,7 @@ export default function UserProfile() {
                             value={editableUser.gender}
                             onChange={handleInputChange}
                           >
+                            <option value="">請選擇</option>
                             <option value="male">男</option>
                             <option value="female">女</option>
                             <option value="undisclosed">不公開</option>
@@ -691,7 +727,10 @@ export default function UserProfile() {
                           src={profilePic}
                           alt="Profile"
                           className="rounded-circle img-fluid mb-3"
-                          style={{ width: '220px', height: '220px' }}
+                          style={{ width: '220px', height: '220px', 
+                            // margin:'0 auto',
+                            //  position:'relative', 
+                            }}
                         />
                         <div className="mb-3">
                           <label

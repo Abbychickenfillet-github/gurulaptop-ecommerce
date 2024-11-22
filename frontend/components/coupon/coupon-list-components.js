@@ -7,6 +7,7 @@ import Coupon2 from './index2'
 import { useAuth } from '@/hooks/use-auth'
 import { AiFillExclamationCircle } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
+import { AiTwotoneDelete } from "react-icons/ai";
 
 
 const MySwal = withReactContent(Swal)
@@ -332,7 +333,7 @@ export default function CouponList() {
                     setEndDateFilter('')
                   }}
                 >
-                  清除
+                <AiTwotoneDelete />  {/* 清除 */}
                 </Button>
               )}
             </div>

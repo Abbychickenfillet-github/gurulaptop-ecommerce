@@ -332,8 +332,6 @@ router.get('/blog_user_overview/:user_id', async (req, res) => {
 // GET 評論路由
 router.get('/blog-comment/:blog_id', async (req, res) => {
   try {
-    // console.log('收到查詢請求，blog_id:', req.params.blog_id) // 加入偵錯訊息
-
     const [blogComment] = await db.query(
       `SELECT 
         bc.*,
@@ -346,15 +344,47 @@ router.get('/blog-comment/:blog_id', async (req, res) => {
       [req.params.blog_id]
     )
 
-    // console.log('查詢結果:', blogComment) // 加入偵錯訊息
+    // 處理每條評論的圖片路徑
+    const processedComments = blogComment.map((comment) => {
+      if (!comment.image_path) {
+        return comment
+      }
 
-    // 修改這裡的判斷邏輯
-    // if (!blogComment) {
-    //   return res.status(404).json({ message: '找不到該文章' })
-    // }
+      // 檢查是否已經是完整的 base64 或檔案路徑
+      if (
+        comment.image_path.startsWith('data:image') ||
+        comment.image_path.startsWith('http') ||
+        comment.image_path.startsWith('/')
+      ) {
+        return comment
+      }
 
-    // 始終返回陣列
-    res.json(blogComment || [])
+      // 檢查是否為純 base64 字串
+      if (comment.image_path.startsWith('/9j/')) {
+        // JPEG 圖片
+        return {
+          ...comment,
+          image_path: `data:image/jpeg;base64,${comment.image_path}`,
+        }
+      } else if (comment.image_path.startsWith('iVBOR')) {
+        // PNG 圖片
+        return {
+          ...comment,
+          image_path: `data:image/png;base64,${comment.image_path}`,
+        }
+      }
+
+      // 如果都不是，回傳原始資料
+      return comment
+    })
+
+    // 記錄處理結果（開發時可用）
+    console.log('處理第一筆資料的圖片：', {
+      original: blogComment[0]?.image_path?.substring(0, 50),
+      processed: processedComments[0]?.image_path?.substring(0, 50),
+    })
+
+    res.json(processedComments || [])
   } catch (error) {
     console.error('部落格查詢錯誤:', error)
     res.status(500).json({ message: '伺服器錯誤' })

@@ -17,12 +17,11 @@ import Head from 'next/head'
 // import { LoadingSpinner } from '@/components/dashboard/loading-spinner'
 // import MarioGame from '@/components/dashboard/MarioGame'
 
-export default function Test1() {
+export default function DashboardIndex() {
   const { auth } = useAuth()
   const [activeKey, setActiveKey] = useState('home')
   const [couponActiveKey, setCouponActiveKey] = useState('available')
   // 需要加入這個state
-  const [isLoading, setIsLoading] = useState(true)
   const [subActiveKey, setSubActiveKey] = useState('')
   // 狀態用一樣的就好，因為畫面上一次只會呈現一個就不用多組狀態控制
 
@@ -38,6 +37,10 @@ export default function Test1() {
       { key: 'all-orders', label: '全部訂單' },
       { key: 'processing', label: '未付款' },
       { key: 'completed', label: '已付款' },
+    ],
+    favorites: [
+      { key: 'record', label: '收藏紀錄' },
+      { key: 'history', label: '歷史紀錄' },
     ],
     'coupon-record': [
       { key: 'available', label: '優惠卷' },
@@ -66,15 +69,6 @@ export default function Test1() {
       setCouponActiveKey(key)
     }
   }
-  useEffect(() => {
-    console.log('Dashboard mounted')
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-      console.log('Loading complete')
-    }, 2000)
-
-    return () => clearTimeout(timer)
-  }, [])
 
   const renderHome = (key) => {
     switch (key) {
@@ -109,12 +103,16 @@ export default function Test1() {
             }}
           >
             {/* Left Sidebar */}
-            <div className="col-md-3">
+            <div className="col-md-2">
               <div className="text-center">
                 <img
                   src={
                     auth?.userData?.image_path ||
-                    'signup_login/undraw_profile_1.svg'
+                    (auth?.userData?.gender === 'male'
+                      ? 'signup_login/undraw_profile_2.svg'
+                      : auth?.userData?.gender === 'female'
+                      ? 'signup_login/undraw_profile_1.svg'
+                      : '/Vector.svg')
                   }
                   alt="Profile"
                   className="rounded-circle img-fluid mb-3"
@@ -155,7 +153,7 @@ export default function Test1() {
             </div>
 
             {/* Main Content Area */}
-            <div className="col-md-9">
+            <div className="col-md-10">
               {/* 上方導航 */}
               <Nav
                 variant="tabs"
@@ -187,7 +185,7 @@ export default function Test1() {
               </Nav>
 
               {/* 內容區域 */}
-              <Tab.Content>
+              <Tab.Content className="mb-5">
                 <Tab.Pane eventKey="home">
                   <div className="row justify-content-end">
                     {renderHome(subActiveKey)}

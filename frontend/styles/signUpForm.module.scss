@@ -1,7 +1,5 @@
 .gradient-bg {
   position: relative;
-  z-index: 1;
-  background-image: url(../assets/signup_login/andras-vas-Bd7gNnWJBkU-unsplash.jpg);
   background: linear-gradient(135deg, #3c007a, #000);
   background-repeat: no-repeat;
   background-size: cover ;  /* 改用 cover */
@@ -38,6 +36,11 @@
 
 .left {
   // position: relative;
+  text-align: left;
+  h4, h3 {
+    margin-left: 0;
+    align-self: flex-start;  // 在 flex 容器中靠左對齊
+  }
   z-index: 20;  /* 確保在其他元素上方 */
   // min-width: 200px;  /* 給予最小寬度 */
   padding: 20px;    /* 給予一些內邊距 */
@@ -79,8 +82,7 @@
   background: rgba(30, 25, 55, 0.30); 
   border-radius: 10px; 
   overflow: hidden; 
-  justify-content: flex-start; 
-  align-items: center; gap: 10px; display: inline-flex
+  align-items: center; gap: 10px; 
 }
 .inputs::placeholder {
   font-size: 10px; /* 設置文字大小 */
@@ -94,22 +96,91 @@
       border-color: rgba(255, 255, 255, 1); /* 聚焦時邊框顏色變化 */
   }
 
+// signUpForm.module.scss
 .hover {
+  position: relative;
+  transition: all 0.3s ease;
+  
+  // 下劃線動畫效果
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #fff;
+    transition: width 0.3s ease;
+  }
+  
   &:hover {
-    color: #8055f5 !important;  // 直接使用色碼
-    // 或是使用你的 primary 色碼
-    // color: #8605af5 !important; 
-    text-shadow: 1px 1px 4px rgba(128, 90, 245, 0.5);
+    // 發光效果
+    text-shadow: 0 0 10px rgba(188, 126, 126, 0.8);
+    transform: translateY(-2px);
+    
+    &::after {
+      width: 100%;
+    }
   }
 }
 
+// 可以加入更炫的效果
+// .tabs {
+//   .hover {
+//     // 漸變色效果
+//     background: linear-gradient(
+//       to right,
+//       #fff,
+//       #fff 50%,
+//       transparent 50%
+//     );
+//     background-clip: text;
+//     -webkit-background-clip: text;
+//     background-size: 200% 100%;
+//     background-position: 100%;
+//     transition: background-position 0.3s ease;
+    
+//     &:hover {
+//       background-position: 0;
+//       color: transparent;
+//       -webkit-text-fill-color: transparent;
+//     }
+//   }
+// }
+
+// 或者霓虹燈效果
+// .hover {
+//   &:hover {
+//     animation: neon 1.5s ease-in-out infinite alternate;
+//   }
+// }
+
+// @keyframes neon {
+//   from {
+//     text-shadow: 
+//       0 0 5px #fff,
+//       0 0 10px #fff,
+//       0 0 15px #805AF5,
+//       0 0 20px #805AF5,
+//       0 0 25px #805AF5;
+//   }
+//   to {
+//     text-shadow: 
+//       0 0 10px #fff,
+//       0 0 20px #fff,
+//       0 0 30px #805AF5,
+//       0 0 40px #805AF5,
+//       0 0 50px #805AF5;
+//   }
+// }
+
 .button{
-  background: -webkit-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246d8e 100%);
-  background: -o-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
-  background: -moz-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
-  background: linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
+  // background: -webkit-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246d8e 100%);
+  // background: -o-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
+  // background: -moz-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
+  // background: linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
   width: 90%;
-  border-radius: 20px;
+  // border-radius: 20px;
   margin: 25px;
 }
 .welcome{
@@ -169,10 +240,10 @@
     transition: transform 0.3s ease;
   }
 }
-.signup-right{
-  margin-block: 40px;
-  margin-right:40px;
-}
+// .signup-right{
+//   margin-block: 40px;
+//   margin-right:40px;
+// }
 
 
 .content-row {

@@ -7,6 +7,7 @@ import withReactContent from 'sweetalert2-react-content'
 import { useAuth } from '@/hooks/use-auth'
 import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai'
 import { AiOutlineSearch } from "react-icons/ai";
+import { AiTwotoneDelete } from "react-icons/ai";
 
 
 const MySwal = withReactContent(Swal)
@@ -194,7 +195,7 @@ export default function CouponUser() {
                   variant="outline-secondary"
                   onClick={() => setSearchTerm('')}
                 >
-                  清除
+                  <AiTwotoneDelete />{/* 清除 */}
                 </Button>
               )}
             </div>

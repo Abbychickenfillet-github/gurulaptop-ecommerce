@@ -8,6 +8,10 @@ import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import BlogDetailMainArea from '@/components/blog/bloghomepage/articlehomepage-mainarea'
 import NextBreadCrumb from '@/components/common/next-breadcrumb'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
+import Head from 'next/head'
 
 export default function Blogcreated(props) {
   const router = useRouter() // 加入 router
@@ -17,15 +21,6 @@ export default function Blogcreated(props) {
   const { isAuth, userData } = auth // 一起解構
   const user_id = userData.user_id
   console.log(user_id)
-  // -------------------使用者-------------------
-
-  // 2. 用戶驗證，如果沒有登入就導向首頁或登入頁
-  useEffect(() => {
-    if (!isAuth) {
-      router.push('http://localhost:3000/member/login')
-    }
-  }, [isAuth, router])
-  // -------------------使用者-------------------
 
   const brands = [
     ['ROG', 'DELL', 'Acer', 'Raser'],
@@ -86,26 +81,43 @@ export default function Blogcreated(props) {
       const result = await response.json()
 
       if (response.ok) {
-        alert('部落格新增成功')
+        MySwal.fire({
+          icon: 'success',
+          title: '部落格新增成功',
+          showConfirmButton: false,
+          timer: 1500,
+        })
         if (result.blog_id) {
-          // 導航到新建立的文章頁面
-          router.push(`/blog/blog-user-detail/${result.blog_id}`)
+          // toast.success('部落格新增成功')
+          router.push(`/blog`)
         }
       } else {
-        alert(`發生錯誤: ${result.message}`)
+        MySwal.fire({
+          icon: 'error',
+          title: '部落格新增失敗',
+          showConfirmButton: false,
+          timer: 1500,
+        })
       }
     } catch (error) {
       console.error('錯誤:', error)
-      alert('發生錯誤，請稍後再試')
+
+      MySwal.fire({
+        icon: 'error',
+        title: '部落格新增失敗',
+        showConfirmButton: false,
+        timer: 1500,
+      })
     }
-  }
-  if (!isAuth) {
-    return null // 或是返回一個 loading 元件
   }
 
   return (
     <>
+      <Head>
+        <title>新增部落格</title>
+      </Head>
       <Header />
+      {/* <ToastContainer /> */}
       <BlogDetailMainArea />
       <div className="container mt-5">
         <NextBreadCrumb
@@ -114,13 +126,17 @@ export default function Blogcreated(props) {
           isHomeIcon={true}
         />
       </div>
-
       <div className="container-lg container-fluid d-flex h-auto flex-column gap-5 mt-5 col-lg-5 col-md-8 col-12">
         {/* 圖片上傳區塊 */}
         <div className="">
           <div className="BlogEditSmallTitle text-nowrap">
             <p>
-              <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+              <FontAwesomeIcon
+                icon={faDiamond}
+                className="TitleDiamond"
+                size="xs"
+              />
+              {'\u00A0 '}
               {'\u00A0 '}
               新增封面圖片
             </p>
@@ -160,10 +176,11 @@ export default function Blogcreated(props) {
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
                 {'\u00A0 '}
+                {'\u00A0 '}
                 標題
               </p>
             </div>
-            <div className="col-lg-10 col-12">
+            <div className="col-lg-10 col-10">
               <input
                 className="form-control form-control-lg"
                 type="text"
@@ -180,6 +197,7 @@ export default function Blogcreated(props) {
             <div className="BlogEditSmallTitle text-nowrap col-2">
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                {'\u00A0 '}
                 {'\u00A0 '}
                 內文
               </p>
@@ -201,6 +219,7 @@ export default function Blogcreated(props) {
               <div className="BlogEditSmallTitle text-nowrap">
                 <p>
                   <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                  {'\u00A0 '}
                   {'\u00A0 '}
                   筆電品牌
                 </p>
@@ -236,6 +255,7 @@ export default function Blogcreated(props) {
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
                 {'\u00A0 '}
+                {'\u00A0 '}
                 筆電型號
               </p>
             </div>
@@ -251,15 +271,16 @@ export default function Blogcreated(props) {
           </div>
           {/* 類別選擇區塊 */}
           <div className="container d-flex justify-content-start align-items-start mb-5 flex-lg-row flex-column col-12">
-            <div className="BlogEditSmallTitle text-nowrap col-10">
+            <div className="BlogEditSmallTitle text-nowrap col-8">
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                {'\u00A0 '}
                 {'\u00A0 '}
                 類別
               </p>
             </div>
-            <div className="w-25 h-25"></div>
-            <div className="d-flex flex-column gap-xxl-5 gap-xl-5 gap-lg-4 gap-md-3 gap-sm-2 gap-xs-2 gap-1 col-2">
+
+            <div className="d-flex flex-column  gap-xxl-4 gap-xl-4 gap-lg-3 gap-md-2 gap-sm-1 gap-xs-1 gap-1 col-4 w-50 ms-5">
               {['購買心得', '開箱文', '疑難雜症', '活動心得'].map((v) => (
                 <div
                   key={v}
@@ -279,10 +300,11 @@ export default function Blogcreated(props) {
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
                 {'\u00A0 '}
+                {'\u00A0 '}
                 關鍵字
               </p>
             </div>
-            <div className="col-9">
+            <div className="col-10">
               <input
                 className="form-control form-control-lg"
                 type="text"
@@ -294,7 +316,7 @@ export default function Blogcreated(props) {
           </div>
 
           {/* 按鈕區塊 */}
-          <div className="container d-flex flex-row justify-content-around align-items-center mt-5 mb-5">
+          <div className="container d-flex flex-row justify-content-around align-items-center mt-5 mb-5 col-4">
             <button className="BlogEditButtonSubmit shadow" type="submit">
               送出
             </button>

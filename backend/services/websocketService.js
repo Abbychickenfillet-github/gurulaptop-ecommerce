@@ -11,77 +11,6 @@ class WebSocketService {
     this.isConnecting = false
   }
 
-  formatDateTime() {
-    const now = new Date()
-    const year = now.getFullYear()
-    const month = (now.getMonth() + 1).toString().padStart(2, '0')
-    const day = now.getDate().toString().padStart(2, '0')
-    const hours = now.getHours().toString().padStart(2, '0')
-    const minutes = now.getMinutes().toString().padStart(2, '0')
-
-    return `${year}/${month}/${day} ${hours}:${minutes}`
-  }
-
-  formatSystemMessage(type, content) {
-    let messageContent = content
-    let parsedContent = null
-
-    try {
-      if (typeof content === 'string' && content.includes('"type":"system"')) {
-        parsedContent = JSON.parse(content)
-        if (parsedContent.content) {
-          // 提取使用者名稱
-          const match = parsedContent.content.match(/使用者\s*(.*?)\s*已/)
-          if (match) {
-            messageContent = match[1]
-          } else {
-            messageContent = parsedContent.content
-          }
-        }
-      } else if (typeof content === 'object' && content.gameId) {
-        messageContent = content.gameId
-      }
-    } catch (e) {
-      // 如果解析失敗，嘗試直接從內容中提取
-      const match = content.match(/使用者\s*(.*?)\s*已/)
-      if (match) {
-        messageContent = match[1]
-      }
-    }
-
-    // 移除所有 JSON 相關的標記
-    messageContent = messageContent
-      .replace(/[{}]/g, '')
-      .replace(/"type":"system",/g, '')
-      .replace(/"content":/g, '')
-      .replace(/"/g, '')
-      .replace(/使用者/g, '')
-      .trim()
-
-    const dateTime = this.formatDateTime()
-
-    switch (type) {
-      case 'memberJoined':
-        return {
-          type: 'system',
-          content: `${dateTime} ${messageContent} 已加入群組`,
-          timestamp: new Date().toISOString(),
-        }
-      case 'memberLeft':
-        return {
-          type: 'system',
-          content: `${dateTime} ${messageContent} 已離開群組`,
-          timestamp: new Date().toISOString(),
-        }
-      default:
-        return {
-          type: 'system',
-          content: `${dateTime} ${messageContent}`,
-          timestamp: new Date().toISOString(),
-        }
-    }
-  }
-
   connect(userId) {
     if (
       this.isConnecting ||
@@ -106,23 +35,26 @@ class WebSocketService {
         })
       }
 
-      this.ws.onmessage = (event) => {
+      this.ws.onmessage = async (event) => {
         try {
           let data = JSON.parse(event.data)
+          console.log('收到WebSocket消息:', data)
 
-          // 處理系統訊息
-          if (
-            data.type === 'system' ||
-            data.type === 'memberJoined' ||
-            data.type === 'memberLeft'
-          ) {
-            const formattedMessage = this.formatSystemMessage(data.type, data)
+          // 處理新的群組申請
+          if (data.type === 'newGroupRequest') {
+            const [[userData]] = await db.execute(
+              'SELECT name, image_path FROM users WHERE user_id = ?',
+              [data.fromUser]
+            )
+
             data = {
               ...data,
-              content: formattedMessage.content,
+              sender_name: userData.name,
+              sender_image: userData.image_path,
             }
           }
 
+          // 發送消息給所有監聽器
           const listeners = this.listeners.get(data.type) || []
           listeners.forEach((callback) => callback(data))
         } catch (error) {
@@ -175,7 +107,8 @@ class WebSocketService {
         if (
           data.type === 'system' ||
           data.type === 'memberJoined' ||
-          data.type === 'memberLeft'
+          data.type === 'memberLeft' ||
+          data.type === 'groupRequestResult'
         ) {
           const dateTime = this.formatDateTime()
           const action =

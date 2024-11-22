@@ -6,6 +6,19 @@ export default function HomeSection() {
   const [currentImage, setCurrentImage] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
 
+  const getTitleText = (index, title) => {
+    switch (index) {
+      case 0:
+        return `ROG Strix G16`;
+      case 1:
+        return `MSI Cyborg 15`;
+      case 2:
+        return `Acer Predator`;
+      default:
+        return title
+    }
+  }
+
   // 處理圖片切換
   const handleImageChange = (index) => {
     if (isTransitioning) return // 如果正在轉換中，不執行切換
@@ -62,7 +75,7 @@ export default function HomeSection() {
                 <span>{String(index + 1).padStart(2, '0')}</span>
               </div>
               <div className="home-item2">
-                <span>{item.title}</span>
+                <span>{getTitleText(index, item.title)}</span>
               </div>
             </div>
           </div>

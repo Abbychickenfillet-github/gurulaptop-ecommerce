@@ -88,12 +88,12 @@
 .product_aside {
   background-color: transparent;
   border: 1px solid;
-  border-color: white;
+  border-color: #b4b4b4;
   border-radius: 20px;
   height: auto;
   overflow: hidden;
   min-width: 320px;
-  margin: 0px 0px 0px 10.417vw;
+  margin: 0px 0px 0px 13.5vw;
 }
 .product_aside_content {
   display: flex;
@@ -271,7 +271,8 @@
 .product_pagination {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
+  margin-bottom: 40px;
+  margin-left: 8vw;
   align-items: center;
   padding: 10px;
   border-radius: 8px;
@@ -304,6 +305,10 @@
 .product_page_item.disabled .product_page_link {
   pointer-events: none; /* 禁用點擊 */
 }
+.product_list {
+  display: flex;
+  flex-wrap: wrap;
+}
 
 @media (max-width: 1140px) {
   .product_aside_toggle_wrapper {
@@ -328,7 +333,6 @@
     z-index: 1000;
   }
   .product_banner {
-    background-image: url('/images/product/mobile-banner.jpg');
     width: 100%;
     padding-top: 32.5%;
   }
@@ -344,8 +348,19 @@
   .product_list {
     justify-content: center;
   }
+  .product_pagination {
+    margin-left: 0;
+  }
 }
-.product_list {
-  display: flex;
-  flex-wrap: wrap;
+
+@media (max-width: 400px) {
+  .product_banner_title {
+    font-size: 30px;
+    letter-spacing: 1.042vw;
+  }
+  .product_banner_content {
+    font-size: 12px;
+    letter-spacing: 1.042vw;
+    margin-top: 5.208vw;
+  }
 }

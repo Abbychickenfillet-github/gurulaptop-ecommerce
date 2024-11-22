@@ -591,3 +591,33 @@
     padding: 0 10px;
   }
 }
+/* Mobile Portrait (up to 500px) */
+@media screen and (max-width: 500px) {
+  .menu {
+    width: 300px;
+    height: 500px;
+  }
+  .square {
+    max-width: 300px;
+    max-height: 300px;
+  }
+  .square img {
+    max-width: 200px;
+    max-height: 200px;
+  }
+  .list {
+    width: 300px;
+    height: 100px;
+  }
+
+  .list img {
+    max-width: 100px;
+
+    object-fit: cover;
+  }
+  .menu2 {
+    width: 300px;
+    /* justify-content: center; */
+    align-items: center;
+  }
+}

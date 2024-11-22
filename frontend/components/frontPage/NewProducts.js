@@ -10,45 +10,42 @@ const NewProducts = () => {
     {
       id: 1,
       image: '/images/index/banner_17.jpg',
-      title: '產品標題 1',
-      description: '產品描述內容 1',
-      link: 'https://www.bilibili.com/video/BV1jkxyeVEG5/?spm_id_from=333.788.player.switch&vd_source=1b25005216ba454333811619f6788cea',
+      title: 'ASUS ExpertBook B9 OLED',
+      description:
+        '極輕．疾快\n採用頂級鎂鋰合金，突破輕量極限，實現極致的可攜性和耐用性',
+      link: 'http://localhost:3000/product/71',
     },
     {
       id: 2,
-      image: '/images/index/banner_16.jpg',
-      title: '產品標題 2',
-      description: '產品描述內容 2',
-      link: 'https://www.bilibili.com/video/BV1jkxyeVEG5/?spm_id_from=333.788.player.switch&vd_source=1b25005216ba454333811619f6788cea',
+      image: '/images/index/banner_03.jpg',
+      title: 'GIGABYTE AORUS 5',
+      description:
+        '強大效能使遊戲操作不再受限，將全面解放玩家鬼神技術',
+      link: 'http://localhost:3000/product/230',
     },
     {
       id: 3,
-      image: '/images/index/banner_03.jpg',
-      title: '產品標題 3',
-      description: '產品描述內容 3',
-      link: 'https://www.bilibili.com/video/BV1jkxyeVEG5/?spm_id_from=333.788.player.switch&vd_source=1b25005216ba454333811619f6788cea',
+      image: '/images/index/banner_16.jpg',
+      title: 'Razer Blade 18',
+      description:
+        '世上第一款搭載 18 吋 4K 200 Hz 顯示器1 與 Thunderbolt™ 52 的筆記型電腦',
+      link: 'http://localhost:3000/product/247',
     },
     {
       id: 4,
-      image: '/images/index/banner_04.jpg',
-      title: '產品標題 4',
-      description: '產品描述內容 4',
+      image: '/images/index/banner_05.jpg',
+      title: '優惠券 7 折 ',
+      description: '馬上領取，用最低價格入手你的夢幻筆電',
       link: 'https://www.bilibili.com/video/BV1jkxyeVEG5/?spm_id_from=333.788.player.switch&vd_source=1b25005216ba454333811619f6788cea',
     },
     {
       id: 5,
       image: '/images/index/banner_04.jpg',
-      title: '產品標題 4',
-      description: '產品描述內容 4',
+      title: '結帳立減 1500 元',
+      description: '筆電超值優惠，輕鬆帶回家，現在就行動',
       link: 'https://www.bilibili.com/video/BV1jkxyeVEG5/?spm_id_from=333.788.player.switch&vd_source=1b25005216ba454333811619f6788cea',
     },
-    {
-      id: 6,
-      image: '/images/index/banner_04.jpg',
-      title: '產品標題 4',
-      description: '產品描述內容 4',
-      link: 'https://www.bilibili.com/video/BV1jkxyeVEG5/?spm_id_from=333.788.player.switch&vd_source=1b25005216ba454333811619f6788cea',
-    },
+
   ]
 
   return (
@@ -56,7 +53,7 @@ const NewProducts = () => {
       <div className="home-pic-body">
         <div className="title-body">
           <div className="home-title-diamond">◇</div>
-          <title className="home-title">新品介紹</title>
+          <title className="home-title">最新消息</title>
         </div>
         <Swiper
           onSwiper={setSwiperRef}
@@ -93,7 +90,14 @@ const NewProducts = () => {
               <a href={product.link} className="product-link">
                 <div className="home-content">
                   <h3>{product.title}</h3>
-                  <p>{product.description}</p>
+                  <p
+                    style={{
+                      whiteSpace: 'pre-line',
+                      wordBreak: 'break-word',
+                    }}
+                  >
+                    {product.description}
+                  </p>
                 </div>
                 <div
                   className="slide-background"

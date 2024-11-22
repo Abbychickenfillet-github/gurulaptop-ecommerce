@@ -68,12 +68,13 @@ export default function ForgetPasswordForm() {
   }
 
   return (
+
     <main className={`form-member w-100 m-auto text-center`}>
       <h2 className="text-center mb-5">重設密碼</h2>
       <p className={`text-center mb-3 ${styles['text-note']}`}>
         {message && <div className="alert alert-success">{message}</div>}
         {error.email && <div className="alert alert-danger">{error.email}</div>}
-        輸入你的會員電子郵件地址，按下&quot;取得驗証碼&ldquo;按鈕後，我們會將密碼重設指示寄送給你。
+        輸入你的會員電子郵件地址，按下&quot;取得新密碼&ldquo;按鈕後，我們會將密碼重設指示寄送給你。
       </p>
       <form>
         <div className="row mb-3">
@@ -99,7 +100,7 @@ export default function ForgetPasswordForm() {
               type="button"
               onClick={getConfirmMail}
             >
-              取得驗証碼
+              取得新密碼
             </button>
           </div>
         </div>

@@ -4,8 +4,10 @@ import { format } from 'date-fns'
 import { zhTW } from 'date-fns/locale'
 import Image from 'next/image'
 import websocketService from '@/services/websocketService'
+import { LogOut } from 'lucide-react'
+import Swal from 'sweetalert2'
 
-export default function ChatRoom({ currentUser, currentRoom }) {
+export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
   const [messages, setMessages] = useState([])
   const messageListRef = useRef(null)
   const defaultAvatar = 'http://localhost:3005/uploads/default-avatar.png'
@@ -14,6 +16,55 @@ export default function ChatRoom({ currentUser, currentRoom }) {
     if (!messageListRef.current) return
     messageListRef.current.scrollTop = messageListRef.current.scrollHeight
   }, [])
+
+  const handleLeaveRoom = async () => {
+    const result = await Swal.fire({
+      icon: 'question',
+      title: '離開聊天室',
+      text: '確定要離開此聊天室嗎？',
+      showCancelButton: true,
+      confirmButtonText: '確定',
+      cancelButtonText: '取消',
+    })
+
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(
+          `http://localhost:3005/api/chat/rooms/${currentRoom}/leave`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+          }
+        )
+
+        if (!response.ok) {
+          throw new Error('離開聊天室失敗')
+        }
+
+        websocketService.send({
+          type: 'leaveRoom',
+          roomID: currentRoom,
+          fromID: currentUser,
+          message: '已離開聊天室',
+        })
+
+        setMessages([])
+        onLeaveRoom && onLeaveRoom()
+      } catch (error) {
+        console.error('離開聊天室失敗:', error)
+        await Swal.fire({
+          icon: 'error',
+          title: '操作失敗',
+          text: '離開聊天室失敗，請稍後再試',
+          showConfirmButton: false,
+          timer: 2000,
+        })
+      }
+    }
+  }
 
   const handleNewMessage = useCallback(
     (data) => {
@@ -44,7 +95,6 @@ export default function ChatRoom({ currentUser, currentRoom }) {
     (data) => {
       if (data.room_id === currentRoom || data.roomId === currentRoom) {
         setMessages((prev) => {
-          // 解析系統訊息
           let messageContent = data.content || data.message
 
           try {
@@ -59,7 +109,6 @@ export default function ChatRoom({ currentUser, currentRoom }) {
             // 如果解析失敗，使用原始內容
           }
 
-          // 清理訊息內容
           messageContent = messageContent
             .replace(/^{/, '')
             .replace(/}$/, '')
@@ -77,7 +126,6 @@ export default function ChatRoom({ currentUser, currentRoom }) {
             created_at: data.created_at || new Date().toISOString(),
           }
 
-          // 檢查訊息是否已存在
           const exists = prev.some(
             (msg) =>
               msg.id === newMessage.id ||
@@ -161,14 +209,6 @@ export default function ChatRoom({ currentUser, currentRoom }) {
     websocketService.on('memberLeft', handleMemberUpdate)
 
     return () => {
-      if (currentRoom) {
-        websocketService.send({
-          type: 'leaveRoom',
-          roomID: currentRoom,
-          fromID: currentUser,
-        })
-      }
-
       websocketService.off('message', handleNewMessage)
       websocketService.off('system', handleSystemMessage)
       websocketService.off('roomJoined', handleRoomJoined)
@@ -191,7 +231,6 @@ export default function ChatRoom({ currentUser, currentRoom }) {
       const content = msg.content || msg.message
       if (!content) return null
 
-      // 清理並格式化系統訊息
       let displayContent = content
       try {
         if (typeof content === 'string' && content.startsWith('{')) {
@@ -202,7 +241,6 @@ export default function ChatRoom({ currentUser, currentRoom }) {
         displayContent = content
       }
 
-      // 移除多餘的符號和格式
       displayContent = displayContent
         .replace(/^{/, '')
         .replace(/}$/, '')
@@ -255,6 +293,14 @@ export default function ChatRoom({ currentUser, currentRoom }) {
 
   return (
     <div className={styles.chatContainer}>
+      {currentRoom && (
+        <div className={styles.chatHeader}>
+          <button onClick={handleLeaveRoom} className={styles.leaveButton}>
+            <LogOut size={20} />
+            <span className={styles.leaveButtonText}>離開聊天室</span>
+          </button>
+        </div>
+      )}
       <div className={styles.messagesContainer} ref={messageListRef}>
         {messages.map((msg) => {
           const messageKey = msg.id
