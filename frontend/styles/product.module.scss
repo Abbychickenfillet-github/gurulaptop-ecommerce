@@ -88,12 +88,12 @@
 .product_aside {
   background-color: transparent;
   border: 1px solid;
-  border-color: white;
+  border-color: #b4b4b4;
   border-radius: 20px;
   height: auto;
   overflow: hidden;
   min-width: 320px;
-  margin: 0px 0px 0px 10.417vw;
+  margin: 0px 0px 0px 13.5vw;
 }
 .product_aside_content {
   display: flex;
@@ -271,7 +271,8 @@
 .product_pagination {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
+  margin-bottom: 40px;
+  margin-left: 9vw;
   align-items: center;
   padding: 10px;
   border-radius: 8px;
