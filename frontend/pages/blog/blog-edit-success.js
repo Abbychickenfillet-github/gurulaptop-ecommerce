@@ -27,14 +27,14 @@ export default function Blogdeletesuccess() {
     <>
       <div className="display-5 text-center mt-5">
         部落格編輯成功！{countdown}{' '}
-        秒後會自動跳轉，或是自己動手按一下回到使用者首頁~
+        秒後會自動跳轉，或是自己動手按一下回到部落格首頁~
       </div>
       <div className="text-center mt-3">
         <button
           className="btn btn-primary"
-          onClick={() => router.push('http://localhost:3000/dashboard')}
+          onClick={() => router.push('http://localhost:3000/blog')}
         >
-          回到使用者
+          回到部落格
         </button>
       </div>
     </>
