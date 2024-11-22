@@ -272,7 +272,7 @@
   display: flex;
   justify-content: center;
   margin-bottom: 40px;
-  margin-left: 9vw;
+  margin-left: 8vw;
   align-items: center;
   padding: 10px;
   border-radius: 8px;
@@ -304,6 +304,10 @@
 
 .product_page_item.disabled .product_page_link {
   pointer-events: none; /* 禁用點擊 */
+}
+.product_list {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 1140px) {
@@ -345,10 +349,18 @@
     justify-content: center;
   }
   .product_pagination {
-    margin-left: 2.5vw;
+    margin-left: 0;
   }
 }
-.product_list {
-  display: flex;
-  flex-wrap: wrap;
+
+@media (max-width: 400px) {
+  .product_banner_title {
+    font-size: 30px;
+    letter-spacing: 1.042vw;
+  }
+  .product_banner_content {
+    font-size: 12px;
+    letter-spacing: 1.042vw;
+    margin-top: 5.208vw;
+  }
 }
