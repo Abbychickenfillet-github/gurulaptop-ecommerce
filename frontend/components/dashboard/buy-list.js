@@ -101,8 +101,8 @@ export default function BuyList(order) {
       <Accordion defaultActiveKey="0" className="mb-3">
         <Accordion.Item eventKey="0" className="border-primary">
           <Accordion.Header>
-            <div className="col-10">訂單編號: {order_id}</div>
-            <div className="col-1">
+            <div className="col-md-10 col-8">訂單編號: {order_id}</div>
+            <div className="col-md-1 col-2">
               {alreadyPay ? (
                 <div className="btn btn-success text-light">已付款</div>
               ) : (
@@ -112,23 +112,23 @@ export default function BuyList(order) {
           </Accordion.Header>
           <Accordion.Body>
             <div className="row mb-3">
-              <div className="col-6">訂單日期： {order_date}</div>
-              <div className="col">
+              <div className="col-md-6 col-12">訂單日期： {order_date}</div>
+              <div className="col-md col-12">
                 訂單金額： NT {order.order.order_amount.toLocaleString()}元
               </div>
               <div className="">
                 本筆訂單使用優惠券： {coupon_code == 0 ? '無' : coupon_code}
               </div>
-              <div className="col-6">收件人： {receiver}</div>
-              <div className="col-6">聯絡電話： {phone}</div>
-              <div className="col-6">收件地址： {address}</div>
+              <div className="col-md-6 col-12">收件人： {receiver}</div>
+              <div className="col-md-6 col-12">聯絡電話： {phone}</div>
+              <div className="col-md-6 col-12">收件地址： {address}</div>
               {payment_method == 1 ? (
-                <div className="col-6">付款方式： Line Pay</div>
+                <div className="col-md-6 col-12">付款方式： Line Pay</div>
               ) : (
                 <></>
               )}
               {payment_method == 0 ? (
-                <div className="col-6">付款方式： 綠界支付</div>
+                <div className="col-md-6 col-12">付款方式： 綠界支付</div>
               ) : (
                 <></>
               )}
