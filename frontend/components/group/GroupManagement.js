@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styles from './GroupManagement.module.css'
 import EditGroupModal from './EditGroupModal'
+import Swal from 'sweetalert2'
 
 const GroupManagement = () => {
   const [groups, setGroups] = useState([])
@@ -9,32 +10,23 @@ const GroupManagement = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [selectedGroup, setSelectedGroup] = useState(null)
 
-  useEffect(() => {
-    fetchUserGroups()
-  }, [])
-
   const fetchUserGroups = async () => {
     try {
-      // 第一個請求：獲取使用者參與的群組
-      const memberResponse = await fetch(
-        'http://localhost:3005/api/group/user',
-        {
+      const [memberResponse, creatorResponse] = await Promise.all([
+        fetch('http://localhost:3005/api/group/user', {
           credentials: 'include',
-        }
-      )
-      const memberData = await memberResponse.json()
+        }),
+        fetch('http://localhost:3005/api/group/creator', {
+          credentials: 'include',
+        }),
+      ])
 
-      // 第二個請求：獲取使用者創建的群組
-      const creatorResponse = await fetch(
-        'http://localhost:3005/api/group/creator',
-        {
-          credentials: 'include',
-        }
-      )
-      const creatorData = await creatorResponse.json()
+      const [memberData, creatorData] = await Promise.all([
+        memberResponse.json(),
+        creatorResponse.json(),
+      ])
 
       if (memberData.status === 'success' && creatorData.status === 'success') {
-        // 合併創建和參與的群組，並標記身份
         const combinedGroups = [
           ...memberData.data.groups.map((group) => ({
             ...group,
@@ -46,13 +38,10 @@ const GroupManagement = () => {
           })),
         ]
 
-        // 移除重複的群組（如果同時是創建者和成員）
         const uniqueGroups = combinedGroups.reduce((acc, current) => {
           const x = acc.find((item) => item.group_id === current.group_id)
-          if (!x) {
-            return acc.concat([current])
-          } else if (current.role === 'creator') {
-            // 如果當前項是創建者，替換掉成員身份的項
+          if (!x) return acc.concat([current])
+          if (current.role === 'creator') {
             return acc.map((item) =>
               item.group_id === current.group_id ? current : item
             )
@@ -62,19 +51,38 @@ const GroupManagement = () => {
 
         setGroups(uniqueGroups)
       } else {
-        setError(memberData.message || creatorData.message)
+        throw new Error(memberData.message || creatorData.message)
       }
     } catch (error) {
       console.error('獲取群組失敗:', error)
       setError('獲取群組資料失敗')
+      await Swal.fire({
+        icon: 'error',
+        title: '錯誤',
+        text: '獲取群組資料失敗',
+        timer: 1500,
+        showConfirmButton: false,
+      })
     } finally {
       setLoading(false)
     }
   }
 
-  // 刪除群組
+  useEffect(() => {
+    fetchUserGroups()
+  }, [])
+
   const handleDeleteGroup = async (groupId) => {
-    if (!window.confirm('確定要刪除此群組？')) return
+    const result = await Swal.fire({
+      icon: 'warning',
+      title: '確認刪除',
+      text: '確定要刪除此群組嗎？此操作無法復原',
+      showCancelButton: true,
+      confirmButtonText: '確定',
+      cancelButtonText: '取消',
+    })
+
+    if (!result.isConfirmed) return
 
     try {
       const response = await fetch(
@@ -87,19 +95,30 @@ const GroupManagement = () => {
 
       const data = await response.json()
       if (data.status === 'success') {
-        // 重新載入群組列表
+        await Swal.fire({
+          icon: 'success',
+          title: '刪除成功',
+          text: '群組已成功刪除',
+          timer: 1500,
+          showConfirmButton: false,
+        })
         fetchUserGroups()
       } else {
-        alert(data.message)
+        throw new Error(data.message)
       }
     } catch (error) {
       console.error('刪除群組失敗:', error)
-      alert('刪除群組失敗')
+      await Swal.fire({
+        icon: 'error',
+        title: '錯誤',
+        text: error.message || '刪除群組失敗',
+        timer: 1500,
+        showConfirmButton: false,
+      })
     }
   }
 
-  // 處理編輯群組
-  const handleEdit = (group) => {
+  const handleEditClick = (group) => {
     setSelectedGroup(group)
     setIsEditModalOpen(true)
   }
@@ -126,7 +145,6 @@ const GroupManagement = () => {
       const result = await response.json()
 
       if (result.status === 'success') {
-        // 更新本地群組列表
         setGroups((prevGroups) =>
           prevGroups.map((group) =>
             group.group_id === selectedGroup.group_id
@@ -134,18 +152,29 @@ const GroupManagement = () => {
               : group
           )
         )
-        alert('更新成功！')
+        await Swal.fire({
+          icon: 'success',
+          title: '更新成功',
+          text: '群組資訊已成功更新',
+          timer: 1500,
+          showConfirmButton: false,
+        })
         setIsEditModalOpen(false)
       } else {
         throw new Error(result.message || '更新失敗')
       }
     } catch (error) {
       console.error('更新揪團失敗:', error)
-      alert(error.message)
+      await Swal.fire({
+        icon: 'error',
+        title: '錯誤',
+        text: error.message || '更新失敗',
+        timer: 1500,
+        showConfirmButton: false,
+      })
     }
   }
 
-  // 處理圖片路徑
   const getImageUrl = (imagePath) => {
     if (!imagePath) {
       return 'http://localhost:3005/uploads/groups/group-default.png'
@@ -153,9 +182,17 @@ const GroupManagement = () => {
     return `http://localhost:3005${imagePath}`
   }
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error: {error}</div>
-  if (groups.length === 0) return <div>目前沒有參加或創建的群組</div>
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>
+  }
+
+  if (groups.length === 0) {
+    return <div>目前沒有參加或創建的群組</div>
+  }
 
   return (
     <div className={`py-2`}>
@@ -210,7 +247,7 @@ const GroupManagement = () => {
                     <>
                       <button
                         className={styles.actionBtn}
-                        onClick={() => handleEdit(group)}
+                        onClick={() => handleEditClick(group)}
                       >
                         <i className="bi bi-pencil-square"></i>
                       </button>
@@ -226,7 +263,6 @@ const GroupManagement = () => {
               </div>
             </div>
 
-            {/* Mobile View */}
             <div className={`${styles.mobileLayout} d-block d-md-none`}>
               <div className={styles.mobileImgWrapper}>
                 <img
@@ -260,7 +296,7 @@ const GroupManagement = () => {
                     <div className={styles.mobileActions}>
                       <button
                         className={styles.actionBtn}
-                        onClick={() => handleEdit(group)}
+                        onClick={() => handleEditClick(group)}
                       >
                         <i className="bi bi-pencil-square"></i>
                       </button>

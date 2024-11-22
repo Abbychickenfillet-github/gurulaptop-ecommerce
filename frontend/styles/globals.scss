@@ -1,9 +1,15 @@
 // 檔案位置: styles/global.scss
 // 變數覆蓋用 (Variable overrides)
+// bs5內建圖示字體
+// 如果有使用其它圖示字體可以註解不使用
+@import '~bootstrap-icons/font/bootstrap-icons';
+
+// google Noto Sans TC 字體
+@import 'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap';
 // 全站配色 colors
 $primary: #805af5;
 // $secondary: #f06ce380;
-$secondary: #B4B4B4;
+$secondary: #b4b4b4;
 $success: #457db2;
 $danger: #ffeb36;
 
@@ -117,12 +123,6 @@ $card-height: 100%;
   );
   backdrop-filter: blur(10px) brightness(100%);
 }
-// bs5內建圖示字體
-// 如果有使用其它圖示字體可以註解不使用
-@import '~bootstrap-icons/font/bootstrap-icons';
-
-// google Noto Sans TC 字體
-@import 'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap';
 
 // fixed for __next root div
 #__next {
