@@ -82,12 +82,12 @@ export default function LogIn(props) {
           <div
             className={`row ${styles['content-row']} d-flex justify-content-center align-items-center `}
           >
-            <div className={`${styles.left} col`}>
-              <h4 className={styles.white}>
+            <div className={`${styles.left} col d-flex flex-column justify-content-start  `}>
+              <h4 className={`text-white text-md-start`}>
                 {renderJumpingText('Welcome to', 'welcome-text')}
               </h4>
               <br />
-              <h3 className={`text-white ${styles['guru-laptop']}`}>
+              <h3 className={`text-white ${styles['guru-laptop']} text-start! text-md-start`}>
                 {renderJumpingText('LaptopGuru', 'company-name')}
               </h3>
             </div>
@@ -107,13 +107,13 @@ export default function LogIn(props) {
                   註冊
                 </Link>
               </div>
-              <form className="mt-5 position-relative" onSubmit={handleSubmit}>
+              <form className="position-relative" onSubmit={handleSubmit}>
                 <div className={styles['inputs-group']}>
                   <div className="inputs position-relative">
                     <div className="position-relative mt-5">
                       <label
                         htmlFor="email"
-                        className={`form-label text-white`}
+                        className={`form-label text-white ${styles.hover}`}
                       >
                         帳號(信箱)
                       </label>
@@ -137,7 +137,7 @@ export default function LogIn(props) {
                     <div className="position-relative mt-5">
                       <label
                         htmlFor="password"
-                        className={`form-label text-white`}
+                        className={`form-label text-white ${styles.hover}`}
                       >
                         密碼
                       </label>
@@ -159,8 +159,7 @@ export default function LogIn(props) {
                         className="btn position-absolute end-0 top-50 vertical-adjustment border-0 ${styles[eye-icon]}"
                         onClick={() => setShowpassword(!showpassword)}
                         style={{
-                          background: 'none',
-                          zIndex: 2,
+                          background: 'none', 
                           // 使用 !important 強制覆蓋
                           transform: 'translateY(calc(50% - 20px))',
                           right: '10px',
@@ -205,7 +204,7 @@ export default function LogIn(props) {
 
                     <div className="center-of-bottom-group d-flex flex-wrap justify-content-around">
                       <div className="row">
-                        <Link className="text-white" href="./forget-password">
+                        <Link className={`text-white text-decoration-none ${styles.hover}`} href="./forget-password">
                           忘記密碼
                         </Link>
                       </div>
@@ -214,15 +213,15 @@ export default function LogIn(props) {
                         onClick={() => {
                           login
                         }}
-                        className={`text-white  btn btn-primary border-0 ${styles.button} `}
+                        className={`text-white  btn btn-primary border-0  ${styles.hover} ${styles.button} `}
                         type="submit"
                       >
                         送出
-                        <MdArrowForward
+                        {/* <MdArrowForward
                           size={20}
                           className={styles['button-icon']}
                           style={{ marginLeft: '8px' }}
-                        />
+                        /> */}
                       </button>
                     </div>
                   </div>
