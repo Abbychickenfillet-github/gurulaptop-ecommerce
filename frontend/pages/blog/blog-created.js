@@ -279,8 +279,8 @@ export default function Blogcreated(props) {
                 類別
               </p>
             </div>
-            <div className="w-25 h-25"></div>
-            <div className="d-flex flex-column gap-xxl-5 gap-xl-5 gap-lg-4 gap-md-3 gap-sm-2 gap-xs-2 gap-1 col-4">
+
+            <div className="d-flex flex-column  gap-xxl-4 gap-xl-4 gap-lg-3 gap-md-2 gap-sm-1 gap-xs-1 gap-1 col-4 w-50 ms-5">
               {['購買心得', '開箱文', '疑難雜症', '活動心得'].map((v) => (
                 <div
                   key={v}
