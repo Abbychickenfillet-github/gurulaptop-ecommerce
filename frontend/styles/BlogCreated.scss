@@ -1,111 +1,174 @@
+/* 主容器 */
 .BlogEditAlignAllItems {
-  // width: 100%;
-  height: auto;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 6rem;
+  gap: 2.5rem;
 }
 
+/* 菱形 */
 .TitleDiamond {
   color: transparent;
-  border: 0.3rem solid #805af5;
-  transform: rotate(45deg) translate(0.3rem, -1rem);
+  border: 0.15rem solid #805af5;
+  transform: rotate(45deg) translate(0.15rem, -0.6rem);
   font-size: 0.8rem;
-  top: 0;
-  left: 1.5rem;
+  margin-right: 0.75rem;
 }
+
+/* 圖片上傳 */
 .BlogImgUploadDiv {
-  width: 50vw;
-  height: 31.25rem;
-  background-color: #fff;
-  border: 1px solid black;
+  width: 100%;
+  max-width: 700px;
+  height: 250px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border: 2px dashed #805af5;
+  border-radius: 12px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
+
+.BlogImgUploadDiv:hover {
+  background-color: #f0f0f0;
+  border-color: #6b46c1;
+}
+
+/* 上傳 */
 .fa-arrow-up-from-bracket {
-  font-size: 8rem;
-}
-.BlogEditBrandSelected {
-  width: 16.625rem;
-  height: 3.75rem;
-  background-color: #805af5;
-  border-radius: 20px 0px;
-  font-size: 2rem;
-  font-weight: 400;
-  color: #fff;
-  cursor: pointer;
-}
-
-.BlogEditBrandSelected:hover {
-  background: linear-gradient(180deg, #a793e9 0%, #423db0 50%, #2e256a 100%);
-  animation: pulse 1s infinite;
-}
-
-.BlogEditBrandSelected.focus {
-  background: linear-gradient(180deg, #a793e9 0%, #423db0 50%, #2e256a 100%);
-}
-
-.BlogEditBrandSelectedActive {
-  background: linear-gradient(180deg, #a793e9 0%, #423db0 50%, #2e256a 100%);
-}
-
-.BlogEditTypeSelected {
-  width: 34.375rem;
-  height: 3.75rem;
-  background-color: #805af5;
-  border-radius: 20px 0px;
-  font-size: 2rem;
-  font-weight: 400;
-  color: #fff;
-  cursor: pointer;
-}
-
-.BlogEditTypeSelected:focus {
-  background: linear-gradient(180deg, #a793e9 0%, #423db0 50%, #2e256a 100%);
-}
-
-.BlogEditTypeSelected:hover {
-  background: linear-gradient(180deg, #a793e9 0%, #423db0 50%, #2e256a 100%);
-  animation: pulse 1s infinite;
-}
-.BlogEditButtonSubmit {
-  width: 16.625rem;
-  height: 3.75rem;
-  background-color: transparent;
-  border: 0.5px solid #805af5;
-  border-radius: 20px 0px;
-  font-size: 2rem;
-  font-weight: 400;
+  font-size: 2.5rem;
   color: #805af5;
 }
-.BlogEditButtonSubmit:hover {
-  animation: heartBeat 0.6s infinite; // 興奮版本
+
+/* 類型按鈕 */
+.BlogEditBrandSelected,
+.BlogEditTypeSelected {
+  width: 150px;
+  height: 40px;
+  background-color: #805af5;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0.5rem;
+  line-height: 1;
+  padding: 0 1rem;
+}
+
+.BlogEditBrandSelected p,
+.BlogEditTypeSelected p {
+  margin: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.BlogEditBrandSelected:hover,
+.BlogEditTypeSelected:hover,
+.BlogEditBrandSelectedActive {
+  background: linear-gradient(180deg, #a793e9 0%, #423db0 50%, #2e256a 100%);
+  transform: translateY(-2px);
+}
+
+/* 按鈕 */
+.BlogEditButtonSubmit,
+.BlogEditButtonDelete {
+  width: 150px;
+  height: 40px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.BlogEditButtonSubmit {
+  background-color: transparent;
+  border: 2px solid #805af5;
+  color: #805af5;
 }
 
 .BlogEditButtonDelete {
-  width: 16.625rem;
-  height: 3.75rem;
   background-color: #805af5;
-  border: transparent;
-  border-radius: 20px 0px;
-  font-size: 2rem;
-  font-weight: 400;
+  border: none;
+  color: #fff;
+}
+
+.BlogEditButtonSubmit:hover,
+.BlogEditButtonDelete:hover {
+  transform: translateY(-2px);
+}
+
+.BlogEditButtonSubmit:hover {
+  background-color: #805af5;
   color: #fff;
 }
 
 .BlogEditButtonDelete:hover {
-  animation: heartBeat 0.6s infinite; // 興奮版本
+  background-color: #6b46c1;
 }
 
-.BlogSmallTitleAlign {
-  width: 50%;
-  height: 100%;
+/* 表單元素 */
+.form-control {
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
 }
-@media screen and (max-width: 430px) {
+
+.form-control:focus {
+  border-color: #805af5;
+  box-shadow: none;
+}
+
+/* 標題段落 */
+.BlogSmallTitleAlign {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.BlogEditSmallTitle {
+  font-size: 1.2rem;
+  color: #2d3748;
+  margin-bottom: 0.75rem;
+}
+
+/* RWD */
+@media (max-width: 768px) {
   .BlogImgUploadDiv {
-    width: 50vw;
-    height: 31.25rem;
-    background-color: #fff;
-    border: 1px solid black;
-    cursor: pointer;
+    height: 200px;
+  }
+
+  .BlogEditBrandSelected,
+  .BlogEditTypeSelected {
+    width: 130px;
+    font-size: 0.85rem;
+  }
+
+  .BlogEditButtonSubmit,
+  .BlogEditButtonDelete {
+    width: 130px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .BlogImgUploadDiv {
+    height: 180px;
+  }
+
+  .BlogEditBrandSelected,
+  .BlogEditTypeSelected,
+  .BlogEditButtonSubmit,
+  .BlogEditButtonDelete {
+    width: 100%;
+    max-width: none;
+    margin: 0.5rem 0;
   }
 }
