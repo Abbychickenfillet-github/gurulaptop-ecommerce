@@ -8,7 +8,7 @@ import styles from '@/styles/dashboard.module.scss'
 export default function UserProfile() {
   const { auth, setAuth, logout } = useAuth()
   const user_id = auth?.userData?.user_id
-  // useEffect(,[])
+ 
   const [editableUser, setEditableUser] = useState({
     name: '',
     gender: '',

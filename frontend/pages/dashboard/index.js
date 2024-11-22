@@ -99,7 +99,7 @@ export default function DashboardIndex() {
             }}
           >
             {/* Left Sidebar */}
-            <div className="col-md-3">
+            <div className="col-md-2">
               <div className="text-center">
                 <img
                   src={
@@ -149,7 +149,7 @@ export default function DashboardIndex() {
             </div>
 
             {/* Main Content Area */}
-            <div className="col-md-9">
+            <div className="col-md-10">
               {/* 上方導航 */}
               <Nav
                 variant="tabs"
