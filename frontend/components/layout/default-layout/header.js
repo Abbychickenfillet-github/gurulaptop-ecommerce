@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
-import { MessageCircle } from 'lucide-react'
-import { ShoppingCart } from 'lucide-react'
+import { MessageCircle, ShoppingCart, Menu } from 'lucide-react'
 
 export default function Header() {
   const { auth, logout } = useAuth()
@@ -12,6 +11,8 @@ export default function Header() {
   const [user_id, setUserId] = useState('')
   const router = useRouter()
   const [image_path, setImagePath] = useState('/Vector.svg')
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   const handleLogout = async () => {
     try {
@@ -54,6 +55,19 @@ export default function Header() {
   }
 
   useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+      if (window.innerWidth > 768) {
+        setIsMenuOpen(false)
+      }
+    }
+
+    checkIfMobile()
+    window.addEventListener('resize', checkIfMobile)
+    return () => window.removeEventListener('resize', checkIfMobile)
+  }, [])
+
+  useEffect(() => {
     if (user_id) {
       fetch(`http://localhost:3005/api/header`, {
         method: 'POST',
@@ -89,13 +103,11 @@ export default function Header() {
     } else {
       setUserId(null)
     }
-    // 動態設置 body 的 padding-top
-    document.body.style.paddingTop = '75px'
+    document.body.style.paddingTop = isMobile ? '60px' : '75px'
     return () => {
-      // 清除設置
       document.body.style.paddingTop = '0px'
     }
-  }, [userData])
+  }, [userData, isMobile])
 
   const navItems = [
     { name: '首頁', path: '/' },
@@ -108,66 +120,123 @@ export default function Header() {
 
   return (
     <header className="tech-nav">
-      <div className="nav-container">
-        <div className="nav-left">
-          <Link href="/" className="logo-link">
-            <img src="/logo.svg" alt="Logo" className="logo" />
-          </Link>
-        </div>
-
-        <div className="nav-center">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              href={item.path}
-              className={`nav-item ${
-                router.pathname === item.path ? 'active' : ''
-              }`}
-              style={{ textDecoration: 'none' }}
-            >
-              <span>{item.name}</span>
-              {router.pathname === item.path && (
-                <div className="active-indicator" />
-              )}
+      {isMobile ? (
+        <>
+          <div className="mobile-header">
+            <Link href="/" className="logo-link">
+              <img src="/logo.svg" alt="Logo" className="logo" />
             </Link>
-          ))}
-        </div>
 
-        <div className="nav-right">
-          {isAuth ? (
-            <div className="auth-section">
-              <Link href="/dashboard">
-                <div className="user-avatar">
-                  <img src={image_path} alt="User" />
-                </div>
-              </Link>
-              <Link href="/chatroom" className="icon-wrapper">
-                <MessageCircle className="icon" size={24} />
-              </Link>
-              <Link href="/cart" className="icon-wrapper">
-                <ShoppingCart className="icon" size={24} />
-              </Link>
-              <button className="logout-btn" onClick={handleLogout}>
-                登出
+            <div className="mobile-controls">
+              <button
+                className="menu-btn"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                <Menu className="icon" size={24} />
               </button>
             </div>
-          ) : (
-            <div className="auth-buttons">
-              <Link href="/member/login">
-                <button className="auth-btn login">登入</button>
+          </div>
+
+          <div
+            className={`nav-menu ${isMenuOpen ? 'open' : ''}`}
+            style={{ zIndex: '1000' }}
+          >
+            <nav className="nav-links">
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  className={`nav-item ${
+                    router.pathname === item.path ? 'active' : ''
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <span>{item.name}</span>
+                </Link>
+              ))}
+              {isAuth && (
+                <>
+                  <div className="mobile-icons">
+                    <Link href="/dashboard" className="icon-wrapper">
+                      <div className="user-avatar">
+                        <img src={image_path} alt="User" />
+                      </div>
+                    </Link>
+                    <Link href="/chatroom" className="icon-wrapper">
+                      <MessageCircle className="icon" size={24} />
+                    </Link>
+                    <Link href="/cart" className="icon-wrapper">
+                      <ShoppingCart className="icon" size={24} />
+                    </Link>
+                  </div>
+                  <button className="mobile-logout-btn" onClick={handleLogout}>
+                    登出
+                  </button>
+                </>
+              )}
+            </nav>
+          </div>
+        </>
+      ) : (
+        <div className="nav-container">
+          <div className="nav-left">
+            <Link href="/" className="logo-link">
+              <img src="/logo.svg" alt="Logo" className="logo" />
+            </Link>
+          </div>
+
+          <div className="nav-center">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                href={item.path}
+                className={`nav-item ${
+                  router.pathname === item.path ? 'active' : ''
+                }`}
+                style={{ textDecoration: 'none' }}
+              >
+                <span>{item.name}</span>
+                {router.pathname === item.path && (
+                  <div className="active-indicator" />
+                )}
               </Link>
-              <Link href="/member/signup">
-                <button className="auth-btn signup">註冊</button>
-              </Link>
-            </div>
-          )}
+            ))}
+          </div>
+
+          <div className="nav-right">
+            {isAuth ? (
+              <div className="auth-section">
+                <Link href="/dashboard">
+                  <div className="user-avatar">
+                    <img src={image_path} alt="User" />
+                  </div>
+                </Link>
+                <Link href="/chatroom" className="icon-wrapper">
+                  <MessageCircle className="icon" size={24} />
+                </Link>
+                <Link href="/cart" className="icon-wrapper">
+                  <ShoppingCart className="icon" size={24} />
+                </Link>
+                <button className="logout-btn" onClick={handleLogout}>
+                  登出
+                </button>
+              </div>
+            ) : (
+              <div className="auth-buttons">
+                <Link href="/member/login">
+                  <button className="auth-btn login">登入</button>
+                </Link>
+                <Link href="/member/signup">
+                  <button className="auth-btn signup">註冊</button>
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <style jsx>{`
-        body {
-          padding-top: 75px;
-        }
         .tech-nav {
           background: linear-gradient(
             90deg,
@@ -177,13 +246,10 @@ export default function Header() {
           );
           backdrop-filter: blur(12px);
           border-bottom: 1px solid rgba(128, 90, 245, 0.15);
-          padding: 0.5rem 4rem;
           position: fixed;
           width: 100%;
           top: 0;
-          height: 75px;
-          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-          z-index: 99999999999999999999;
+          z-index: 999;
         }
 
         .nav-container {
@@ -193,7 +259,8 @@ export default function Header() {
           grid-template-columns: 1fr auto 1fr;
           align-items: center;
           gap: 3rem;
-          height: 100%;
+          height: 75px;
+          padding: 0.5rem 4rem;
         }
 
         .nav-left {
@@ -221,6 +288,7 @@ export default function Header() {
           position: relative;
           padding: 0.5rem 0;
           transition: all 0.3s ease;
+          text-decoration: none !important;
         }
 
         .nav-item span {
@@ -259,8 +327,6 @@ export default function Header() {
           animation: gradient 3s linear infinite;
           box-shadow: 0 0 10px rgba(128, 90, 245, 0.5),
             0 0 20px rgba(128, 90, 245, 0.3);
-           {
-          }
         }
 
         @keyframes gradient {
@@ -358,78 +424,121 @@ export default function Header() {
           filter: drop-shadow(0 0 15px rgba(128, 90, 245, 0.6));
           background: linear-gradient(135deg, #9d7af5, #805af5);
         }
+
+        /* Mobile Styles */
+        .mobile-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 60px;
+          padding: 0 1rem;
+          width: 100%;
+          background: rgba(15, 5, 30, 0.98);
+        }
+
+        .mobile-header .logo {
+          height: 35px;
+        }
+
+        .mobile-controls {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .menu-btn {
+          background: transparent;
+          border: none;
+          padding: 0.5rem;
+          cursor: pointer;
+          color: rgba(255, 255, 255, 0.85);
+        }
+
+        .nav-menu {
+          position: fixed;
+          top: 60px;
+          left: 0;
+          width: 100%;
+          height: calc(100vh - 60px);
+          overflow-y: auto;
+          background: rgba(15, 5, 30, 0.98);
+          transition: transform 0.3s ease-in-out;
+          transform: translateX(-100%);
+          padding: 2rem 0;
+          z-index: 1000;
+        }
+
+        .nav-menu.open {
+          transform: translateX(0);
+        }
+
+        .nav-links {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2rem;
+        }
+
+        .nav-links .nav-item {
+          width: 100%;
+          text-align: center;
+          padding: 0.5rem 0;
+          text-decoration: none !important;
+        }
+
+        .nav-links .nav-item span {
+          font-size: 1.2rem;
+          font-weight: 500;
+        }
+
+        .mobile-icons {
+          display: flex;
+          justify-content: center;
+          gap: 2rem;
+          margin: 1rem 0;
+          width: 100%;
+        }
+
+        .mobile-icons .icon-wrapper {
+          text-decoration: none;
+        }
+
+        .mobile-icons .user-avatar {
+          width: 32px;
+          height: 32px;
+        }
+
+        .mobile-icons .icon {
+          width: 24px;
+          height: 24px;
+        }
+
+        .mobile-logout-btn {
+          margin-top: 1rem;
+          padding: 0.5rem 1.5rem;
+          background: linear-gradient(135deg, #805af5, #6a48d1);
+          color: #fff;
+          border: none;
+          border-radius: 8px;
+          width: 40%;
+          cursor: pointer;
+          font-size: 1rem;
+          filter: drop-shadow(0 0 8px rgba(128, 90, 245, 0.3));
+        }
+
+        .mobile-logout-btn:hover {
+          filter: drop-shadow(0 0 15px rgba(128, 90, 245, 0.6));
+          background: linear-gradient(135deg, #9d7af5, #805af5);
+        }
+
         @media (max-width: 1280px) {
-          .tech-nav {
+          .nav-container {
             padding: 0.5rem 2rem;
           }
 
           .nav-center {
             gap: 2rem;
-          }
-        }
-
-        @media (max-width: 1024px) {
-          .tech-nav {
-            height: auto;
-            padding: 0.5rem 1rem;
-          }
-
-          .nav-container {
-            grid-template-columns: auto auto;
-          }
-
-          .nav-center {
-            grid-column: 1 / -1;
-            grid-row: 2;
-            overflow-x: auto;
-            justify-content: start;
-            padding: 0.5rem 0;
-            gap: 1.5rem;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .nav-container {
-            grid-template-columns: 1fr;
-            justify-items: center;
-            gap: 1rem;
-          }
-
-          .nav-left {
-            justify-self: center;
-          }
-
-          .nav-right {
-            display: flex;
-            flex-direction: row;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1rem;
-          }
-
-          .auth-section {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-          }
-
-          .nav-center {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1rem;
-          }
-
-          .auth-buttons {
-            display: flex;
-            flex-direction: row;
-            gap: 0.5rem;
-          }
-
-          .login {
-            margin-right: 0;
           }
         }
       `}</style>
