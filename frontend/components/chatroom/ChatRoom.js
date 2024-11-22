@@ -5,6 +5,7 @@ import { zhTW } from 'date-fns/locale'
 import Image from 'next/image'
 import websocketService from '@/services/websocketService'
 import { LogOut } from 'lucide-react'
+import Swal from 'sweetalert2'
 
 export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
   const [messages, setMessages] = useState([])
@@ -17,7 +18,16 @@ export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
   }, [])
 
   const handleLeaveRoom = async () => {
-    if (window.confirm('確定要離開此聊天室嗎？')) {
+    const result = await Swal.fire({
+      icon: 'question',
+      title: '離開聊天室',
+      text: '確定要離開此聊天室嗎？',
+      showCancelButton: true,
+      confirmButtonText: '確定',
+      cancelButtonText: '取消',
+    })
+
+    if (result.isConfirmed) {
       try {
         const response = await fetch(
           `http://localhost:3005/api/chat/rooms/${currentRoom}/leave`,
@@ -45,7 +55,13 @@ export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
         onLeaveRoom && onLeaveRoom()
       } catch (error) {
         console.error('離開聊天室失敗:', error)
-        alert('離開聊天室失敗，請稍後再試')
+        await Swal.fire({
+          icon: 'error',
+          title: '操作失敗',
+          text: '離開聊天室失敗，請稍後再試',
+          showConfirmButton: false,
+          timer: 2000,
+        })
       }
     }
   }

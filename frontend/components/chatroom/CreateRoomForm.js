@@ -3,18 +3,36 @@ import { Form, Modal } from 'react-bootstrap'
 import EventButton from '@/components/event/EventButton'
 import styles from '@/styles/Chat.module.css'
 import websocketService from '@/services/websocketService'
+import Swal from 'sweetalert2'
 
 export default function CreateRoomForm({ show, onHide, currentUser }) {
   const [roomName, setRoomName] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!roomName.trim()) return
+    if (!roomName.trim()) {
+      await Swal.fire({
+        icon: 'warning',
+        title: '提示',
+        text: '請輸入聊天室名稱',
+        showConfirmButton: false,
+        timer: 1500,
+      })
+      return
+    }
 
     websocketService.send({
       type: 'createRoom',
       roomName: roomName,
       fromID: currentUser,
+    })
+
+    await Swal.fire({
+      icon: 'success',
+      title: '建立成功',
+      text: '聊天室已建立',
+      showConfirmButton: false,
+      timer: 1500,
     })
 
     setRoomName('')

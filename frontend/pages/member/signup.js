@@ -196,19 +196,25 @@ export default function Signup() {
           quality={100}
         />
         <div className="container">
-          <div className="row d-flex justify-content-center align-items-center">
-            <div className={`${styles.left} col`}>
+          <div className="row  align-items-center">
+            <div
+              className={`${styles.left} col d-flex flex-column align-items-start justify-content-start w-100`}
+            >
               {/* <h4 className={`text-white ${styles.welcome}`}>Welcome to</h4>
               <h3 className={`text-white ${styles['guru-laptop']}`}>
                 GURU Laptop */}
               {/* </h3> */}
-              <h4 className={styles.white}>
-                {renderJumpingText('Welcome to', 'welcome-text')}
-              </h4>
-              <br />
-              <h3 className={`text-white ${styles['guru-laptop']}`}>
-                {renderJumpingText('LaptopGuru', 'company-name')}
-              </h3>
+              <div className={` d-flex  `}>
+                <h4 className={`text-white text-start w-100`}>
+                  {renderJumpingText('Welcome to', 'welcome-text')}
+                </h4>
+
+                <h3
+                  className={`text-white ${styles['guru-laptop']} text-start w-100`}
+                >
+                  {renderJumpingText('LaptopGuru', 'company-name')}
+                </h3>
+              </div>
             </div>
             <div
               className={`${styles.right} align-item-center col ${styles['signup-right']} text-white`}
@@ -339,16 +345,15 @@ export default function Signup() {
                       生日
                     </label>
                     <div className="">
-                    <input
-                      type="date"
-                      id="birthdate"
-                      name="birthdate"
-                      className={`form-control ${styles.inputs}`}
-                      value={user.birthdate}
-                      onChange={handleFieldChange}
-                    />
+                      <input
+                        type="date"
+                        id="birthdate"
+                        name="birthdate"
+                        className={`form-control ${styles.inputs}`}
+                        value={user.birthdate}
+                        onChange={handleFieldChange}
+                      />
                     </div>
-                    
                   </div>
 
                   <div className="mb-3">
@@ -363,9 +368,9 @@ export default function Signup() {
                       onChange={handleFieldChange}
                     >
                       <option value="">請選擇</option>
-                      <option value="女">女</option>
-                      <option value="男">男</option>
-                      <option value="不透漏">不透漏</option>
+                      <option value="female">女</option>
+                      <option value="male">男</option>
+                      <option value="undisclosed">不透漏</option>
                     </select>
                   </div>
 

@@ -5,6 +5,7 @@ import { Nav, ListGroup } from 'react-bootstrap'
 import Image from 'next/image'
 import websocketService from '@/services/websocketService'
 import { getGroupImage } from '@/utils/imageUtils'
+import Swal from 'sweetalert2'
 
 export default function UserList({
   users,
@@ -80,6 +81,13 @@ export default function UserList({
       }
     } catch (error) {
       console.error('獲取資料失敗:', error)
+      await Swal.fire({
+        icon: 'error',
+        title: '載入失敗',
+        text: '無法取得聊天資料，請重新整理頁面',
+        showConfirmButton: false,
+        timer: 2000,
+      })
     }
   }
 
@@ -118,6 +126,21 @@ export default function UserList({
   }
 
   const handleRequest = async (requestId, status) => {
+    // 顯示確認對話框
+    const confirmResult = await Swal.fire({
+      icon: 'question',
+      title: '確認操作',
+      text:
+        status === 'accepted' ? '確定要接受此申請嗎？' : '確定要拒絕此申請嗎？',
+      showCancelButton: true,
+      confirmButtonText: '確定',
+      cancelButtonText: '取消',
+    })
+
+    if (!confirmResult.isConfirmed) {
+      return
+    }
+
     try {
       const response = await fetch(
         `http://localhost:3005/api/chat/requests/${requestId}`,
@@ -156,10 +179,25 @@ export default function UserList({
         })
 
         fetchInitialData()
+
+        // 顯示成功提示
+        await Swal.fire({
+          icon: 'success',
+          title: '處理完成',
+          text: status === 'accepted' ? '已接受申請' : '已拒絕申請',
+          showConfirmButton: false,
+          timer: 1500,
+        })
       }
     } catch (error) {
       console.error('處理申請失敗:', error)
-      alert(error.message || '處理申請失敗，請稍後再試')
+      await Swal.fire({
+        icon: 'error',
+        title: '處理失敗',
+        text: error.message || '處理申請失敗，請稍後再試',
+        showConfirmButton: false,
+        timer: 2000,
+      })
     }
   }
 
@@ -338,7 +376,7 @@ export default function UserList({
                 ))}
               </ListGroup>
             ) : (
-              <div className={styles.emptyList}>您目前沒有參與任何群組</div>
+              <div className={styles.emptyList}>目前沒有參與任何群組</div>
             )}
           </div>
         )}

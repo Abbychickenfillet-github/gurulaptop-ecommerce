@@ -8,6 +8,7 @@ import EventButton from '@/components/event/EventButton'
 import websocketService from '@/services/websocketService'
 import styles from '@/styles/Chat.module.css'
 import { Send } from 'lucide-react'
+import Swal from 'sweetalert2'
 
 export default function Chat() {
   const [users, setUsers] = useState([])

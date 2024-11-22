@@ -37,6 +37,7 @@
     "otpauth": "^9.2.4",
     "pug": "^3.0.2",
     "react-spinners": "^0.14.1",
+    "react-toastify": "^10.0.6",
     "request": "^2.88.2",
     "secure-compare": "^3.0.1",
     "sequelize": "^6.37.3",

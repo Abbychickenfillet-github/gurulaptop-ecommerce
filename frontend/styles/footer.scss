@@ -1,13 +1,52 @@
 footer {
-  background-color: #000;
+  background: radial-gradient(135.76% 131.62% at 50% 158.38%, #5A2D98 0%, #000 100%);
   width: 100%;
 }
 
 .footer-logo {
-  height: 80px;
+  height: 65px;
 
   & img {
     height: 100%;
   }
 }
 
+.footer-side {
+  padding: 60px 0px;
+}
+
+@media screen and (max-width: 768px) {
+  .footer-logo-container {
+    order: -1;
+    width: 100%;
+    justify-content: center !important;
+    margin-bottom: 2rem;
+  }
+ 
+  .footer-link {
+    width: 33.33%; /* 改為三等分 */
+    text-align: center;
+    padding: 0 10px; /* 加入左右間距 */
+  }
+  
+  /* 社群圖標置中 */
+  .footer-row .col {
+    text-align: center; 
+  }
+ 
+  /* 版權文字置中 */
+  .footer-row .text-end {
+    text-align: center !important;
+  }
+ }
+ 
+ /* 手機版進一步調整 */
+ @media screen and (max-width: 576px) {
+  .footer-side {
+    padding: 30px 0;
+  }
+ 
+  .footer-logo {
+    height: 50px;
+  }
+ }

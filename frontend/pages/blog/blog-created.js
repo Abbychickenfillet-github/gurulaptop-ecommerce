@@ -21,15 +21,6 @@ export default function Blogcreated(props) {
   const { isAuth, userData } = auth // 一起解構
   const user_id = userData.user_id
   console.log(user_id)
-  // -------------------使用者-------------------
-
-  // 2. 用戶驗證，如果沒有登入就導向首頁或登入頁
-  useEffect(() => {
-    if (!isAuth) {
-      router.push('http://localhost:3000/member/login')
-    }
-  }, [isAuth, router])
-  // -------------------使用者-------------------
 
   const brands = [
     ['ROG', 'DELL', 'Acer', 'Raser'],
@@ -97,8 +88,8 @@ export default function Blogcreated(props) {
           timer: 1500,
         })
         if (result.blog_id) {
-          // 導航到新建立的文章頁面
-          router.push(`/blog/blog-user-detail/${result.blog_id}`)
+          // toast.success('部落格新增成功')
+          router.push(`/blog`)
         }
       } else {
         MySwal.fire({
@@ -119,9 +110,6 @@ export default function Blogcreated(props) {
       })
     }
   }
-  if (!isAuth) {
-    return null // 或是返回一個 loading 元件
-  }
 
   return (
     <>
@@ -129,6 +117,7 @@ export default function Blogcreated(props) {
         <title>新增部落格</title>
       </Head>
       <Header />
+      {/* <ToastContainer /> */}
       <BlogDetailMainArea />
       <div className="container mt-5">
         <NextBreadCrumb
@@ -137,7 +126,6 @@ export default function Blogcreated(props) {
           isHomeIcon={true}
         />
       </div>
-
       <div className="container-lg container-fluid d-flex h-auto flex-column gap-5 mt-5 col-lg-5 col-md-8 col-12">
         {/* 圖片上傳區塊 */}
         <div className="">
