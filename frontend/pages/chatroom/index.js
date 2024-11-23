@@ -9,6 +9,7 @@ import websocketService from '@/services/websocketService'
 import styles from '@/styles/Chat.module.css'
 import { Send, Menu } from 'lucide-react'
 import Swal from 'sweetalert2'
+import Head from 'next/head'
 
 export default function Chat() {
   const [users, setUsers] = useState([])
@@ -120,81 +121,86 @@ export default function Chat() {
   }
 
   return (
-    <Container fluid className={styles.container}>
-      <button onClick={toggleSidebar} className={styles.sidebarToggle}>
-        <Menu size={24} />
-      </button>
+    <>
+      <Head>
+        <title>聊天室</title>
+      </Head>
+      <Container fluid className={styles.container}>
+        <button onClick={toggleSidebar} className={styles.sidebarToggle}>
+          <Menu size={24} />
+        </button>
 
-      <h3 className={styles.chatTitle}>
-        聊天室
-        {currentRoom &&
-          rooms.find((r) => r.chatRoomId === currentRoom) &&
-          ` - ${rooms.find((r) => r.chatRoomId === currentRoom).name}`}
-      </h3>
+        <h3 className={styles.chatTitle}>
+          聊天室
+          {currentRoom &&
+            rooms.find((r) => r.chatRoomId === currentRoom) &&
+            ` - ${rooms.find((r) => r.chatRoomId === currentRoom).name}`}
+        </h3>
 
-      <div className={styles.chatLayout}>
-        <div
-          className={`${styles.userListOverlay} ${
-            isSidebarOpen ? styles.open : ''
-          }`}
-          role="button"
-          tabIndex={0}
-          onClick={() => setIsSidebarOpen(false)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              setIsSidebarOpen(false)
-            }
-          }}
-        />
-
-        <div
-          className={`${styles.userList} ${isSidebarOpen ? styles.open : ''}`}
-        >
-          <UserList
-            users={users}
-            rooms={rooms}
-            currentUser={currentUser}
-            currentRoom={currentRoom}
-            onPrivateChat={handlePrivateChat}
-            onRoomSelect={handleRoomSelect}
+        <div className={styles.chatLayout}>
+          <div
+            className={`${styles.userListOverlay} ${
+              isSidebarOpen ? styles.open : ''
+            }`}
+            role="button"
+            tabIndex={0}
+            onClick={() => setIsSidebarOpen(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                setIsSidebarOpen(false)
+              }
+            }}
           />
-        </div>
 
-        <div className={styles.chatContent}>
-          <ChatRoom
-            currentUser={currentUser}
-            currentRoom={currentRoom}
-            onLeaveRoom={handleLeaveRoom}
-          />
-        </div>
-      </div>
-
-      <div className={styles.inputArea}>
-        <form onSubmit={handleSendMessage} className={styles.inputForm}>
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="輸入訊息..."
-            className={styles.messageInput}
-            disabled={!currentRoom}
-          />
-          <EventButton
-            type="submit"
-            className={styles.sendButton}
-            disabled={!currentRoom || !message.trim()}
+          <div
+            className={`${styles.userList} ${isSidebarOpen ? styles.open : ''}`}
           >
-            <Send size={18} />
-            <span>發送</span>
-          </EventButton>
-        </form>
-      </div>
+            <UserList
+              users={users}
+              rooms={rooms}
+              currentUser={currentUser}
+              currentRoom={currentRoom}
+              onPrivateChat={handlePrivateChat}
+              onRoomSelect={handleRoomSelect}
+            />
+          </div>
 
-      <CreateRoomForm
-        show={showCreateRoom}
-        onHide={() => setShowCreateRoom(false)}
-        currentUser={currentUser}
-      />
-    </Container>
+          <div className={styles.chatContent}>
+            <ChatRoom
+              currentUser={currentUser}
+              currentRoom={currentRoom}
+              onLeaveRoom={handleLeaveRoom}
+            />
+          </div>
+        </div>
+
+        <div className={styles.inputArea}>
+          <form onSubmit={handleSendMessage} className={styles.inputForm}>
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="輸入訊息..."
+              className={styles.messageInput}
+              disabled={!currentRoom}
+            />
+            <EventButton
+              type="submit"
+              className={styles.sendButton}
+              disabled={!currentRoom || !message.trim()}
+            >
+              <Send size={18} />
+              <span>發送</span>
+            </EventButton>
+          </form>
+        </div>
+
+        <CreateRoomForm
+          show={showCreateRoom}
+          onHide={() => setShowCreateRoom(false)}
+          currentUser={currentUser}
+        />
+      </Container>
+    </>
   )
 }

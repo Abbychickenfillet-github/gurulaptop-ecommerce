@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import EventButton from '@/components/event/EventButton'
 import axios from 'axios'
 import NextBreadCrumb from '@/components/common/next-breadcrumb'
+import Head from 'next/head'
 
 const EventDetail = () => {
   const router = useRouter()
@@ -151,84 +152,89 @@ const EventDetail = () => {
   }
 
   return (
-    <div className="eventDetail-wrapper">
-      <div className="container">
-        <NextBreadCrumb />
-        <nav className="navbar navbar-dark eventDetail-navbar mb-4">
-          <div className="container-fluid">
-            <span className="navbar-brand h1">{event.name}</span>
-            <EventButton>{event.status}</EventButton>
-          </div>
-        </nav>
+    <>
+      <Head>
+        <title>{event?.name}</title>
+      </Head>
+      <div className="eventDetail-wrapper">
+        <div className="container">
+          <NextBreadCrumb />
+          <nav className="navbar navbar-dark eventDetail-navbar mb-4">
+            <div className="container-fluid">
+              <span className="navbar-brand h1">{event.name}</span>
+              <EventButton>{event.status}</EventButton>
+            </div>
+          </nav>
 
-        <div className="container container-lg mb-4 eventDetail-content">
-          <div className="row gy-4">
-            {/* 左側資訊 */}
-            <div className="col-12 col-md-4 order-md-1 order-2">
-              <div className="eventDetail-infoBox">
-                <dl className="eventDetail-infoList mb-0">
-                  <dt>活動日期</dt>
-                  <dd>{formatDateTime(event.eventStartTime)}</dd>
-                  <dt>報名期間</dt>
-                  <dd>
-                    開始：{formatDateTime(event.applyStartTime)}
-                    <br />
-                    結束：{formatDateTime(event.applyEndTime)}
-                  </dd>
-                  <dt>平台</dt>
-                  <dd>{event.platform}</dd>
-                  <dt>參賽方式</dt>
-                  <dd>{getTeamTypeDisplay(event.teamType)}</dd>
-                  <dt>{event.teamType === '個人' ? '參賽人數' : '隊伍數'}</dt>
-                  <dd>
-                    目前 {event.currentParticipants}/{event.maxPeople}{' '}
-                    {event.teamType === '個人' ? '人' : '隊'}
-                  </dd>
-                  <dt>獎勵</dt>
-                  <dd>{event.award}</dd>
-                </dl>
-                <div className="d-grid gap-2">
-                  <EventButton onClick={handleRegistration}>
-                    {event.teamType === '個人' ? '個人報名' : '團體報名'}
-                  </EventButton>
-                  <EventButton onClick={() => handleGroupAction('create')}>
-                    開團找人
-                  </EventButton>
-                  <EventButton onClick={() => handleGroupAction('list')}>
-                    揪團列表
-                  </EventButton>
+          <div className="container container-lg mb-4 eventDetail-content">
+            <div className="row gy-4">
+              {/* 左側資訊 */}
+              <div className="col-12 col-md-4 order-md-1 order-2">
+                <div className="eventDetail-infoBox">
+                  <dl className="eventDetail-infoList mb-0">
+                    <dt>活動日期</dt>
+                    <dd>{formatDateTime(event.eventStartTime)}</dd>
+                    <dt>報名期間</dt>
+                    <dd>
+                      開始：{formatDateTime(event.applyStartTime)}
+                      <br />
+                      結束：{formatDateTime(event.applyEndTime)}
+                    </dd>
+                    <dt>平台</dt>
+                    <dd>{event.platform}</dd>
+                    <dt>參賽方式</dt>
+                    <dd>{getTeamTypeDisplay(event.teamType)}</dd>
+                    <dt>{event.teamType === '個人' ? '參賽人數' : '隊伍數'}</dt>
+                    <dd>
+                      目前 {event.currentParticipants}/{event.maxPeople}{' '}
+                      {event.teamType === '個人' ? '人' : '隊'}
+                    </dd>
+                    <dt>獎勵</dt>
+                    <dd>{event.award}</dd>
+                  </dl>
+                  <div className="d-grid gap-2">
+                    <EventButton onClick={handleRegistration}>
+                      {event.teamType === '個人' ? '個人報名' : '團體報名'}
+                    </EventButton>
+                    <EventButton onClick={() => handleGroupAction('create')}>
+                      開團找人
+                    </EventButton>
+                    <EventButton onClick={() => handleGroupAction('list')}>
+                      揪團列表
+                    </EventButton>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* 右側內容 */}
-            <div className="col-12 col-md-8 order-md-2 order-1">
-              <img
-                src={event.picture}
-                alt="活動圖片"
-                className="eventDetail-image mb-4"
-                onError={(e) => {
-                  e.target.src = '/images/event-default.png'
-                }}
-              />
-              <div className="eventDetail-infoBox">
-                <h2 className="h5 mb-3">活動介紹</h2>
-                <p>{event.content}</p>
-              </div>
-              <div className="eventDetail-infoBox">
-                <h2 className="h5 mb-3">規則</h2>
-                <div
-                  className="eventDetail-rulesList"
-                  dangerouslySetInnerHTML={{
-                    __html: formatRule(event.rule),
+              {/* 右側內容 */}
+              <div className="col-12 col-md-8 order-md-2 order-1">
+                <img
+                  src={event.picture}
+                  alt="活動圖片"
+                  className="eventDetail-image mb-4"
+                  onError={(e) => {
+                    e.target.src = '/images/event-default.png'
                   }}
                 />
+                <div className="eventDetail-infoBox">
+                  <h2 className="h5 mb-3">活動介紹</h2>
+                  <p>{event.content}</p>
+                </div>
+                <div className="eventDetail-infoBox">
+                  <h2 className="h5 mb-3">規則</h2>
+                  <div
+                    className="eventDetail-rulesList"
+                    dangerouslySetInnerHTML={{
+                      __html: formatRule(event.rule),
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

@@ -6,6 +6,7 @@ import GroupBanner from '@/components/group/GroupBanner'
 import GroupDetailModal from '@/components/group/GroupDetailModal'
 import GroupJoin from '@/components/group/GroupJoin'
 import GroupNavbar from '@/components/group/GroupNavbar'
+import Head from 'next/head'
 
 const Group = () => {
   const searchParams = useSearchParams()
@@ -192,137 +193,142 @@ const Group = () => {
   }
 
   return (
-    <div className="group-wrapper">
-      <div className="group-container">
-        {/* 導航區域 */}
-        <nav className="group-nav-section mb-2">
-          <div className="group-nav-container">
-            <h1 className="group-nav-title">揪團列表</h1>
-            <Link
-              href={
-                eventId
-                  ? `/group/groupCreat?eventId=${eventId}&eventName=${eventName}`
-                  : '/group/groupCreat'
-              }
-              style={{ textDecoration: 'none' }}
-            >
-              <EventButton>創建揪團</EventButton>
-            </Link>
-          </div>
-        </nav>
-
-        {/* 搜尋和篩選區域 */}
-        <GroupNavbar
-          events={events}
-          onEventFilter={setFilterEvent}
-          onSearch={setSearchTerm}
-          onSort={setSortOrder}
-          initialEventId={eventId}
-        />
-
-        {/* 內容區域 */}
-        <div className="group-content">
-          {filteredGroups.length === 0 ? (
-            <div className="no-groups-message">
-              {loading ? '載入中...' : '找不到符合條件的揪團'}
+    <>
+      <Head>
+        <title>揪團列表</title>
+      </Head>
+      <div className="group-wrapper">
+        <div className="group-container">
+          {/* 導航區域 */}
+          <nav className="group-nav-section mb-2">
+            <div className="group-nav-container">
+              <h1 className="group-nav-title">揪團列表</h1>
+              <Link
+                href={
+                  eventId
+                    ? `/group/groupCreat?eventId=${eventId}&eventName=${eventName}`
+                    : '/group/groupCreat'
+                }
+                style={{ textDecoration: 'none' }}
+              >
+                <EventButton>創建揪團</EventButton>
+              </Link>
             </div>
-          ) : (
-            <div className="group-banner-grid">
-              {getCurrentPageGroups().map((group) => (
-                <div key={group.group_id}>
-                  <GroupBanner
-                    groupData={{
-                      id: group.group_id,
-                      title: group.group_name,
-                      creatorId: group.creator_id,
-                      creatorName: group.creator_name,
-                      createTime: group.creat_time,
-                      currentMembers: group.member_count || 0,
-                      maxMembers: group.max_members,
-                      description: group.description,
-                      image: group.group_img,
-                      eventId: group.event_id,
-                      eventName: group.event_name,
-                    }}
-                    onOpenDetail={() => handleOpenModal(group)}
-                    onOpenJoin={() => handleOpenJoinModal(group)}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+          </nav>
 
-          {/* 分頁導航 */}
-          {filteredGroups.length > 0 && (
-            <nav className="group-pagination-container">
-              <ul className="group-pagination-list">
-                {/* 上一頁按鈕 */}
-                <li
-                  className={`group-pagination-item ${
-                    currentPage === 1 ? 'disabled' : ''
-                  }`}
-                >
-                  <button
-                    className="group-pagination-link"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    ⟨
-                  </button>
-                </li>
+          {/* 搜尋和篩選區域 */}
+          <GroupNavbar
+            events={events}
+            onEventFilter={setFilterEvent}
+            onSearch={setSearchTerm}
+            onSort={setSortOrder}
+            initialEventId={eventId}
+          />
 
-                {/* 頁碼 */}
-                {generatePaginationItems().map((item, index) => (
+          {/* 內容區域 */}
+          <div className="group-content">
+            {filteredGroups.length === 0 ? (
+              <div className="no-groups-message">
+                {loading ? '載入中...' : '找不到符合條件的揪團'}
+              </div>
+            ) : (
+              <div className="group-banner-grid">
+                {getCurrentPageGroups().map((group) => (
+                  <div key={group.group_id}>
+                    <GroupBanner
+                      groupData={{
+                        id: group.group_id,
+                        title: group.group_name,
+                        creatorId: group.creator_id,
+                        creatorName: group.creator_name,
+                        createTime: group.creat_time,
+                        currentMembers: group.member_count || 0,
+                        maxMembers: group.max_members,
+                        description: group.description,
+                        image: group.group_img,
+                        eventId: group.event_id,
+                        eventName: group.event_name,
+                      }}
+                      onOpenDetail={() => handleOpenModal(group)}
+                      onOpenJoin={() => handleOpenJoinModal(group)}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* 分頁導航 */}
+            {filteredGroups.length > 0 && (
+              <nav className="group-pagination-container">
+                <ul className="group-pagination-list">
+                  {/* 上一頁按鈕 */}
                   <li
-                    key={`page-${index}`}
                     className={`group-pagination-item ${
-                      item === currentPage ? 'active' : ''
-                    } ${item === '...' ? 'disabled' : ''}`}
+                      currentPage === 1 ? 'disabled' : ''
+                    }`}
                   >
                     <button
                       className="group-pagination-link"
-                      onClick={() => item !== '...' && handlePageChange(item)}
-                      disabled={item === '...'}
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
                     >
-                      {item}
+                      ⟨
                     </button>
                   </li>
-                ))}
 
-                {/* 下一頁按鈕 */}
-                <li
-                  className={`group-pagination-item ${
-                    currentPage === totalPages ? 'disabled' : ''
-                  }`}
-                >
-                  <button
-                    className="group-pagination-link"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
+                  {/* 頁碼 */}
+                  {generatePaginationItems().map((item, index) => (
+                    <li
+                      key={`page-${index}`}
+                      className={`group-pagination-item ${
+                        item === currentPage ? 'active' : ''
+                      } ${item === '...' ? 'disabled' : ''}`}
+                    >
+                      <button
+                        className="group-pagination-link"
+                        onClick={() => item !== '...' && handlePageChange(item)}
+                        disabled={item === '...'}
+                      >
+                        {item}
+                      </button>
+                    </li>
+                  ))}
+
+                  {/* 下一頁按鈕 */}
+                  <li
+                    className={`group-pagination-item ${
+                      currentPage === totalPages ? 'disabled' : ''
+                    }`}
                   >
-                    ⟩
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          )}
+                    <button
+                      className="group-pagination-link"
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                    >
+                      ⟩
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            )}
+          </div>
         </div>
+
+        {/* Modal 組件 */}
+        {isModalOpen && (
+          <GroupDetailModal
+            onClose={handleCloseModal}
+            groupData={selectedGroup}
+            onJoin={() => handleOpenJoinModal()}
+          />
+        )}
+
+        {/* 申請加入 Modal */}
+        {isJoinModalOpen && (
+          <GroupJoin onClose={handleCloseJoinModal} groupData={selectedGroup} />
+        )}
       </div>
-
-      {/* Modal 組件 */}
-      {isModalOpen && (
-        <GroupDetailModal
-          onClose={handleCloseModal}
-          groupData={selectedGroup}
-          onJoin={() => handleOpenJoinModal()}
-        />
-      )}
-
-      {/* 申請加入 Modal */}
-      {isJoinModalOpen && (
-        <GroupJoin onClose={handleCloseJoinModal} groupData={selectedGroup} />
-      )}
-    </div>
+    </>
   )
 }
 
