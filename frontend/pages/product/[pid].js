@@ -539,9 +539,10 @@ export default function Detail() {
 
           <section className={styles.col3}>
             <div className={styles.relatedProducts}>
-              <span className={styles.diamond}>◇</span>
+              <span className={styles.diamond}></span>
               <span className={styles.title3}>相關商品</span>
             </div>
+
             <div className={styles.relatedProductsList}>
               {relatedProducts?.map((product) => (
                 <div key={product.product_id}>

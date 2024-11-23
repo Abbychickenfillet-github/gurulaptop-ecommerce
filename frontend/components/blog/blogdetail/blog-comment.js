@@ -149,7 +149,7 @@ export default function BlogComment({ blog_id }) {
             />
           </div>
           <button
-            className="BlogEditButtonDelete ms-5 mb-5"
+            className="BlogEditButtonDelete Comment ms-5 mb-5"
             type="button"
             onClick={handleSubmit}
           >

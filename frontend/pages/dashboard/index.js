@@ -38,6 +38,10 @@ export default function DashboardIndex() {
       { key: 'processing', label: '未付款' },
       { key: 'completed', label: '已付款' },
     ],
+    favorites: [
+      { key: 'record', label: '收藏紀錄' },
+      { key: 'history', label: '歷史紀錄' },
+    ],
     'coupon-record': [
       { key: 'available', label: '優惠卷' },
       { key: 'used', label: '領取優惠卷' },
