@@ -7,7 +7,7 @@ import UserList from '@/components/chatroom/UserList'
 import EventButton from '@/components/event/EventButton'
 import websocketService from '@/services/websocketService'
 import styles from '@/styles/Chat.module.css'
-import { Send } from 'lucide-react'
+import { Send, Menu } from 'lucide-react'
 import Swal from 'sweetalert2'
 
 export default function Chat() {
@@ -18,6 +18,7 @@ export default function Chat() {
   const [showCreateRoom, setShowCreateRoom] = useState(false)
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -77,6 +78,7 @@ export default function Chat() {
 
   const handleRoomSelect = async (roomId) => {
     setCurrentRoom(roomId)
+    setIsSidebarOpen(false)
     websocketService.send({
       type: 'joinRoom',
       roomID: roomId,
@@ -105,8 +107,12 @@ export default function Chat() {
   }
 
   const handlePrivateChat = (userId) => {
-    // 處理私人聊天
     console.log('Private chat with user:', userId)
+    setIsSidebarOpen(false)
+  }
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen)
   }
 
   if (isLoading) {
@@ -115,6 +121,10 @@ export default function Chat() {
 
   return (
     <Container fluid className={styles.container}>
+      <button onClick={toggleSidebar} className={styles.sidebarToggle}>
+        <Menu size={24} />
+      </button>
+
       <h3 className={styles.chatTitle}>
         聊天室
         {currentRoom &&
@@ -123,14 +133,32 @@ export default function Chat() {
       </h3>
 
       <div className={styles.chatLayout}>
-        <UserList
-          users={users}
-          rooms={rooms}
-          currentUser={currentUser}
-          currentRoom={currentRoom}
-          onPrivateChat={handlePrivateChat}
-          onRoomSelect={handleRoomSelect}
+        <div
+          className={`${styles.userListOverlay} ${
+            isSidebarOpen ? styles.open : ''
+          }`}
+          role="button"
+          tabIndex={0}
+          onClick={() => setIsSidebarOpen(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              setIsSidebarOpen(false)
+            }
+          }}
         />
+
+        <div
+          className={`${styles.userList} ${isSidebarOpen ? styles.open : ''}`}
+        >
+          <UserList
+            users={users}
+            rooms={rooms}
+            currentUser={currentUser}
+            currentRoom={currentRoom}
+            onPrivateChat={handlePrivateChat}
+            onRoomSelect={handleRoomSelect}
+          />
+        </div>
 
         <div className={styles.chatContent}>
           <ChatRoom

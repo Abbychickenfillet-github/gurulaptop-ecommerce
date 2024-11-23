@@ -26,8 +26,6 @@ export default function NextBreadCrumbStatic({
   isChevron = false,
   bgClass = 'bg-body-tertiary',
 }) {
-  // 得到目前的網址的路徑
-
   const getPathFormatLocale = useMemo(() => {
     // 1. 拆解 '/product/baby/birth' -> ['','product','baby', 'birth']
     const paths = pathname.split('/')

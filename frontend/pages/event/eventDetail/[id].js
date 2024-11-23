@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import EventButton from '@/components/event/EventButton'
 import axios from 'axios'
+import NextBreadCrumb from '@/components/common/next-breadcrumb'
 
 const EventDetail = () => {
   const router = useRouter()
@@ -152,6 +153,7 @@ const EventDetail = () => {
   return (
     <div className="eventDetail-wrapper">
       <div className="container">
+        <NextBreadCrumb />
         <nav className="navbar navbar-dark eventDetail-navbar mb-4">
           <div className="container-fluid">
             <span className="navbar-brand h1">{event.name}</span>

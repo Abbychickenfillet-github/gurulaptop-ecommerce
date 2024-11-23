@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useSearchParams } from 'next/navigation'
 import EventButton from '@/components/event/EventButton'
 import Swal from 'sweetalert2'
+import NextBreadCrumb from '@/components/common/next-breadcrumb'
 
 export default function GroupCreat() {
   const router = useRouter()
@@ -300,6 +301,7 @@ export default function GroupCreat() {
   return (
     <div className="group-creat-wrapper">
       <div className="container">
+        <NextBreadCrumb />
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6">
             <div className="group-creat-card p-4">
@@ -445,4 +447,3 @@ export default function GroupCreat() {
     </div>
   )
 }
-  

@@ -4,6 +4,8 @@ import EventButton from '@/components/event/EventButton'
 import styles from '@/styles/individualRegistration.module.css'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import PrivacyPolicy from '@/components/event/PrivacyPolicy'
+import NextBreadCrumb from '@/components/common/next-breadcrumb'
 
 const IndividualRegistration = () => {
   const router = useRouter()
@@ -188,6 +190,7 @@ const IndividualRegistration = () => {
   return (
     <div className={styles['individualRegistration-wrapper']}>
       <div className="container">
+        <NextBreadCrumb />
         <div className="row justify-content-center">
           <div className="col-12 col-lg-8">
             <div className={styles['individualRegistration-card'] + ' p-4'}>
@@ -288,7 +291,8 @@ const IndividualRegistration = () => {
                       required
                     />
                     <label className="form-check-label" htmlFor="agreeToTerms">
-                      我同意活動相關規定及條款
+                      我同意活動相關規定及
+                      <PrivacyPolicy />
                     </label>
                   </div>
                 </div>

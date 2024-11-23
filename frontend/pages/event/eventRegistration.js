@@ -4,6 +4,8 @@ import EventButton from '@/components/event/EventButton'
 import PlayerInfo from '@/components/event/PlayerInfo'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import PrivacyPolicy from '@/components/event/PrivacyPolicy'
+import NextBreadCrumb from '@/components/common/next-breadcrumb'
 
 const EventRegistration = () => {
   const router = useRouter()
@@ -367,6 +369,7 @@ const EventRegistration = () => {
   return (
     <div className="eventRegistration-wrapper">
       <div className="container">
+        <NextBreadCrumb />
         <div className="row justify-content-center">
           <div className="col-12 col-lg-8">
             <div className="eventRegistration-card p-4">
@@ -520,7 +523,8 @@ const EventRegistration = () => {
                       required
                     />
                     <label className="form-check-label" htmlFor="agreeToTerms">
-                      我同意活動相關規定及條款
+                      我同意活動相關規定及
+                      <PrivacyPolicy />
                     </label>
                   </div>
                 </div>
