@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
+import { Home } from 'lucide-react'
 // 中文路徑對照陣列，到configs/index.js中設定
 import { pathsLocaleMap } from '@/configs'
 // 額外樣式檔案
@@ -12,25 +13,20 @@ import styles from './next-breadcrumb.module.scss'
  * @component
  * @param {object} props
  * @param {boolean} [props.omitRoot=false] omit root node(home)
- * @param {JSX.Element} [props.homeIcon=<i className="bi bi-house-door-fill"></i>]
- * @param {boolean} [props.isHomeIcon=false] with home icon
  * @param {boolean} [props.isChevron=false] with chevron divider (`>`)
- * @param {string} [props.bgClass='bg-body-tertiary'] background css class
+ * @param {string} [props.bgClass=''] background css class
  * @returns {JSX.Element}
  */
 export default function NextBreadCrumb({
   omitRoot = false,
-  homeIcon = <i className="bi bi-house-door-fill"></i>,
-  isHomeIcon = false,
   isChevron = false,
-  bgClass = 'bg-body-tertiary',
+  bgClass = '',
 }) {
   // 得到目前的網址的路徑
   const router = useRouter()
   const { isReady, asPath } = router
   const pathname = asPath.split('?')[0]
 
-  //const [display, setDisplay] = useState(null)
   const [showChild, setShowChild] = useState(false)
 
   const getPathFormatLocale = useCallback(() => {
@@ -62,7 +58,12 @@ export default function NextBreadCrumb({
       if (i === array.length - 1) {
         return (
           <li key={i} className="breadcrumb-item active" aria-current="page">
-            {v}
+            <button
+              className="breadcrumb-text btn btn-link p-0"
+              onClick={(e) => e.preventDefault()}
+            >
+              {v}
+            </button>
           </li>
         )
       }
@@ -72,7 +73,7 @@ export default function NextBreadCrumb({
         <li key={i} className="breadcrumb-item">
           <Link
             href={paths.slice(0, i + 1).join('/')}
-            className="link-body-emphasis fw-semibold text-decoration-none"
+            className="fw-semibold text-decoration-none"
           >
             {v}
           </Link>
@@ -81,7 +82,7 @@ export default function NextBreadCrumb({
     })
 
     return pathsDisplay
-  }, [isReady, asPath])
+  }, [isReady, pathname])
 
   useEffect(() => {
     if (isReady) {
@@ -102,11 +103,8 @@ export default function NextBreadCrumb({
               isChevron ? styles['breadcrumb-item'] : ''
             }`}
           >
-            <Link
-              href="/"
-              className="link-body-emphasis fw-semibold text-decoration-none"
-            >
-              {!isHomeIcon ? pathsLocaleMap['home'] : homeIcon}
+            <Link href="/" className="fw-semibold text-decoration-none">
+              <Home size={18} strokeWidth={2} />
             </Link>
           </li>
         )}
