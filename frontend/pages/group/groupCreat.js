@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation'
 import EventButton from '@/components/event/EventButton'
 import Swal from 'sweetalert2'
 import NextBreadCrumb from '@/components/common/next-breadcrumb'
+import Head from 'next/head'
 
 export default function GroupCreat() {
   const router = useRouter()
@@ -299,151 +300,156 @@ export default function GroupCreat() {
   }
 
   return (
-    <div className="group-creat-wrapper">
-      <div className="container">
-        <NextBreadCrumb />
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-8 col-lg-6">
-            <div className="group-creat-card p-4">
-              <h2 className="text-center mb-4">揪團表單</h2>
+    <>
+      <Head>
+        <title>創建揪團</title>
+      </Head>
+      <div className="group-creat-wrapper">
+        <div className="container">
+          <NextBreadCrumb />
+          <div className="row justify-content-center">
+            <div className="col-12 col-md-8 col-lg-6">
+              <div className="group-creat-card p-4">
+                <h2 className="text-center mb-4">揪團表單</h2>
 
-              {/* 活動相關資訊提示 */}
-              {eventName && (
-                <div className="alert alert-info mb-4">
-                  此揪團關聯活動：{eventName}
-                  <br />
-                  活動開始時間：{new Date(eventStartTime).toLocaleString()}
-                  <br />
-                  <small className="text-muted">
-                    提醒：揪團時間必須安排在活動開始前
-                  </small>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit}>
-                {/* 群組名稱 */}
-                <div className="mb-3">
-                  <label htmlFor="group_name" className="group-creat-label">
-                    群組名稱
-                    <span className="group-creat-required">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="group_name"
-                    name="group_name"
-                    value={formData.group_name}
-                    onChange={handleInputChange}
-                    className="form-control group-creat-input"
-                    placeholder="請輸入群組名稱"
-                    maxLength={20}
-                    required
-                  />
-                </div>
-
-                {/* 活動時間 */}
-                <div className="mb-3">
-                  <label htmlFor="group_time" className="group-creat-label">
-                    活動時間
-                    <span className="group-creat-required">*</span>
-                  </label>
-                  <input
-                    type="datetime-local"
-                    id="group_time"
-                    name="group_time"
-                    value={formData.group_time}
-                    onChange={handleInputChange}
-                    className="form-control group-creat-input group-time-input"
-                    min={new Date().toISOString().slice(0, 16)}
-                    max={
-                      eventStartTime
-                        ? new Date(eventStartTime).toISOString().slice(0, 16)
-                        : null
-                    }
-                    required
-                  />
-                </div>
-
-                {/* 人數上限 */}
-                <div className="mb-3">
-                  <label htmlFor="max_members" className="group-creat-label">
-                    人數上限
-                    <span className="group-creat-required">*</span>
-                  </label>
-                  <select
-                    name="max_members"
-                    value={formData.max_members}
-                    onChange={handleInputChange}
-                    className="group-creat-select"
-                    required
-                  >
-                    <option value="">請選擇人數上限</option>
-                    <option value="2">2人</option>
-                    <option value="3">3人</option>
-                    <option value="4">4人</option>
-                    <option value="5">5人</option>
-                    <option value="6">6人</option>
-                    <option value="7">7人</option>
-                    <option value="8">8人</option>
-                  </select>
-                </div>
-
-                {/* 群組描述 */}
-                <div className="mb-4">
-                  <label htmlFor="description" className="group-creat-label">
-                    群組描述
-                    <span className="group-creat-required">*</span>
-                  </label>
-                  <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    className="form-control group-creat-input"
-                    rows={4}
-                    placeholder="請描述你的群組"
-                    maxLength={500}
-                    required
-                  />
-                </div>
-
-                {/* 圖片上傳 */}
-                <div className="mb-4">
-                  <label htmlFor="group_img" className="group-creat-label">
-                    群組圖片
-                  </label>
-                  <div className="group-creat-image-preview">
-                    {imagePreview ? (
-                      <img
-                        src={imagePreview}
-                        alt="Preview"
-                        style={{
-                          maxWidth: '100%',
-                          maxHeight: '100%',
-                          objectFit: 'contain',
-                        }}
-                      />
-                    ) : (
-                      <span className="text-white-50">預覽圖片</span>
-                    )}
+                {/* 活動相關資訊提示 */}
+                {eventName && (
+                  <div className="alert alert-info mb-4">
+                    此揪團關聯活動：{eventName}
+                    <br />
+                    活動開始時間：{new Date(eventStartTime).toLocaleString()}
+                    <br />
+                    <small className="text-muted">
+                      提醒：揪團時間必須安排在活動開始前
+                    </small>
                   </div>
-                  <label className="group-creat-upload-btn d-block text-center">
-                    選擇圖片
-                    <input
-                      type="file"
-                      id="group_img"
-                      className="group-creat-file-input"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                    />
-                  </label>
-                </div>
+                )}
 
-                {/* 提交按鈕 */}
-                <EventButton type="submit">建立群組</EventButton>
-              </form>
+                <form onSubmit={handleSubmit}>
+                  {/* 群組名稱 */}
+                  <div className="mb-3">
+                    <label htmlFor="group_name" className="group-creat-label">
+                      群組名稱
+                      <span className="group-creat-required">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="group_name"
+                      name="group_name"
+                      value={formData.group_name}
+                      onChange={handleInputChange}
+                      className="form-control group-creat-input"
+                      placeholder="請輸入群組名稱"
+                      maxLength={20}
+                      required
+                    />
+                  </div>
+
+                  {/* 活動時間 */}
+                  <div className="mb-3">
+                    <label htmlFor="group_time" className="group-creat-label">
+                      活動時間
+                      <span className="group-creat-required">*</span>
+                    </label>
+                    <input
+                      type="datetime-local"
+                      id="group_time"
+                      name="group_time"
+                      value={formData.group_time}
+                      onChange={handleInputChange}
+                      className="form-control group-creat-input group-time-input"
+                      min={new Date().toISOString().slice(0, 16)}
+                      max={
+                        eventStartTime
+                          ? new Date(eventStartTime).toISOString().slice(0, 16)
+                          : null
+                      }
+                      required
+                    />
+                  </div>
+
+                  {/* 人數上限 */}
+                  <div className="mb-3">
+                    <label htmlFor="max_members" className="group-creat-label">
+                      人數上限
+                      <span className="group-creat-required">*</span>
+                    </label>
+                    <select
+                      name="max_members"
+                      value={formData.max_members}
+                      onChange={handleInputChange}
+                      className="group-creat-select"
+                      required
+                    >
+                      <option value="">請選擇人數上限</option>
+                      <option value="2">2人</option>
+                      <option value="3">3人</option>
+                      <option value="4">4人</option>
+                      <option value="5">5人</option>
+                      <option value="6">6人</option>
+                      <option value="7">7人</option>
+                      <option value="8">8人</option>
+                    </select>
+                  </div>
+
+                  {/* 群組描述 */}
+                  <div className="mb-4">
+                    <label htmlFor="description" className="group-creat-label">
+                      群組描述
+                      <span className="group-creat-required">*</span>
+                    </label>
+                    <textarea
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      className="form-control group-creat-input"
+                      rows={4}
+                      placeholder="請描述你的群組"
+                      maxLength={500}
+                      required
+                    />
+                  </div>
+
+                  {/* 圖片上傳 */}
+                  <div className="mb-4">
+                    <label htmlFor="group_img" className="group-creat-label">
+                      群組圖片
+                    </label>
+                    <div className="group-creat-image-preview">
+                      {imagePreview ? (
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          style={{
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            objectFit: 'contain',
+                          }}
+                        />
+                      ) : (
+                        <span className="text-white-50">預覽圖片</span>
+                      )}
+                    </div>
+                    <label className="group-creat-upload-btn d-block text-center">
+                      選擇圖片
+                      <input
+                        type="file"
+                        id="group_img"
+                        className="group-creat-file-input"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                      />
+                    </label>
+                  </div>
+
+                  {/* 提交按鈕 */}
+                  <EventButton type="submit">建立群組</EventButton>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
