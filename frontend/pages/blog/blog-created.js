@@ -131,7 +131,12 @@ export default function Blogcreated(props) {
         <div className="">
           <div className="BlogEditSmallTitle text-nowrap">
             <p>
-              <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+              <FontAwesomeIcon
+                icon={faDiamond}
+                className="TitleDiamond"
+                size="xs"
+              />
+              {'\u00A0 '}
               {'\u00A0 '}
               新增封面圖片
             </p>
@@ -171,10 +176,11 @@ export default function Blogcreated(props) {
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
                 {'\u00A0 '}
+                {'\u00A0 '}
                 標題
               </p>
             </div>
-            <div className="col-lg-10 col-12">
+            <div className="col-lg-10 col-10">
               <input
                 className="form-control form-control-lg"
                 type="text"
@@ -191,6 +197,7 @@ export default function Blogcreated(props) {
             <div className="BlogEditSmallTitle text-nowrap col-2">
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                {'\u00A0 '}
                 {'\u00A0 '}
                 內文
               </p>
@@ -212,6 +219,7 @@ export default function Blogcreated(props) {
               <div className="BlogEditSmallTitle text-nowrap">
                 <p>
                   <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                  {'\u00A0 '}
                   {'\u00A0 '}
                   筆電品牌
                 </p>
@@ -247,6 +255,7 @@ export default function Blogcreated(props) {
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
                 {'\u00A0 '}
+                {'\u00A0 '}
                 筆電型號
               </p>
             </div>
@@ -262,15 +271,16 @@ export default function Blogcreated(props) {
           </div>
           {/* 類別選擇區塊 */}
           <div className="container d-flex justify-content-start align-items-start mb-5 flex-lg-row flex-column col-12">
-            <div className="BlogEditSmallTitle text-nowrap col-10">
+            <div className="BlogEditSmallTitle text-nowrap col-8">
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
+                {'\u00A0 '}
                 {'\u00A0 '}
                 類別
               </p>
             </div>
-            <div className="w-25 h-25"></div>
-            <div className="d-flex flex-column gap-xxl-5 gap-xl-5 gap-lg-4 gap-md-3 gap-sm-2 gap-xs-2 gap-1 col-2">
+
+            <div className="d-flex flex-column  gap-xxl-4 gap-xl-4 gap-lg-3 gap-md-2 gap-sm-1 gap-xs-1 gap-1 col-4 w-50 ms-5">
               {['購買心得', '開箱文', '疑難雜症', '活動心得'].map((v) => (
                 <div
                   key={v}
@@ -290,10 +300,11 @@ export default function Blogcreated(props) {
               <p>
                 <FontAwesomeIcon icon={faDiamond} className="TitleDiamond" />
                 {'\u00A0 '}
+                {'\u00A0 '}
                 關鍵字
               </p>
             </div>
-            <div className="col-9">
+            <div className="col-10">
               <input
                 className="form-control form-control-lg"
                 type="text"
@@ -305,7 +316,7 @@ export default function Blogcreated(props) {
           </div>
 
           {/* 按鈕區塊 */}
-          <div className="container d-flex flex-row justify-content-around align-items-center mt-5 mb-5">
+          <div className="container d-flex flex-row justify-content-around align-items-center mt-5 mb-5 col-4">
             <button className="BlogEditButtonSubmit shadow" type="submit">
               送出
             </button>

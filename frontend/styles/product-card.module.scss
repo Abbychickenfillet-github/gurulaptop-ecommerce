@@ -7,7 +7,7 @@
   transition: transform 0.3s, box-shadow 0.3s; /* 鼠標懸停時的轉換效果 */
   width: 300px;
   height: 400px;
-  margin: 0 0 42px 50px; /* 產品卡片間距 */
+  margin: 0 0 42px 42px; /* 產品卡片間距 */
   background-color: #000;
 }
 
@@ -145,4 +145,16 @@
 
 .arrow:hover {
   background: linear-gradient(270deg, #7b65ed 0%, #2c2887 50%, #00013a 100%);
+}
+@media (max-width: 1140px) {
+  .product_card {
+    margin: 0 21px 42px 21px;
+  }
+  
+}
+@media (max-width: 500px) {
+  .product_card {
+    margin: 0 0 42px 0;
+  }
+  
 }
