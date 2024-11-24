@@ -4,6 +4,7 @@ import Carousel from '@/components/event/Carousel'
 import EventNavbar from '@/components/event/EventNavbar'
 import axios from 'axios'
 import EventTabs from '@/components/event/EventTabs'
+import Head from 'next/head'
 
 // 分頁導航組件
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
@@ -192,73 +193,78 @@ export default function Event() {
   }
 
   return (
-    <div className="event-wrapper">
-      <Carousel />
-      <EventNavbar
-        onFilterChange={handleFilterChange}
-        setIsLoading={setLoading}
-      />
-      <EventTabs
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        onTabChange={handleTabChange}
-      />
+    <>
+      <Head>
+        <title>活動</title>
+      </Head>
+      <div className="event-wrapper">
+        <Carousel />
+        <EventNavbar
+          onFilterChange={handleFilterChange}
+          setIsLoading={setLoading}
+        />
+        <EventTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          onTabChange={handleTabChange}
+        />
 
-      <main>
-        <div className="event-container" style={{ maxWidth: 1440 }}>
-          {error && (
-            <div className="alert alert-danger text-center" role="alert">
-              {error}
-            </div>
-          )}
-
-          {loading ? (
-            <div className="text-center p-5">
-              <div className="spinner-border" role="status">
-                <span className="visually-hidden">載入中...</span>
+        <main>
+          <div className="event-container" style={{ maxWidth: 1440 }}>
+            {error && (
+              <div className="alert alert-danger text-center" role="alert">
+                {error}
               </div>
-            </div>
-          ) : (
-            <div className="row g-4 justify-content-start">
-              {' '}
-              {/* 修改這裡 */}
-              {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="col-12 col-sm-6 col-lg-4 col-xl-3"
-                >
-                  {' '}
-                  {/* 修改這裡 */}
-                  <EventCard
-                    id={event.id}
-                    name={event.name}
-                    type={event.type}
-                    platform={event.platform}
-                    content={event.content}
-                    picture={event.picture}
-                    applyStartTime={event.applyStartTime}
-                    applyEndTime={event.applyEndTime}
-                    eventStartTime={event.eventStartTime}
-                    maxPeople={event.maxPeople}
-                    currentParticipants={event.currentParticipants}
-                    status={event.status}
-                    teamType={event.teamType}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+            )}
 
-          {!loading && !error && events.length > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          )}
-        </div>
-      </main>
-    </div>
+            {loading ? (
+              <div className="text-center p-5">
+                <div className="spinner-border" role="status">
+                  <span className="visually-hidden">載入中...</span>
+                </div>
+              </div>
+            ) : (
+              <div className="row g-4 justify-content-start">
+                {' '}
+                {/* 修改這裡 */}
+                {events.map((event) => (
+                  <div
+                    key={event.id}
+                    className="col-12 col-sm-6 col-lg-4 col-xl-3"
+                  >
+                    {' '}
+                    {/* 修改這裡 */}
+                    <EventCard
+                      id={event.id}
+                      name={event.name}
+                      type={event.type}
+                      platform={event.platform}
+                      content={event.content}
+                      picture={event.picture}
+                      applyStartTime={event.applyStartTime}
+                      applyEndTime={event.applyEndTime}
+                      eventStartTime={event.eventStartTime}
+                      maxPeople={event.maxPeople}
+                      currentParticipants={event.currentParticipants}
+                      status={event.status}
+                      teamType={event.teamType}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {!loading && !error && events.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
+          </div>
+        </main>
+      </div>
+    </>
   )
 }
 // Event.getLayout = (page) => page

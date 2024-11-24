@@ -469,7 +469,7 @@
 .title2 {
   color: #805af5;
   text-align: center;
-  font-size: 36px;
+  font-size: 30px;
   margin-bottom: 40px;
 }
 
@@ -499,11 +499,14 @@
 
 .relatedProducts {
   display: flex;
-  font-size: 30px;
   color: #805af5;
-  width: 100%;
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
+
+  align-items: center;
+  gap: 15px;
+  font-weight: 900;
+  font-size: 24px;
 }
 .relatedProductsList {
   display: flex;
@@ -512,9 +515,11 @@
   flex-wrap: wrap;
 }
 .diamond {
-  font-size: 30px;
-  color: #805af5;
-  margin-right: 8px;
+  width: 15px;
+  height: 15px;
+  transform: rotate(45deg);
+  border: 2px solid #805af5;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 /* Desktop (1200px and up) */
 @media screen and (min-width: 1200px) {
@@ -620,4 +625,30 @@
     /* justify-content: center; */
     align-items: center;
   }
+}
+
+.p-title-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-start;
+}
+.p-home-title-diamond {
+  width: 15px;
+  height: 15px;
+  transform: rotate(45deg);
+  border: 2px solid #805af5;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.p-home-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  align-self: stretch;
+  color: var(--color-1, #805af5);
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-size: var(--h6-font-size);
+  font-weight: 900;
+  font-size: 24px;
 }

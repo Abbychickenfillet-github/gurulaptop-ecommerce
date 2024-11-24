@@ -67,8 +67,8 @@ export default function MyFooter() {
           </div>
           <div className="mb-4" />
         </div>
-        <div className="row p-3 footer-row">
-          <div className="col">
+        <div className="p-3 footer-row">
+          <div className="col mb-3">
             <Link className="text-secondary mb-2 text-decoration-none" href="">
               <img src="/Icon-fb2.svg" alt="Facebook 圖標" className="me-3" />
             </Link>

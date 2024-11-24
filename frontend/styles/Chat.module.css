@@ -44,6 +44,26 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.sidebarToggle {
+  display: none;
+  position: fixed;
+  left: 10px;
+  top: 10px;
+  z-index: 1000;
+  background: rgba(93, 63, 211, 0.6);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sidebarToggle:hover {
+  background: rgba(93, 63, 211, 0.8);
+}
+
 .userList {
   width: 240px;
   background: rgba(128, 90, 213, 0.2);
@@ -52,6 +72,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: transform 0.3s ease;
 }
 
 .userListHeader {
@@ -157,10 +178,10 @@
 .messagesContainer {
   flex: 1;
   overflow-y: auto;
-  padding: 0.2rem 1rem; /* 減少容器的內邊距 */
+  padding: 0.2rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem; /* 減少訊息之間的間距 */
+  gap: 0.5rem;
 }
 
 .messageWrapper {
@@ -248,7 +269,6 @@
   text-align: right;
   margin-top: 0.25rem;
 }
-
 .systemMessage {
   align-self: center;
   text-align: center;
@@ -264,10 +284,7 @@
 
 .inputArea {
   width: 900px;
-  /* background: rgba(30, 30, 40, 0.4); */
   backdrop-filter: blur(10px);
-  /* border-radius: 0.5rem; */
-  /* border: 1px solid rgba(255, 255, 255, 0.1); */
   padding: 1rem;
   margin-top: 1rem;
   position: relative;
@@ -417,10 +434,6 @@
   font-size: 0.875rem;
 }
 
-.messagesContainer {
-  padding-top: 0.5rem;
-}
-
 /* 捲動條樣式 */
 .messagesContainer::-webkit-scrollbar {
   width: 6px;
@@ -458,15 +471,69 @@
   background: rgba(128, 90, 213, 0.7);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Modal 樣式 */
+.modal {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modalHeader {
+  background: rgba(93, 63, 211, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.modalBody {
+  background: rgba(30, 30, 40, 0.95);
+  color: white;
+}
+
+.modalInput {
+  background: rgba(128, 90, 213, 0.15);
+  border: 1px solid rgba(128, 90, 213, 0.3);
+  color: white;
+}
+
+.modalInput:focus {
+  background: rgba(128, 90, 213, 0.25);
+  border-color: rgba(128, 90, 213, 0.5);
+  box-shadow: 0 0 0 2px rgba(128, 90, 213, 0.3);
+  color: white;
+}
+
+.modalCancelButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.modalCancelButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.modalSubmitButton {
+  background: rgba(128, 90, 213, 0.8);
+  border: none;
+  color: white;
+}
+
+.modalSubmitButton:hover {
+  background: rgba(128, 90, 213, 1);
+}
+
+/* Loading 容器 */
+.loadingContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 30, 40, 0.95);
+  color: white;
+  font-size: 1.25rem;
+  z-index: 9999;
 }
 
 @media (max-width: 1200px) {
@@ -476,9 +543,84 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
+  .sidebarToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .userList {
-    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    transform: translateX(-100%);
+    width: 280px;
+  }
+
+  .userList.open {
+    transform: translateX(0);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .userListOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+  }
+
+  .userListOverlay.open {
+    display: block;
+  }
+
+  .chatContent {
+    width: 100%;
+  }
+
+  .chatLayout {
+    height: calc(100vh - 180px);
+  }
+
+  .chatTitle {
+    margin-left: 50px;
+  }
+
+  .inputArea {
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0.75rem;
+  }
+
+  .messageContainer {
+    max-width: 85%;
+  }
+
+  .messageContent {
+    max-width: 250px;
+  }
+
+  .inputForm {
+    gap: 0.5rem;
+  }
+
+  .sendButton {
+    min-width: 80px;
+    padding: 0.75rem 1rem;
+  }
+
+  .chatTitle {
+    font-size: 1.5rem;
   }
 }
 
@@ -488,26 +630,87 @@
   }
 
   .chatLayout {
-    flex-direction: column;
-    height: auto;
+    height: calc(100vh - 140px);
   }
 
-  .userList {
-    width: 240px;
-    background: rgba(93, 63, 211, 0.15);
-    backdrop-filter: blur(10px);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+  .inputArea {
+    padding: 0.5rem;
   }
 
   .inputForm {
+    gap: 0.5rem;
     flex-direction: column;
   }
 
-  .messageInput,
+  .messageInput {
+    width: 100%;
+    padding: 0.5rem 1rem;
+  }
+
   .sendButton {
     width: 100%;
+    padding: 0.5rem 1rem;
+  }
+
+  .userList {
+    width: 260px;
+  }
+
+  .messageContainer {
+    max-width: 90%;
+  }
+
+  .messageContent {
+    max-width: 200px;
+  }
+
+  .chatTitle {
+    font-size: 1.25rem;
+    margin-left: 45px;
+  }
+
+  .avatarWrapper {
+    width: 32px;
+    height: 32px;
+  }
+
+  .senderName {
+    font-size: 0.7rem;
+  }
+
+  .userListContent {
+    max-height: calc(100vh - 60px);
+  }
+
+  .chatHeader {
+    padding: 0.5rem;
+  }
+
+  .leaveButton {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .leaveButtonText {
+    font-size: 0.8rem;
+  }
+
+  .userItem,
+  .roomItem {
+    padding: 0.5rem;
+  }
+
+  .userAvatar,
+  .roomAvatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .userName,
+  .roomName {
+    font-size: 0.875rem;
+  }
+
+  .roomMembers {
+    font-size: 0.7rem;
   }
 }

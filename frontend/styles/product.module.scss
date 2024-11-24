@@ -157,13 +157,15 @@
   appearance: none;
   width: 0;
   height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 20px solid #805af5;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 12px solid #805af5;
   position: relative;
-  top: 10px;
-  pointer-events: auto; /* 啟用互動 */
+  top: 15px;
+  pointer-events: auto; 
   z-index: 2;
+  background-color: #805af5;
+  transform: rotate(45deg); 
 }
 
 .product_slider::-moz-range-thumb {

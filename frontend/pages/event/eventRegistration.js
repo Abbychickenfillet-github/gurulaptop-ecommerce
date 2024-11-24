@@ -4,6 +4,9 @@ import EventButton from '@/components/event/EventButton'
 import PlayerInfo from '@/components/event/PlayerInfo'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import PrivacyPolicy from '@/components/event/PrivacyPolicy'
+import NextBreadCrumb from '@/components/common/next-breadcrumb'
+import Head from 'next/head'
 
 const EventRegistration = () => {
   const router = useRouter()
@@ -365,177 +368,187 @@ const EventRegistration = () => {
   }
 
   return (
-    <div className="eventRegistration-wrapper">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-12 col-lg-8">
-            <div className="eventRegistration-card p-4">
-              <h2 className="eventRegistration-title text-center mb-4">
-                團體賽報名表單
-              </h2>
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <h3 className="eventRegistration-subtitle">隊伍資訊</h3>
-                  <div className="mb-3">
-                    <label
-                      htmlFor="teamName"
-                      className="eventRegistration-label"
-                    >
-                      隊伍名稱
-                    </label>
-                    <input
-                      type="text"
-                      id="teamName"
-                      name="teamName"
-                      value={formData.teamName}
-                      onChange={handleInputChange}
-                      className="form-control eventRegistration-input"
-                      placeholder="請輸入隊伍名稱"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-4">
-                  <h3 className="eventRegistration-subtitle">隊長資訊</h3>
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
+    <>
+      <Head>
+        <title>團體報名表</title>
+      </Head>
+      <div className="eventRegistration-wrapper">
+        <div className="container">
+          <NextBreadCrumb />
+          <div className="row justify-content-center">
+            <div className="col-12 col-lg-8">
+              <div className="eventRegistration-card p-4">
+                <h2 className="eventRegistration-title text-center mb-4">
+                  團體賽報名表單
+                </h2>
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-4">
+                    <h3 className="eventRegistration-subtitle">隊伍資訊</h3>
+                    <div className="mb-3">
                       <label
-                        htmlFor="captain.name"
+                        htmlFor="teamName"
                         className="eventRegistration-label"
                       >
-                        隊長姓名
+                        隊伍名稱
                       </label>
                       <input
                         type="text"
-                        name="captain.name"
-                        value={formData.captain.name}
+                        id="teamName"
+                        name="teamName"
+                        value={formData.teamName}
                         onChange={handleInputChange}
                         className="form-control eventRegistration-input"
-                        placeholder="請輸入隊長姓名"
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label
-                        htmlFor="captain.gameId"
-                        className="eventRegistration-label"
-                      >
-                        遊戲ID
-                      </label>
-                      <input
-                        type="text"
-                        name="captain.gameId"
-                        value={formData.captain.gameId}
-                        onChange={handleInputChange}
-                        className="form-control eventRegistration-input"
-                        placeholder="請輸入遊戲ID"
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label
-                        htmlFor="captain.phone"
-                        className="eventRegistration-label"
-                      >
-                        聯絡電話
-                      </label>
-                      <input
-                        type="tel"
-                        name="captain.phone"
-                        value={formData.captain.phone}
-                        onChange={handleInputChange}
-                        className="form-control eventRegistration-input"
-                        placeholder="請輸入手機號碼（格式：09xxxxxxxx）"
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label
-                        htmlFor="captain.email"
-                        className="eventRegistration-label"
-                      >
-                        電子郵件
-                      </label>
-                      <input
-                        type="email"
-                        name="captain.email"
-                        value={formData.captain.email}
-                        onChange={handleInputChange}
-                        className="form-control eventRegistration-input"
-                        placeholder="請輸入電子郵件"
+                        placeholder="請輸入隊伍名稱"
                         required
                       />
                     </div>
                   </div>
-                </div>
 
-                <div className="mb-4">
-                  <div className="d-flex justify-content-between align-items-center mb-3">
-                    <h3 className="eventRegistration-subtitle mb-0">
-                      隊員資訊
-                    </h3>
-                    <EventButton
-                      type="button"
-                      onClick={handleAddPlayer}
-                      className="btn-sm"
-                      disabled={visiblePlayers >= 6}
-                    >
-                      新增隊員 ({visiblePlayers}/6)
+                  <div className="mb-4">
+                    <h3 className="eventRegistration-subtitle">隊長資訊</h3>
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <label
+                          htmlFor="captain.name"
+                          className="eventRegistration-label"
+                        >
+                          隊長姓名
+                        </label>
+                        <input
+                          type="text"
+                          name="captain.name"
+                          value={formData.captain.name}
+                          onChange={handleInputChange}
+                          className="form-control eventRegistration-input"
+                          placeholder="請輸入隊長姓名"
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6 mb-3">
+                        <label
+                          htmlFor="captain.gameId"
+                          className="eventRegistration-label"
+                        >
+                          遊戲ID
+                        </label>
+                        <input
+                          type="text"
+                          name="captain.gameId"
+                          value={formData.captain.gameId}
+                          onChange={handleInputChange}
+                          className="form-control eventRegistration-input"
+                          placeholder="請輸入遊戲ID"
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6 mb-3">
+                        <label
+                          htmlFor="captain.phone"
+                          className="eventRegistration-label"
+                        >
+                          聯絡電話
+                        </label>
+                        <input
+                          type="tel"
+                          name="captain.phone"
+                          value={formData.captain.phone}
+                          onChange={handleInputChange}
+                          className="form-control eventRegistration-input"
+                          placeholder="請輸入手機號碼（格式：09xxxxxxxx）"
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6 mb-3">
+                        <label
+                          htmlFor="captain.email"
+                          className="eventRegistration-label"
+                        >
+                          電子郵件
+                        </label>
+                        <input
+                          type="email"
+                          name="captain.email"
+                          value={formData.captain.email}
+                          onChange={handleInputChange}
+                          className="form-control eventRegistration-input"
+                          placeholder="請輸入電子郵件"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <h3 className="eventRegistration-subtitle mb-0">
+                        隊員資訊
+                      </h3>
+                      <EventButton
+                        type="button"
+                        onClick={handleAddPlayer}
+                        className="btn-sm"
+                        disabled={visiblePlayers >= 6}
+                      >
+                        新增隊員 ({visiblePlayers}/6)
+                      </EventButton>
+                    </div>
+
+                    {Array.from({ length: visiblePlayers }).map((_, index) => (
+                      <div key={index + 1} className="position-relative mb-3">
+                        <PlayerInfo
+                          number={index + 1}
+                          playerData={formData.players[index + 1]}
+                          onChange={(field, value) =>
+                            handlePlayerChange(index + 1, field, value)
+                          }
+                        />
+                        {index > 0 && (
+                          <button
+                            type="button"
+                            className="btn btn-outline-danger btn-sm position-absolute"
+                            style={{ top: '10px', right: '10px' }}
+                            onClick={() => handleRemovePlayer(index + 1)}
+                          >
+                            移除
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mb-4">
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="agreeToTerms"
+                        name="agreeToTerms"
+                        checked={formData.agreeToTerms}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="agreeToTerms"
+                      >
+                        我同意活動相關規定及
+                        <PrivacyPolicy />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="text-center">
+                    <EventButton type="submit" disabled={isSubmitting}>
+                      {isSubmitting ? '報名中...' : '提交報名'}
                     </EventButton>
                   </div>
-
-                  {Array.from({ length: visiblePlayers }).map((_, index) => (
-                    <div key={index + 1} className="position-relative mb-3">
-                      <PlayerInfo
-                        number={index + 1}
-                        playerData={formData.players[index + 1]}
-                        onChange={(field, value) =>
-                          handlePlayerChange(index + 1, field, value)
-                        }
-                      />
-                      {index > 0 && (
-                        <button
-                          type="button"
-                          className="btn btn-outline-danger btn-sm position-absolute"
-                          style={{ top: '10px', right: '10px' }}
-                          onClick={() => handleRemovePlayer(index + 1)}
-                        >
-                          移除
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mb-4">
-                  <div className="form-check">
-                    <input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="agreeToTerms"
-                      name="agreeToTerms"
-                      checked={formData.agreeToTerms}
-                      onChange={handleInputChange}
-                      required
-                    />
-                    <label className="form-check-label" htmlFor="agreeToTerms">
-                      我同意活動相關規定及條款
-                    </label>
-                  </div>
-                </div>
-
-                <div className="text-center">
-                  <EventButton type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? '報名中...' : '提交報名'}
-                  </EventButton>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
