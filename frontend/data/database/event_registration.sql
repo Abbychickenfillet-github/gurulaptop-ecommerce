@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-11-20 21:32:10
+-- 產生時間： 2024-11-24 23:29:16
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -805,7 +805,11 @@ INSERT INTO `event_registration` (`registration_id`, `event_id`, `user_id`, `reg
 (4138, 52, 163, '團體', NULL, NULL, NULL, 'active', '2024-10-08 22:43:02', 1, '2024-11-20 21:30:15'),
 (4139, 52, 284, '團體', NULL, NULL, NULL, 'active', '2024-10-11 04:55:20', 1, '2024-11-20 21:30:15'),
 (4140, 52, 209, '團體', NULL, NULL, NULL, 'active', '2024-10-11 19:40:34', 1, '2024-11-20 21:30:15'),
-(4141, 52, 323, '團體', NULL, NULL, NULL, 'active', '2024-09-26 23:30:54', 1, '2024-11-20 21:30:15');
+(4141, 52, 323, '團體', NULL, NULL, NULL, 'active', '2024-09-26 23:30:54', 1, '2024-11-20 21:30:15'),
+(4142, 1, 440, '個人', NULL, NULL, '{\"teamName\":\"123c123\",\"captainInfo\":{\"name\":\"123c213c\",\"gameId\":\"123\",\"phone\":\"0909123123\",\"email\":\"123123@gmail.com\"},\"teamMembers\":[{\"name\":\"Andy\",\"gameId\":\"aa\"}]}', 'active', '2024-11-21 10:09:25', 1, '2024-11-21 10:09:25'),
+(4143, 13, 440, '個人', NULL, NULL, '{\"name\":\"123\",\"gameId\":\"aaaaaa\",\"phone\":\"0923123123\",\"email\":\"ipoipoip@fsad.com\"}', 'active', '2024-11-21 10:22:27', 1, '2024-11-21 10:22:27'),
+(4144, 25, 440, '個人', NULL, NULL, '{\"teamName\":\"123c123\",\"captainInfo\":{\"name\":\"123c213c\",\"gameId\":\"123\",\"phone\":\"0909123123\",\"email\":\"sdsad@gmail.com\"},\"teamMembers\":[{\"name\":\"123\",\"gameId\":\"123\"}]}', 'active', '2024-11-21 10:54:36', 1, '2024-11-21 10:54:36'),
+(4145, 17, 443, '個人', NULL, NULL, '{\"name\":\"ccc\",\"gameId\":\"123\",\"phone\":\"0923123123\",\"email\":\"ipoipoip@fsad.com\"}', 'active', '2024-11-21 13:14:13', 1, '2024-11-21 13:14:13');
 
 --
 -- 已傾印資料表的索引
@@ -829,7 +833,7 @@ ALTER TABLE `event_registration`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `event_registration`
 --
 ALTER TABLE `event_registration`
-  MODIFY `registration_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4387;
+  MODIFY `registration_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4146;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
