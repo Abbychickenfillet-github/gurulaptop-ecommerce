@@ -182,7 +182,7 @@ export default function Blogcreated(props) {
             </div>
             <div className="col-lg-10 col-10">
               <input
-                className="form-control form-control-lg"
+                className="blog-form-control blog-form-control-lg"
                 type="text"
                 placeholder="標題"
                 value={blog_title}
@@ -204,7 +204,7 @@ export default function Blogcreated(props) {
             </div>
             <div className="col-10">
               <textarea
-                className="form-control"
+                className="blog-form-control"
                 value={blog_content}
                 onChange={(e) => setContent(e.target.value)}
                 rows="20"
@@ -261,7 +261,7 @@ export default function Blogcreated(props) {
             </div>
             <div className="col-10">
               <input
-                className="form-control form-control-lg"
+                className="blog-form-control blog-form-control-lg"
                 type="text"
                 placeholder="筆電型號"
                 value={blog_brand_model}
@@ -306,7 +306,7 @@ export default function Blogcreated(props) {
             </div>
             <div className="col-10">
               <input
-                className="form-control form-control-lg"
+                className="blog-form-control blog-form-control-lg"
                 type="text"
                 placeholder="輸入一組你喜歡的關鍵字！"
                 value={blog_keyword}
