@@ -247,7 +247,7 @@ export default function GroupCreat() {
         await Swal.fire({
           icon: 'success',
           title: '建立成功！',
-          text: '即將進入聊天室...',
+          text: '即將進入揪團列表...',
           showConfirmButton: false,
           timer: 1500,
         })
@@ -261,7 +261,7 @@ export default function GroupCreat() {
           setTimeout(() => {
             const savedId = localStorage.getItem('currentChatRoomId')
             console.log('Saved chat room ID before redirect:', savedId)
-            router.push('/chatroom')
+            router.push('/group')
           }, 1500)
         } else {
           console.error('No chat room ID received from server')
