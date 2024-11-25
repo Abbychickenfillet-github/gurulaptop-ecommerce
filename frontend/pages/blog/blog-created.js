@@ -204,7 +204,7 @@ export default function Blogcreated(props) {
             </div>
             <div className="col-10">
               <textarea
-                className="blog-form-control"
+                className="blog-form-control w-100"
                 value={blog_content}
                 onChange={(e) => setContent(e.target.value)}
                 rows="20"
