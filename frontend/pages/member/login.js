@@ -84,7 +84,7 @@ export default function LogIn(props) {
           <div
             className={`row ${styles['content-row']} d-flex justify-content-center align-items-center `}
           >
-            <div className={`${styles.left} col d-flex flex-column justify-content-start   `}>
+            <div className={`${styles.left} col d-flex flex-column justify-content-start col-sm-12 col-md-11 col-lg-6  `}>
               {/* <h4 className={`text-white text-md-start`}>
                 {renderJumpingText('Welcome to', 'welcome-text')}
                 {renderJumpingText('Log in', 'welcome-text')}
@@ -94,10 +94,10 @@ export default function LogIn(props) {
                 {/* {renderJumpingText('to LaptopGuru', 'company-name')} */}
               {/* </h3> */}
               {/* <GlitchText>Log in</GlitchText> */}
-              <i><GlowingText text="Log in to"className={`text-white text-md-start`} /></i>
-              <i><GlowingText text="GuruLaptop" className={`text-white text-md-start ${styles.glowingText}`}/></i>
+              <i><GlowingText text="Log in to"className={`text-white text-md-start text-lg-start`} /></i>
+              <i><GlowingText text="GuruLaptop" className={`text-white text-center text-lg-start text-md-start ${styles.glowingText}`}/></i>
               </div>
-            <div className={`${styles.right} col`}>
+            <div className={`${styles.right} col-sm-12 col-md-11 col-lg-5 `}>
               <div className={`${styles.tabs} d-flex justify-content-between`}>
                 <Link
                   className={` ${styles.hover} text-decoration-none text-white`}
