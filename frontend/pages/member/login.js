@@ -95,7 +95,7 @@ export default function LogIn(props) {
               {/* </h3> */}
               {/* <GlitchText>Log in</GlitchText> */}
               <i><GlowingText text="Log in to"className={`text-white text-md-start`} /></i>
-              <i><GlowingText text="LaptopGuru" className={`text-white text-md-start`}/></i>
+              <i><GlowingText text="GuruLaptop" className={`text-white text-md-start ${styles.glowingText}`}/></i>
               </div>
             <div className={`${styles.right} col`}>
               <div className={`${styles.tabs} d-flex justify-content-between`}>
@@ -162,7 +162,7 @@ export default function LogIn(props) {
                       {/* 這個button是 眼睛*/}
                       <button
                         type="button"
-                        className="btn position-absolute end-0 top-50 vertical-adjustment border-0 ${styles[eye-icon]}"
+                        className="btn btn-primary position-absolute end-0 top-50  border-0 ${styles[eye-icon]}"
                         onClick={() => setShowpassword(!showpassword)}
                         style={{
                           background: 'none', 
