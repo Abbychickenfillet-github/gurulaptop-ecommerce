@@ -199,7 +199,7 @@ export default function MembershipLevels() {
             ))}
           </ProgressBar>
         </div>
-      </div>
+      </div>f
 
       <div className="row mb-5 mt-5">
         <div className="col">
