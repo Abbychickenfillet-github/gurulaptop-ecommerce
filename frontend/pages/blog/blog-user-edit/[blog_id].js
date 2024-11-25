@@ -228,7 +228,7 @@ export default function BlogUserEdit() {
             </div>
             <div className="col-lg-10 col-11">
               <input
-                className="form-control form-control-lg"
+                className="blog-form-control blog-form-control-lg"
                 type="text"
                 placeholder="標題"
                 value={formData.blog_title || ''}
@@ -248,7 +248,7 @@ export default function BlogUserEdit() {
             </div>
             <div className="col-10">
               <textarea
-                className="form-control w-100"
+                className="blog-form-control w-100"
                 value={formData.blog_content || ''}
                 onChange={(e) => handleChange('blog_content', e.target.value)}
                 rows="20"
@@ -303,7 +303,7 @@ export default function BlogUserEdit() {
             </div>
             <div className="col-10">
               <input
-                className="form-control form-control-lg"
+                className="blog-form-control blog-form-control-lg"
                 type="text"
                 placeholder="型號"
                 value={formData.blog_brand_model || ''}
@@ -352,7 +352,7 @@ export default function BlogUserEdit() {
             </div>
             <div className="col-9 col-lg-8 col-md-10">
               <input
-                className="form-control form-control-lg"
+                className="blog-form-control blog-form-control-lg"
                 type="text"
                 placeholder="輸入一組你喜歡的關鍵字！"
                 value={formData.blog_keyword || ''}
