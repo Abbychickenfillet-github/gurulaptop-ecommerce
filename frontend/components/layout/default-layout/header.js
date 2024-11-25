@@ -81,10 +81,10 @@ export default function Header() {
         .then((res) => res.json())
         .then((data) => {
           const defaultImage =
-            data?.gender === 'male'
-              ? 'signup_login/undraw_profile_2.svg'
-              : data?.gender === 'female'
-              ? 'signup_login/undraw_profile_1.svg'
+            user_id?.data?.gender === 'male'
+              ? '/signup_login/undraw_profile_2.svg'
+              : user_id?.data?.gender === 'female'
+              ? '/signup_login/undraw_profile_1.svg'
               : '/Vector.svg'
 
           setImagePath(data?.image_path || defaultImage)
@@ -95,7 +95,7 @@ export default function Header() {
     return () => {
       document.body.style.paddingTop = '0px'
     }
-  }, [user_id, auth?.userData?.image_path])
+  }, [user_id, auth?.userData?.gender, auth?.userData?.image_path])
 
   useEffect(() => {
     if (userData && userData.user_id) {
@@ -160,7 +160,14 @@ export default function Header() {
                   <div className="mobile-icons">
                     <Link href="/dashboard" className="icon-wrapper">
                       <div className="user-avatar">
-                        <img src={image_path} alt="User" />
+                        <img src={
+                          auth?.userData?.image_path ||
+                          (auth?.userData?.gender === 'male'
+                            ? '/signup_login/undraw_profile_2.svg'
+                            : auth?.userData?.gender === 'female'
+                            ? '/signup_login/undraw_profile_1.svg'
+                            : '/Vector.svg')
+                        } alt="user-avatar" />
                       </div>
                     </Link>
                     <Link href="/chatroom" className="icon-wrapper">
