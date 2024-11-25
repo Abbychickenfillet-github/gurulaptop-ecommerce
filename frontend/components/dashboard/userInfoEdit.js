@@ -154,6 +154,17 @@ export default function UserProfile() {
       [name]: value,
     }))
   }
+// userInfoEdit.js
+useEffect(() => {
+  setProfilePic(
+    editableUser.image_path || 
+    (editableUser.gender === 'male' 
+      ? 'signup_login/undraw_profile_2.svg'
+      : editableUser.gender === 'female'
+      ? 'signup_login/undraw_profile_1.svg'
+      : '/Vector.svg')
+  )
+}, [editableUser.gender, editableUser.image_path]) // 加入相依性
 
   useEffect(() => {
     const user_id = auth?.userData?.user_id
@@ -247,6 +258,16 @@ export default function UserProfile() {
         setProfilePic(defaultProfilePic);
         setSelectedImg(defaultProfilePic);      
     };
+     // 當性別欄位改變時，同時更新 auth 中的 userData
+  if (name === 'gender') {
+    setAuth((prev) => ({
+      ...prev,
+      userData: {
+        ...prev.userData,
+        gender: value
+      }
+    }))
+  }
   }
 
   const handleImageChange = (e) => {
@@ -303,8 +324,17 @@ export default function UserProfile() {
 
       if (response.data.status === 'success') {
         Swal.fire('成功', '用戶資料更新成功', 'success')
-        setAuth({ isAuth: auth.isAuth, userData: { ...dataToSubmit, user_id } })
-        console.log({ ...dataToSubmit })
+        setAuth((prev) => ({
+          ...prev,
+          userData: { 
+            ...prev.userData,
+            ...dataToSubmit,
+            user_id 
+          }
+        }))
+      
+      // 替換以上這段
+  
         // 改變的結果是輸入的狀態的物件
       }
     } catch (error) {

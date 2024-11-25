@@ -1,6 +1,5 @@
 import React, { useState, useContext, createContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import axiosInstance from '@/services/axios-instance'
 import { checkAuth, getFavs } from '@/services/user'
 import Swal from 'sweetalert2'
 
@@ -46,7 +45,7 @@ export const initUserData = {
   detailed_address: '',
   image_path: '',
   remarks: '',
-  level:0,
+  level: 0,
 }
 // 可以視為webtoken要押的資料
 // 承接登入以後用的
@@ -84,10 +83,7 @@ export const AuthProvider = ({ children }) => {
   // 登入頁路由
   const loginRoute = '/member/login'
   // 隱私頁面路由，未登入時會，檢查後跳轉至登入頁
-  const protectedRoutes = [
-    '/dashboard',
-    '/coupon/coupon-user'
-  ]
+  const protectedRoutes = ['/dashboard', '/coupon/coupon-user']
   const login = async (email, password) => {
     try {
       const response = await fetch('api/login', {
@@ -111,7 +107,7 @@ export const AuthProvider = ({ children }) => {
           detailed_address: result.data.detailed_address,
           birthdate: result.data.birthdate,
           remarks: result.data.remarks,
-          level:result.data.level,
+          level: result.data.level,
         })
       }
       console.log(response.json())
@@ -125,17 +121,29 @@ export const AuthProvider = ({ children }) => {
         method: 'POST',
         credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-  
+          'Content-Type': 'application/json',
+        },
+      })
+
       if (!response.ok) {
-        throw new Error('登出失敗');
+        throw new Error('登出失敗')
       }
-      const result = await response.json();
-      
+      const result = await response.json()
+
       if (result.status === 'success') {
         // 清除本地的 auth 狀態
+        await Promise.all([
+          // 立即導航到登入頁
+          router.push('/member/login'),
+          // 清除狀態
+          new Promise((resolve) => {
+            setAuth({
+              isAuth: false,
+              userData: initUserData, // 使用完整的 initUserData
+            })
+            resolve()
+          }),
+        ])
         setAuth({
           isAuth: false,
           user_id: 0,
@@ -149,17 +157,16 @@ export const AuthProvider = ({ children }) => {
           road_name: '',
           detailed_address: '',
           birthdate: '',
-          level:''
+          level: '',
+          image_path: '',
           // 共13 col
         })
-
       }
-  
     } catch (error) {
-      console.error('登出錯誤:', error);
+      console.error('登出錯誤:', error)
       // 處理錯誤
     }
-  };
+  }
   // 檢查會員認証用
   // 每次重新到網站中，或重新整理，都會執行這個函式，用於向伺服器查詢取回原本登入會員的資料
   const handleCheckAuth = async () => {
@@ -193,7 +200,7 @@ export const AuthProvider = ({ children }) => {
     if (router.isReady && !auth.isAuth) {
       handleCheckAuth()
     }
-    
+
     // 下面加入router.pathname，是為了要在向伺服器檢查後，
     // 如果有比對到是隱私路由，就執行跳轉到登入頁面工作
     // 注意有可能會造成向伺服器要求多次，此為簡單的實作範例

@@ -10,7 +10,21 @@ export default function Header() {
   const { isAuth, userData } = auth
   const [user_id, setUserId] = useState('')
   const router = useRouter()
-  const [image_path, setImagePath] = useState('/Vector.svg')
+  const getDefaultImage = (gender) => {
+    switch (gender) {
+      case 'male':
+        return '/signup_login/undraw_profile_2.svg'
+      case 'female':
+        return '/signup_login/undraw_profile_1.svg'
+      default:
+        return '/Vector.svg'
+    }
+  }
+
+  const [image_path, setImagePath] = useState(
+    () => auth?.userData?.image_path || getDefaultImage(auth?.userData?.gender)
+  )
+
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
@@ -80,22 +94,17 @@ export default function Header() {
       })
         .then((res) => res.json())
         .then((data) => {
-          const defaultImage =
-            data?.gender === 'male'
-              ? 'signup_login/undraw_profile_2.svg'
-              : data?.gender === 'female'
-              ? 'signup_login/undraw_profile_1.svg'
-              : '/Vector.svg'
-
-          setImagePath(data?.image_path || defaultImage)
+          // 使用相同的 getDefaultImage 函數
+          setImagePath(data?.image_path || getDefaultImage(data?.gender))
         })
+       
     }
 
     document.body.style.paddingTop = '75px'
     return () => {
       document.body.style.paddingTop = '0px'
     }
-  }, [user_id, auth?.userData?.image_path])
+  }, [user_id, auth?.userData?.gender, auth?.userData?.image_path])
 
   useEffect(() => {
     if (userData && userData.user_id) {
@@ -160,7 +169,17 @@ export default function Header() {
                   <div className="mobile-icons">
                     <Link href="/dashboard" className="icon-wrapper">
                       <div className="user-avatar">
-                        <img src={image_path} alt="User" />
+                        <img
+                          src={
+                            auth?.userData?.image_path ||
+                            (auth?.userData?.gender === 'male'
+                              ? '/signup_login/undraw_profile_2.svg'
+                              : auth?.userData?.gender === 'female'
+                              ? '/signup_login/undraw_profile_1.svg'
+                              : '/Vector.svg')
+                          }
+                          alt="user-avatar"
+                        />
                       </div>
                     </Link>
                     <Link href="/chatroom" className="icon-wrapper">
@@ -209,7 +228,13 @@ export default function Header() {
               <div className="auth-section">
                 <Link href="/dashboard">
                   <div className="user-avatar">
-                    <img src={image_path} alt="User" />
+                    <img
+                      src={
+                        auth?.userData?.image_path ||
+                        getDefaultImage(auth?.userData?.gender)
+                      }
+                      alt="User"
+                    />
                   </div>
                 </Link>
                 <Link href="/chatroom" className="icon-wrapper">

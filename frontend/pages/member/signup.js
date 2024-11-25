@@ -198,7 +198,7 @@ export default function Signup() {
         />
         <div className="container">
           <div className="row align-items-center">
-            <div className={`${styles.left} col d-flex flex-column justify-content-start`}>
+            <div className={`${styles.left} col-sm-12  col-md-6 col-lg-6 col d-flex flex-column justify-content-start`}>
               {/* <i>
               <h4 className={`text-white  animate__animated animate__zoomIn animate__infinite animate__rubberBand animate__slower	3s ${styles.signup}`}>Sign Up</h4> */}
                 {/* </i> */}
@@ -217,7 +217,7 @@ export default function Signup() {
               <i><GlowingText text="LaptopGuru" className={`text-white text-md-start`}/></i>
             </div>
             <div
-              className={`${styles.right} align-item-center col ${styles['signup-right']} text-white`}
+              className={`${styles.right} align-item-center col ${styles['signup-right']} text-white col-sm-12  col-md-11 col-lg-5`}
             >
               <div className={`${styles.tabs} d-flex justify-content-between`}>
                 <Link

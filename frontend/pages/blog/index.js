@@ -111,7 +111,7 @@ export default function BlogSearchPage() {
               type="text"
               value={filters.searchText}
               onChange={handleSearch}
-              className="form-control BlogSearchInputStyle"
+              className="blog-form-control BlogSearchInputStyle"
               placeholder="Search"
             />
             <button className="btn" onClick={(e) => e.preventDefault()}>
