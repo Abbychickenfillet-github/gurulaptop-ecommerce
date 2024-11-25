@@ -114,7 +114,7 @@ export default function MembershipLevels() {
       name: '鑽石會員',
       benefits:
         '可於文章區發表文章、參加活動、免費包膜服務(價值1,000元)、日後購買新機免費升級延長保固半年、生日禮(抽獎券-可抽筆電支架)',
-      criteria: '消費金額達10萬',
+      criteria: '消費金額達10萬及以上',
     },
   ]
 
