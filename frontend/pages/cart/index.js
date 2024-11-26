@@ -335,7 +335,7 @@ export default function CartIndex() {
       ],
     })
 
-    console.log(res.data) //訂單物件格式(line-pay專用)
+    // console.log(res.data) //訂單物件格式(line-pay專用)
 
     if (res.data.status === 'success') {
       setLineOrder(res.data.data.order)
@@ -354,7 +354,7 @@ export default function CartIndex() {
       `/line-pay/confirm?transactionId=${transactionId}`
     )
 
-    console.log(res.data)
+    // console.log(res.data)
 
     if (res.data.status === 'success') {
       MySwal.fire({
@@ -384,7 +384,7 @@ export default function CartIndex() {
   useEffect(() => {
     if (router.isReady) {
       // 這裡確保能得到router.query值
-      console.log(router.query)
+      // console.log(router.query)
       // http://localhost:3000/order?transactionId=2022112800733496610&orderId=da3b7389-1525-40e0-a139-52ff02a350a8
       // 這裡要得到交易id，處理伺服器通知line pay已確認付款，為必要流程
       // TODO: 除非為不需登入的交易，為提高安全性應檢查是否為會員登入狀態
