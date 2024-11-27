@@ -66,19 +66,19 @@ export default function ProductCard({ onSendMessage, product_id }) {
       // 從比較清單中移除產品 ID
       compareProduct = compareProduct.filter((id) => id !== productID)
       localStorage.setItem('compareProduct', compareProduct.join(','))
-      onSendMessage('取消比較！')
+      onSendMessage('取消比較！', `success`)
       setIsCompared(false)
     } else {
       // 檢查比較清單是否已滿
       if (compareProduct.length >= 2) {
-        onSendMessage('比較清單已滿！')
+        onSendMessage('比較清單已滿！', `error`)
         return
       }
 
       // 添加產品 ID 到比較清單
       compareProduct.push(productID)
       localStorage.setItem('compareProduct', compareProduct.join(','))
-      onSendMessage('加入比較！')
+      onSendMessage('加入比較！', `success`)
       setIsCompared(true)
     }
   }
@@ -102,13 +102,13 @@ export default function ProductCard({ onSendMessage, product_id }) {
 
           if (response.ok) {
             // 收藏成功
-            onSendMessage('取消收藏！')
+            onSendMessage('取消收藏！', 'success')
             setIsChecked(false)
           } else {
-            onSendMessage('取消收藏失敗！')
+            onSendMessage('取消收藏失敗！', 'error')
           }
         } catch (error) {
-          onSendMessage('取消收藏失敗！')
+          onSendMessage('取消收藏失敗！', 'error')
         }
       } else {
         //寫入favorite management資料庫
@@ -125,13 +125,13 @@ export default function ProductCard({ onSendMessage, product_id }) {
 
           if (response.ok) {
             // 收藏成功
-            onSendMessage('收藏成功！')
+            onSendMessage('收藏成功！', 'success')
             setIsChecked(true)
           } else {
-            onSendMessage('收藏失敗！')
+            onSendMessage('收藏失敗！', 'error')
           }
         } catch (error) {
-          onSendMessage('收藏失敗！')
+          onSendMessage('收藏失敗！', 'error')
         }
       }
     } else {
@@ -157,12 +157,12 @@ export default function ProductCard({ onSendMessage, product_id }) {
         })
         const result = await response.json()
         if (result.status == 'success') {
-          onSendMessage('加入購物車成功！')
+          onSendMessage('加入購物車成功！', `success`)
         } else {
-          onSendMessage('加入購物車失敗，請再試一次！')
+          onSendMessage('加入購物車失敗，請再試一次！', `error`)
         }
       } catch (error) {
-        onSendMessage('加入購物車失敗，請洽管理員！')
+        onSendMessage('加入購物車失敗，請洽管理員！', `error`)
       }
     } else {
       window.location.href = 'http://localhost:3000/member/login'
@@ -175,7 +175,7 @@ export default function ProductCard({ onSendMessage, product_id }) {
         <input
           type="checkbox"
           id={`productCompareCheck_${key}`}
-          onClick={toggleCompare}
+          onChange={toggleCompare}
           checked={isCompared}
           className={styles.product_compare_checkbox}
         />
@@ -187,7 +187,11 @@ export default function ProductCard({ onSendMessage, product_id }) {
         </label>
         <span className={styles.product_compare_text}>比較</span>
         <Image
-          src={data ? `/product/${data.product_img_path}` : ''}
+          src={
+            data
+              ? `/product/${data?.product_img_path}`
+              : '/images/product/placeholder.avif'
+          }
           alt="Product"
           width={200}
           height={200}
@@ -205,8 +209,9 @@ export default function ProductCard({ onSendMessage, product_id }) {
         <div className={styles.product_icons}>
           <input
             type="checkbox"
-            id="heartCheckbox"
+            id={`heartCheckbox_${key}`}
             checked={isChecked}
+            onChange={toggleHeart}
             className={styles.product_collection_checkbox}
           />
           <svg

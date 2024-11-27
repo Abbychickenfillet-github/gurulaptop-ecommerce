@@ -48,23 +48,27 @@
 .store-name {
   font-size: 12px; /* 從 12px 放大到 16px */
   color: #2d3748;
+  margin-bottom: 18px;
+  margin-top: 5px;
 }
 
 .store-name2 {
   font-size: 12px; /* 從 12px 放大到 16px */
   color: #9b9b9b;
+  margin-bottom: 18px;
+  margin-top: 5px;
 }
 
 .offer-text {
   font-size: 14px; /* 從 9px 放大到 12px */
   color: #4a5568;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .offer-text2 {
   font-size: 14px; /* 從 9px 放大到 12px */
   color: #9b9b9b;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .coupon-code {
@@ -90,20 +94,20 @@
 .coupon_discount {
   font-size: 12px; /* 從 8px 放大到 11px */
   color: #6b46c1;
-  margin-bottom: 13px;
+  margin-bottom: 20px;
 }
 
 .coupon_discount2 {
   font-size: 12px; /* 從 8px 放大到 11px */
   color: #9b9b9b;
-  margin-bottom: 13px;
+  margin-bottom: 20px;
 }
 
 .expiry-date {
   font-size: 9px; /* 從 7px 放大到 9px */
   color: #718096;
   // margin-top: 20px;
-  margin-right: 15px;
+  margin-right: 30px;
   text-align: right;
 }
 
@@ -138,6 +142,105 @@
     font-size: 6px;
     margin-top: 12px;
     margin-right: 20px;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .coupon-wrapper {
+    max-width: 450px;
+  }
+
+  .coupon-content {
+    right: 25px;
+  }
+
+  .store-name,
+  .store-name2 {
+    font-size: 11px;
+    margin: 5px;
+  }
+
+  .offer-text,
+  .offer-text2 {
+    font-size: 12px;
+  }
+
+  .coupon-code,
+  .coupon-code2 {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .coupon_discount,
+  .coupon_discount2 {
+    font-size: 11px;
+  }
+
+  .expiry-date,
+  .expiry-date2 {
+    font-size: 8px;
+  }
+}
+
+/* Mobile (<768px) */
+@media (max-width: 767px) {
+  .coupon-wrapper {
+    max-width: 350px;
+  }
+
+  .coupon-content {
+    right: 20px;
+    top: 8px;
+  }
+
+  .store-name,
+  .store-name2 {
+    font-size: 10px;
+  }
+
+  .offer-text,
+  .offer-text2 {
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+
+  .coupon-code,
+  .coupon-code2 {
+    padding: 5px 8px;
+    font-size: 9px;
+    margin-bottom: 5px;
+  }
+
+  .coupon_discount,
+  .coupon_discount2 {
+    font-size: 9px;
+    margin-bottom: 0px;
+  }
+
+  .expiry-date,
+  .expiry-date2 {
+    font-size: 6px;
+    margin-right: 10px;
+    margin-top: 0px;
+  }
+}
+
+/* Small Mobile (<576px) */
+@media (max-width: 575px) {
+  .coupon-wrapper {
+    max-width: 300px;
+  }
+
+  .store-name,
+  .store-name2 {
+    font-size: 9px;
+    margin-bottom: 5px;
+
+  }
+
+  .offer-text,
+  .offer-text2 {
+    font-size: 9px;
+    margin-bottom: 5px;
   }
 }
 

@@ -1,0 +1,38 @@
+.eventNavContainer {
+  background-color: #1a0026;
+  padding: 20px 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.navCustom {
+  position: relative;
+  overflow: hidden;
+}
+
+.navLink {
+  color: #b39ddb;
+  transition: color 0.3s ease, transform 0.3s ease;
+  padding: 10px 10px;
+  border-radius: 3px;
+}
+
+.navLink:hover {
+  color: #e0b3ff;
+  transform: scale(1.1);
+}
+
+.active {
+  color: #ffffff;
+  font-weight: bold;
+  border-bottom: 2px solid #7e57c2;
+}
+
+@keyframes moveLine {
+  0% {
+    background-position: 0%;
+  }
+  100% {
+    background-position: 100%;
+  }
+}

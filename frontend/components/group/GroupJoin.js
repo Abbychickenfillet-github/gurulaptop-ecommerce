@@ -3,6 +3,7 @@ import styles from './GroupJoin.module.css'
 import { X, User, MessageSquare } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import websocketService from '../../services/websocketService'
+import Swal from 'sweetalert2'
 
 const GroupJoin = ({ onClose, groupData }) => {
   const { auth } = useAuth()
@@ -11,7 +12,6 @@ const GroupJoin = ({ onClose, groupData }) => {
     description: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState('')
 
   useEffect(() => {
     if (auth.isAuth) {
@@ -24,18 +24,36 @@ const GroupJoin = ({ onClose, groupData }) => {
       ...formData,
       [e.target.name]: e.target.value,
     })
-    setError('')
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!auth.isAuth) {
-      setError('請先登入')
+      await Swal.fire({
+        icon: 'warning',
+        title: '無法申請',
+        text: '請先登入',
+        showConfirmButton: false,
+        timer: 1500,
+      })
+      return
+    }
+
+    // 確認提交
+    const confirmResult = await Swal.fire({
+      icon: 'question',
+      title: '確認送出',
+      text: '確定要送出申請嗎？',
+      showCancelButton: true,
+      confirmButtonText: '確定',
+      cancelButtonText: '取消',
+    })
+
+    if (!confirmResult.isConfirmed) {
       return
     }
 
     setIsSubmitting(true)
-    setError('')
 
     try {
       const response = await fetch('http://localhost:3005/api/group/requests', {
@@ -46,7 +64,7 @@ const GroupJoin = ({ onClose, groupData }) => {
         credentials: 'include',
         body: JSON.stringify({
           groupId: groupData.group_id,
-          gameId: formData.gameId, // 這將被用於系統訊息
+          gameId: formData.gameId,
           description: formData.description,
         }),
       })
@@ -61,15 +79,28 @@ const GroupJoin = ({ onClose, groupData }) => {
         type: 'groupRequest',
         fromID: auth.user_id,
         groupId: groupData.group_id,
-        gameId: formData.gameId, // 確保傳送 gameId
+        gameId: formData.gameId,
         description: formData.description,
       })
 
+      await Swal.fire({
+        icon: 'success',
+        title: '申請已送出！',
+        text: '等待群組管理員審核',
+        showConfirmButton: false,
+        timer: 1500,
+      })
+
       onClose()
-      alert('申請已成功送出！')
     } catch (err) {
       console.error('Error:', err)
-      setError(err.message || '申請發送失敗，請稍後再試')
+      await Swal.fire({
+        icon: 'error',
+        title: '送出失敗',
+        text: err.message || '申請發送失敗，請稍後再試',
+        showConfirmButton: false,
+        timer: 2000,
+      })
     } finally {
       setIsSubmitting(false)
     }
@@ -95,8 +126,6 @@ const GroupJoin = ({ onClose, groupData }) => {
         <div className={styles.modalContent}>
           <h2 className={styles.modalTitle}>申請加入揪團</h2>
           <h3 className={styles.eventTitle}>{groupData.group_name}</h3>
-
-          {error && <div className={styles.error}>{error}</div>}
 
           <form onSubmit={handleSubmit} className={styles.formSection}>
             <div className={styles.inputGroup}>

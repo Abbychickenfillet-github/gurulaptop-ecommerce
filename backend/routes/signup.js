@@ -19,17 +19,17 @@ router.post('/', upload.none(), async (req, res, next) => {
     })
 
     // 3. 特別檢查 password
-    console.log('password 型別:', typeof password)
-    console.log('password 長度:', password ? password.length : 'undefined')
+    // console.log('password 型別:', typeof password)
+    // console.log('password 長度:', password ? password.length : 'undefined')
 
     if (!password) {
       throw new Error('密碼未接收到')
     }
 
     // 4. 看要執行的 SQL 值
-    console.log('準備插入的值:', [email, password, phone, birthdate, gender])
+    // console.log('準備插入的值:', [email, password, phone, birthdate, gender])
     // 檢查是否已經有相同的email
-    console.log('開始資料庫操作')
+    // console.log('開始資料庫操作')
 
     const [existingUsers] = await db.query(
       'SELECT * FROM users WHERE email = ?',
@@ -62,7 +62,7 @@ router.post('/', upload.none(), async (req, res, next) => {
       hashedPassword, // 使用加密後的密碼
       phone || null,
       birthdate || null,
-      gender,
+      gender === '' ? null : gender,  // 明確檢查空字串
     ]
 
     const [result] = await db.query(sql, params)

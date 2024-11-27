@@ -38,70 +38,55 @@ export default function BloghomepageCardgroup() {
     <>
       <div className="container">
         <div className="row g-4">
-          {' '}
-          {/* 使用 row-cols 來確保每行固定列數 */}
-          {blogs.map(
-            (
-              data,
-              index // 直接遍歷 blogs，不需要 rows
-            ) => (
-              <div className="col-md-6" key={index}>
-                {' '}
-                {/* 固定寬度為半欄 */}
-                <Link
-                  className="text-decoration-none"
-                  href={`/blog/blog-detail/${data.blog_id}`}
-                  passHref
-                >
-                  <div className="card d-flex flex-row bg-white ArticleSmallerCard">
-                    {' '}
-                    {/* 固定卡片高度 */}
-                    <div className="w-50 position-relative">
-                      {' '}
-                      {/* 圖片容器 */}
-                      <img
-                        src={
-                          data.blog_image
-                            ? `http://localhost:3005${data.blog_image}`
-                            : 'http://localhost:3005/blog-images/nolaptopupload.jpeg'
-                        }
-                        className="w-100 h-100 ratio object-fit-cover position-center"
-                        alt="..."
-                        style={{ objectPosition: 'center' }}
-                      />
-                      <div className="ArticleSmallerCardHeadHover position-absolute left-0 bottom-0 w-100 h-25 container">
-                        <p className="ArticleSmallerCardHeadHoverP">
-                          {data.blog_brand}
+          {blogs.map((data, index) => (
+            <div className="col-md-6" key={index}>
+              <Link
+                className="text-decoration-none"
+                href={`/blog/blog-detail/${data.blog_id}`}
+                passHref
+              >
+                <div className="card d-flex flex-row bg-white ArticleSmallerCard">
+                  <div className="w-50 position-relative">
+                    <img
+                      src={
+                        data.blog_image
+                          ? `http://localhost:3005${data.blog_image}`
+                          : 'http://localhost:3005/blog-images/nolaptopupload.jpeg'
+                      }
+                      className="w-100 h-100 ratio object-fit-cover position-center"
+                      alt="..."
+                      style={{ objectPosition: 'center' }}
+                    />
+                    <div className="ArticleSmallerCardHeadHover position-absolute left-0 bottom-0 w-100 h-25 container">
+                      <p className="ArticleSmallerCardHeadHoverP">
+                        {data.blog_brand}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="w-50">
+                    <div className="card-body h-100 d-flex flex-column m-2">
+                      <div className="flex-grow-1">
+                        <h5 className="ArticleSmallerCardTitle mb-2 text-dark">
+                          {data.blog_title}
+                        </h5>
+                        <p className="ArticleSmallerCardContent mb-3 text-dark">
+                          {data.blog_content}
+                        </p>
+                      </div>
+                      <div className="d-flex justify-content-between flex-column flex-xl-row">
+                        <p className="mb-0 text-dark text-nowrap">
+                          {data.blog_type}
+                        </p>
+                        <p className="mb-0 text-dark text-nowrap">
+                          {data.blog_created_date}
                         </p>
                       </div>
                     </div>
-                    <div className="w-50">
-                      {' '}
-                      {/* 內容區域 */}
-                      <div className="card-body h-100 d-flex flex-column m-2">
-                        <div className="flex-grow-1">
-                          <h5 className="ArticleSmallerCardTitle mb-2 text-dark">
-                            {data.blog_title}
-                          </h5>
-                          <p className="ArticleSmallerCardContent mb-3 text-dark">
-                            {data.blog_content}
-                          </p>
-                        </div>
-                        <div className="d-flex justify-content-between mt-auto">
-                          <p className="mb-0 text-dark text-nowrap">
-                            {data.blog_type}
-                          </p>
-                          <p className="mb-0 text-dark text-nowrap">
-                            {data.blog_created_date}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
                   </div>
-                </Link>
-              </div>
-            )
-          )}
+                </div>
+              </Link>
+            </div>
+          ))}
         </div>
       </div>
     </>

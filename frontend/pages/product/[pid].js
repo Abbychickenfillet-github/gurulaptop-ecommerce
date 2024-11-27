@@ -2,7 +2,6 @@ import React from 'react'
 import styles from '@/styles/product-lease.module.scss'
 import Header from '@/components/layout/default-layout/header'
 import Footer from '@/components/layout/default-layout/my-footer'
-import NextBreadCrumbLight from '@/components/common/next-breadcrumb-light'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -10,6 +9,7 @@ import ProductCard from '@/components/product/product-card'
 import { useAuth } from '@/hooks/use-auth'
 import { forEach } from 'lodash'
 import BackToTop2 from '@/components/BackToTop/BackToTop2'
+import Head from 'next/head'
 export default function Detail() {
   // 從網址列的參數取得商品ID，並透過ID取得商品資料
   const router = useRouter()
@@ -23,6 +23,7 @@ export default function Detail() {
 
   const [isChecked, setIsChecked] = useState(false) // 用來控制 checkbox 狀態
   const [alertMessage, setAlertMessages] = useState([]) // 使用陣列儲存訊息
+  const [alertType, setAlertType] = useState() // 設置訊息的類型
   const [quantity, setQuantity] = useState(1) // 用來控制購買數量
 
   // 初始化
@@ -63,8 +64,14 @@ export default function Detail() {
   }, [userData, pid]) // 確保在 userData 和 pid 改變時重新執行
 
   // 新增訊息到陣列
-  const handleShowMessage = (message) => {
-    setAlertMessages((prevMessages) => [...prevMessages, message])
+  const handleShowMessage = (message, type) => {
+    if (type === 'success') {
+      setAlertType('alert-success')
+      setAlertMessages((prevMessages) => [...prevMessages, message])
+    } else {
+      setAlertType('alert-danger')
+      setAlertMessages((prevMessages) => [...prevMessages, message])
+    }
     setTimeout(() => {
       // 1 秒後移除最早的訊息
       setAlertMessages((prevMessages) => prevMessages.slice(1))
@@ -169,13 +176,13 @@ export default function Detail() {
 
           if (response.ok) {
             // 收藏成功
-            handleShowMessage('取消收藏！')
+            handleShowMessage('取消收藏！', 'success')
             setIsChecked(false)
           } else {
-            handleShowMessage('取消收藏失敗！')
+            handleShowMessage('取消收藏失敗！', 'error')
           }
         } catch (error) {
-          handleShowMessage('取消收藏失敗！')
+          handleShowMessage('取消收藏失敗！', 'error')
         }
       } else {
         //寫入favorite management資料庫
@@ -192,13 +199,13 @@ export default function Detail() {
 
           if (response.ok) {
             // 收藏成功
-            handleShowMessage('收藏成功！')
+            handleShowMessage('收藏成功！', 'success')
             setIsChecked(true)
           } else {
-            handleShowMessage('收藏失敗！')
+            handleShowMessage('收藏失敗！', 'error')
           }
         } catch (error) {
-          handleShowMessage('收藏失敗！')
+          handleShowMessage('收藏失敗！', 'error')
         }
       }
     } else {
@@ -224,12 +231,12 @@ export default function Detail() {
         })
         const result = await response.json()
         if (result.status == 'success') {
-          handleShowMessage('加入購物車成功！')
+          handleShowMessage('加入購物車成功！', 'success')
         } else {
-          handleShowMessage('加入購物車失敗，請再試一次！')
+          handleShowMessage('加入購物車失敗，請再試一次！', 'error')
         }
       } catch (error) {
-        handleShowMessage('加入購物車失敗，請洽管理員！')
+        handleShowMessage('加入購物車失敗，請洽管理員！', 'error')
       }
     } else {
       window.location.href = 'http://localhost:3000/member/login'
@@ -249,30 +256,31 @@ export default function Detail() {
       // 從比較清單中移除產品 ID
       compareProduct = compareProduct.filter((id) => id !== productID)
       localStorage.setItem('compareProduct', compareProduct.join(','))
-      handleShowMessage('取消比較！')
+      handleShowMessage('取消比較！', 'success')
       setIsCompared(false)
     } else {
       // 檢查比較清單是否已滿
       if (compareProduct.length >= 2) {
-        handleShowMessage('比較清單已滿！')
+        handleShowMessage('比較清單已滿！', 'error')
         return
       }
 
       // 添加產品 ID 到比較清單
       compareProduct.push(productID)
       localStorage.setItem('compareProduct', compareProduct.join(','))
-      handleShowMessage('加入比較！')
+      handleShowMessage('加入比較！', 'success')
       setIsCompared(true)
     }
   }
   return (
     <>
+      <Head>
+        <title>{data?.product_name}</title>
+      </Head>
       <Header />
       <div className={styles.customBody}>
         <div className={styles.customContainer}>
-          <nav className={`${styles.breadcrumb}`}>
-            <NextBreadCrumbLight bgClass="transparent" isHomeIcon="true" />
-          </nav>
+          <nav className={`${styles.breadcrumb}`}></nav>
           <section className={styles.col1}>
             <div className={styles.menu}>
               <div className={styles.square}>
@@ -395,7 +403,11 @@ export default function Detail() {
                 <div className={styles.project}>
                   <div className={styles.project2}>
                     <span className={styles.price}>
-                      {isLoading ? 'Loading...' : `NT ${new Intl.NumberFormat('zh-TW').format(data.list_price)}元`}
+                      {isLoading
+                        ? 'Loading...'
+                        : `NT ${new Intl.NumberFormat('zh-TW').format(
+                            data.list_price
+                          )}元`}
                     </span>
                   </div>
                 </div>
@@ -466,6 +478,9 @@ export default function Detail() {
             <div className={styles.productSpecs}>
               <div className={styles.title2}>產品規格</div>
               <ul>
+                {!isLoading && data?.affordance && (
+                  <li>用途： {data.affordance}</li>
+                )}
                 {!isLoading && data?.product_CPU && (
                   <li>處理器： {data.product_CPU}</li>
                 )}
@@ -524,9 +539,10 @@ export default function Detail() {
 
           <section className={styles.col3}>
             <div className={styles.relatedProducts}>
-              <span className={styles.diamond}>◇</span>
+              <span className={styles.diamond}></span>
               <span className={styles.title3}>相關商品</span>
             </div>
+
             <div className={styles.relatedProductsList}>
               {relatedProducts?.map((product) => (
                 <div key={product.product_id}>
@@ -545,7 +561,7 @@ export default function Detail() {
           {alertMessage.map((msg, index) => (
             <div
               key={index}
-              className="alert alert-success alert-dismissible fade show"
+              className={`alert ${alertType} alert-dismissible fade show`}
               style={{
                 zIndex: 9999,
                 position: 'fixed',

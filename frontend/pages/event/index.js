@@ -3,36 +3,8 @@ import EventCard from '@/components/event/EventCard'
 import Carousel from '@/components/event/Carousel'
 import EventNavbar from '@/components/event/EventNavbar'
 import axios from 'axios'
-
-// 分頁標籤組件
-const EventTabs = ({ activeTab, setActiveTab, onTabChange }) => {
-  const tabs = ['所有活動', '進行中', '即將開始報名', '報名中', '已結束']
-
-  return (
-    <div className="event-nav-container">
-      <ul className="nav nav-underline justify-content-center gap-5">
-        {tabs.map((tab) => (
-          <li key={tab} className="nav-item">
-            <a
-              className={`nav-link event-nav-link ${
-                activeTab === tab ? 'active' : ''
-              }`}
-              href="#"
-              onClick={(e) => {
-                e.preventDefault()
-                setActiveTab(tab)
-                onTabChange(tab)
-              }}
-            >
-              {tab}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <div className="event-nav-line" />
-    </div>
-  )
-}
+import EventTabs from '@/components/event/EventTabs'
+import Head from 'next/head'
 
 // 分頁導航組件
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
@@ -116,11 +88,33 @@ export default function Event() {
   const [activeTab, setActiveTab] = useState('所有活動')
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [filters, setFilters] = useState({
+    type: null,
+    platform: null,
+    teamType: null,
+    search: null,
+  })
+
+  // 節流函數
+  const throttle = (func, limit) => {
+    let inThrottle
+    return function (...args) {
+      if (!inThrottle) {
+        func.apply(this, args)
+        inThrottle = true
+        setTimeout(() => (inThrottle = false), limit)
+      }
+    }
+  }
 
   // 獲取活動資料
-  const fetchEvents = async (page = currentPage, status = activeTab) => {
+  const fetchEvents = async (
+    page = currentPage,
+    status = activeTab,
+    showLoading = true
+  ) => {
     try {
-      setLoading(true)
+      if (showLoading) setLoading(true)
       setError(null)
 
       const response = await axios.get('http://localhost:3005/api/events', {
@@ -128,6 +122,10 @@ export default function Event() {
           page,
           pageSize: 12,
           status: status === '所有活動' ? '' : status,
+          type: filters.type,
+          platform: filters.platform,
+          teamType: filters.teamType,
+          keyword: filters.search,
         },
       })
 
@@ -141,7 +139,7 @@ export default function Event() {
       setError('獲取資料失敗，請稍後再試')
       console.error('Error fetching events:', err)
     } finally {
-      setLoading(false)
+      if (showLoading) setLoading(false)
     }
   }
 
@@ -149,31 +147,62 @@ export default function Event() {
   useEffect(() => {
     fetchEvents()
 
-    // 定時更新資料（每30秒）
-    const interval = setInterval(() => {
-      fetchEvents(currentPage, activeTab)
+    // 使用節流的自動更新
+    const throttledFetch = throttle(() => {
+      fetchEvents(currentPage, activeTab, false)
     }, 30000)
 
+    const interval = setInterval(throttledFetch, 30000)
     return () => clearInterval(interval)
   }, [])
+
+  // 當篩選器改變時重新獲取數據
+  useEffect(() => {
+    if (filters.type !== undefined) {
+      fetchEvents(1, activeTab)
+    }
+  }, [filters])
 
   // 處理分頁變更
   const handlePageChange = (page) => {
     setCurrentPage(page)
-    fetchEvents(page)
+    fetchEvents(page, activeTab)
+    // 滾動到頁面頂部，但保持在卡片區域
+    document
+      .querySelector('.event-container')
+      ?.scrollIntoView({ behavior: 'smooth' })
   }
 
   // 處理分類變更
   const handleTabChange = (tab) => {
+    setActiveTab(tab)
     setCurrentPage(1)
     fetchEvents(1, tab)
   }
 
+  // 處理篩選變更
+  const handleFilterChange = (newFilters) => {
+    setFilters((prev) => ({
+      ...prev,
+      type: newFilters.type,
+      platform: newFilters.platform,
+      teamType: newFilters.teamType,
+      search: newFilters.search,
+    }))
+    setCurrentPage(1)
+  }
+
   return (
     <>
-      <Carousel />
+      <Head>
+        <title>活動</title>
+      </Head>
       <div className="event-wrapper">
-        <EventNavbar />
+        <Carousel />
+        <EventNavbar
+          onFilterChange={handleFilterChange}
+          setIsLoading={setLoading}
+        />
         <EventTabs
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -195,24 +224,32 @@ export default function Event() {
                 </div>
               </div>
             ) : (
-              <div className="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center mx-auto">
+              <div className="row g-4 justify-content-start">
+                {' '}
+                {/* 修改這裡 */}
                 {events.map((event) => (
-                  <EventCard
+                  <div
                     key={event.id}
-                    id={event.id}
-                    name={event.name}
-                    type={event.type}
-                    platform={event.platform}
-                    content={event.content}
-                    picture={event.picture}
-                    applyStartTime={event.applyStartTime}
-                    applyEndTime={event.applyEndTime}
-                    eventStartTime={event.eventStartTime}
-                    maxPeople={event.maxPeople}
-                    currentParticipants={event.currentParticipants}
-                    status={event.status}
-                    teamType={event.teamType}
-                  />
+                    className="col-12 col-sm-6 col-lg-4 col-xl-3"
+                  >
+                    {' '}
+                    {/* 修改這裡 */}
+                    <EventCard
+                      id={event.id}
+                      name={event.name}
+                      type={event.type}
+                      platform={event.platform}
+                      content={event.content}
+                      picture={event.picture}
+                      applyStartTime={event.applyStartTime}
+                      applyEndTime={event.applyEndTime}
+                      eventStartTime={event.eventStartTime}
+                      maxPeople={event.maxPeople}
+                      currentParticipants={event.currentParticipants}
+                      status={event.status}
+                      teamType={event.teamType}
+                    />
+                  </div>
                 ))}
               </div>
             )}
@@ -230,3 +267,4 @@ export default function Event() {
     </>
   )
 }
+// Event.getLayout = (page) => page

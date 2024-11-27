@@ -36,17 +36,27 @@ export default function Favorites() {
     }
   }, [userData])
 
-  function onSendMessage(message) {
-    MySwal.fire({
-      icon: 'success',
-      title: message,
-      showConfirmButton: false,
-      timer: 1000,
-    })
+  function onSendMessage(message, type) {
+    if (type === 'success') {
+      MySwal.fire({
+        icon: 'success',
+        title: message,
+        showConfirmButton: false,
+        timer: 1000,
+      })
+    } else {
+      MySwal.fire({
+        icon: 'error',
+        title: message,
+        showConfirmButton: false,
+        timer: 1000,
+      })
+    }
   }
 
   if (loading) return <div>Loading...</div> // 加載狀態
-  if (!data || data.length === 0) return <div>No favorites found.</div> // 無收藏項目
+  if (!data || data.length === 0)
+    return <h3 className="text-center mt-5">尚未收藏任何商品</h3> // 無收藏項目
 
   return (
     <main className={`${styles.product_list}`}>

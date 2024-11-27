@@ -5,6 +5,10 @@ import Coupon from './index'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useAuth } from '@/hooks/use-auth'
+import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai'
+import { AiOutlineSearch } from "react-icons/ai";
+import { AiTwotoneDelete } from "react-icons/ai";
+
 
 const MySwal = withReactContent(Swal)
 
@@ -17,6 +21,15 @@ export default function CouponUser() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [sortOrder, setSortOrder] = useState('desc')
+
+  function sortCoupons(coupons, order) {
+    return [...coupons].sort((a, b) => {
+      const dateA = new Date(a.coupon_end_time)
+      const dateB = new Date(b.coupon_end_time)
+      return order === 'asc' ? dateA - dateB : dateB - dateA
+    })
+  }
 
   // 除錯用
   console.log('當前auth狀態:', auth)
@@ -115,14 +128,17 @@ export default function CouponUser() {
   }
 
   // 搜尋過濾邏輯
-  const filteredCoupons = couponDataList.filter((coupon) => {
-    const searchContent = searchTerm.toLowerCase()
-    return (
-      coupon.coupon_content.toLowerCase().includes(searchContent) ||
-      coupon.coupon_code.toLowerCase().includes(searchContent) ||
-      String(coupon.coupon_discount).includes(searchContent)
-    )
-  })
+  const filteredCoupons = sortCoupons(
+    couponDataList.filter((coupon) => {
+      const searchContent = searchTerm.toLowerCase()
+      return (
+        coupon.coupon_content.toLowerCase().includes(searchContent) ||
+        coupon.coupon_code.toLowerCase().includes(searchContent) ||
+        String(coupon.coupon_discount).includes(searchContent)
+      )
+    }),
+    sortOrder
+  )
 
   // 載入中顯示
   if (loading) {
@@ -143,9 +159,9 @@ export default function CouponUser() {
       </div>
     )
   }
+
   return (
     <div className="container ">
-      {/* 新的搜尋表單 */}
       <Form onSubmit={handleSubmit} className="mb-4">
         <div className="row g-3">
           <div className="col-md-3">
@@ -160,27 +176,51 @@ export default function CouponUser() {
             </Form.Group>
           </div>
 
-          <div className="col-md-3 d-flex align-items-end">
-            <Button
-              variant="primary"
-              type="submit"
-              style={{
-                backgroundColor: '#805AF5',
-                borderColor: '#805AF5',
-                color: 'white',
-              }}
-              className="me-2"
-            >
-              搜尋
-            </Button>
-            {searchTerm && (
+          <div className="col-md-9 d-flex align-items-end justify-content-between">
+            <div>
               <Button
-                variant="outline-secondary"
-                onClick={() => setSearchTerm('')}
+                variant="primary"
+                type="submit"
+                style={{
+                  backgroundColor: '#805AF5',
+                  borderColor: '#805AF5',
+                  color: 'white',
+                }}
+                className="me-2"
               >
-                清除
+                <AiOutlineSearch />{/* 搜尋 */}
               </Button>
-            )}
+              {searchTerm && (
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => setSearchTerm('')}
+                >
+                  <AiTwotoneDelete />{/* 清除 */}
+                </Button>
+              )}
+            </div>
+
+            <div>
+              <Button
+                onClick={() => setSortOrder('asc')}
+                className="me-2"
+                style={{
+                  backgroundColor: '#5B35AA',
+                  color: 'white',
+                }}
+              >
+                <AiOutlineArrowUp />
+              </Button>
+              <Button
+                onClick={() => setSortOrder('desc')}
+                style={{
+                  backgroundColor: '#5B35AA',
+                  color: 'white',
+                }}
+              >
+                <AiOutlineArrowDown />
+              </Button>
+            </div>
           </div>
         </div>
       </Form>

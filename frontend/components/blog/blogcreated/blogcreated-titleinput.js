@@ -11,7 +11,7 @@ export default function BlogcreatedTitleinput(props) {
         </div>
         <div className="col-8 col-lg-8 col-md-10">
           <input
-            className="form-control form-control-lg"
+            className="blog-form-control blog-form-control-lg"
             type="text"
             placeholder="標題"
           />

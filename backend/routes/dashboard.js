@@ -18,8 +18,7 @@ router.get('/all', async function (req, res) {
     return res.status(500).json({ status: 'error', message: '無法連接' })
   }
 })
-// 給userEditInfo.js的useEffect用 順序有沒有關係?
-// 關於如何將使用者資訊串到 :user_id 的路由:
+
 // 在 /api/dashboard/:user_id 的路由中,我們使用了 req.params 來獲取 URL 中的動態參數 user_id。然後,我們使用這個 user_id 來查詢資料庫,找到對應的使用者資訊。
 router.get('/:user_id', async function (req, res) {
   try {
@@ -66,19 +65,19 @@ router.put('/:user_id', async (req, res) => {
 
 // 變更密碼單獨抓出來一個區域做處理
 router.put('/pwdCheck/:user_id', async (req, res) => {
-  console.log('收到請求參數:', req.params);
+  // console.log('收到請求參數:', req.params);
   // 在後端可以通過 req.params.user_id 取得這個值
-  console.log('收到請求內容:', req.body);  //
+  // console.log('收到請求內容:', req.body);  
     const { user_id } = req.params
     const { currentPassword } = req.body
-    console.log(currentPassword);
+    // console.log(currentPassword);
 try{
     // 檢查當前密碼是否正確
-    console.log('檢查參數:', {
-      user_id,
-      currentPassword,
-      currentPasswordType: typeof currentPassword,
-    })
+    // console.log('檢查參數:', {
+    //   user_id,
+    //   currentPassword,
+    //   currentPasswordType: typeof currentPassword,
+    // })
     const [users] = await db.query(
       'SELECT password FROM users WHERE user_id = ?',
       [user_id]

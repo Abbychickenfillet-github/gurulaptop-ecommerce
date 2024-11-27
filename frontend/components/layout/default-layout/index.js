@@ -12,15 +12,14 @@ export default function DefaultLayout({ title = 'Next-BS5', children }) {
   return (
     <>
       <Head>
-        <title>{title}</title>
         <meta name="viewport" content="width=device-width" />
       </Head>
       <Header />
-      <main className="flex-shrink-0 py-5">
-        <div className="container">
-          <NextBreadCrumb isHomeIcon isChevron bgClass="bg-transparent" />
-          {children}
-        </div>
+      <main className="flex-shrink-0">
+        {/* <div className="container">
+          <NextBreadCrumb isHomeIcon isChevron bgClass="bg-transparent" /> */}
+        {children}
+        {/* </div> */}
         {/* 全域的載入動畫指示器 */}
         {loader()}
       </main>

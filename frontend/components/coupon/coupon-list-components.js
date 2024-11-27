@@ -5,6 +5,10 @@ import withReactContent from 'sweetalert2-react-content'
 import Coupon from '.'
 import Coupon2 from './index2'
 import { useAuth } from '@/hooks/use-auth'
+import { AiFillExclamationCircle } from "react-icons/ai";
+import { AiOutlineSearch } from "react-icons/ai";
+import { AiTwotoneDelete } from "react-icons/ai";
+
 
 const MySwal = withReactContent(Swal)
 
@@ -18,6 +22,7 @@ export default function CouponList() {
   const userId = auth?.userData?.user_id
   const [claimedCoupons, setClaimedCoupons] = useState(new Set())
   const [userCoupons, setUserCoupons] = useState([])
+  const [endDateFilter, setEndDateFilter] = useState('')
 
   console.log('當前auth狀態:', auth)
   console.log('用戶ID:', userId)
@@ -71,9 +76,11 @@ export default function CouponList() {
 
       const getUserCoupons = async (userId) => {
         try {
-          const res = await fetch(`http://localhost:3005/api/coupon-user/${userId}`)
+          const res = await fetch(
+            `http://localhost:3005/api/coupon-user/${userId}`
+          )
           const data = await res.json()
-          
+
           if (data.status === 'success') {
             return data.data
           } else {
@@ -115,7 +122,7 @@ export default function CouponList() {
 
   const getUserCoupons = async () => {
     if (!userId) return
-    
+
     try {
       const res = await fetch(`http://localhost:3005/api/coupon-user/${userId}`)
       const data = await res.json()
@@ -130,9 +137,8 @@ export default function CouponList() {
 
   // 判斷使用者是否已擁有特定優惠券
   const isUserHasCoupon = (couponId) => {
-    return userCoupons.some(userCoupon => userCoupon.coupon_id === couponId)
+    return userCoupons.some((userCoupon) => userCoupon.coupon_id === couponId)
   }
-
 
   useEffect(() => {
     setMounted(true)
@@ -149,11 +155,25 @@ export default function CouponList() {
 
   const filteredCoupons = couponDataList.filter((coupon) => {
     const searchContent = searchTerm.toLowerCase()
-    return (
+    const matchesSearch =
       coupon.coupon_content.toLowerCase().includes(searchContent) ||
       coupon.coupon_code.toLowerCase().includes(searchContent) ||
       String(coupon.coupon_discount).includes(searchContent)
-    )
+
+    // 日期篩選
+    let matchesDate = true
+    if (endDateFilter) {
+      const couponEndDate = new Date(coupon.coupon_end_time).setHours(
+        0,
+        0,
+        0,
+        0
+      )
+      const filterDate = new Date(endDateFilter).setHours(0, 0, 0, 0)
+      matchesDate = couponEndDate >= filterDate
+    }
+
+    return matchesSearch && matchesDate
   })
 
   if (loading) {
@@ -174,11 +194,100 @@ export default function CouponList() {
     )
   }
 
+  const handleClaimAllCoupons = async () => {
+    if (!userId) {
+      MySwal.fire({
+        icon: 'warning',
+        title: '請先登入',
+        text: '需要登入才能領取優惠券',
+      })
+      window.location.href = 'http://localhost:3000/member/login'
+      return
+    }
+
+    // 取得尚未領取的優惠券
+    const unclaimedCoupons = filteredCoupons.filter(
+      (coupon) => !isUserHasCoupon(coupon.coupon_id)
+    )
+
+    if (unclaimedCoupons.length === 0) {
+      MySwal.fire({
+        icon: 'info',
+        title: '沒有可領取的優惠券',
+        text: '您已領取所有可用優惠券',
+      })
+      return
+    }
+
+    try {
+      // 顯示確認對話框
+      const result = await MySwal.fire({
+        icon: 'question',
+        title: '一鍵領取優惠券',
+        text: `確定要領取 ${unclaimedCoupons.length} 張優惠券嗎？`,
+        showCancelButton: true,
+        confirmButtonText: '確定領取',
+        cancelButtonText: '取消',
+      })
+
+      if (result.isConfirmed) {
+        let successCount = 0
+        let failCount = 0
+
+        // 依序領取每張優惠券
+        for (const coupon of unclaimedCoupons) {
+          try {
+            const addResponse = await fetch(
+              `http://localhost:3005/api/coupon-user/add/${userId}`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  coupon_id: coupon.coupon_id,
+                }),
+              }
+            )
+
+            const addResult = await addResponse.json()
+            if (addResult.status === 'success') {
+              successCount++
+            } else {
+              failCount++
+            }
+          } catch (error) {
+            failCount++
+          }
+        }
+
+        // 更新頁面資料
+        await getCouponData()
+        await getUserCoupons()
+
+        // 顯示結果
+        MySwal.fire({
+          icon: successCount > 0 ? 'success' : 'error',
+          title: '領取完成',
+          text: `成功領取 ${successCount} 張優惠券${
+            failCount > 0 ? `，${failCount} 張領取失敗` : ''
+          }`,
+        })
+      }
+    } catch (error) {
+      console.error('一鍵領取失敗:', error)
+      MySwal.fire({
+        icon: 'error',
+        title: '領取失敗',
+        text: '系統錯誤，請稍後再試',
+      })
+    }
+  }
+
   return (
     <div className="container">
-      {/* 搜尋表單 */}
       <Form onSubmit={handleSubmit} className="mb-4">
-        <div className="row g-3">
+        <div className="row">
           <div className="col-md-3">
             <Form.Group>
               <Form.Label>關鍵字搜尋</Form.Label>
@@ -191,27 +300,52 @@ export default function CouponList() {
             </Form.Group>
           </div>
 
-          <div className="col-md-3 d-flex align-items-end">
-            <Button
-              variant="primary"
-              type="submit"
-              style={{
-                backgroundColor: '#805AF5',
-                borderColor: '#805AF5',
-                color: 'white',
-              }}
-              className="me-2"
-            >
-              搜尋
-            </Button>
-            {searchTerm && (
+          <div className="col-md-3">
+            <Form.Group>
+              <Form.Label>優惠券有效期限</Form.Label>
+              <Form.Control
+                type="date"
+                value={endDateFilter}
+                onChange={(e) => setEndDateFilter(e.target.value)}
+              />
+            </Form.Group>
+          </div>
+
+          <div className="col-md-6 d-flex align-items-end justify-content-between">
+            <div>
               <Button
-                variant="outline-secondary"
-                onClick={() => setSearchTerm('')}
+                variant="primary"
+                type="submit"
+                style={{
+                  backgroundColor: '#805AF5',
+                  borderColor: '#805AF5',
+                  color: 'white',
+                }}
+                className="me-2"
               >
-                清除
+                <AiOutlineSearch />{/* 搜尋 */}
               </Button>
-            )}
+              {(searchTerm || endDateFilter) && (
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => {
+                    setSearchTerm('')
+                    setEndDateFilter('')
+                  }}
+                >
+                <AiTwotoneDelete />  {/* 清除 */}
+                </Button>
+              )}
+            </div>
+            <Button
+              onClick={handleClaimAllCoupons}
+              className="text-white"
+              style={{
+                backgroundColor: '#5B35AA',
+              }}
+            >
+              <AiFillExclamationCircle /> 一鍵領取
+            </Button>
           </div>
         </div>
       </Form>
@@ -227,12 +361,14 @@ export default function CouponList() {
         ) : (
           filteredCoupons.map((coupon) => {
             const hasThisCoupon = isUserHasCoupon(coupon.coupon_id)
-            
+
             return (
               <div
                 key={coupon.coupon_id}
                 className="col-md-6 coupon-item"
-                onClick={() => !hasThisCoupon && handleClaimCoupon(coupon.coupon_id)}
+                onClick={() =>
+                  !hasThisCoupon && handleClaimCoupon(coupon.coupon_id)
+                }
                 style={{ cursor: hasThisCoupon ? 'default' : 'pointer' }}
               >
                 {hasThisCoupon ? (

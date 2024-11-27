@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-11-16 21:15:09
+-- 產生時間： 2024-11-18 03:35:13
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -540,7 +540,11 @@ INSERT INTO `product_detail_img` (`id`, `img_product_id`, `product_img_path`) VA
 (825, 186, 'GA402XV-0046D7940HS-NBL-5_1731762737_0.png'),
 (826, 186, 'GA402XV-0046D7940HS-NBL-2_1731762737_1.png'),
 (827, 186, 'GA402XV-0046D7940HS-NBL-3_1731762737_2.png'),
-(828, 186, 'GA402XV-0046D7940HS-NBL-4_1731762737_3.png');
+(828, 186, 'GA402XV-0046D7940HS-NBL-4_1731762737_3.png'),
+(829, 265, 'Alienware m16 R2-0_1731895358_0.png'),
+(830, 265, 'Alienware m16 R2-1_1731895358_1.png'),
+(831, 265, 'Alienware m16 R2-2_1731895358_2.png'),
+(832, 265, 'Alienware m16 R2-3_1731895358_3.png');
 
 --
 -- 已傾印資料表的索引
@@ -560,7 +564,7 @@ ALTER TABLE `product_detail_img`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `product_detail_img`
 --
 ALTER TABLE `product_detail_img`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=829;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=833;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

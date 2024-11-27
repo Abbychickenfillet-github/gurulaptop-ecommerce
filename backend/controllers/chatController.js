@@ -3,29 +3,31 @@ import { chatService } from '../services/chatService.js'
 import db from '../configs/mysql.js'
 
 export const chatController = {
-  // === 群組申請相關方法 ===
+  // 群組申請相關方法
   getPendingRequests: async (userId) => {
     try {
-      const requests = await ChatRoom.getPendingRequests(userId)
+      const [requests] = await db.execute(
+        `SELECT 
+          gr.*,
+          u.name as sender_name,
+          u.image_path as sender_image,
+          g.group_name,
+          g.creator_id,
+          g.chat_room_id
+        FROM group_requests gr
+        JOIN users u ON gr.sender_id = u.user_id
+        JOIN \`group\` g ON gr.group_id = g.group_id
+        WHERE g.creator_id = ? AND gr.status = 'pending'
+        ORDER BY gr.created_at DESC`,
+        [userId]
+      )
+
       return {
         status: 'success',
         data: requests,
       }
     } catch (error) {
       console.error('獲取待處理申請錯誤:', error)
-      throw new Error('獲取待處理申請失敗')
-    }
-  },
-
-  getRequestHistory: async (userId) => {
-    try {
-      const requests = await ChatRoom.getGroupRequestHistory(userId)
-      return {
-        status: 'success',
-        data: requests,
-      }
-    } catch (error) {
-      console.error('獲取申請歷史錯誤:', error)
       throw error
     }
   },
@@ -36,7 +38,17 @@ export const chatController = {
       await connection.beginTransaction()
 
       const { requestId, status } = requestData
-      const request = await ChatRoom.getGroupRequestById(requestId)
+
+      // 獲取申請詳情與申請者資訊
+      const [[request]] = await connection.execute(
+        `SELECT gr.*, g.chat_room_id, g.group_name, 
+                u.name as sender_name, u.image_path as sender_image, g.creator_id
+         FROM group_requests gr
+         JOIN \`group\` g ON gr.group_id = g.group_id
+         JOIN users u ON gr.sender_id = u.user_id
+         WHERE gr.id = ?`,
+        [requestId]
+      )
 
       if (!request) {
         throw new Error('找不到該申請')
@@ -46,21 +58,33 @@ export const chatController = {
         throw new Error('沒有權限處理此申請')
       }
 
-      await ChatRoom.updateGroupRequest(requestId, { status })
+      await connection.execute(
+        'UPDATE group_requests SET status = ?, updated_at = NOW() WHERE id = ?',
+        [status, requestId]
+      )
 
       if (status === 'accepted') {
-        await ChatRoom.addGroupMember(request.group_id, request.sender_id)
+        await connection.execute(
+          'INSERT INTO group_members (group_id, member_id, status) VALUES (?, ?, "accepted")',
+          [request.group_id, request.sender_id]
+        )
 
         if (request.chat_room_id) {
-          await ChatRoom.saveMessage({
-            roomId: request.chat_room_id,
-            senderId: userId,
-            message: JSON.stringify({
-              type: 'system',
-              content: `使用者 ${request.sender_name} 已加入群組`,
-            }),
-            isSystem: true,
+          await connection.execute(
+            'INSERT INTO chat_room_members (room_id, user_id) VALUES (?, ?)',
+            [request.chat_room_id, request.sender_id]
+          )
+
+          // 發送系統消息
+          const systemMessage = JSON.stringify({
+            type: 'system',
+            content: `使用者 ${request.sender_name} 已加入群組`,
           })
+
+          await connection.execute(
+            'INSERT INTO chat_messages (room_id, sender_id, message, is_system) VALUES (?, ?, ?, 1)',
+            [request.chat_room_id, userId, systemMessage]
+          )
 
           // 更新成員數量
           const [[memberCount]] = await connection.execute(
@@ -68,10 +92,15 @@ export const chatController = {
             [request.group_id]
           )
 
+          // 廣播群組更新
           chatService.broadcastToRoom(request.chat_room_id, {
             type: 'groupUpdate',
             groupId: request.group_id,
             memberCount: memberCount.count,
+            senderName: request.sender_name,
+            senderImage: request.sender_image,
+            status: status,
+            timestamp: new Date().toISOString(),
           })
         }
       }
@@ -80,6 +109,10 @@ export const chatController = {
       return {
         status: 'success',
         message: `申請已${status === 'accepted' ? '接受' : '拒絕'}`,
+        data: {
+          sender_name: request.sender_name,
+          sender_image: request.sender_image,
+        },
       }
     } catch (error) {
       await connection.rollback()
