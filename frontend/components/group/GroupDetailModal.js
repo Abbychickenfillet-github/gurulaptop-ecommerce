@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import styles from './GroupDetailModal.module.css'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 
-// 修改預設頭像路徑
 const DEFAULT_AVATAR = '/images/group/default-avatar.png'
 
 const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
@@ -11,16 +10,17 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
 
   useEffect(() => {
     fetchGroupMembers()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupData.id])
 
   const fetchGroupMembers = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3005/api/group/${groupData.id}`
+        `http://localhost:3005/api/group/${groupData.id}`,
+        {
+          credentials: 'include',
+        }
       )
       const data = await response.json()
-      console.log('Received members data:', data)
 
       if (data.status === 'success') {
         setMembers(data.data.group.members || [])
@@ -33,25 +33,13 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
   }
 
   const getImageUrl = (imagePath) => {
-    if (!imagePath) {
-      return DEFAULT_AVATAR
-    }
+    if (!imagePath) return DEFAULT_AVATAR
 
     try {
       const cleanPath = imagePath.replace(/['"]/g, '').trim()
 
       if (cleanPath.startsWith('data:image')) {
-        const base64Part = cleanPath.split(',')[1]
-        return `data:image/png;base64,${base64Part}`
-      }
-
-      if (cleanPath.includes('base64,')) {
-        const base64Content = cleanPath.split('base64,')[1]
-        return `data:image/png;base64,${base64Content}`
-      }
-
-      if (/^[A-Za-z0-9+/=]+$/.test(cleanPath)) {
-        return `data:image/png;base64,${cleanPath}`
+        return cleanPath
       }
 
       if (cleanPath.startsWith('http')) {
@@ -62,20 +50,12 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
         cleanPath.startsWith('/') ? '' : '/'
       }${cleanPath}`
     } catch (error) {
-      console.error('Image processing error:', {
-        error,
-        originalPath: imagePath,
-      })
+      console.error('Image processing error:', error)
       return DEFAULT_AVATAR
     }
   }
 
-  const handleImageError = (member, e) => {
-    console.error('Image load failed:', {
-      member: member.name,
-      imagePath: member.image_path,
-      processedUrl: e.target.src,
-    })
+  const handleImageError = (e) => {
     e.target.src = DEFAULT_AVATAR
     e.target.onerror = null
   }
@@ -87,14 +67,10 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
   return (
     <div
       className={styles.modalBackdrop}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          onClose()
-        }
-      }}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClose()}
     >
       <div className={styles.customModal}>
         <button
@@ -122,7 +98,7 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>活動時間</span>
               <span className={styles.infoValue}>
-                {new Date(groupData.group_time).toLocaleString()}
+                {new Date(groupData.date).toLocaleString()}
               </span>
             </div>
 
@@ -141,27 +117,28 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
               </button>
 
               <div className={styles.usersContainer}>
-                {members.map((member) => {
-                  const imageUrl = getImageUrl(member.image_path)
-                  console.log(`Rendering image for ${member.name}:`, imageUrl)
-
-                  return (
-                    <div
-                      key={member.user_id}
-                      className={styles.userAvatarWrapper}
-                    >
-                      <img
-                        src={imageUrl}
-                        alt={member.name}
-                        className={styles.userAvatar}
-                        onError={(e) => handleImageError(member, e)}
-                      />
-                      <div className={styles.userNameTooltip}>
-                        {member.name}
+                {members.map((member) => (
+                  <div
+                    key={member.user_id}
+                    className={styles.userAvatarWrapper}
+                  >
+                    <img
+                      src={getImageUrl(member.image_path)}
+                      alt={member.name}
+                      className={styles.userAvatar}
+                      onError={handleImageError}
+                    />
+                    <div className={styles.userNameTooltip}>
+                      <div className={styles.tooltipName}>{member.name}</div>
+                      <div className={styles.tooltipGameId}>
+                        遊戲ID: {member.game_id || '未提供'}
+                      </div>
+                      <div className={styles.tooltipDescription}>
+                        {member.description || '尚無自我介紹'}
                       </div>
                     </div>
-                  )
-                })}
+                  </div>
+                ))}
               </div>
 
               <button className={styles.navButton} type="button">

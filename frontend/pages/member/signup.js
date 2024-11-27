@@ -8,17 +8,18 @@ import styles from '@/styles/signUpForm.module.scss'
 import { useRouter } from 'next/router'
 import Swal from 'sweetalert2'
 import { useJumpingLetters } from '@/hooks/jumping-letters-hook'
-
+import Head from 'next/head'
+import 'animate.css';
+import GlowingText from '@/components/dashboard/glowing-text/glowing-text';
 export default function Signup() {
   // 處理失焦
-  const { renderJumpingText } = useJumpingLetters()
+  // const { renderJumpingText } = useJumpingLetters()
 
-  
   const validatePassword = (password) => {
     //函式內宣告2個變數
     const rules = {
       minLength: password.length >= 8,
-      hasUpperCase: /[A-Z]/.test(password),//2
+      hasUpperCase: /[A-Z]/.test(password), //2
       hasLowerCase: /[a-z]/.test(password),
       hasNumber: /\d/.test(password),
     }
@@ -32,11 +33,13 @@ export default function Signup() {
 
     // 函式的返回值
     //  Object.entries() 是產生新的陣列，不會影響到原物件
-    return Object.entries(rules)
-      .filter(([rule, valid]) => !valid)
-      // !valid 意思是找出值是 false 的規則
-      .map(([rule]) => messages[rule])
-      // 用 rule 當作 key 去 messages 物件找對應的訊息
+    return (
+      Object.entries(rules)
+        .filter(([rule, valid]) => !valid)
+        // !valid 意思是找出值是 false 的規則
+        .map(([rule]) => messages[rule])
+    )
+    // 用 rule 當作 key 去 messages 物件找對應的訊息
   }
 
   const router = useRouter()
@@ -111,7 +114,7 @@ export default function Signup() {
 
     try {
       setSubmitError('')
-      
+
       if (!validateForm()) {
         return
       }
@@ -123,7 +126,6 @@ export default function Signup() {
         }))
         return
       }
-
 
       const response = await axios.post(
         `http://localhost:3005/api/signup`,
@@ -180,46 +182,56 @@ export default function Signup() {
 
   return (
     <>
+      <Head>
+        <title>註冊</title>
+      </Head>
+
       <Header />
       <div className={styles['gradient-bg']}>
         <Image
           src="/bgi/signup_bgi.png"
           alt="background"
           layout="fill"
-          objectFit="cover"
+          // style={{objectFit:'cover'}}
+          // objectFit="cover"
           quality={100}
         />
         <div className="container">
-          <div className="row d-flex justify-content-center align-items-center">
-            <div className={`${styles.left} col`}>
-              {/* <h4 className={`text-white ${styles.welcome}`}>Welcome to</h4>
-              <h3 className={`text-white ${styles['guru-laptop']}`}>
-                GURU Laptop */}
+          <div className="row align-items-center">
+            <div className={`${styles.left} col-sm-12  col-md-6 col-lg-6 col d-flex flex-column justify-content-start`}>
+              {/* <i>
+              <h4 className={`text-white  animate__animated animate__zoomIn animate__infinite animate__rubberBand animate__slower	3s ${styles.signup}`}>Sign Up</h4> */}
+                {/* </i> */}
+              {/* <h3 className={`text-white ${styles['guru-laptop']}`}>
+                GURU Laptop </h3>  */}
               {/* </h3> */}
-              <h4 className={styles.white}>
-                {renderJumpingText('Welcome to', 'welcome-text')}
-              </h4>
-              <br />
-              <h3 className={`text-white ${styles['guru-laptop']}`}>
-                {renderJumpingText('LaptopGuru', 'company-name')}
-              </h3>
+              {/* <h4 className={`text-white text-start`}>
+                {/* {renderJumpingText('Welcome to', 'welcome-text')} */}
+                {/* {renderJumpingText('Sign Up to', 'welcome-text')} */}
+              {/* </h4>  */}
+            
+              {/* <h3 className={`text-white ${styles['guru-laptop']}`}> */}
+                {/* {renderJumpingText('LaptopGuru', 'company-name')} */}
+              {/* </h3> */}
+              <i><GlowingText text="Sign Up to"className={`text-white text-md-start`} /></i>
+              <i><GlowingText text="LaptopGuru" className={`text-white text-md-start`}/></i>
             </div>
             <div
-              className={`${styles.right} align-item-center col ${styles['signup-right']} text-white`}
+              className={`${styles.right} align-item-center col ${styles['signup-right']} text-white col-sm-12  col-md-11 col-lg-5`}
             >
               <div className={`${styles.tabs} d-flex justify-content-between`}>
                 <Link
                   className={`${styles.hover} text-decoration-none text-white`}
                   href="/member/login"
                 >
-                  登入Log in
+                  登入
                 </Link>
-                <span className="text-white">|</span>
+                <span className="text-white">| </span>
                 <Link
                   className={`${styles.hover} text-decoration-none text-white`}
                   href="/member/signup"
                 >
-                  註冊Sign Up
+                  註冊
                 </Link>
               </div>
               {submitError && (
@@ -241,7 +253,6 @@ export default function Signup() {
                       className={`form-control ${styles.inputs}`}
                       value={user.email}
                       onChange={handleFieldChange}
-                      
                     />
                     {errors.email && (
                       <div className="error">{errors.email}</div>
@@ -301,7 +312,6 @@ export default function Signup() {
                         onChange={() =>
                           setShowConfirmpassword(!showConfirmpassword)
                         }
-                        
                         className="form-check-input"
                       />
                       <label
@@ -327,7 +337,6 @@ export default function Signup() {
                       className={`form-control ${styles.inputs}`}
                       value={user.phone}
                       onChange={handleFieldChange}
-                      
                     />
                   </div>
 
@@ -335,15 +344,16 @@ export default function Signup() {
                     <label htmlFor="birthdate" className={styles.white}>
                       生日
                     </label>
-                    <input
-                      type="date"
-                      id="birthdate"
-                      name="birthdate"
-                      className={`form-control ${styles.inputs}`}
-                      value={user.birthdate}
-                      onChange={handleFieldChange}
-                      
-                    />
+                    <div className="">
+                      <input
+                        type="date"
+                        id="birthdate"
+                        name="birthdate"
+                        className={`form-control ${styles.inputs}`}
+                        value={user.birthdate}
+                        onChange={handleFieldChange}
+                      />
+                    </div>
                   </div>
 
                   <div className="mb-3">
@@ -356,12 +366,11 @@ export default function Signup() {
                       className={`form-select ${styles.inputs}`}
                       value={user.gender}
                       onChange={handleFieldChange}
-                      
                     >
                       <option value="">請選擇</option>
-                      <option value="女">女</option>
-                      <option value="男">男</option>
-                      <option value="不透漏">不透漏</option>
+                      <option value="female">女</option>
+                      <option value="male">男</option>
+                      <option value="undisclosed">不透漏</option>
                     </select>
                   </div>
 
@@ -374,8 +383,6 @@ export default function Signup() {
                         checked={user.agree}
                         onChange={handleFieldChange}
                         className="form-check-input"
-                        
-
                       />
                       <label
                         htmlFor="agree"
@@ -389,7 +396,10 @@ export default function Signup() {
                     )}
                   </div>
 
-                  <button type="submit" className="btn btn-primary w-100 text-white">
+                  <button
+                    type="submit"
+                    className="btn btn-primary w-100 text-white"
+                  >
                     送出
                   </button>
                 </div>

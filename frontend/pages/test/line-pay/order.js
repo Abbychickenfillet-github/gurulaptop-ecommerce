@@ -40,6 +40,7 @@ export default function Order() {
     // 送至server建立訂單，packages與order id由server產生
     // products將會組合在packages屬性之下
     const res = await axiosInstance.post('/line-pay/create-order', {
+      userId: auth.userData.user_id,
       amount: quantity1 * price1 + quantity2 * price2,
       products: [
         {

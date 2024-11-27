@@ -4,9 +4,9 @@ import db from '../configs/mysql.js'
 
 class ChatService {
   constructor() {
-    this.clients = new Map()
-    this.rooms = new Map()
-    this.messageQueue = new Map()
+    this.clients = new Map() // 儲存所有連線中的客戶端
+    this.rooms = new Map() // 儲存所有活動中的聊天室
+    this.messageQueue = new Map() // 離線消息隊列
   }
 
   handleConnection(ws, req) {
@@ -42,7 +42,7 @@ class ChatService {
       console.error('WebSocket 客戶端錯誤:', error)
     })
 
-    // 定期檢查連線狀態
+    // 每30秒檢查一次連線狀態
     const pingInterval = setInterval(() => {
       if (ws.isAlive === false) {
         clearInterval(pingInterval)
@@ -82,10 +82,11 @@ class ChatService {
     const { userID } = data
 
     try {
+      // 設置WebSocket的用戶ID
       ws.userID = userID
       this.clients.set(userID, ws)
 
-      // 處理離線訊息
+      // 處理離線消息
       const pendingMessages = this.messageQueue.get(userID) || []
       while (pendingMessages.length > 0) {
         const message = pendingMessages.shift()
@@ -93,6 +94,7 @@ class ChatService {
       }
       this.messageQueue.delete(userID)
 
+      // 發送註冊成功的消息
       ws.send(
         JSON.stringify({
           type: 'registered',
@@ -122,7 +124,7 @@ class ChatService {
       try {
         await connection.beginTransaction()
 
-        // 檢查發送者是否為群組成員
+        // 檢查是否為群組成員
         const [[memberCheck]] = await connection.execute(
           `SELECT gm.* 
            FROM group_members gm
@@ -136,7 +138,7 @@ class ChatService {
           throw new Error('您不是該群組的成員')
         }
 
-        // 儲存訊息
+        // 儲存消息
         const [result] = await connection.execute(
           'INSERT INTO chat_messages (room_id, sender_id, message, is_private, is_system) VALUES (?, ?, ?, 0, 0)',
           [roomID, fromID, message]
@@ -150,6 +152,7 @@ class ChatService {
 
         await connection.commit()
 
+        // 廣播消息給房間內的所有成員
         const messageData = {
           type: 'message',
           id: result.insertId,
@@ -161,7 +164,6 @@ class ChatService {
           created_at: new Date().toISOString(),
         }
 
-        // 廣播訊息給房間所有成員
         this.broadcastToRoom(roomID, messageData)
       } catch (error) {
         await connection.rollback()
@@ -182,9 +184,16 @@ class ChatService {
 
   async handleGroupRequest(ws, { fromID, groupId, gameId, description }) {
     try {
+      // 獲取申請者資訊
+      const [[sender]] = await db.execute(
+        'SELECT name, image_path FROM users WHERE user_id = ?',
+        [fromID]
+      )
+
       const group = await ChatRoom.getGroupById(groupId)
       if (!group) throw new Error('找不到該群組')
 
+      // 通知群組創建者
       const creatorWs = this.clients.get(group.creator_id)
       if (creatorWs?.readyState === WebSocket.OPEN) {
         creatorWs.send(
@@ -192,6 +201,8 @@ class ChatService {
             type: 'newGroupRequest',
             requestId: group.id,
             fromUser: fromID,
+            senderName: sender.name,
+            senderImage: sender.image_path,
             gameId,
             description,
             groupName: group.group_name,
@@ -200,22 +211,24 @@ class ChatService {
         )
       }
 
-      // 儲存申請記錄
-      const requestId = await ChatRoom.saveGroupRequest({
-        groupId,
-        senderId: fromID,
-        creatorId: group.creator_id,
-        gameId,
-        description,
-      })
+      // 保存申請記錄
+      const [result] = await db.execute(
+        `INSERT INTO group_requests 
+         (group_id, sender_id, creator_id, game_id, description) 
+         VALUES (?, ?, ?, ?, ?)`,
+        [groupId, fromID, group.creator_id, gameId, description]
+      )
 
-      // 發送確認給申請者
+      // 向申請者發送確認
       ws.send(
         JSON.stringify({
           type: 'groupRequestSent',
           success: true,
-          requestId,
+          requestId: result.insertId,
           groupId,
+          senderName: sender.name,
+          senderImage: sender.image_path,
+          timestamp: new Date().toISOString(),
         })
       )
     } catch (error) {
@@ -231,48 +244,57 @@ class ChatService {
 
   async handleGroupRequestResponse(ws, { requestId, status, message }) {
     try {
-      const request = await ChatRoom.getGroupRequestById(requestId)
+      // 獲取申請詳情
+      const [[request]] = await db.execute(
+        `SELECT gr.*, g.chat_room_id, g.group_name,
+                u.name as sender_name, u.image_path as sender_image
+         FROM group_requests gr
+         JOIN \`group\` g ON gr.group_id = g.group_id
+         JOIN users u ON gr.sender_id = u.user_id
+         WHERE gr.id = ?`,
+        [requestId]
+      )
+
       if (!request) throw new Error('找不到該申請')
 
-      await ChatRoom.updateGroupRequest(requestId, { status })
+      await db.execute(
+        'UPDATE group_requests SET status = ?, updated_at = NOW() WHERE id = ?',
+        [status, requestId]
+      )
 
       const connection = await db.getConnection()
       try {
         await connection.beginTransaction()
 
         if (status === 'accepted') {
-          // 加入群組成員
-          await ChatRoom.addGroupMember(request.group_id, request.sender_id)
-
-          // 獲取申請者資訊
-          const [[userData]] = await connection.execute(
-            'SELECT name, game_id FROM group_requests WHERE id = ?',
-            [requestId]
+          // 將申請者加入群組
+          await connection.execute(
+            'INSERT INTO group_members (group_id, member_id, status) VALUES (?, ?, "accepted")',
+            [request.group_id, request.sender_id]
           )
 
-          // 獲取群組聊天室 ID
-          const [[groupData]] = await connection.execute(
-            'SELECT chat_room_id FROM `group` WHERE group_id = ?',
-            [request.group_id]
-          )
-
-          if (groupData.chat_room_id) {
-            // 新增系統訊息
-            const systemMessage = JSON.stringify({
-              type: 'system',
-              content: `${userData.game_id || '使用者'} 已加入群組`,
-            })
-
-            // 儲存系統訊息
+          if (request.chat_room_id) {
+            // 將申請者加入聊天室
             await connection.execute(
-              'INSERT INTO chat_messages (room_id, sender_id, message, is_system) VALUES (?, 0, ?, 1)',
-              [groupData.chat_room_id, systemMessage]
+              'INSERT INTO chat_room_members (room_id, user_id) VALUES (?, ?)',
+              [request.chat_room_id, request.sender_id]
             )
 
-            // 廣播系統訊息
-            this.broadcastToRoom(groupData.chat_room_id, {
+            // 發送系統消息
+            const systemMessage = JSON.stringify({
               type: 'system',
-              content: `${userData.game_id || '使用者'} 已加入群組`,
+              content: `${request.sender_name} 已加入群組`,
+            })
+
+            await connection.execute(
+              'INSERT INTO chat_messages (room_id, sender_id, message, is_system) VALUES (?, 0, ?, 1)',
+              [request.chat_room_id, systemMessage]
+            )
+
+            // 廣播系統消息
+            this.broadcastToRoom(request.chat_room_id, {
+              type: 'system',
+              content: `${request.sender_name} 已加入群組`,
               created_at: new Date().toISOString(),
             })
           }
@@ -280,7 +302,7 @@ class ChatService {
 
         await connection.commit()
 
-        // 通知申請者結果
+        // 通知申請者處理結果
         const applicantWs = this.clients.get(request.sender_id)
         if (applicantWs?.readyState === WebSocket.OPEN) {
           applicantWs.send(
@@ -293,10 +315,21 @@ class ChatService {
                 (status === 'accepted'
                   ? '您的申請已被接受'
                   : '您的申請已被拒絕'),
+              sender_name: request.sender_name,
+              sender_image: request.sender_image,
               timestamp: new Date().toISOString(),
             })
           )
         }
+
+        // 廣播群組更新
+        this.broadcastToRoom(request.chat_room_id, {
+          type: 'groupMemberUpdate',
+          groupId: request.group_id,
+          memberId: request.sender_id,
+          status: status,
+          timestamp: new Date().toISOString(),
+        })
       } catch (error) {
         await connection.rollback()
         throw error
@@ -318,7 +351,6 @@ class ChatService {
     try {
       const connection = await db.getConnection()
       try {
-        // 檢查是否為群組成員
         const [[memberCheck]] = await connection.execute(
           `SELECT gm.* 
            FROM group_members gm
@@ -332,7 +364,6 @@ class ChatService {
           throw new Error('您不是該群組的成員')
         }
 
-        // 將用戶加入房間
         if (!this.rooms.has(roomID)) {
           this.rooms.set(roomID, new Set())
         }
@@ -341,7 +372,6 @@ class ChatService {
         room.add(ws)
         ws.roomID = roomID
 
-        // 獲取房間資訊和成員
         const [[groupInfo]] = await connection.execute(
           `SELECT 
             g.*, 
@@ -353,21 +383,19 @@ class ChatService {
           [roomID]
         )
 
-        // 獲取歷史訊息
         const [messages] = await connection.execute(
           `SELECT 
             cm.*,
             u.name as sender_name,
             u.image_path as sender_image
            FROM chat_messages cm
-           JOIN users u ON cm.sender_id = u.user_id
+           LEFT JOIN users u ON cm.sender_id = u.user_id
            WHERE cm.room_id = ?
            ORDER BY cm.created_at ASC
            LIMIT 50`,
           [roomID]
         )
 
-        // 發送加入成功訊息
         ws.send(
           JSON.stringify({
             type: 'roomJoined',
@@ -381,17 +409,16 @@ class ChatService {
             messages: messages.map((msg) => ({
               id: msg.id,
               sender_id: msg.sender_id,
-              sender_name: msg.sender_name,
+              sender_name: msg.sender_name || '未知用戶',
               sender_image: msg.sender_image,
               message: msg.message,
               created_at: msg.created_at,
-              is_system: msg.is_system,
+              is_system: Boolean(msg.is_system),
             })),
             timestamp: new Date().toISOString(),
           })
         )
 
-        // 廣播成員加入訊息
         this.broadcastToRoom(roomID, {
           type: 'memberJoined',
           userId: fromID,
@@ -419,7 +446,6 @@ class ChatService {
         room.delete(ws)
         delete ws.roomID
 
-        // 廣播成員離開訊息
         this.broadcastToRoom(roomID, {
           type: 'memberLeft',
           userId: fromID,

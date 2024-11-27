@@ -30,7 +30,6 @@ export default function NextBreadCrumbLight({
   const { isReady, asPath } = router
   const pathname = asPath.split('?')[0]
 
-  //const [display, setDisplay] = useState(null)
   const [showChild, setShowChild] = useState(false)
 
   const getPathFormatLocale = useCallback(() => {
@@ -61,7 +60,11 @@ export default function NextBreadCrumbLight({
       // 最後一個
       if (i === array.length - 1) {
         return (
-          <li key={i} className="breadcrumb-item active text-light" aria-current="page">
+          <li
+            key={i}
+            className="breadcrumb-item active text-light"
+            aria-current="page"
+          >
             {v}
           </li>
         )

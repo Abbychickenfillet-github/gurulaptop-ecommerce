@@ -1,5 +1,4 @@
 .main-body {
-  background-color: #000000;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -126,7 +125,6 @@
   z-index: 2;
   animation: slideInRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards
     0.3s;
-  opacity: 0;
 }
 
 .home-laptop {
@@ -143,7 +141,6 @@
   z-index: 2;
   animation: slideInRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards
     0.3s;
-  opacity: 0;
 }
 
 .home-welcome span,
@@ -255,6 +252,11 @@
 
 /* Small mobile screens (576px and below) */
 @media screen and (max-width: 576px) {
+  .home-section1 {
+    display: flex;
+    justify-content: space-between; /* 或使用 flex-end */
+  }
+
   .home-welcome,
   .home-guru,
   .home-laptop {
@@ -262,8 +264,20 @@
   }
 
   .home-guru {
-    bottom: 25px;
-    /* 調整間距 */
+    width: 50%;
+    bottom: 0px;
+  }
+
+  .home-laptop {
+    width: 50%;
+    bottom: 0px;
+    margin-left: auto; /* 這會讓元素靠右 */
+  }
+
+  /* 如果要讓 home-guru 和 home-laptop 並排，可以加入 */
+  .home-section1 {
+    display: flex;
+    flex-wrap: wrap;
   }
 
   .home-welcome span,
@@ -272,7 +286,6 @@
     font-size: 0.7em;
   }
 }
-
 /* banner*/
 .home-section1 {
   display: flex;
@@ -369,17 +382,27 @@
   justify-content: flex-end;
   align-items: center;
   flex-shrink: 0;
+  position: relative; /* 添加 */
+  margin-top: 0px; /* 加入上方間距 */
+  position: relative;
+  width: 40px; /* 設定固定寬度 */
+  height: 200px; /* 調整高度 */
 }
 
 .home-item2 span {
-  height: 22px;
-  transform: rotate(90deg);
-  flex-shrink: 0;
-  align-self: stretch;
+  position: absolute; /* 添加 */
+  white-space: nowrap;
+  width: max-content;
   color: #fff;
   font-size: var(--h8-font-size);
   font-weight: 400;
   letter-spacing: 4px;
+
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(90deg);
+  transform-origin: center;
+  white-space: nowrap;
 }
 
 /* 背景圖片*/
@@ -482,7 +505,13 @@
     height: 30px;
   }
 
+  .home-item2 {
+    width: 100px;
+    height: auto;
+  }
+
   .home-item2 span {
+    transform: translate(-50%, -50%);
     font-size: 14px;
     letter-spacing: 2px;
   }
@@ -672,7 +701,7 @@
 
 .home-section3 {
   display: flex;
-  max-width: 1700px;
+  max-width: 1650px;
   width: 100%;
   padding: 68px 0px;
   flex-direction: column;
@@ -907,30 +936,25 @@
   justify-content: center;
   align-items: center;
 }
-// 到這裡
 
+// 到這裡
 @media screen and (min-width: 1200px) {
+  .home-pic {
+    width: 100%;
+    height: 480px;
+  }
   .home-pic-box {
-    min-width: 450px;
     height: 480px;
   }
 }
 
 @media screen and (max-width: 1199px) {
   .home-pic {
+    width: 100%;
     height: 400px;
   }
-
-  .swiper-slide {
-    height: 400px;
-  }
-
   .home-pic-box {
     height: 400px;
-  }
-
-  .swiper {
-    slidesperview: 2;
   }
 }
 
@@ -938,19 +962,13 @@
   .home-section3 {
     padding: 40px 0;
   }
-
   .home-pic {
+    width: 100%;
     height: 350px;
   }
-
   .home-pic-box {
     height: 350px;
   }
-
-  .swiper {
-    slidesperview: 2;
-  }
-
   .home-title {
     font-size: 24px;
   }
@@ -960,47 +978,44 @@
   .home-section3 {
     padding: 30px 0;
   }
-
   .home-pic {
+    width: 100%;
     height: 300px;
   }
-
   .home-pic-box {
     height: 300px;
   }
-
-  .swiper {
-    slidesperview: 1;
-  }
-
   .home-title {
     font-size: 20px;
   }
-
   .home-pic-body {
     gap: 20px;
     width: 95%;
+    margin: auto;
+  }
+  .swiper-slide {
+    width: 100% !important;
   }
 }
 
 @media screen and (max-width: 480px) {
   .home-section3 {
     padding: 20px 0;
+    max-width: 1440px;
   }
-
   .home-pic {
     height: 250px;
   }
-
   .home-pic-box {
     height: 250px;
   }
-
   .home-title {
     font-size: 18px;
   }
+  .swiper-slide {
+    width: 100% !important;
+  }
 }
-
 /* 熱門商品 */
 .home-section4 {
   display: flex;
@@ -1129,12 +1144,6 @@
   position: relative;
 }
 
-.swiper-slide {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .home-laptop-item img {
   max-width: 100%;
   height: auto;
@@ -1176,7 +1185,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  // background: rgba(0, 0, 0, 0.7);
   color: white;
   padding: 10px;
   text-align: center;
@@ -1185,7 +1194,7 @@
 .product-title h3 {
   margin: 0;
   font-size: 18px;
-}
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 2);}
 
 .home-laptop-item {
   position: relative;
@@ -1201,10 +1210,15 @@
 // 到這裡
 
 /* RWD 適配 */
+.home-slider-container {
+  width: 100%;
+  position: relative;
+}
+
 @media screen and (max-width: 768px) {
-  // .home-nav-arrows {
-  //   padding: 0 10px;
-  // }
+  .home-slider-container {
+    width: 100%;
+  }
 
   .home-arrow-left,
   .home-arrow-right {
@@ -1223,9 +1237,17 @@
     border-bottom: 8px solid transparent;
     border-left: 12px solid #805af5;
   }
+
+  .swiper-slide {
+    width: 100% !important;
+  }
 }
 
 @media screen and (max-width: 480px) {
+  .home-slider-container {
+    width: 100%;
+  }
+
   .home-arrow-left,
   .home-arrow-right {
     width: 30px;
@@ -1243,8 +1265,11 @@
     border-bottom: 6px solid transparent;
     border-left: 9px solid #805af5;
   }
-}
 
+  .swiper-slide {
+    width: 100% !important;
+  }
+}
 .home-card2 {
   display: flex;
   justify-content: center;
@@ -1259,7 +1284,7 @@
 .home-font {
   color: #fff;
   text-align: center;
-  font-size: var(--h7-font-size);
+  font-size: 24px;
   letter-spacing: 7.2px;
 }
 
@@ -1369,15 +1394,16 @@
 
 @media screen and (max-width: 480px) {
   .home-section4 {
-    padding: 30px 10px;
+    padding: 30px 0px;
     align-items: center;
   }
   .home-pic-body2 {
     align-items: center;
-    padding: 0 10px; /* 添加些許padding避免內容貼邊 */
+    // padding: 0 10px;
   }
   .home-card1 {
     gap: 20px;
+    height: 300px;
   }
 
   .home-pic1 {
@@ -1498,8 +1524,12 @@
   padding: 0 40px;
 }
 
+.home-article-title2 h3{
+  font-size: 20px;
+}
+
 .home-article-text {
-  color: #fff;
+  color: #B4B4B4;
   font-size: var(--h9-font-size);
   line-height: 1.5;
   letter-spacing: 3.2px;
@@ -1634,56 +1664,56 @@
 }
 
 /* RWD 調整 */
-@media (max-width: 768px) {
-  .home-article-body {
-    flex-direction: column;
-  }
-
-  .home-article-img,
-  .home-article-content {
-    width: 100%;
-    height: 300px;
-  }
-
-  .home-article {
-    margin-bottom: 40px;
-  }
+.home-article-container {
+  position: relative;
+  overflow: hidden;
 }
 
-//到這裡
+.home-articles-wrapper {
+  transition: transform 0.5s ease-in-out;
+}
+
+.home-article {
+  width: 100%;
+  margin-bottom: 0;
+}
+
 @media screen and (max-width: 1200px) {
   .home-article-img,
   .home-article-content {
     height: 350px;
   }
 
-  .home-article-content {
-    // padding: 30px;
-  }
-
-  .home-hide-on-mobile {
-    display: none;
+  .home-articles-wrapper {
+    width: 100%;
   }
 }
 
 @media screen and (max-width: 768px) {
   .home-section5 {
-    padding: 30px 1%;
-    width: 90%;
-  }
-
-  .home-hide-on-mobile {
-    display: none;
+    padding: 30px 3%;
   }
 
   .home-article-body {
     flex-direction: column;
   }
 
+  .home-article {
+    height: auto;
+  }
+
   .home-article-img,
   .home-article-content {
     width: 100%;
     height: 300px;
+  }
+
+  .home-articles-wrapper {
+    width: 100%;
+  }
+
+  .home-article-container {
+    height: 600px; /* 圖片+內容的總高度 */
   }
 
   .home-article-title2 {
@@ -1700,17 +1730,17 @@
 
 @media screen and (max-width: 480px) {
   .home-section5 {
-    padding: 20px 10px;
+    height: auto;
     gap: 20px;
-  }
-
-  .home-hide-on-mobile {
-    display: none;
   }
 
   .home-article-img,
   .home-article-content {
     height: 250px;
+  }
+
+  .home-article-container {
+    height: 500px; /* 調整總高度 */
   }
 
   .home-article-content {
@@ -1728,7 +1758,6 @@
     -webkit-line-clamp: 3;
   }
 }
-
 /* 活動資訊 */
 .home-activity-section6 {
   display: flex;
@@ -1827,6 +1856,7 @@
   gap: 20px;
   padding: 20px;
   color: #fff;
+  text-shadow: 0px 4px 4px #000;
 }
 
 .home-activity-container2 {
@@ -1850,6 +1880,8 @@
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
+  width: 452px;
+  height: 286px;
 }
 
 .home-activity-btn {
@@ -1923,23 +1955,6 @@
   transition: all 0.3s ease;
 }
 
-/* 使用偽元素實現漸變背景 */
-.home-activity-card4::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(
-    --Linear-6,
-    linear-gradient(270deg, #8678c9 0%, #00013a 49%, #00013a 100%)
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 0;
-}
-
 .home-activity-card4:hover::before {
   opacity: 1;
 }
@@ -1953,7 +1968,8 @@
 .home-activity-card-title {
   padding: 20px;
   color: #fff;
-  font-size: 18px;
+  font-size: 20px;
+  text-shadow: 0px 4px 4px #000;
 }
 
 .home-activity-card-content1,
@@ -1991,26 +2007,6 @@
   // padding: 0 20px;
   justify-content: flex-end;
 }
-
-// .home-back-to-top {
-//   position: fixed;
-//   bottom: 30px;
-//   right: 30px;
-//   width: 50px;
-//   height: 50px;
-//   background-color: #8b00ff;
-//   color: white;
-//   border: none;
-//   border-radius: 50%;
-//   font-size: 24px;
-//   cursor: pointer;
-//   transition: all 0.3s ease;
-//   z-index: 1000;
-//   border-radius: 100px;
-//   background: rgba(255, 255, 255, 0.52);
-//   box-shadow: 0px 0px 20px 2px #6854c7;
-//   backdrop-filter: blur(5px);
-// }
 
 .home-activity-card-3 {
   display: flex;
@@ -2068,6 +2064,7 @@
 .home-activity-card-footer3 {
   position: relative;
   z-index: 2;
+  text-shadow: 0px 4px 4px #000;
 }
 .home-activity-frame:hover {
   transform: scale(1.05);
@@ -2121,10 +2118,14 @@
 .home-activity-card-title,
 .home-activity-card-content1 {
   transition: transform 0.3s ease;
+  text-shadow: 0px 4px 4px #000;
+
 }
 
 .home-activity-frame:hover .home-activity-card-title {
   transform: translateY(-5px);
+  text-shadow: 0px 4px 4px #000;
+
 }
 
 .home-activity-frame:hover .home-activity-card-content1 {
@@ -2175,6 +2176,8 @@
   .home-activity-card-title {
     font-size: 14px;
     padding: 10px;
+    text-shadow: 0px 4px 4px #000;
+
   }
 
   .home-activity-card-content1,
@@ -2251,9 +2254,12 @@
   .home-activity-container2 {
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
+    justify-content: center;
     gap: 20px;
-    overflow: visible;
+    width: 100%;
+    max-width: 1440px;
+    min-height: 484px;
+    padding-top: 22px;
   }
 
   .home-activity-card3 {
@@ -2263,4 +2269,84 @@
   .home-activity-card4 {
     min-height: 150px;
   }
+
+}
+.frontpage-footer{
+  margin-top: 50px;
+}
+
+@media (max-width: 480px) {
+  .frontpage-footer{
+    margin-top: 30px;
+  }
+}
+
+/* 基本樣式設定 */
+.home-activity-card-content1,
+.home-activity-card-content2 {  /* 移除 p，直接選擇整個 content 區塊 */
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  color: #fff;
+  text-shadow: 0px 4px 4px #000;
+}
+
+/* hover 時顯示文字 */
+.home-activity-frame:hover .home-activity-card-title,
+.home-activity-frame:hover .home-activity-card-content1,
+.home-activity-card3:hover .home-activity-card-title,
+.home-activity-card3:hover .home-activity-card-content2,  /* 修改這裡，移除 p */
+.home-activity-card4:hover .home-activity-card-content2 {  /* 修改這裡，移除 p */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 確保背景漸層效果 */
+.home-activity-frame::before,
+.home-activity-card3::before,
+.home-activity-card4::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.7)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.home-activity-frame:hover::before,
+.home-activity-card3:hover::before,
+.home-activity-card4:hover::before {  /* 加上 hover */
+  opacity: 1;
+}
+
+/* 確保內容在漸層上層 */
+.home-activity-card-content1,
+.home-activity-card-content2,
+.home-activity-card-title {
+  position: relative;
+  z-index: 2;
+}
+
+.home-activity-card4::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(
+    --Linear-6,
+    linear-gradient(270deg, #8678c9 0%, #00013a 49%, #00013a 100%)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
 }

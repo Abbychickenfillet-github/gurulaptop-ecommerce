@@ -16,6 +16,7 @@ export default function BuyList(order) {
   const receiver = order.order.receiver
   const phone = order.order.phone
   const address = order.order.address
+  const payment_method = order.order.payment_method
 
   const getOrderDetail = async () => {
     const res = await fetch(
@@ -36,8 +37,23 @@ export default function BuyList(order) {
       const data = await res.json()
       setCouponCode(data.data.coupon.coupon_code)
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     }
+  }
+
+  const goLinePay = () => {
+    MySwal.fire({
+      icon: 'info',
+      title: '確認要導向至LINE Pay進行付款?',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+    }).then((result) => {
+      localStorage.removeItem('store711')
+      if (result.isConfirmed) {
+        window.location.href = `http://localhost:3005/api/line-pay/reserve?orderId=${order_id}`
+      }
+    })
   }
 
   const handlePay = async () => {
@@ -57,9 +73,9 @@ export default function BuyList(order) {
     }
   }
 
-  useEffect(() => {
-    console.log(order_id)
-  }, [order_id])
+  // useEffect(() => {
+  //   // console.log(order_id)
+  // }, [order_id])
 
   useEffect(() => {
     if (order_id) {
@@ -85,8 +101,8 @@ export default function BuyList(order) {
       <Accordion defaultActiveKey="0" className="mb-3">
         <Accordion.Item eventKey="0" className="border-primary">
           <Accordion.Header>
-            <div className="col-10">訂單編號: {order_id}</div>
-            <div className="col-1">
+            <div className="col-md-10 col-8">訂單編號: {order_id}</div>
+            <div className="col-md-1 col-2">
               {alreadyPay ? (
                 <div className="btn btn-success text-light">已付款</div>
               ) : (
@@ -96,31 +112,50 @@ export default function BuyList(order) {
           </Accordion.Header>
           <Accordion.Body>
             <div className="row mb-3">
-              <div className="col-6">訂單日期： {order_date}</div>
-              <div className="col">
+              <div className="col-md-6 col-12">訂單日期： {order_date}</div>
+              <div className="col-md col-12">
                 訂單金額： NT {order.order.order_amount.toLocaleString()}元
               </div>
               <div className="">
                 本筆訂單使用優惠券： {coupon_code == 0 ? '無' : coupon_code}
               </div>
-              <div className="col-6">收件人： {receiver}</div>
-              <div className="col-6">聯絡電話： {phone}</div>
-              <div className="">收件地址： {address}</div>
+              <div className="col-md-6 col-12">收件人： {receiver}</div>
+              <div className="col-md-6 col-12">聯絡電話： {phone}</div>
+              <div className="col-md-6 col-12">收件地址： {address}</div>
+              {payment_method == 1 ? (
+                <div className="col-md-6 col-12">付款方式： Line Pay</div>
+              ) : (
+                <></>
+              )}
+              {payment_method == 0 ? (
+                <div className="col-md-6 col-12">付款方式： 綠界支付</div>
+              ) : (
+                <></>
+              )}
             </div>
             {orderDetail.map((item, index) => {
               return <BuyItemCard key={index} item={item} />
             })}
             {alreadyPay ? (
               <></>
+            ) : payment_method == 1 ? (
+              <div className="d-flex justify-content-end">
+                <button
+                  className="btn btn-primary text-light"
+                  onClick={goLinePay}
+                >
+                  前往Line Pay付款
+                </button>
+              </div>
             ) : (
-              <>
+              <div className="d-flex justify-content-end">
                 <button
                   className="btn btn-primary text-light"
                   onClick={handlePay}
                 >
-                  前往付款
+                  前往綠界支付
                 </button>
-              </>
+              </div>
             )}
           </Accordion.Body>
         </Accordion.Item>

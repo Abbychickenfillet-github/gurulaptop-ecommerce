@@ -32,26 +32,66 @@
 
 .chatLayout {
   width: 1100px;
-  height: 600px; /* 增加高度 */
-  background: rgba(30, 30, 40, 0.6);
+  height: 550px;
+  background: rgba(30, 30, 40, 0.4);
   backdrop-filter: blur(10px);
   border-radius: 0.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
   position: relative;
   display: flex;
-  margin-bottom: 1rem;
   z-index: 1;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.sidebarToggle {
+  display: none;
+  position: fixed;
+  left: 10px;
+  top: 10px;
+  z-index: 1000;
+  background: rgba(93, 63, 211, 0.6);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sidebarToggle:hover {
+  background: rgba(93, 63, 211, 0.8);
+}
+
 .userList {
   width: 240px;
-  background: rgba(30, 30, 40, 0.6);
+  background: rgba(128, 90, 213, 0.2);
   backdrop-filter: blur(10px);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.userListHeader {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(93, 63, 211, 0.2);
+}
+
+.userListHeader h4 {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-size: 1.1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.userListContent {
+  flex: 1;
+  overflow-y: auto;
+  background: rgba(93, 63, 211, 0.1);
 }
 
 .chatContent {
@@ -59,46 +99,97 @@
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 0.05);
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.userItem,
+.roomItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(93, 63, 211, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 2px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.userItem:hover,
+.roomItem:hover {
+  background: rgba(93, 63, 211, 0.2);
+  transform: translateY(-1px);
+}
+
+.roomItem.active {
+  background: rgba(93, 63, 211, 0.3);
+  border-color: rgba(93, 63, 211, 0.5);
+}
+
+.userAvatar,
+.roomAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(93, 63, 211, 0.4);
+  background: rgba(93, 63, 211, 0.2);
+}
+
+.userImage,
+.roomImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.userInfo,
+.roomInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.userName,
+.roomName {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9375rem;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.roomMembers {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+}
+
+.chatContainer {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .messagesContainer {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 0.2rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(128, 90, 213, 0.5) rgba(255, 255, 255, 0.1);
-}
-
-.messagesContainer::-webkit-scrollbar {
-  width: 6px;
-}
-
-.messagesContainer::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-}
-
-.messagesContainer::-webkit-scrollbar-thumb {
-  background: rgba(128, 90, 213, 0.5);
-  border-radius: 3px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.messagesContainer::-webkit-scrollbar-thumb:hover {
-  background: rgba(128, 90, 213, 0.7);
+  gap: 0.5rem;
 }
 
 .messageWrapper {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  animation: fadeIn 0.2s ease;
-  margin-bottom: 0.5rem;
+  width: 100%;
+  background: none;
+  border: none;
 }
 
 .messageContainer {
@@ -106,7 +197,10 @@
   align-items: flex-start;
   gap: 0.75rem;
   max-width: 80%;
-  padding: 0 0.5rem;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
 }
 
 .ownMessage {
@@ -127,7 +221,7 @@
   height: 36px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(128, 90, 213, 0.3);
   background: rgba(128, 90, 213, 0.2);
 }
 
@@ -148,78 +242,51 @@
 }
 
 .messageContent {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.75rem 1rem;
+  background: rgba(93, 63, 211, 0.6);
+  padding: 0.5rem 1rem;
   border-radius: 1rem;
-  max-width: calc(100% - 60px);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  position: relative;
+  min-width: 60px;
+  max-width: 300px;
+  word-wrap: break-word;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .ownMessage .messageContent {
-  background: rgba(128, 90, 213, 0.4);
+  background: rgba(147, 51, 234, 0.7);
 }
 
 .messageText {
-  color: white;
+  color: rgb(255, 255, 255);
   font-size: 0.9375rem;
-  line-height: 1.5;
+  line-height: 1.4;
+  margin: 0;
   word-break: break-word;
-  margin-bottom: 0.25rem;
 }
 
 .messageTime {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.8);
   text-align: right;
+  margin-top: 0.25rem;
 }
-
 .systemMessage {
   align-self: center;
   text-align: center;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgb(255, 255, 255);
   font-size: 0.875rem;
-  padding: 0.5rem 1rem;
-  background: rgba(128, 90, 213, 0.2);
-  border-radius: 1rem;
-  max-width: 80%;
-  margin: 0.5rem auto;
-  animation: fadeIn 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.scrollToBottomButton {
-  position: absolute;
-  right: 1rem;
-  bottom: 1rem;
-  background: rgba(128, 90, 213, 0.8);
-  color: white;
+  padding: 0.2rem 0.2rem;
+  background: none;
   border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-  opacity: 0.8;
-}
-
-.scrollToBottomButton:hover {
-  background: rgba(128, 90, 213, 1);
-  transform: translateY(-2px);
-  opacity: 1;
+  margin: 0.05rem auto;
+  min-width: 60px;
+  max-width: 300px;
 }
 
 .inputArea {
-  width: 1000px;
+  width: 900px;
   backdrop-filter: blur(10px);
-  border-radius: 0.5rem;
-  padding: 0.75rem;
-  margin-top: 0.5rem;
+  padding: 1rem;
+  margin-top: 1rem;
   position: relative;
   z-index: 1;
 }
@@ -232,8 +299,8 @@
 
 .messageInput {
   flex: 1;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(128, 90, 213, 0.15);
+  border: 1px solid rgba(128, 90, 213, 0.3);
   border-radius: 1.5rem;
   padding: 0.75rem 1.25rem;
   color: white;
@@ -244,331 +311,406 @@
 .messageInput:focus {
   border-color: rgba(128, 90, 213, 0.5);
   box-shadow: 0 0 0 2px rgba(128, 90, 213, 0.3);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(128, 90, 213, 0.25);
 }
 
 .messageInput::placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
 
+.messageInput:disabled {
+  background: rgba(128, 90, 213, 0.1);
+  border-color: rgba(128, 90, 213, 0.2);
+  cursor: not-allowed;
+}
+
 .sendButton {
-  background: rgb(128, 90, 213);
+  background: rgba(128, 90, 213, 0.8);
   border: none;
   border-radius: 1.5rem;
   padding: 0.75rem 1.5rem;
   color: white;
   transition: all 0.2s ease;
-  min-width: 80px;
-  font-weight: 500;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
 }
 
-.sendButton:hover {
-  background: rgb(108, 70, 193);
+.sendButton:hover:not(:disabled) {
+  background: rgba(128, 90, 213, 1);
   transform: translateY(-1px);
 }
 
-.sendButton:active {
-  transform: translateY(0);
+.sendButton:disabled {
+  background: rgba(128, 90, 213, 0.4);
+  cursor: not-allowed;
+}
+
+.chatTabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+  background: rgba(93, 63, 211, 0.2);
+}
+
+.chatTab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  background: transparent;
+  border: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chatTab span {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.chatTab:hover {
+  background: rgba(93, 63, 211, 0.3);
+}
+
+.chatTab.active {
+  background: rgba(93, 63, 211, 0.4);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.badge {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: rgba(229, 62, 62, 0.8);
+  color: white;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 0.375rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyList {
+  padding: 2rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.chatHeader {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(93, 63, 211, 0.2);
+}
+
+.leaveButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  background: rgba(229, 62, 62, 0.6);
+  color: white;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.leaveButton:hover {
+  background: rgba(229, 62, 62, 0.8);
+  transform: translateY(-1px);
+}
+
+.leaveButtonText {
+  font-size: 0.875rem;
+}
+
+/* 捲動條樣式 */
+.messagesContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messagesContainer::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.messagesContainer::-webkit-scrollbar-thumb {
+  background: rgba(128, 90, 213, 0.5);
+  border-radius: 3px;
+}
+
+.messagesContainer::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 90, 213, 0.7);
+}
+
+.userListContent::-webkit-scrollbar {
+  width: 6px;
+}
+
+.userListContent::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.userListContent::-webkit-scrollbar-thumb {
+  background: rgba(128, 90, 213, 0.5);
+  border-radius: 3px;
+}
+
+.userListContent::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 90, 213, 0.7);
 }
 
 /* Modal 樣式 */
 .modal {
-  background: rgba(30, 30, 40, 0.95);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .modalHeader {
+  background: rgba(93, 63, 211, 0.2);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
 }
 
 .modalBody {
+  background: rgba(30, 30, 40, 0.95);
   color: white;
 }
 
 .modalInput {
+  background: rgba(128, 90, 213, 0.15);
+  border: 1px solid rgba(128, 90, 213, 0.3);
+  color: white;
+}
+
+.modalInput:focus {
+  background: rgba(128, 90, 213, 0.25);
+  border-color: rgba(128, 90, 213, 0.5);
+  box-shadow: 0 0 0 2px rgba(128, 90, 213, 0.3);
+  color: white;
+}
+
+.modalCancelButton {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
 }
 
-.modalInput:focus {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(128, 90, 213, 0.5);
-  box-shadow: 0 0 0 2px rgba(128, 90, 213, 0.3);
-}
-
-.modalCancelButton {
-  color: white;
-  border-color: rgba(255, 255, 255, 0.2);
+.modalCancelButton:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .modalSubmitButton {
-  background: rgb(128, 90, 213);
+  background: rgba(128, 90, 213, 0.8);
+  border: none;
   color: white;
 }
 
-/* 捲軸樣式 */
-.userListContent::-webkit-scrollbar,
-.messagesContainer::-webkit-scrollbar {
-  width: 4px;
+.modalSubmitButton:hover {
+  background: rgba(128, 90, 213, 1);
 }
 
-.userListContent::-webkit-scrollbar-track,
-.messagesContainer::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.userListContent::-webkit-scrollbar-thumb,
-.messagesContainer::-webkit-scrollbar-thumb {
-  background: rgba(128, 90, 213, 0.3);
-  border-radius: 2px;
-}
-
-.userListContent::-webkit-scrollbar-thumb:hover,
-.messagesContainer::-webkit-scrollbar-thumb:hover {
-  background: rgba(128, 90, 213, 0.5);
-}
-
-.roomsScroll {
-  max-height: calc(100vh - 300px);
-  overflow-y: auto;
-  padding: 0.5rem;
-}
-
-.room {
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 8px;
-  background: rgba(30, 30, 40, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease;
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.room:hover {
-  background: rgba(20, 20, 30, 0.2);
-  border-color: rgba(128, 90, 213, 0.4);
-  transform: translateY(-1px);
-}
-
-.room.active {
-  background: rgba(128, 90, 213, 0.3) !important;
-  border-color: rgba(128, 90, 213, 0.6) !important;
-  color: white !important;
-}
-
-.message {
+/* Loading 容器 */
+.loadingContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  margin-bottom: 1rem;
-  animation: fadeIn 0.2s ease;
-}
-
-.message.own {
-  flex-direction: row-reverse;
-}
-
-.messageContent {
-  max-width: 70%;
-  padding: 0.75rem 1rem;
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-.message.own .messageContent {
-  background: rgba(128, 90, 213, 0.4);
-}
-
-.messageTime {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
-  margin: 0.25rem 0.5rem;
-}
-
-.messageSender {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 0.25rem;
-}
-
-/* 群組列表標題 */
-.roomsListTitle {
-  padding: 1rem;
-  color: white;
-  font-size: 1.1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* 當沒有選擇聊天室時的提示 */
-.noRoomSelected {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  color: rgba(255, 255, 255, 0.5);
-  padding: 2rem;
-  text-align: center;
-}
-
-.noRoomSelected h4 {
-  margin-bottom: 1rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-/* 捲軸樣式優化 */
-.roomsScroll::-webkit-scrollbar {
-  width: 4px;
-}
-
-.roomsScroll::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.roomsScroll::-webkit-scrollbar-thumb {
-  background: rgba(128, 90, 213, 0.3);
-  border-radius: 2px;
-}
-
-.roomsScroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(128, 90, 213, 0.5);
-}
-
-/* 申請相關樣式 */
-.badge {
-  background-color: #ff4444;
+  background: rgba(30, 30, 40, 0.95);
   color: white;
-  padding: 2px 6px;
-  border-radius: 10px;
-  font-size: 12px;
-  margin-left: 5px;
+  font-size: 1.25rem;
+  z-index: 9999;
 }
 
-.requestsList {
-  padding: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(30, 30, 40, 0.6);
-}
-
-.requestItem {
-  padding: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  margin-bottom: 10px;
-  background: rgba(20, 20, 30, 0.3);
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.requestItem p {
-  margin: 5px 0;
-}
-
-.requestActions {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  margin-top: 10px;
-}
-
-.acceptButton {
-  background-color: rgba(40, 167, 69, 0.8);
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.acceptButton:hover {
-  background-color: rgba(40, 167, 69, 1);
-}
-
-.rejectButton {
-  background-color: rgba(220, 53, 69, 0.8);
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.rejectButton:hover {
-  background-color: rgba(220, 53, 69, 1);
-}
-
-.systemMessage {
-  text-align: center;
-  padding: 8px;
-  margin: 8px 0;
-  background: rgba(128, 90, 213, 0.2);
-  border-radius: 4px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.requestContent {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 8px;
-  margin-top: 4px;
-  border-radius: 4px;
-  font-size: 0.9em;
-}
-
-/* 動畫效果 */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* RWD 設計 */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .chatLayout,
   .inputArea {
+    width: 95%;
+  }
+}
+
+@media (max-width: 992px) {
+  .sidebarToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .userList {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    transform: translateX(-100%);
+    width: 280px;
+  }
+
+  .userList.open {
+    transform: translateX(0);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .userListOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+  }
+
+  .userListOverlay.open {
+    display: block;
+  }
+
+  .chatContent {
     width: 100%;
-    max-width: 1000px;
+  }
+
+  .chatLayout {
+    height: calc(100vh - 180px);
+  }
+
+  .chatTitle {
+    margin-left: 50px;
+  }
+
+  .inputArea {
+    margin-top: 0.5rem;
   }
 }
 
 @media (max-width: 768px) {
   .container {
-    padding: 0.5rem;
+    padding: 0.75rem;
   }
 
-  .userList {
-    width: 200px;
-  }
-
-  .messageItem {
+  .messageContainer {
     max-width: 85%;
+  }
+
+  .messageContent {
+    max-width: 250px;
+  }
+
+  .inputForm {
+    gap: 0.5rem;
+  }
+
+  .sendButton {
+    min-width: 80px;
+    padding: 0.75rem 1rem;
+  }
+
+  .chatTitle {
+    font-size: 1.5rem;
   }
 }
 
 @media (max-width: 576px) {
-  .chatLayout {
-    flex-direction: column;
-    height: auto;
+  .container {
+    padding: 0.5rem;
   }
 
-  .userList {
-    width: 100%;
-    height: 150px;
+  .chatLayout {
+    height: calc(100vh - 140px);
+  }
+
+  .inputArea {
+    padding: 0.5rem;
   }
 
   .inputForm {
+    gap: 0.5rem;
     flex-direction: column;
   }
 
-  .messageInput,
+  .messageInput {
+    width: 100%;
+    padding: 0.5rem 1rem;
+  }
+
   .sendButton {
     width: 100%;
+    padding: 0.5rem 1rem;
+  }
+
+  .userList {
+    width: 260px;
+  }
+
+  .messageContainer {
+    max-width: 90%;
+  }
+
+  .messageContent {
+    max-width: 200px;
+  }
+
+  .chatTitle {
+    font-size: 1.25rem;
+    margin-left: 45px;
+  }
+
+  .avatarWrapper {
+    width: 32px;
+    height: 32px;
+  }
+
+  .senderName {
+    font-size: 0.7rem;
+  }
+
+  .userListContent {
+    max-height: calc(100vh - 60px);
+  }
+
+  .chatHeader {
+    padding: 0.5rem;
+  }
+
+  .leaveButton {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .leaveButtonText {
+    font-size: 0.8rem;
+  }
+
+  .userItem,
+  .roomItem {
+    padding: 0.5rem;
+  }
+
+  .userAvatar,
+  .roomAvatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .userName,
+  .roomName {
+    font-size: 0.875rem;
+  }
+
+  .roomMembers {
+    font-size: 0.7rem;
   }
 }

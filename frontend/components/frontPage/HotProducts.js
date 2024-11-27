@@ -10,33 +10,21 @@ const HotProducts = () => {
   const products = [
     {
       id: 1,
-      image: '/images/index/banner_05.jpg',
-      title: 'Product 1',
-      link: 'https://www.bilibili.com/video/BV1jkxyeVEG5/?spm_id_from=333.788.player.switch&vd_source=1b25005216ba454333811619f6788cea',
+      image: '/images/index/banner_05.png',
+      title: 'ROG Strix SCAR 17',
+      link: 'http://localhost:3000/product/194',
     },
     {
       id: 2,
-      image: '/images/index/banner_06.jpg',
-      title: 'Product 2',
-      link: 'https://www.bilibili.com/video/BV1jkxyeVEG5/?spm_id_from=333.788.player.switch&vd_source=1b25005216ba454333811619f6788cea',
+      image: '/images/index/banner_06.png',
+      title: 'DELL XPS 16',
+      link: 'http://localhost:3000/product/272',
     },
     {
       id: 3,
-      image: '/images/index/banner_07.jpg',
-      title: 'Product 3',
-      link: 'https://www.bilibili.com/video/BV1jkxyeVEG5/?spm_id_from=333.788.player.switch&vd_source=1b25005216ba454333811619f6788cea',
-    },
-    {
-      id: 4,
-      image: '/images/index/banner_07.jpg',
-      title: 'Product 2',
-      link: 'https://www.bilibili.com/video/BV1jkxyeVEG5/?spm_id_from=333.788.player.switch&vd_source=1b25005216ba454333811619f6788cea',
-    },
-    {
-      id: 5,
-      image: '/images/index/banner_07.jpg',
-      title: 'Product 2',
-      link: 'https://www.bilibili.com/video/BV1jkxyeVEG5/?spm_id_from=333.788.player.switch&vd_source=1b25005216ba454333811619f6788cea',
+      image: '/images/index/banner_07.png',
+      title: 'ASUS ExpertBook B5 OLED',
+      link: 'http://localhost:3000/product/60',
     },
   ]
 
@@ -61,6 +49,29 @@ const HotProducts = () => {
             }}
             virtual
             className="home-slider-container"
+            breakpoints={{
+              // >= 1200px
+              1200: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+              },
+              // >= 992px
+              992: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              // >= 768px
+              768: {
+                slidesPerView: 1,
+                spaceBetween: 10,
+              },
+              // < 768px
+              0: {
+                slidesPerView: 1,
+                spaceBetween: 10,
+                centeredSlides: true,
+              },
+            }}
           >
             {products.map((product, index) => (
               <SwiperSlide key={product.id} virtualIndex={index}>

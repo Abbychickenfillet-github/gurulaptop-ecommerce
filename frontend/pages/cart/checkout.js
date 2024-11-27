@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
+import Head from 'next/head'
 
 export default function Checkout(props) {
   useEffect(() => {
@@ -55,6 +56,10 @@ export default function Checkout(props) {
 
   return (
     <>
+      <Head>
+        <title>結帳確認</title>
+      </Head>
+
       <div className="vh-100">
         <Link href="/dashboard">
           <div className={`btn btn-primary`}>回到會員中心{}</div>

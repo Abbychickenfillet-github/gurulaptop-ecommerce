@@ -66,10 +66,13 @@ router.get('/all', async function (req, res) {
   try {
     connection = await db.getConnection()
     const [groups] = await connection.query(`
-      SELECT g.*, u.name as creator_name, COUNT(DISTINCT gm.member_id) as member_count 
+      SELECT g.*, u.name as creator_name, 
+             COUNT(DISTINCT gm.member_id) as member_count,
+             e.event_name 
       FROM \`group\` g
       LEFT JOIN users u ON g.creator_id = u.user_id
       LEFT JOIN group_members gm ON g.group_id = gm.group_id
+      LEFT JOIN event_type e ON g.event_id = e.event_id
       GROUP BY g.group_id
       ORDER BY g.creat_time DESC
     `)
@@ -83,6 +86,36 @@ router.get('/all', async function (req, res) {
     return res.json({
       status: 'error',
       message: '獲取群組失敗',
+    })
+  } finally {
+    if (connection) connection.release()
+  }
+})
+
+// GET - 獲取所有活動的揪團
+router.get('/events', async function (req, res) {
+  let connection
+  try {
+    connection = await db.getConnection()
+    const [events] = await connection.query(`
+      SELECT DISTINCT e.event_id, e.event_name 
+      FROM \`group\` g 
+      JOIN event_type e ON g.event_id = e.event_id
+      WHERE g.event_id IS NOT NULL
+      GROUP BY e.event_id
+      HAVING COUNT(g.group_id) > 0
+      ORDER BY e.event_start_time DESC
+    `)
+
+    return res.json({
+      status: 'success',
+      data: { events },
+    })
+  } catch (error) {
+    console.error('獲取活動揪團失敗:', error)
+    return res.status(500).json({
+      status: 'error',
+      message: '獲取活動揪團失敗',
     })
   } finally {
     if (connection) connection.release()
@@ -164,14 +197,12 @@ router.get('/:id', async function (req, res) {
   try {
     connection = await db.getConnection()
     const [groups] = await connection.query(
-      `
-      SELECT g.*, 
+      `SELECT g.*, 
              (SELECT COUNT(*) FROM group_members WHERE group_id = g.group_id AND status = 'accepted') as member_count,
              u.name as creator_name
       FROM \`group\` g
       LEFT JOIN users u ON g.creator_id = u.user_id
-      WHERE g.group_id = ?
-    `,
+      WHERE g.group_id = ?`,
       [req.params.id]
     )
 
@@ -182,14 +213,17 @@ router.get('/:id', async function (req, res) {
       })
     }
 
-    // 獲取群組成員
+    // 獲取群組成員及其申請資訊
     const [members] = await connection.query(
-      `
-      SELECT u.user_id, u.name, u.image_path, gm.status, gm.join_time
-      FROM group_members gm
-      JOIN users u ON gm.member_id = u.user_id
-      WHERE gm.group_id = ?
-    `,
+      `SELECT u.user_id, u.name, u.image_path, gm.status, gm.join_time,
+              gr.game_id, gr.description
+       FROM group_members gm
+       JOIN users u ON gm.member_id = u.user_id
+       LEFT JOIN (
+         SELECT * FROM group_requests 
+         WHERE status = 'accepted'
+       ) gr ON gr.group_id = gm.group_id AND gr.sender_id = gm.member_id
+       WHERE gm.group_id = ? AND gm.status = 'accepted'`,
       [req.params.id]
     )
 
@@ -210,7 +244,6 @@ router.get('/:id', async function (req, res) {
     if (connection) connection.release()
   }
 })
-
 // POST - 建立新群組
 router.post('/', checkAuth, upload.single('group_img'), async (req, res) => {
   let connection
@@ -220,7 +253,8 @@ router.post('/', checkAuth, upload.single('group_img'), async (req, res) => {
 
     // 從 token 中獲取用戶 ID
     const creator_id = req.user.user_id
-    const { group_name, description, max_members, group_time } = req.body
+    const { group_name, description, max_members, group_time, event_id } =
+      req.body
     const group_img = req.file ? `/uploads/groups/${req.file.filename}` : ''
 
     // 驗證必要欄位
@@ -265,7 +299,7 @@ router.post('/', checkAuth, upload.single('group_img'), async (req, res) => {
 
     // 新增群組
     const [groupResult] = await connection.query(
-      'INSERT INTO `group` (group_name, description, creator_id, max_members, group_img, chat_room_id, creat_time, group_time) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?)',
+      'INSERT INTO `group` (group_name, description, creator_id, max_members, group_img, chat_room_id, creat_time, group_time, event_id) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?)',
       [
         group_name.trim(),
         description.trim(),
@@ -274,6 +308,7 @@ router.post('/', checkAuth, upload.single('group_img'), async (req, res) => {
         group_img,
         chatRoomResult.insertId,
         group_time,
+        event_id || null,
       ]
     )
 

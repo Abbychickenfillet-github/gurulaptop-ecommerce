@@ -1,35 +1,82 @@
+import Link from 'next/link'
+
 export default function MyFooter() {
   return (
     <footer>
-      <div className="conatiner p-5">
-        <div className="row m-3 border-bottom border-light">
-          <div className="col-5">
-            <div className="logo">
-              <img src="/logo.svg" alt="網站 Logo" />
+      <div className="container footer-side">
+        <div className="row m-3 border-bottom border-secondary footer-row">
+
+          <div className="footer-link col-2">
+            <Link
+              className="text-secondary mb-3 d-block text-decoration-none"
+              href=""
+            >
+              關於我們
+            </Link>
+            <Link
+              className="text-secondary mb-3 d-block text-decoration-none"
+              href=""
+            >
+              加入我們
+            </Link>
+            <Link
+              className="text-secondary mb-3 d-block text-decoration-none"
+              href=""
+            >
+              最新優惠
+            </Link>
+          </div>
+          <div className="footer-link col-2">
+            <Link
+              className="text-secondary mb-3 d-block text-decoration-none"
+              href=""
+            >
+              產品列表
+            </Link>
+            <Link
+              className="text-secondary mb-3 d-block text-decoration-none"
+              href=""
+            >
+              租賃規則
+            </Link>
+            <Link
+              className="text-secondary mb-3 d-block text-decoration-none"
+              href=""
+            >
+              比看看
+            </Link>
+          </div>
+          <div className="footer-link col">
+            <Link
+              className="text-secondary mb-3 d-block text-decoration-none"
+              href=""
+            >
+              最新文章
+            </Link>
+            <Link
+              className="text-secondary mb-3 d-block text-decoration-none"
+              href=""
+            >
+              來揪團
+            </Link>
+          </div>
+          <div className="col-3 d-flex justify-content-end footer-logo-container">
+            <div className="footer-logo">
+              <img src="/logo2.svg" alt="網站 Logo" />
             </div>
-          </div>
-          <div className="col">
-            <div className="text-light mb-2">關於我們</div>
-            <div className="text-light mb-2">加入我們</div>
-            <div className="text-light">最新優惠</div>
-          </div>
-          <div className="col">
-            <div className="text-light mb-2">產品列表</div>
-            <div className="text-light mb-2">租賃規則</div>
-            <div className="text-light">比看看!</div>
-          </div>
-          <div className="col">
-            <div className="text-light mb-2">最新文章</div>
-            <div className="text-light mb-2">來揪團</div>
           </div>
           <div className="mb-4" />
         </div>
-        <div className="row p-3">
-          <div className="col">
-            <img src="/Icon-fb.svg" alt="Facebook 圖標" className="me-3" />
-            <img src="/Icon-ig.svg" alt="Instagram 圖標" />
+        <div className="p-3 footer-row">
+          <div className="col mb-3">
+            <Link className="text-secondary mb-2 text-decoration-none" href="">
+              <img src="/Icon-fb2.svg" alt="Facebook 圖標" className="me-3" />
+            </Link>
+            <Link className="text-secondary mb-2 text-decoration-none" href="">
+              <img src="/Icon-ig2.svg" alt="Instagram 圖標" />
+            </Link>
           </div>
-          <div className="col text-light text-end">© 2024 Hello, Inc.</div>
+          <div className="col text-secondary text-end">© 2024 Hello, Inc.</div>
         </div>
       </div>
     </footer>

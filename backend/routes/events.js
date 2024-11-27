@@ -4,19 +4,80 @@ import { checkAuth } from './auth.js'
 
 const router = express.Router()
 
+// 獲取所有唯一的遊戲類型
+router.get('/filters/types', async (req, res) => {
+  try {
+    const query = `
+      SELECT DISTINCT event_type 
+      FROM event_type 
+      WHERE valid = 1 
+      ORDER BY event_type ASC
+    `
+    const [types] = await db.query(query)
+
+    res.json({
+      code: 200,
+      message: 'success',
+      data: types.map((type) => type.event_type),
+    })
+  } catch (error) {
+    console.error('Error fetching game types:', error)
+    res.status(500).json({
+      code: 500,
+      message: '獲取遊戲類型失敗',
+      error: error.message,
+    })
+  }
+})
+
+// 獲取所有唯一的平台
+router.get('/filters/platforms', async (req, res) => {
+  try {
+    const query = `
+      SELECT DISTINCT event_platform 
+      FROM event_type 
+      WHERE valid = 1 
+      ORDER BY event_platform ASC
+    `
+    const [platforms] = await db.query(query)
+
+    res.json({
+      code: 200,
+      message: 'success',
+      data: platforms.map((platform) => platform.event_platform),
+    })
+  } catch (error) {
+    console.error('Error fetching platforms:', error)
+    res.status(500).json({
+      code: 500,
+      message: '獲取平台列表失敗',
+      error: error.message,
+    })
+  }
+})
+
 // 獲取活動列表
 router.get('/', async (req, res) => {
   try {
-    const { page = 1, pageSize = 12, status = '所有活動' } = req.query
+    const {
+      page = 1,
+      pageSize = 12,
+      status = '',
+      type = '',
+      platform = '',
+      teamType = '',
+      keyword = '',
+    } = req.query
     const offset = (page - 1) * pageSize
 
+    // 基礎查詢
     let query = `
       SELECT 
         et.*,
         (SELECT COUNT(*) 
          FROM event_registration er 
          WHERE er.event_id = et.event_id 
-         AND er.registration_status = 'active'
+         AND er.registration_status = "active"
         ) as current_participants,
         CASE 
           WHEN NOW() < et.apply_start_time THEN '即將開始報名'
@@ -34,7 +95,72 @@ router.get('/', async (req, res) => {
       WHERE et.valid = 1
     `
 
-    if (status !== '所有活動' && status) {
+    const queryParams = []
+    const countParams = []
+
+    // 條件陣列 - 用於收集所有篩選條件
+    const conditions = []
+
+    // 遊戲類型篩選
+    if (type && type !== '全部遊戲' && type !== '全部遊戲') {
+      conditions.push('et.event_type = ?')
+      queryParams.push(type)
+      countParams.push(type)
+    }
+
+    // 平台篩選
+    if (platform && platform !== '平台') {
+      // 處理 Mobile/PC 格式
+      if (platform === 'Mobile') {
+        conditions.push(
+          '(et.event_platform LIKE ? OR et.event_platform LIKE ?)'
+        )
+        queryParams.push('Mobile%', '%Mobile%')
+        countParams.push('Mobile%', '%Mobile%')
+      } else if (platform === 'PC') {
+        conditions.push(
+          '(et.event_platform LIKE ? OR et.event_platform LIKE ?)'
+        )
+        queryParams.push('PC%', '%PC%')
+        countParams.push('PC%', '%PC%')
+      } else {
+        conditions.push('et.event_platform = ?')
+        queryParams.push(platform)
+        countParams.push(platform)
+      }
+    }
+
+    // 個人/團隊篩選
+    if (teamType && teamType !== '個人/團隊') {
+      let dbTeamType
+      if (teamType === '團隊') {
+        dbTeamType = '團體'
+      } else if (teamType === '個人') {
+        dbTeamType = '個人'
+      }
+
+      if (dbTeamType) {
+        conditions.push('et.individual_or_team = ?')
+        queryParams.push(dbTeamType)
+        countParams.push(dbTeamType)
+      }
+    }
+
+    // 關鍵字搜尋
+    if (keyword && keyword.trim()) {
+      conditions.push(`(
+        LOWER(et.event_name) LIKE LOWER(?) OR
+        LOWER(et.event_type) LIKE LOWER(?) OR
+        LOWER(et.event_platform) LIKE LOWER(?) OR
+        LOWER(et.event_content) LIKE LOWER(?)
+      )`)
+      const searchTerm = `%${keyword.trim()}%`
+      queryParams.push(searchTerm, searchTerm, searchTerm, searchTerm)
+      countParams.push(searchTerm, searchTerm, searchTerm, searchTerm)
+    }
+
+    // 狀態篩選
+    if (status) {
       const statusCondition = {
         進行中: 'NOW() BETWEEN et.apply_end_time AND et.event_end_time',
         報名中: 'NOW() BETWEEN et.apply_start_time AND et.apply_end_time',
@@ -43,16 +169,26 @@ router.get('/', async (req, res) => {
       }[status]
 
       if (statusCondition) {
-        query += ` AND ${statusCondition}`
-        countQuery += ` AND ${statusCondition}`
+        conditions.push(statusCondition)
       }
     }
 
+    // 組合所有條件
+    if (conditions.length > 0) {
+      const whereClause = conditions.join(' AND ')
+      query += ` AND (${whereClause})`
+      countQuery += ` AND (${whereClause})`
+    }
+
+    // 添加排序和分頁
     query += ` ORDER BY et.created_at DESC LIMIT ? OFFSET ?`
-    const queryParams = [parseInt(pageSize), offset]
+    queryParams.push(parseInt(pageSize), offset)
+
+    // 執行查詢
+    console.log('Executing query:', query, queryParams)
 
     const [events] = await db.query(query, queryParams)
-    const [totalRows] = await db.query(countQuery)
+    const [totalRows] = await db.query(countQuery, countParams)
 
     res.json({
       code: 200,
@@ -91,7 +227,6 @@ router.get('/', async (req, res) => {
     })
   }
 })
-
 // 獲取單一活動詳情
 router.get('/:id', async (req, res) => {
   try {
@@ -154,6 +289,55 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({
       code: 500,
       message: '獲取活動詳情失敗',
+      error: error.message,
+    })
+  }
+})
+
+// 獲取即將開始報名的活動
+router.get('/upcoming', async (req, res) => {
+  try {
+    const { limit = 3 } = req.query
+
+    const query = `
+      SELECT 
+        et.*,
+        (SELECT COUNT(*) 
+         FROM event_registration er 
+         WHERE er.event_id = et.event_id 
+         AND er.registration_status = "active"
+        ) as current_participants
+      FROM event_type et
+      WHERE et.valid = 1
+      AND NOW() < et.apply_start_time
+      ORDER BY et.apply_start_time ASC
+      LIMIT ?
+    `
+
+    const [events] = await db.query(query, [parseInt(limit)])
+
+    res.json({
+      code: 200,
+      message: 'success',
+      data: events.map((event) => ({
+        id: event.event_id,
+        name: event.event_name,
+        type: event.event_type,
+        platform: event.event_platform,
+        teamType: event.individual_or_team,
+        picture: event.event_picture,
+        applyStartTime: event.apply_start_time,
+        applyEndTime: event.apply_end_time,
+        eventStartTime: event.event_start_time,
+        maxPeople: event.maximum_people,
+        currentParticipants: parseInt(event.current_participants) || 0,
+      })),
+    })
+  } catch (error) {
+    console.error('Error fetching upcoming events:', error)
+    res.status(500).json({
+      code: 500,
+      message: '獲取即將開始報名活動失敗',
       error: error.message,
     })
   }
@@ -647,6 +831,58 @@ router.get('/:eventId/registrations', checkAuth, async (req, res) => {
     res.status(500).json({
       code: 500,
       message: '獲取報名列表失敗',
+      error: error.message,
+    })
+  }
+})
+
+// 獲取所有唯一的遊戲類型
+router.get('/filters/types', async (req, res) => {
+  try {
+    const query = `
+      SELECT DISTINCT event_type 
+      FROM event_type 
+      WHERE valid = 1 
+      ORDER BY event_type ASC
+    `
+    const [types] = await db.query(query)
+
+    res.json({
+      code: 200,
+      message: 'success',
+      data: types.map((type) => type.event_type),
+    })
+  } catch (error) {
+    console.error('Error fetching game types:', error)
+    res.status(500).json({
+      code: 500,
+      message: '獲取遊戲類型失敗',
+      error: error.message,
+    })
+  }
+})
+
+// 獲取所有唯一的平台
+router.get('/filters/platforms', async (req, res) => {
+  try {
+    const query = `
+      SELECT DISTINCT event_platform 
+      FROM event_type 
+      WHERE valid = 1 
+      ORDER BY event_platform ASC
+    `
+    const [platforms] = await db.query(query)
+
+    res.json({
+      code: 200,
+      message: 'success',
+      data: platforms.map((platform) => platform.event_platform),
+    })
+  } catch (error) {
+    console.error('Error fetching platforms:', error)
+    res.status(500).json({
+      code: 500,
+      message: '獲取平台列表失敗',
       error: error.message,
     })
   }

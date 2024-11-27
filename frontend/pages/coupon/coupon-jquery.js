@@ -11,6 +11,7 @@ import CouponList from '@/components/coupon/coupon-list-components'
 import { useRouter } from 'next/router'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+
 const MySwal = withReactContent(Swal)
 
 export default function CouponPageJquery() {

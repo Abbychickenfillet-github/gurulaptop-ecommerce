@@ -7,11 +7,14 @@ import nodemailer from 'nodemailer'
 const transport = {
   service:'gmail',
   port:587,
-  secure:false,
+  secure:true,
   auth:{
     user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD//
+    pass: process.env.GMAIL_APP_PASSWORD
   },
+  tls: {
+    rejectUnauthorized: false  // 添加這個設定可以避免某些 SSL 問題
+  }
 }
 
 
