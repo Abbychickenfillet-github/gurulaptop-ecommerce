@@ -144,23 +144,7 @@ export const AuthProvider = ({ children }) => {
             resolve()
           }),
         ])
-        setAuth({
-          isAuth: false,
-          user_id: 0,
-          name: '',
-          phone: '',
-          created_at: '',
-          gender: '',
-          country: '',
-          city: '',
-          district: '',
-          road_name: '',
-          detailed_address: '',
-          birthdate: '',
-          level: '',
-          image_path: '',
-          // 共13 col
-        })
+       
       }
     } catch (error) {
       console.error('登出錯誤:', error)

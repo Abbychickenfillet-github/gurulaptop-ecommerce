@@ -37,7 +37,7 @@ export default function BuyList(order) {
       const data = await res.json()
       setCouponCode(data.data.coupon.coupon_code)
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     }
   }
 
@@ -73,9 +73,9 @@ export default function BuyList(order) {
     }
   }
 
-  useEffect(() => {
-    console.log(order_id)
-  }, [order_id])
+  // useEffect(() => {
+  //   // console.log(order_id)
+  // }, [order_id])
 
   useEffect(() => {
     if (order_id) {

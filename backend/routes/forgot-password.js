@@ -52,7 +52,7 @@ router.post('/send', async (req, res) => {
 
       // 發送郵件
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: process.env.GMAIL_USER,
         to: email,
         subject: '密碼重置通知',
         html: `
