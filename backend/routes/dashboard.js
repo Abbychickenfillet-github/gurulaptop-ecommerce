@@ -18,8 +18,7 @@ router.get('/all', async function (req, res) {
     return res.status(500).json({ status: 'error', message: '無法連接' })
   }
 })
-// 給userEditInfo.js的useEffect用 順序有沒有關係?
-// 關於如何將使用者資訊串到 :user_id 的路由:
+
 // 在 /api/dashboard/:user_id 的路由中,我們使用了 req.params 來獲取 URL 中的動態參數 user_id。然後,我們使用這個 user_id 來查詢資料庫,找到對應的使用者資訊。
 router.get('/:user_id', async function (req, res) {
   try {
