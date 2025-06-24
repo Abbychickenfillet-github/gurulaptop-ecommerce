@@ -38,7 +38,7 @@ export default function CouponUser() {
   // 獲取使用者優惠券資料
   const getUserCoupons = async () => {
     if (!userId) {
-      setError('請先登入')
+      setError('請先登入3')
       setLoading(false)
       return
     }
@@ -93,7 +93,7 @@ export default function CouponUser() {
   const handleCartCoupon = (couponId) => {
     if (!userId) {
       MySwal.fire({
-        title: '請先登入',
+        title: '請先登入4',
         text: '需要登入才能使用優惠券',
         icon: 'warning',
       })

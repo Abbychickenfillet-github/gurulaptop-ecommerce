@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from '@/styles/signUpForm.module.scss'
 import Swal from 'sweetalert2'
 import Image from 'next/image'
@@ -14,6 +14,7 @@ import { useLoader } from '@/hooks/use-loader'
 import Head from 'next/head'
 import GlitchText from '@/components/dashboard/glitch-text/glitch-text'
 import GlowingText from '@/components/dashboard/glowing-text/glowing-text';
+import {auth} from '@/hooks/use-auth'
 
 export default function LogIn(props) {
   const [showpassword, setShowpassword] = useState(false)
@@ -66,6 +67,12 @@ export default function LogIn(props) {
     }
   }
 
+  useEffect(() => {
+    // 如果用戶已登入，重定向到儀表板
+    if (auth?.isAuth) {
+      router.replace('/dashboard')
+    }
+  }, [auth?.isAuth])
   return (
     <>
       <Head>

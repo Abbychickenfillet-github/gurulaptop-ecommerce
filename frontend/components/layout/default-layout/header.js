@@ -4,8 +4,11 @@ import { useAuth } from '@/hooks/use-auth'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
 import { MessageCircle, ShoppingCart, Menu } from 'lucide-react'
+import useFirebase from '@/hooks/use-firebase'
+
 
 export default function Header() {
+  const { logoutFirebase } = useFirebase()  // 加入這行
   const { auth, logout } = useAuth()
   const { isAuth, userData } = auth
   const [user_id, setUserId] = useState('')
@@ -42,9 +45,11 @@ export default function Header() {
       })
 
       if (!result.isConfirmed) return
-
+      if(auth?.userData?.google_uid){
+        await logoutFirebase()
+      }
       await logout()
-
+      router.replace('/member/login')
       await Swal.fire({
         title: '登出成功',
         text: '您已成功登出',
@@ -54,7 +59,7 @@ export default function Header() {
       })
 
       setTimeout(() => {
-        router.push('/member/login')
+        router.replace('/member/login')
       }, 1000)
     } catch (error) {
       console.error('登出失敗:', error)

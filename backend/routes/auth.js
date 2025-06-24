@@ -158,20 +158,30 @@ router.post('/login', upload.none(), async (req, res) => {
 
 // 登出
 router.post('/logout', authenticate, (req, res) => {
-  res.clearCookie('accessToken')
-  return res.json({ status: 'success', message: '登出成功' })
+  // 清除 cookie
+  res.clearCookie('accessToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/'
+  })
+  
+  return res.json({ 
+    status: 'success', 
+    message: '登出成功' 
+  })
 })
 
 // 身份驗證中間件
 export const checkAuth = (req, res, next) => {
   try {
     const token =
-      req.headers.authorization?.split(' ')[1] || req.cookies.accessToken
+      req.headers.authorization?.split(' ')[1] || req.cookies.accessToken || req.cookies['Google-accessToken']
 
     if (!token) {
       return res.status(401).json({
         status: 'error',
-        message: '請先登入',
+        message: '請先登入9',
       })
     }
 

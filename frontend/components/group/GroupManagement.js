@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styles from './GroupManagement.module.css'
 import EditGroupModal from './EditGroupModal'
 import Swal from 'sweetalert2'
-
+import {auth, } from '@/hooks/use-auth'
 const GroupManagement = () => {
   const [groups, setGroups] = useState([])
   const [loading, setLoading] = useState(true)
@@ -11,6 +11,7 @@ const GroupManagement = () => {
   const [selectedGroup, setSelectedGroup] = useState(null)
 
   const fetchUserGroups = async () => {
+    if(!auth?.isAuth) return
     try {
       const [memberResponse, creatorResponse] = await Promise.all([
         fetch('http://localhost:3005/api/group/user', {

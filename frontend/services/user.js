@@ -11,7 +11,7 @@ export const checkAuth = async () => {
  * Google Login(Firebase)登入用，providerData為登入後得到的資料
  */
 export const googleLogin = async (providerData = {}) => {
-  return await axiosInstance.post('/google-login', providerData)
+  return await axiosInstance.post('http://localhost:3005/api/google-login', providerData)
 }
 
 /**

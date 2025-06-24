@@ -37,7 +37,7 @@ export default function GroupCreat() {
         if (!response.ok) {
           await Swal.fire({
             icon: 'warning',
-            title: '請先登入',
+            title: '請先登入8',
             text: '即將導向登入頁面...',
             showConfirmButton: false,
             timer: 1500,

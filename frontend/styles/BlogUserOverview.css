@@ -1,0 +1,100 @@
+@charset "UTF-8";
+.BlogUserOverviewCard {
+  background-color: #fff;
+  border: none;
+  height: 15rem;
+  border-radius: 1rem 0 1rem 0;
+  cursor: pointer;
+}
+
+.BlogUserOverviewCard:hover {
+  animation: fadeIn 0.5s;
+}
+
+.BlogUserOverviewCard:hover {
+  background: linear-gradient(270deg, #a793e9 0%, #5346b6 35%, #34246d 70%, #271948 100%);
+}
+
+.BlogUserOverviewCardBodyContent {
+  color: black;
+  font-size: 1rem;
+}
+
+.BlogUserOverviewCardTitle {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  color: black;
+  letter-spacing: 0.2rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  -webkit-line-clamp: 1;
+}
+
+.BlogUserOverviewCardContent {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  color: black;
+  font-size: 1rem;
+  letter-spacing: 0.2rem;
+}
+
+.BlogUserOverviewCardType {
+  width: 8rem;
+  color: black;
+  letter-spacing: 0.2rem;
+  text-wrap: nowrap;
+}
+
+.BlogUserOverviewCardImg {
+  border-radius: 1rem 0 1rem 0;
+}
+
+/* ------------------------------------搜尋欄------------------------------------ */
+.BlogSearchInputStyle {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  /* border-bottom: ; */
+  border-radius: 0;
+  width: 47rem;
+  border-bottom: 1px solid black;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.BlogSearchInputStyle::-moz-placeholder {
+  color: black;
+  font-size: 2rem;
+}
+
+.BlogSearchInputStyle::placeholder {
+  color: black;
+  font-size: 2rem;
+}
+
+.BlogSearchInputStyle:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: transparent;
+  border-bottom: 1px solid black;
+}
+
+.BlogSearchInputStyle:focus::-moz-placeholder {
+  color: transparent;
+}
+
+.BlogSearchInputStyle:focus::placeholder {
+  color: transparent;
+}
+
+.BlogUserOverviewSearchResult {
+  font-size: 2rem;
+}
+
+/* ------------------------------------搜尋欄------------------------------------ *//*# sourceMappingURL=BlogUserOverview.css.map */

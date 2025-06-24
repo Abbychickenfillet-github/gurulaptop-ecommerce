@@ -4,11 +4,14 @@ import { useAuth, logout, setAuth } from '@/hooks/use-auth'
 import axios from 'axios'
 import { taiwanData } from '@/data/address/data.js'
 import styles from '@/styles/dashboard.module.scss'
-
+import SearchableSelect from './searchable-select' // 根據你的文件結構調整路徑
+import router from 'next/router'
+import EnhancedSelect from './Enhanced-select'
+//如果Google登入的user_id沒有清空的話這邊就還會有
 export default function UserProfile() {
   const { auth, setAuth, logout } = useAuth()
   const user_id = auth?.userData?.user_id
- 
+
   const [editableUser, setEditableUser] = useState({
     name: '',
     gender: '',
@@ -27,12 +30,12 @@ export default function UserProfile() {
   })
 
   const [profilePic, setProfilePic] = useState(
-    editableUser.image_path || 
-  (editableUser.gender === 'male' 
-    ? 'signup_login/undraw_profile_2.svg'
-    : editableUser.gender === 'female'
-    ? 'signup_login/undraw_profile_1.svg'
-    : '/Vector.svg')
+    editableUser.image_path ||
+      (editableUser.gender === 'male'
+        ? 'signup_login/undraw_profile_2.svg'
+        : editableUser.gender === 'female'
+        ? 'signup_login/undraw_profile_1.svg'
+        : '/Vector.svg')
   )
   const [uploadStatus, setUploadStatus] = useState('')
   // 沒有寫就是false
@@ -154,17 +157,17 @@ export default function UserProfile() {
       [name]: value,
     }))
   }
-// userInfoEdit.js
-useEffect(() => {
-  setProfilePic(
-    editableUser.image_path || 
-    (editableUser.gender === 'male' 
-      ? 'signup_login/undraw_profile_2.svg'
-      : editableUser.gender === 'female'
-      ? 'signup_login/undraw_profile_1.svg'
-      : '/Vector.svg')
-  )
-}, [editableUser.gender, editableUser.image_path]) // 加入相依性
+  // userInfoEdit.js
+  useEffect(() => {
+    setProfilePic(
+      editableUser.image_path ||
+        (editableUser.gender === 'male'
+          ? 'signup_login/undraw_profile_2.svg'
+          : editableUser.gender === 'female'
+          ? 'signup_login/undraw_profile_1.svg'
+          : '/Vector.svg')
+    )
+  }, [editableUser.gender, editableUser.image_path]) // 加入相依性
 
   useEffect(() => {
     const user_id = auth?.userData?.user_id
@@ -241,33 +244,33 @@ useEffect(() => {
       [name]: value,
     }))
 
-      // 當性別欄位改變時，且使用者沒有上傳過圖片時才更新預設頭貼
-      // 變更下拉式選單沒有改變預設圖片可能是因為原本就有存圖了
-      if (name === 'gender' && !editableUser.image_path) {
-        let defaultProfilePic;
-        switch (value) {
-          case 'female':
-            defaultProfilePic = '/signup_login/undraw_profile_1.svg';
-            break;
-          case 'male':
-            defaultProfilePic = '/signup_login/undraw_profile_2.svg';
-            break;
-          default:
-            defaultProfilePic = '/Vector.svg';
-        }
-        setProfilePic(defaultProfilePic);
-        setSelectedImg(defaultProfilePic);      
-    };
-     // 當性別欄位改變時，同時更新 auth 中的 userData
-  if (name === 'gender') {
-    setAuth((prev) => ({
-      ...prev,
-      userData: {
-        ...prev.userData,
-        gender: value
+    // 當性別欄位改變時，且使用者沒有上傳過圖片時才更新預設頭貼
+    // 變更下拉式選單沒有改變預設圖片可能是因為原本就有存圖了
+    if (name === 'gender' && !editableUser.image_path) {
+      let defaultProfilePic
+      switch (value) {
+        case 'female':
+          defaultProfilePic = '/signup_login/undraw_profile_1.svg'
+          break
+        case 'male':
+          defaultProfilePic = '/signup_login/undraw_profile_2.svg'
+          break
+        default:
+          defaultProfilePic = '/Vector.svg'
       }
-    }))
-  }
+      setProfilePic(defaultProfilePic)
+      setSelectedImg(defaultProfilePic)
+    }
+    // 當性別欄位改變時，同時更新 auth 中的 userData
+    if (name === 'gender') {
+      setAuth((prev) => ({
+        ...prev,
+        userData: {
+          ...prev.userData,
+          gender: value,
+        },
+      }))
+    }
   }
 
   const handleImageChange = (e) => {
@@ -312,9 +315,9 @@ useEffect(() => {
         // email: auth?.userData?.email || editableUser.email,
         // 確保有 email, email已經改成純顯示了所以之前的editableUser裡面的email應該要刪掉
       }
-      delete dataToSubmit.password // 移除 password 欄位
-      delete dataToSubmit.currentPassword // 移除 currentPassword 欄位
-      delete dataToSubmit.newPassword // 移除 newPassword 欄位
+      // delete dataToSubmit.password // 移除 password 欄位
+      // delete dataToSubmit.currentPassword // 移除 currentPassword 欄位
+      // delete dataToSubmit.newPassword // 移除 newPassword 欄位
 
       const response = await axios.put(
         `http://localhost:3005/api/dashboard/${user_id}`,
@@ -326,15 +329,15 @@ useEffect(() => {
         Swal.fire('成功', '用戶資料更新成功', 'success')
         setAuth((prev) => ({
           ...prev,
-          userData: { 
+          userData: {
             ...prev.userData,
             ...dataToSubmit,
-            user_id 
-          }
+            user_id,
+          },
         }))
-      
-      // 替換以上這段
-  
+
+        // 替換以上這段
+
         // 改變的結果是輸入的狀態的物件
       }
     } catch (error) {
@@ -346,7 +349,7 @@ useEffect(() => {
       )
     }
   }
-// 在 userInfoEdit.js 中
+  // 在 userInfoEdit.js 中
 
   const handleDeactivate = async () => {
     // const {logout} = useAuth()
@@ -421,15 +424,18 @@ useEffect(() => {
         setUploadStatus('頭像更新成功！') //有文字算true,沒有算none?
         //除非想防風報攻擊才需要寫得很認真@@
         setAuth((prev) => ({
-          ...prev,
+          ...prev,//prev是React的useState更新函數的一個特殊參數。他代表當前的state值
           userData: {
             ...prev.userData,
-            image_path: selectedImg
+            image_path: selectedImg,
+          },
+        }))
+        const headerResponse = await axios.post(
+          'http://localhost:3005/api/header',
+          {
+            user_id: user_id,
           }
-        }));
-        const headerResponse = await axios.post('http://localhost:3005/api/header', {
-          user_id: user_id
-        });
+        )
         Swal.fire('成功', '頭像更新成功', 'success')
       }
     } catch (error) {
@@ -583,7 +589,7 @@ useEffect(() => {
                             縣市
                           </label>
                           <div className="col-sm-9">
-                            <select
+                            <EnhancedSelect
                               id="city"
                               name="city"
                               className="form-select"
@@ -606,7 +612,7 @@ useEffect(() => {
                                   </optgroup>
                                 )
                               )}
-                            </select>
+                            </EnhancedSelect>
                           </div>
                         </div>
 
@@ -618,7 +624,7 @@ useEffect(() => {
                             鄉鎮市區
                           </label>
                           <div className="col-sm-9">
-                            <select
+                            <EnhancedSelect
                               id="district"
                               name="district"
                               className="form-select"
@@ -637,7 +643,7 @@ useEffect(() => {
                                   {area.AreaName} ({area.ZipCode})
                                 </option>
                               ))}
-                            </select>
+                            </EnhancedSelect>
                           </div>
                         </div>
 
@@ -649,8 +655,8 @@ useEffect(() => {
                             路名
                           </label>
                           <div className="col-sm-9">
-                            <select
-                              id="roadList"
+                            <EnhancedSelect
+                              id="road_name"
                               name="road_name"
                               className="form-select"
                               disabled={
@@ -658,8 +664,9 @@ useEffect(() => {
                               }
                               value={editableUser.road_name}
                               onChange={handleRoadChange}
+                              placeholder="請選擇居住街道"
                             >
-                              <option value="">請選擇居住街道</option>
+                              <option value="">請選擇居住街道路名</option>
                               {roads.map((road) => (
                                 <option
                                   key={road.RoadName}
@@ -668,7 +675,7 @@ useEffect(() => {
                                   {road.RoadName}
                                 </option>
                               ))}
-                            </select>
+                            </EnhancedSelect>
                           </div>
                         </div>
 
@@ -757,10 +764,12 @@ useEffect(() => {
                           src={profilePic}
                           alt="Profile"
                           className="rounded-circle img-fluid mb-3"
-                          style={{ width: '220px', height: '220px', 
+                          style={{
+                            width: '220px',
+                            height: '220px',
                             // margin:'0 auto',
-                            //  position:'relative', 
-                            }}
+                            //  position:'relative',
+                          }}
                         />
                         <div className="mb-3">
                           <label

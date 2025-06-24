@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import axios from 'axios'
 import Link from 'next/link'
@@ -11,6 +11,7 @@ import { useJumpingLetters } from '@/hooks/jumping-letters-hook'
 import Head from 'next/head'
 import 'animate.css';
 import GlowingText from '@/components/dashboard/glowing-text/glowing-text';
+import {auth} from '@/hooks/use-auth'
 export default function Signup() {
   // 處理失焦
   // const { renderJumpingText } = useJumpingLetters()
@@ -179,7 +180,12 @@ export default function Signup() {
       setSubmitError(errorMessage)
     }
   }
-
+  useEffect(() => {
+    // 如果用戶已登入，重定向到儀表板
+    if (auth?.isAuth) {
+      router.replace('/dashboard')
+    }
+  }, [auth?.isAuth])
   return (
     <>
       <Head>

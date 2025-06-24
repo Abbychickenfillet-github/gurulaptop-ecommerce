@@ -5,7 +5,7 @@ const upload = multer()
 const router = express.Router()
 import { generateHash } from '#db-helpers/password-hash.js'
 
-router.post('/', upload.none(), async (req, res, next) => {
+router.post('/', upload.none(), async (req, res) => {
   try {
     const { email, password, phone, birthdate, gender } = req.body
 

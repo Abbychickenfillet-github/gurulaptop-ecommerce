@@ -1,0 +1,205 @@
+@charset "UTF-8";
+.group-creat-wrapper {
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  background-image: url("../public/images/event/event-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  position: relative;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0;
+  margin: 0;
+}
+
+.group-creat-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(55, 5, 67, 0.3);
+}
+
+.group-creat-wrapper > * {
+  position: relative;
+  z-index: 1;
+}
+
+.group-creat-card {
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: #fff;
+}
+
+.group-creat-title {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+.group-creat-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Input & Select 共同樣式 */
+.group-creat-input,
+.group-creat-select {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  padding: 0.625rem 1rem;
+  width: 100%;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+}
+
+/* Select 特定樣式 */
+.group-creat-select {
+  cursor: pointer;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.25rem;
+  padding-right: 2.5rem;
+}
+
+/* Select 選項樣式 */
+.group-creat-select option {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 0.625rem;
+}
+
+/* Focus 狀態 */
+.group-creat-input:focus,
+.group-creat-select:focus {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+  box-shadow: 0 0 0 0.2rem rgba(5, 42, 255, 0.2) !important;
+  outline: none;
+}
+
+/* Placeholder 樣式 */
+.group-creat-input::-moz-placeholder, .group-creat-select::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+.group-creat-input::placeholder,
+.group-creat-select::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Disabled 狀態 */
+.group-creat-input:disabled,
+.group-creat-select:disabled {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  cursor: not-allowed;
+}
+
+.group-creat-label {
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.5rem;
+}
+
+.group-creat-submit {
+  background: rgb(126, 34, 206) !important;
+  border: none !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+.group-creat-submit:hover {
+  background: rgb(107, 33, 168) !important;
+  transform: translateY(-1px);
+}
+
+.group-creat-required {
+  color: rgb(248, 113, 113);
+  margin-left: 4px;
+}
+
+.group-creat-image-preview {
+  width: 100%;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.group-creat-image-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+.group-creat-file-input {
+  display: none;
+}
+
+.group-creat-upload-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.group-creat-upload-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+/* 活動時間輸入框樣式 */
+.group-time-input {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  padding: 0.625rem 1rem;
+  width: 100%;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+}
+
+.group-time-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+.group-time-input:focus {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 0 0 0.2rem rgba(5, 42, 255, 0.2) !important;
+  outline: none;
+}
+
+.group-time-input:disabled {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  cursor: not-allowed;
+}/*# sourceMappingURL=groupCreat.css.map */
