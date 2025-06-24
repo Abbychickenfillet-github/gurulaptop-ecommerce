@@ -46,6 +46,11 @@ export const initUserData = {
   image_path: '',
   remarks: '',
   level: 0,
+  google_uid:null,
+  line_uid:null,
+  photo_url: " ",
+  iat:'' ,
+  exp:'' ,
 }
 // 可以視為webtoken要押的資料
 // 承接登入以後用的
@@ -54,20 +59,19 @@ export const AuthProvider = ({ children }) => {
     isAuth: false,
     userData: initUserData,
   })
-
   // 我的最愛清單使用
   // 變數 函式後面的函式 更改前面變數的內容
-  const [favorites, setFavorites] = useState([])
-
+  // const [favorites, setFavorites] = useState([])
+  
   // 得到我的最愛
   // const handleGetFavorites = async () => {
-  //   const res = await getFavs()
-  //   //console.log(res.data)
-  //   if (res.data.status === 'success') {
-  //     setFavorites(res.data.data.favorites)
-  //   }
-  // }
-
+    //   const res = await getFavs()
+    //   //console.log(res.data)
+    //   if (res.data.status === 'success') {
+      //     setFavorites(res.data.data.favorites)
+      //   }
+      // }
+      
   // useEffect(() => {
   //   if (auth.isAuth) {
   //     // 成功登入後要執行一次向伺服器取得我的最愛清單
@@ -84,6 +88,8 @@ export const AuthProvider = ({ children }) => {
   const loginRoute = '/member/login'
   // 隱私頁面路由，未登入時會，檢查後跳轉至登入頁
   const protectedRoutes = ['/dashboard', '/coupon/coupon-user']
+
+
   const login = async (email, password) => {
     try {
       const response = await fetch('api/login', {
@@ -115,6 +121,33 @@ export const AuthProvider = ({ children }) => {
       console.error('登入失敗：', error)
     }
   }
+
+  const clearAuthState = () => {
+    setAuth({
+      isAuth: false,
+      userData: {
+        user_id: 0,
+        name: '',
+        password: '',
+        gender: '',
+        birthdate: '',
+        phone: '',
+        email: '',
+        country: '',
+        city: '',
+        district: '',
+        road_name: '',
+        detailed_address: '',
+        image_path: '',
+        remarks: '',
+        level: 0,
+        google_uid: null,
+        photo_url: null,
+        iat: null,
+        exp: null
+      }
+    })
+  }
   const logout = async () => {
     try {
       const response = await fetch('http://localhost:3005/api/auth/logout', {
@@ -129,23 +162,22 @@ export const AuthProvider = ({ children }) => {
         throw new Error('登出失敗')
       }
       const result = await response.json()
-
+      
       if (result.status === 'success') {
         // 清除本地的 auth 狀態
         await Promise.all([
-          // 立即導航到登入頁
-          router.push('/member/login'),
+
           // 清除狀態
           new Promise((resolve) => {
-            setAuth({
-              isAuth: false,
-              userData: initUserData, // 使用完整的 initUserData
-            })
+            clearAuthState()
             resolve()
           }),
+          // 立即導航到登入頁
+          router.replace('/'),
         ])
-       
-      }
+        document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+    }
+
     } catch (error) {
       console.error('登出錯誤:', error)
       // 處理錯誤
@@ -153,43 +185,54 @@ export const AuthProvider = ({ children }) => {
   }
   // 檢查會員認証用
   // 每次重新到網站中，或重新整理，都會執行這個函式，用於向伺服器查詢取回原本登入會員的資料
+  // 這個頁面載入時，useAuth hook 會自動執行 handleCheckAuth
+
   const handleCheckAuth = async () => {
-    const res = await checkAuth()
-
-    // 伺服器api成功的回應為 { status:'success', data:{ user } }
-    if (res.data.status === 'success') {
-      // 只需要initUserData的定義屬性值
-      const dbUser = res.data.data.user
-      const userData = { ...initUserData }
-
-      for (const key in userData) {
-        if (Object.hasOwn(dbUser, key)) {
-          userData[key] = dbUser[key] || ''
-        }
-      }
-      // 設到全域狀態中
-      setAuth({ isAuth: true, userData })
-    } else {
-      console.warn(res.data)
-
-      // 在這裡實作隱私頁面路由的跳轉
-      if (protectedRoutes.includes(router.pathname)) {
+   
+      if (protectedRoutes.includes(router.pathname)&&(!auth.isAuth&&!document.cookie.includes('accessToken'))) {
         router.push(loginRoute)
       }
-    }
-  }
+     // const res = await checkAuth()
 
-  // didMount(初次渲染)後，向伺服器要求檢查會員是否登入中
-  useEffect(() => {
-    if (router.isReady && !auth.isAuth) {
-      handleCheckAuth()
-    }
+    // 伺服器api成功的回應為 { status:'success', data:{ user } }
+    // if (res.data.status === 'success') {
+      // 只需要initUserData的定義屬性值
+      // const dbUser = res.data.data.user
+      // const userData = { ...initUserData }
+
+      // for (const key in userData) {
+        // if (Object.hasOwn(dbUser, key)) {
+          // userData[key] = dbUser[key] || ''
+        // }
+      // }
+      // 設到全域狀態中
+      // setAuth({ isAuth: true, userData })
+    // } else {
+      // console.warn(res.data)
+
+      // 在這裡實作隱私頁面路由的跳轉
+  }
+  // 已經登入的使用者不得再進入註冊和登入頁面
+      const publicOnlyRoutes = ['/member/login','/member/signup']
+      useEffect(()=>{
+        if(router.isReady){
+          // router.pathname 是目前頁面的完整路徑
+          if(auth?.isAuth && publicOnlyRoutes.includes(router.pathname)){
+            router.replace('/dashboard')
+          }
+        }
+      },[router?.isReady, router?.pathname, auth?.isAuth])
+    // didMount(初次渲染)後，向伺服器要求檢查會員是否登入中
+    useEffect(() => {
+      if (router?.isReady && !auth?.isAuth && document.cookie.includes('accessToken')) {
+        handleCheckAuth()
+      }
+    }, [router.isReady, router.pathname])
 
     // 下面加入router.pathname，是為了要在向伺服器檢查後，
     // 如果有比對到是隱私路由，就執行跳轉到登入頁面工作
     // 注意有可能會造成向伺服器要求多次，此為簡單的實作範例
     // eslint-disable-next-line
-  }, [router.isReady, router.pathname])
 
   return (
     <AuthContext.Provider
@@ -198,13 +241,14 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         setAuth,
-        favorites,
-        setFavorites,
+        // favorites,
+        // setFavorites,
       }}
     >
       {children}
     </AuthContext.Provider>
   )
 }
+
 
 export const useAuth = () => useContext(AuthContext)

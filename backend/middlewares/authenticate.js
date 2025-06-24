@@ -1,5 +1,5 @@
 import jsonwebtoken from 'jsonwebtoken'
-
+// 與import jwt from 'jswonwebtoken'等效
 // 存取`.env`設定檔案使用
 import 'dotenv/config.js'
 

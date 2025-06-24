@@ -1,0 +1,61 @@
+.breadcrumb-chevron {
+  margin-top: -40px;
+  background-color: transparent !important;
+}
+.breadcrumb-chevron :global(.breadcrumb-item + .breadcrumb-item::before) {
+  content: "" !important;
+  display: none !important;
+}
+.breadcrumb-chevron :global(.breadcrumb-item) {
+  display: flex;
+  align-items: center;
+  color: #9333ea !important;
+}
+.breadcrumb-chevron :global(.breadcrumb-item):not(:last-child)::after {
+  content: "/" !important;
+  margin: 0 0.5rem !important;
+  color: #9333ea !important;
+}
+.breadcrumb-chevron :global(.breadcrumb-item) a {
+  color: #9333ea !important;
+  text-decoration: none !important;
+  display: flex;
+  align-items: center;
+}
+.breadcrumb-chevron :global(.breadcrumb-item) a:hover {
+  opacity: 0.7;
+}
+.breadcrumb-chevron :global(.breadcrumb-item) svg {
+  color: #9333ea !important;
+}
+.breadcrumb-chevron :global(.breadcrumb-item.active) {
+  pointer-events: none !important;
+  -webkit-user-select: none !important;
+     -moz-user-select: none !important;
+          user-select: none !important;
+  opacity: 0.8;
+}
+.breadcrumb-chevron :global(.breadcrumb-item.active) .breadcrumb-text {
+  color: #9333ea !important;
+  pointer-events: none !important;
+  cursor: default !important;
+  -webkit-user-select: none !important;
+     -moz-user-select: none !important;
+          user-select: none !important;
+}
+
+:global(.text-light) .breadcrumb-chevron :global(.breadcrumb-item),
+:global(.text-light) .breadcrumb-chevron :global(.breadcrumb-item::after),
+:global(.text-light) .breadcrumb-chevron :global(.breadcrumb-item.active .breadcrumb-text),
+:global(.text-light) .breadcrumb-chevron a,
+:global(.text-light) .breadcrumb-chevron svg {
+  color: #fff !important;
+}
+
+:global(.link-body-emphasis) .breadcrumb-chevron :global(.breadcrumb-item),
+:global(.link-body-emphasis) .breadcrumb-chevron :global(.breadcrumb-item::after),
+:global(.link-body-emphasis) .breadcrumb-chevron :global(.breadcrumb-item.active .breadcrumb-text),
+:global(.link-body-emphasis) .breadcrumb-chevron a,
+:global(.link-body-emphasis) .breadcrumb-chevron svg {
+  color: inherit !important;
+}/*# sourceMappingURL=next-breadcrumb.module.css.map */

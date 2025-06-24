@@ -6,11 +6,11 @@ export default function BuylistPage(props) {
   const { orderStatus } = props
   const [order, setOrder] = useState([])
   const [whereClause, setWhereClause] = useState(orderStatus)
-  const [user_id, setUser_id] = useState('0')
+  
   const { auth } = useAuth()
   const { userData } = auth
-  // const user_id = userData.user_id
-
+  const [user_id, setUser_id] = useState(null)
+  
   useEffect(() => {
     if (userData) {
       setUser_id(userData.user_id)
@@ -18,13 +18,19 @@ export default function BuylistPage(props) {
   }, [userData])
 
   const getOrder = async () => {
-    const res = await fetch(`http://localhost:3005/api/buy-list/${user_id}`)
-    const data = await res.json()
-
-    if ((data.status == 'success') & !data.data) {
-      return setOrder([])
+    if (!user_id) return
+    try {
+      const res = await fetch(`http://localhost:3005/api/buy-list/${user_id}`)
+      const data = await res.json()
+      
+      if ((data.status === 'success') && !data.data) {
+        return setOrder([])
+      }
+      setOrder(data.data)
+    } catch (error) {
+      console.error('Error fetching orders:', error)
+      setOrder([])
     }
-    setOrder(data.data)
   }
 
   useEffect(() => {

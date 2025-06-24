@@ -37,10 +37,10 @@ export default function GoogleLoginRedirect() {
       // 從JWT存取令牌中解析出會員資料
       // 注意JWT存取令牌中只有id, username, google_uid, line_uid在登入時可以得到
       const jwtUser = parseJwt(res.data.data.accessToken)
-      // console.log(jwtUser)
+      console.log(jwtUser)
 
       const res1 = await getUserById(jwtUser.id)
-      //console.log(res1.data)
+      console.log(res1.data)
 
       if (res1.data.status === 'success') {
         // 只需要initUserData中的定義屬性值，詳見use-auth勾子

@@ -1,0 +1,121 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.laptop {
+  width: 100%;
+  max-width: 1000px;
+  perspective: 2000px;
+}
+
+.screen {
+  background: #000;
+  aspect-ratio: 16/10;
+  border-radius: 10px;
+  padding: 20px;
+  transform-origin: bottom;
+  transition: transform 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+}
+.screen.opened {
+  transform: rotateX(0deg);
+}
+.screen:not(.opened) {
+  transform: rotateX(-90deg);
+}
+
+.camera {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.cameraLens {
+  width: 6px;
+  height: 6px;
+  background: #333;
+  border-radius: 50%;
+  position: relative;
+}
+.cameraLight {
+  position: absolute;
+  right: -3px;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  background: #4CAF50;
+  border-radius: 50%;
+  animation: blink 2s infinite;
+}
+
+.container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.notebook {
+  background: white;
+  width: 100%;
+  max-width: 800px;
+  min-height: 600px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  overflow: hidden;
+}
+
+.binding {
+  width: 50px;
+  background: #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  padding: 20px 0;
+}
+
+.spiral {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #999;
+  border-radius: 50%;
+  margin: 5px 0;
+}
+
+.gradientBg {
+  min-height: 100vh;
+  background-image: url(../assets/signup_login/andras-vas-Bd7gNnWJBkU-unsplash.jpg);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+.gradientBg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(60, 0, 122, 0.8), rgba(0, 0, 0, 0.8));
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}/*# sourceMappingURL=laptopLogin.module.css.map */

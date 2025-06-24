@@ -1,0 +1,18 @@
+@charset "UTF-8";
+.aside {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+/* 我是想說邊緣都要一樣  */
+.purple-border {
+  border: #805AF5 solid 1px;
+  background-color: aliceblue;
+}
+
+.profile-button:hover {
+  color: white;
+}/*# sourceMappingURL=dashboard.module.css.map */

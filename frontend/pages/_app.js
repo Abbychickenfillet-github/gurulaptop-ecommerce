@@ -13,6 +13,7 @@ import '@/styles/footer.scss'
 import '@/styles/frontPage.scss'
 //會員註冊
 // import '@/styles/transitions_Abby.scss'
+import RouterGuard from '@/hooks/router-guard'
 
 // 文章/部落格用 css
 import '@/styles/ArticleDetail.scss'
@@ -107,6 +108,7 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <AuthProvider>
+      <RouterGuard>
       <LoadingProviderAnimation close={1} CustomLoader={LoadingAnimation}>
         <LoaderProvider
           close={1}
@@ -120,6 +122,7 @@ export default function MyApp({ Component, pageProps }) {
           </GroupAuthProvider>
         </LoaderProvider>
       </LoadingProviderAnimation>
+      </RouterGuard>
     </AuthProvider>
   )
 }

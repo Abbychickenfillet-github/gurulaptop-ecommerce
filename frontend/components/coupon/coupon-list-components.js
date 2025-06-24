@@ -52,7 +52,7 @@ export default function CouponList() {
     if (!userId) {
       MySwal.fire({
         icon: 'warning',
-        title: '請先登入',
+        title: '請先登入2',
         text: '需要登入才能領取優惠券',
       })
       window.location.href = 'http://localhost:3000/member/login'
@@ -198,7 +198,7 @@ export default function CouponList() {
     if (!userId) {
       MySwal.fire({
         icon: 'warning',
-        title: '請先登入',
+        title: '請先登入5',
         text: '需要登入才能領取優惠券',
       })
       window.location.href = 'http://localhost:3000/member/login'

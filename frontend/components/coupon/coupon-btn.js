@@ -43,9 +43,9 @@ export default function CouponBtn({ price, setCouponValue }) {
     try {
       const res = await fetch(`http://localhost:3005/api/coupon-user/${userId}`)
 
-      if (!res.ok) {
-        throw new Error('請求失敗')
-      }
+      // if (!res.ok) {
+      //   throw new Error('請求失敗')
+      // }
 
       const resData = await res.json()
       console.log('優惠券資料:', resData)
@@ -80,7 +80,7 @@ export default function CouponBtn({ price, setCouponValue }) {
   const updateCouponStatus = async (couponId) => {
     if (!userId) {
       MySwal.fire({
-        title: '請先登入',
+        title: '請先登入1',
         text: '需要登入才能使用優惠券',
         icon: 'warning',
       })
@@ -186,7 +186,7 @@ export default function CouponBtn({ price, setCouponValue }) {
   const handleClick = () => {
     if (!userId) {
       MySwal.fire({
-        title: '請先登入',
+        title: '請先登入6',
         text: '需要登入才能使用優惠券',
         icon: 'warning',
         showCancelButton: true,

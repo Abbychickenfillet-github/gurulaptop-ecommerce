@@ -64,6 +64,7 @@ function onError(error) {
   }
 
   var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port
+  // 這是指如果port的型別是字串的話就有字串Pipe加上埠號否則就是字串Port加上埠號
 
   // handle specific listen errors with friendly messages
   switch (error.code) {

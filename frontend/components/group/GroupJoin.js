@@ -32,7 +32,7 @@ const GroupJoin = ({ onClose, groupData }) => {
       await Swal.fire({
         icon: 'warning',
         title: '無法申請',
-        text: '請先登入',
+        text: '請先登入7',
         showConfirmButton: false,
         timer: 1500,
       })

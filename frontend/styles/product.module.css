@@ -1,0 +1,362 @@
+@charset "UTF-8";
+.product_banner {
+  background-image: url("/images/product/banner.jpg");
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  padding-top: 23.9%;
+  position: relative;
+}
+
+.product_container {
+  box-sizing: border-box;
+  padding: 0px;
+  background: linear-gradient(333deg, #6835a6 9.79%, #150928 27.32%, #000 49.97%, #1b1956 72.85%, #402bb0 86.53%, #d0bcff 98.34%);
+}
+
+.product_text_container {
+  position: absolute;
+  height: 16.406vw;
+  left: 14.0625vw;
+  top: 5.208vw;
+  width: 75vw;
+}
+
+.product_banner_title {
+  text-shadow: 0px 10px 8px rgba(0, 0, 0, 0.5);
+  font-size: 3.90625vw;
+  letter-spacing: 2.135vw;
+  color: white;
+}
+
+.product_banner_content {
+  text-shadow: 0px 10px 8px rgba(0, 0, 0, 0.5);
+  font-size: 1.667vw;
+  letter-spacing: 1.042vw;
+  color: white;
+  margin-top: 5.208vw;
+}
+
+.product_breadcrumb {
+  padding: 3.646vw 10.417vw 3.646vw;
+  font-size: 14px;
+  color: white;
+}
+
+/* 選單開關 */
+/* 隱藏 checkbox */
+.product_aside_toggle {
+  display: none;
+}
+
+/* toggle wrapper 基本樣式 */
+.product_aside_toggle_wrapper {
+  display: none;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Menu 標題的樣式 */
+.product_aside_toggle_title {
+  font-size: 16px;
+  color: white;
+  margin-right: 8px;
+}
+
+/* ▼ 標誌的樣式 */
+.product_aside_toggle_logo {
+  font-size: 16px;
+  transition: transform 0.3s ease;
+  color: white;
+  transform: rotate(90deg);
+}
+
+/* 當 checkbox 被勾選時，旋轉箭頭 */
+.product_aside_toggle:checked + .product_aside_toggle_wrapper .product_aside_toggle_logo {
+  transform: rotate(0deg);
+}
+
+/* 選單開始 */
+.product_aside {
+  background-color: transparent;
+  border: 1px solid;
+  border-color: #b4b4b4;
+  border-radius: 20px;
+  height: auto;
+  overflow: hidden;
+  min-width: 320px;
+  margin: 0px 0px 0px 13.5vw;
+}
+
+.product_aside_content {
+  display: flex;
+  padding: 40px;
+}
+
+.product_search {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid white;
+  color: white;
+  outline: none;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  width: 100%;
+  letter-spacing: 5px;
+}
+
+.product_search_icon {
+  margin-top: 40px;
+  margin-left: -20px;
+}
+
+/* slider */
+.product_slider_title {
+  color: white;
+  font-size: 16px;
+  margin: 0 15px 0 -80px;
+}
+
+.product_slider_container {
+  position: relative;
+  margin: 0 50px 0 120px;
+  width: 150px;
+  height: 50px;
+}
+
+/* 隱藏原生滑桿 */
+.product_slider {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+       appearance: none;
+  position: absolute;
+  width: 100%;
+  background: transparent; /* 隱藏背景 */
+  pointer-events: none; /* 讓兩個滑桿重疊可以互動 */
+}
+
+/* 滑桿線條 */
+.product_slider_container::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #ddd;
+  z-index: 1;
+}
+
+/* 滑塊樣式 */
+.product_slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 12px solid #805af5;
+  position: relative;
+  top: 15px;
+  pointer-events: auto;
+  z-index: 2;
+  background-color: #805af5;
+  transform: rotate(45deg);
+}
+
+.product_slider::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 20px solid #805af5;
+  position: relative;
+  top: 10px;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.price_tip {
+  position: absolute;
+  padding: 5px 10px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none; /* 不影響滑鼠操作 */
+  transform: translate(-50%, -150%); /* 將 tooltip 定位到滑鼠上方 */
+}
+
+/* 摺疊選單 */
+/* 隱藏 checkbox */
+.menu_toggle {
+  display: none;
+}
+
+/* 將標題和三角形並排 */
+.product_list_container {
+  display: flex;
+  flex-direction: column; /* 使用縱向排列 */
+  margin-bottom: 10px; /* 每個選單之間的間距 */
+}
+
+.menu_toggle_wrapper {
+  display: flex; /* 使標題和圖示並排 */
+  align-items: center; /* 垂直居中 */
+  justify-content: space-between; /* 左右對齊 */
+  cursor: pointer; /* 鼠標指標 */
+}
+
+.menu_title {
+  display: inline-block;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold; /* 粗體 */
+  padding: 40px;
+  color: white; /* 字體顏色 */
+}
+
+.menu_icon {
+  display: inline-block;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 40px;
+  color: #805af5; /* 字體顏色 */
+}
+
+.menu_icon {
+  transform: rotate(90deg); /* 初始旋轉角度 */
+  transition: transform 0.3s; /* 旋轉動畫 */
+}
+
+/* 當 checkbox 被選取時倒三角形轉向 */
+.menu_toggle:checked + .menu_toggle_wrapper .menu_icon {
+  transform: rotate(0deg); /* 旋轉回正 */
+}
+
+/* 摺疊選單樣式 */
+.menu_content {
+  max-height: 0; /* 初始高度為0，隱藏選單 */
+  overflow: hidden; /* 隱藏超出部分 */
+  transition: max-height 0.3s ease; /* 動畫效果 */
+  padding: 0 40px; /* 左右邊距 */
+  text-align: right; /* 文字右對齊 */
+}
+
+/* 當 checkbox 被選取時顯示選單 */
+.menu_toggle:checked + .menu_toggle_wrapper + .menu_content {
+  max-height: 600px; /* 設定展開的最大高度 */
+}
+
+.menu_content a {
+  color: white; /* 連結顏色 */
+  text-decoration: none; /* 去除底線 */
+}
+
+.menu_content li {
+  list-style: none; /* 去除列表標記 */
+  margin-top: 40px; /* 每項之間的間距 */
+}
+
+.product_not_found {
+  color: white;
+  font-size: 16px;
+  margin-top: 40px;
+  margin-left: 40px;
+}
+
+.product_pagination {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  margin-left: 8vw;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  list-style: none;
+}
+
+.product_page_item {
+  margin: 0 5px;
+  color: white;
+}
+
+.product_page_link {
+  color: #ffffff; /* 白色文字 */
+  background-color: transparent;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  transition: color 0.3s;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.product_page_item.active .product_page_link {
+  font-weight: bold;
+}
+
+.product_page_item.disabled .product_page_link {
+  pointer-events: none; /* 禁用點擊 */
+}
+
+.product_list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1140px) {
+  .product_aside_toggle_wrapper {
+    display: flex;
+    margin-left: 20px;
+    margin-bottom: 20px;
+  }
+  .product_aside {
+    margin-left: -400px;
+    transition: margin-left 0.3s;
+  }
+  .product_aside.show {
+    margin-left: 0px;
+    transition: margin-left 0.3s;
+  }
+  .product_breadcrumb {
+    padding-left: 20px;
+  }
+  .product_aside {
+    position: absolute;
+    background-color: black;
+    z-index: 1000;
+  }
+  .product_banner {
+    width: 100%;
+    padding-top: 32.5%;
+  }
+  .product_banner_title {
+    font-size: 32px;
+    letter-spacing: 1.042vw;
+  }
+  .product_banner_content {
+    font-size: 16px;
+    letter-spacing: 1.042vw;
+    margin-top: 5.208vw;
+  }
+  .product_list {
+    justify-content: center;
+  }
+  .product_pagination {
+    margin-left: 0;
+  }
+}
+@media (max-width: 400px) {
+  .product_banner_title {
+    font-size: 30px;
+    letter-spacing: 1.042vw;
+  }
+  .product_banner_content {
+    font-size: 12px;
+    letter-spacing: 1.042vw;
+    margin-top: 5.208vw;
+  }
+}/*# sourceMappingURL=product.module.css.map */
