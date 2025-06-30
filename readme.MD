@@ -45,3 +45,9 @@ npm run debug-win
 - 避免使用相同於資料表名稱
 - 避免使用縮寫或簡稱
 - 外鍵(Foreign key)欄位需要有資料表名稱加上它們的主鍵，例如 blog_id 代表從資料表 blog 來的外鍵
+>[!TIP]
+>Clone結束後，請依照步驟執行:
+>先開啟XAMPP將MySQL Start, 依照env檔中的db帳號密碼跟db名稱在自己的phpMyAdmin中建立，並且從frontend/data/database匯入sql檔。
+>將終端機新增一個cmd cd backend 後npm run dev。
+>將終端機新增一個cmd cd frontend 後npm run dev。
+>點選前端frontend終端機中的localhost:3000的網址會進入到首頁。

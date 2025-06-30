@@ -10,6 +10,8 @@ export default function RouterGuard({children}){
     useEffect(()=>{
         if (router.isReady){
             if(protectedRoutes.includes(router.pathname) && !auth.isAuth){
+                console.log('router.pathname', router.pathname);
+                console.log('auth.isAuth',auth.isAuth);
                 router.replace('/member/login')
             }
         if(publicOnlyRoutes.includes(router.pathname) &&auth.isAuth){
