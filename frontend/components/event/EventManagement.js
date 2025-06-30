@@ -3,6 +3,7 @@ import Link from 'next/link'
 import styles from './EventManagement.module.css'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import Router from 'next/router'
 
 const EventManagement = () => {
   const [events, setEvents] = useState([])
@@ -23,10 +24,11 @@ const EventManagement = () => {
       )
 
       if (response.data.code === 200) {
-        const events = response.data.data.events || []
+        const events = response?.data?.data?.events || []
         setEvents(events)
+        Router.push('/dashboard')
       } else {
-        throw new Error(response.data.message || '獲取活動列表失敗')
+        throw new Error(response?.data?.message || '獲取活動列表失敗')
       }
     } catch (error) {
       console.error('獲取活動失敗:', error)

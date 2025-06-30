@@ -86,10 +86,11 @@ export default function Detail() {
           `http://localhost:3005/api/products/${pid}`
         )
         const result = await response.json()
-        setData(result.data.product)
+        setData(result?.data?.product)
         setIsLoding(false)
       } catch (error) {
         //如果發生錯誤，重新導向商品列表
+        
         router.push('/product/list')
       }
     }
