@@ -41,10 +41,21 @@ export default function UserProfile() {
   // 沒有寫就是false
   const [selectedImg, setSelectedImg] = useState(null)
 
-  //裡面要放什麼
+  // districts 狀態存放的是 AreaList 陣列
   const [districts, setDistricts] = useState([])
+  // 初始狀態為空陣列
+  // 這個陣列會根據選擇的縣市動態更新
+  // 當選擇縣市後，會根據縣市的區域列表來更新這個陣列
+  // 例如：當選擇「台北市」時，這個陣列會包含「中正區」、「大同區」等台北市的區域名稱
+  // 當選擇其他縣市時，這個陣列會根據選擇的縣市來更新，顯示該縣市的區域名稱
+  // 這樣可以讓使用者在選擇縣市後，能   夠選擇對應的區域名稱
+  // 這個陣列會在 handleCityChange 函式中根據選擇的縣市動態更新
+  // 這樣可以讓使用者在選擇縣市後，能夠選擇對應的區域名稱
+  // 這個陣列會在 handleCityChange 函式中根據選擇的縣市動態更新
+  // 當選擇縣市後，會根據縣市的區域列表來更新這個陣列     
   const [roads, setRoads] = useState([])
-  // 欄位是否要開放
+  //  禁用條件：isDistrictDisabled 為 true 或者 沒有選擇城市
+  // 預設為true代表禁用，後面的函式更新器會根據選擇的縣市和區域來更新這個狀態
   const [isDistrictDisabled, setIsDistrictDisabled] = useState(true)
   const [isRoadDisabled, setIsRoadDisabled] = useState(true)
 
@@ -86,7 +97,8 @@ export default function UserProfile() {
   const handleCountryChange = (e) => {
     const { name, value } = e.target
     setEditableUser((prev) => ({
-      ...prev,
+      ...prev,// 保留原有的所有屬性
+      // 這裡的prev是React的useState更新函數的一個特殊參數。他代表當前的state值
       [name]: value,
       city: '',
       district: '',
@@ -94,10 +106,15 @@ export default function UserProfile() {
     }))
 
     if (value === '台灣') {
+      // 如果選擇的是台灣，"啟用"縣市選擇
       setIsDistrictDisabled(false)
+    //這邊的else為了當選擇其他國家時，禁用縣市、區域和路名選擇 
     } else {
+      // 禁用行政區
       setIsDistrictDisabled(true)
+      // 禁用路名選擇
       setIsRoadDisabled(true)
+      // 清空縣市、區域和路名的選擇
       setDistricts([])
       setRoads([])
     }
@@ -105,6 +122,7 @@ export default function UserProfile() {
 
   const handleCityChange = (e) => {
     const { name, value } = e.target
+    // 為什麼這邊要有e.target 從目標中的
     setEditableUser((prev) => ({
       ...prev,
       [name]: value,
@@ -532,6 +550,26 @@ export default function UserProfile() {
                             name="birthdate"
                             value={editableUser.birthdate}
                             onChange={handleInputChange}
+                          />
+                        </div>
+                      </div>
+                      test
+                      <div className="mb-3 row">
+                        <label
+                          htmlFor="test"
+                          className="col-sm-3 col-form-label"
+                        >
+                          test
+                        </label>
+                        <div className="col-sm-9">
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="test"
+                            name="test"
+                            value={editableUser.test}
+                            onChange={handleInputChange}
+                            disabled={false}
                           />
                         </div>
                       </div>

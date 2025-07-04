@@ -53,6 +53,8 @@ app.use(
     credentials: true,
   })
 )
+
+app.use(express.json())
 //
 // 視圖引擎設定
 app.set('views', path.join(__dirname, 'views'))

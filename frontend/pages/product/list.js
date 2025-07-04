@@ -48,6 +48,7 @@ export default function List() {
     price,
     search,
   }) => {
+  try{
     let where = ''
 
     if (page) {
@@ -65,15 +66,32 @@ export default function List() {
     if (search) {
       where += `&search=${search}`
     }
+    console.log('請求 URL:', `http://localhost:3005/api/products/list?${where}`)
 
     const response = await fetch(
-      `http://localhost:3005/api/products/list?${where}`
+      `http://localhost:3005/api/products/list?${where}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
     )
+    if(!response.ok){
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const result = await response.json()
+
     if (result.status === 'success') {
       setProducts(result.data.products)
       setTotalPages(result.data.totalPages)
-    } else if (result.status === 'error') {
+    } else {
+      console.error('API 返回錯誤:', result.message)
+      setProducts([])
+      setTotalPages(1)
+    }
+  } catch (error) {
+      console.error('fetchProducts 錯誤:', error)
       setProducts([])
       setTotalPages(0)
     }
