@@ -43,7 +43,7 @@ export default function ProductCard({ onSendMessage, product_id }) {
             `http://localhost:3005/api/products/card/${product_id}`
           )
           const result = await response.json()
-          setData(result.data.product)
+          setData(result?.data?.product)
         } catch (error) {
           console.error('Error fetching data', error)
         }

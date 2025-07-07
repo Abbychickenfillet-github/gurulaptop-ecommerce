@@ -12,7 +12,7 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 
 // seeion? -> 真的? 隔一段時間丟進伺服器做驗證
 // 檢查登入狀態 每次一打開頁面
-router.get('/check', authenticate, async (req, res) => {
+router.get('/check', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM users WHERE user_id=?', [
       req.user.user_id,
@@ -175,13 +175,12 @@ router.post('/logout', authenticate, (req, res) => {
 // 身份驗證中間件
 export const checkAuth = (req, res, next) => {
   try {
-    const token =
-      req.headers.authorization?.split(' ')[1] || req.cookies.accessToken || req.cookies['Google-accessToken']
+    const token = req.cookies.accessToken || req.headers.authorization?.split(' ')[1]
 
     if (!token) {
       return res.status(401).json({
         status: 'error',
-        message: '請先登入9',
+        message: '請先登入',
       })
     }
 
@@ -196,5 +195,4 @@ export const checkAuth = (req, res, next) => {
     })
   }
 }
-
 export default router

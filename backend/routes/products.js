@@ -156,7 +156,7 @@ router.get('/related/:product_id', async (req, res) => {
     }
     const fuzzyName = `%${product_detail.product_name}%`
     const [related_products] = await db.query(
-      'SELECT product_id FROM product WHERE  (product_name LIKE ? OR product_brand LIKE ? OR affordance LIKE ?) AND product_id != ?  AND valid = 1',
+      'SELECT product_id FROM product WHERE (product_name LIKE ? OR product_brand LIKE ? OR affordance LIKE ?) AND product_id != ? AND valid = 1',
       [
         fuzzyName,
         product_detail.product_brand,

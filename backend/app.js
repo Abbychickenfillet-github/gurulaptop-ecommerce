@@ -19,6 +19,8 @@ import chatRoutes from './routes/chat.js'
 import GroupRequests from './routes/group-request.js'
 import googleLoginRouter from './routes/google-login.js'
 import forgotPasswordRouter from './routes/forgot-password.js'
+
+
 // 使用檔案的session store，存在sessions資料夾
 import sessionFileStore from 'session-file-store'
 const FileStore = sessionFileStore(session)
@@ -40,10 +42,12 @@ const __dirname = path.dirname(__filename)
 // 讓console.log呈現檔案與行號，與字串訊息呈現顏色用
 import { extendLog } from '#utils/tool.js'
 import 'colors'
-extendLog()
+extendLog() 
 
 // 建立 Express 應用程式
 const app = express()
+
+// 所有請求都會經過這些中間件：
 
 // cors設定，參數為必要，注意不要只寫`app.use(cors())`
 app.use(
@@ -53,29 +57,48 @@ app.use(
     credentials: true,
   })
 )
+// 中間件1
 
-app.use(express.json())
+// ---
+app.use(express.json()) // 中間件2 
 //
 // 視圖引擎設定
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 // 記錄HTTP要求
-app.use(logger('dev'))
+app.use(logger('dev')) // 中間件3
+// 設定日誌格式，使用 morgan 套件
+// 這裡使用 'dev' 模式，會顯示簡潔的日誌格式
+// 其他可選模式有 'combined', 'common', 'short', 'tiny'
+
+
 // 剖析 POST 與 PUT 要求的JSON格式資料
-app.use(express.json({ limit: '20mb' }))
-app.use(express.urlencoded({ extended: false, limit: '20mb' }))
+app.use(express.json({ 
+  limit: '20mb' , // 限制請求體的大小為20MB
+  strict: true,         // 只接受 array 和 object
+  type: 'application/json'  // 只處理這種 Content-Type
+}))
+// 沒有 express.json()，你的 req.body 會是 undefined！
+
+// 這個limit:'20mb'是傳入參數
+app.use(express.urlencoded({ extended: false, limit: '20mb' }))// 中間件4
 // 剖折 Cookie 標頭與增加至 req.cookies
-app.use(cookieParser())
+app.use(cookieParser())// 中間件5
 // 在 public 的目錄，提供影像、CSS 等靜態檔案
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')))// 中間件6
+// 路由1
 app.use('/api/auth', authRouter)
+// 路由2
+
 app.use('/api/login', loginRouter)
 app.use('/api/signup', signupRouter)
 app.use('/api/dashboard', dashboardRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/events', eventsRouter)
 app.use('/api/forgot-password', forgotPasswordRouter)
+app.use('/api/auth', authRouter)
+
 
 //優惠卷路由
 app.use('/api/coupon', couponRouter)
@@ -153,5 +176,14 @@ if (!fs.existsSync(uploadDir)) {
 // 使用聊天室路由
 app.use('/api/chat', chatRoutes)
 app.use('/api/', GroupRequests)
-
+// 在 app.js 最底部加上這個測試路由
+app.get('/api/auth/check', (req, res) => {
+  res.json({
+    status: 'success', 
+    data: { 
+      isAuth: false, 
+      user: null 
+    }
+  })
+})
 export default app

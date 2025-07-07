@@ -288,11 +288,11 @@ export const AuthProvider = ({ children }) => {
   }, [router?.isReady, router?.pathname, auth?.isAuth])
 
   // didMount(初次渲染)後，向伺服器要求檢查會員是否登入中
-  useEffect(() => {
-    if (router.isReady) {
-      handleCheckAuth()
-    }
-  }, [router.isReady, router.pathname])
+  // useEffect(() => {
+  //   if (router.isReady) {
+  //     handleCheckAuth()
+  //   }
+  // }, [router.isReady, router.pathname])
 
   // 加入狀態變化的 debug log
   useEffect(() => {
