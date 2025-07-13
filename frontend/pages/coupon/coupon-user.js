@@ -1,6 +1,5 @@
 import React from 'react'
 import { Nav, Tab } from 'react-bootstrap'
-import CardExample from '@/components/bootstrap/cards'
 import CouponUser from '@/components/coupon/coupon-user-components'
 import UserProfile from '@/components/dashboard/userInfoEdit'
 import Paginationcomponent from '@/components/paginationcomponent/paginationcomponent'

@@ -14,13 +14,12 @@ import { useLoader } from '@/hooks/use-loader'
 import Head from 'next/head'
 import GlitchText from '@/components/dashboard/glitch-text/glitch-text'
 import GlowingText from '@/components/dashboard/glowing-text/glowing-text';
-import {auth} from '@/hooks/use-auth'
 
 export default function LogIn(props) {
   const [showpassword, setShowpassword] = useState(false)
   const { renderJumpingText } = useJumpingLetters(true, 2000)
   const router = useRouter()
-  const { login } = useAuth()
+  const { login, auth } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({ error: ' ' })
@@ -47,6 +46,8 @@ export default function LogIn(props) {
 
       if (result.status === 'success') {
         console.log('登入前端接上後端成功')
+        // await login(formData.get('email'), formData.get('password'))
+        // console.log('登入成功，auth 狀態:', auth) // 加入 debug
         router.push('/dashboard')
       } else {
         setErrors({
@@ -69,10 +70,12 @@ export default function LogIn(props) {
 
   useEffect(() => {
     // 如果用戶已登入，重定向到儀表板
+      console.log('Login 頁面 auth 狀態:', auth) // 加入 debug
     if (auth?.isAuth) {
       router.replace('/dashboard')
+      console.log('用戶已登入，跳轉到 dashboard')
     }
-  }, [auth?.isAuth])
+  }, [auth?.isAuth, router])
   return (
     <>
       <Head>
@@ -226,7 +229,7 @@ export default function LogIn(props) {
                         onClick={() => {
                           login
                         }}
-                        className={`text-white  btn btn-primary border-0  ${styles.hover} ${styles.button} `}
+                        className={` border-0 mt-3 ${styles.hover} ${styles['debug-test']} `}
                         type="submit"
                       >
                         送出

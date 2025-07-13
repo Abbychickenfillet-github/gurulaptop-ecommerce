@@ -177,13 +177,13 @@ if (!fs.existsSync(uploadDir)) {
 app.use('/api/chat', chatRoutes)
 app.use('/api/', GroupRequests)
 // 在 app.js 最底部加上這個測試路由
-app.get('/api/auth/check', (req, res) => {
-  res.json({
-    status: 'success', 
-    data: { 
-      isAuth: false, 
-      user: null 
-    }
-  })
-})
+// app.get('/api/auth/check', (req, res) => {
+//   res.json({
+//     status: 'success', 
+//     data: { 
+//       isAuth: false, 
+//       user: null 
+//     }
+//   })
+// })
 export default app

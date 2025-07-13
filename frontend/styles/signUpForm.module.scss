@@ -1,3 +1,120 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+// 定義 mixin
+
+$prefix: "guru-style-";
+$background: rgb(164, 114, 210);
+$border: #3498db;
+.debug-test {
+  // 直接測試 color-contrast 函數
+  --test-bg: #{$background};
+  --test-contrast: #{color-contrast($background)};
+  --test-shade: #{shade-color($background, 20%)};
+  --test-shade-contrast: #{color-contrast(shade-color($background, 20%))};
+  
+  background: var(--test-bg);
+  color: var(--test-contrast);
+  border: 1px solid;
+  padding: 10px;
+  margin: 10px 0;
+  
+  &::before {
+    content: "背景: " var(--test-bg) " | 文字: " var(--test-contrast);
+    display: block;
+    font-size: 12px;
+  }
+}
+
+@mixin button-variant($prefix, $background, $border) {
+  --#{$prefix}btn-color: color-contrast($background);
+  --#{$prefix}btn-bg: #{$background};
+  --#{$prefix}btn-border-color: #{$border};
+  --#{$prefix}btn-hover-color: color-contrast(shade-color($background, 20%));
+  --#{$prefix}btn-hover-bg: shade-color($background, 20%);
+  --#{$prefix}btn-hover-border-color: shade-color($border, 20%);
+  --#{$prefix}btn-focus-shadow-rgb: #{to-rgb(mix(color-contrast($background), $border, 15%))};
+}
+
+// 使用 mixin
+
+.button {
+  // 原有樣式保持不變...
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #bfd1e5;
+  font-size: large;
+
+  border-radius: 8px;
+  padding: 12px 24px;
+  transition: all 0.3s ease;
+  .button-icon {
+    transition: transform 0.3s ease;
+  }
+  &:active {
+    transform: translateY(0);  // 點擊時回到原位置
+  }
+  @include button-variant($prefix, $background, $border);
+
+  background-color: var(--guru-style-btn-bg);
+  border: 2px solid var(--guru-style-btn-border-color);
+  box-shadow: 0 0 5px rgba(var(--guru-style-btn-focus-shadow-rgb), 0.5);
+
+  &:hover {
+    background-color: var(--guru-style-btn-hover-bg);
+    border-color: var(--guru-style-btn-hover-border-color);
+    color: var(--guru-style-btn-hover-color);
+  }
+
+  &:focus {
+    box-shadow: 0 0 10px rgba(var(--guru-style-btn-focus-shadow-rgb), 0.5);
+  }
+}
+
+.button-variant-dark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #bfd1e5;
+  font-size: large;
+
+  border-radius: 8px;
+  padding: 12px 24px;
+  transition: all 0.3s ease;
+  .button-icon {
+    transition: transform 0.3s ease;
+  }
+  &:active {
+    transform: translateY(0);  // 點擊時回到原位置
+  }
+  @include button-variant($prefix, #5c95cd, #34495e);
+  
+  background-color: var(--guru-style-btn-bg);
+  color: var(--guru-style-btn-color);
+  border: 2px solid var(--guru-style-btn-border-color);
+  
+  &:hover {
+    background-color: var(--guru-style-btn-hover-bg);
+    color: var(--guru-style-btn-hover-color);
+    border-color: var(--guru-style-btn-hover-border-color);
+  }
+}
+
+.button-variant-light {
+  @include button-variant($prefix, #ecf0f1d0, #bdc3c7);
+  
+  background-color: var(--guru-style-btn-bg);
+  color: var(--guru-style-btn-color);
+  border: 2px solid var(--guru-style-btn-border-color);
+  
+  &:hover {
+    background-color: var(--guru-style-btn-hover-bg);
+    color: var(--guru-style-btn-hover-color);
+    border-color: var(--guru-style-btn-hover-border-color);
+  }
+}
+
 .gradient-bg {
   position: relative;
   background: linear-gradient(135deg, #3c007a, #000);
@@ -224,21 +341,9 @@
   }
 }
 
-.button {
-  // 原有樣式保持不變...
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  .button-icon {
-    transition: transform 0.3s ease;
-  }
-  
-  &:hover .button-icon {
-    transform: translateX(10px);
-    transition: transform 0.3s ease;
-  }
-}
+
+
+
 // .signup-right{
 //   margin-block: 40px;
 //   margin-right:40px;

@@ -14,7 +14,7 @@ import Favorites from '@/components/product/favorites'
 import BlogUserOverview from '@/components/blog/bloguseroverview'
 import Link from 'next/link'
 import Head from 'next/head'
-// import { LoadingSpinner } from '@/components/dashboard/loading-spinner'
+import { LoadingSpinner } from '@/components/dashboard/loading-spinner'
 // import MarioGame from '@/components/dashboard/MarioGame'
 
 export default function DashboardIndex() {
@@ -84,7 +84,15 @@ export default function DashboardIndex() {
         return <UserProfile />
     }
   }
+    // 如果還在載入中，顯示載入動畫
+  if (auth.isLoading) {
+    return <LoadingAnimation />
+  }
 
+  // 如果未登入，返回 null（Router Guard 會處理跳轉）
+  if (!auth.isAuth) {
+    return null
+  }
   return (
     <>
       {/* <LoadingSpinner loading={isLoading} /> */}

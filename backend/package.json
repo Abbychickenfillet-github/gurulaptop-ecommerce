@@ -7,7 +7,9 @@
     "seed": "node ./cli/db-init.js",
     "backup": "node ./cli/db-backup.js",
     "debug": "DEBUG=express:* node ./bin/www",
-    "debug-win": "set DEBUG=express:* & node ./bin/www"
+    "debug-win": "set DEBUG=express:* & node ./bin/www",
+    "start": "node ./bin/www"
+
   },
   "dependencies": {
     "app-root-path": "^3.1.0",

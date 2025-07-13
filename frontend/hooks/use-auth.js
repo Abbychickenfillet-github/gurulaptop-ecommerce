@@ -58,7 +58,12 @@ export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
     isAuth: false,
     userData: initUserData,
+    // isLoading: true,
   })
+  // 只在應用啟動時檢查一次認證狀態
+  useEffect(() => {
+    // handleCheckAuth()
+  }, []) // 空依賴陣列，只執行一次
 
   // 我的最愛清單使用
   // 變數 函式後面的函式 更改前面變數的內容
@@ -146,10 +151,10 @@ export const AuthProvider = ({ children }) => {
         // 使用 setTimeout 來檢查狀態是否更新
         setTimeout(() => {
           console.log('狀態更新後的 auth:', auth)
-        }, 100)
+        }, 1000)
         
         // 登入成功後跳轉
-        router.push('/dashboard')
+        router.replace('/dashboard')
         
       } else {
         console.error('登入失敗:', result.message || result)
@@ -240,52 +245,56 @@ export const AuthProvider = ({ children }) => {
         return
       }
       
-      // 如果有 token，向伺服器驗證
-      if (document.cookie.includes('accessToken')) {
-        console.log('有 token，向伺服器驗證...')
-        const res = await checkAuth()
-        console.log('伺服器驗證結果:', res)
-        
-        if (res.data.status === 'success') {
-          const dbUser = res.data.data.user
-          const userData = { ...initUserData }
-          
-          for (const key in userData) {
-            if (Object.hasOwn(dbUser, key)) {
-              userData[key] = dbUser[key] || ''
-            }
-          }
-          
-          console.log('設定認證狀態:', { isAuth: true, userData })
-          setAuth({ isAuth: true, userData })
-        } else {
-          console.log('token 無效，清除並跳轉')
-          // token 無效，清除並跳轉
-          document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-          if (protectedRoutes.includes(router.pathname)) {
-            router.push(loginRoute)
-          }
+      if (!document.cookie.includes('accessToken')) {
+      console.log('沒有 accessToken')
+      setAuth(prev => ({ ...prev, isLoading: false }))
+      return
+    }
+    
+    const res = await checkAuth()
+    console.log('伺服器驗證結果:', res)
+    
+    if (res.data.status === 'success') {
+      const dbUser = res.data.data.user
+      const userData = { ...initUserData }
+      
+      for (const key in userData) {
+        if (Object.hasOwn(dbUser, key)) {
+          userData[key] = dbUser[key] || ''
         }
       }
-    } catch (error) {
-      console.error('檢查認證失敗:', error)
-      if (protectedRoutes.includes(router.pathname)) {
-        router.push(loginRoute)
-      }
+      
+      setAuth({ 
+        isAuth: true, 
+        userData,
+        isLoading: false
+      })
+    } else {
+      setAuth(prev => ({ 
+        ...prev, 
+        isAuth: false,
+        isLoading: false
+      }))
     }
+  } catch (error) {
+    console.error('檢查認證失敗:', error)
+    setAuth(prev => ({ 
+      ...prev, 
+      isAuth: false,
+      isLoading: false
+    }))
   }
-
+}
   // 已經登入的使用者不得再進入註冊和登入頁面
   const publicOnlyRoutes = ['/member/login', '/member/signup']
   
   useEffect(() => {
-    if (router.isReady) {
-      // router.pathname 是目前頁面的完整路徑
+   
       if (auth?.isAuth && publicOnlyRoutes.includes(router.pathname)) {
         router.replace('/dashboard')
       }
-    }
-  }, [router?.isReady, router?.pathname, auth?.isAuth])
+    
+  }, [ router?.pathname, auth?.isAuth])
 
   // didMount(初次渲染)後，向伺服器要求檢查會員是否登入中
   // useEffect(() => {
@@ -308,6 +317,7 @@ export const AuthProvider = ({ children }) => {
         setAuth,
         // favorites,
         // setFavorites,
+        handleCheckAuth
       }}
     >
       {children}

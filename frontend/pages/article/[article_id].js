@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import ArticleDetailMainArea from '@/components/article/articledetail/articledetail-mainarea'
 
 // 定义组件 ArticleDetail
 export default function ArticleDetail(props) {
