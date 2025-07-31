@@ -9,7 +9,6 @@
     "debug": "DEBUG=express:* node ./bin/www",
     "debug-win": "set DEBUG=express:* & node ./bin/www",
     "start": "node ./bin/www"
-
   },
   "dependencies": {
     "app-root-path": "^3.1.0",
@@ -37,6 +36,7 @@
     "node-fetch": "^3.3.2",
     "nodemailer": "^6.9.16",
     "otpauth": "^9.2.4",
+    "pg": "^8.16.3",
     "pug": "^3.0.2",
     "react-spinners": "^0.14.1",
     "react-toastify": "^10.0.6",
@@ -57,7 +57,8 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.0.0-alpha.2",
     "nodemon": "^3.1.0",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "prisma": "^6.12.0"
   },
   "type": "module",
   "engines": {

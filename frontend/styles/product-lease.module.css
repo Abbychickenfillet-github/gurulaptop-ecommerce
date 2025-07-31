@@ -76,14 +76,12 @@
 
 .leftBtn {
   left: 10px;
-  -webkit-clip-path: polygon(100% 0, 0 50%, 100% 100%);
-          clip-path: polygon(100% 0, 0 50%, 100% 100%);
+  clip-path: polygon(100% 0, 0 50%, 100% 100%);
 }
 
 .rightBtn {
   right: 10px;
-  -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%);
-          clip-path: polygon(0 0, 100% 50%, 0 100%);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
 .carouselBtn img {

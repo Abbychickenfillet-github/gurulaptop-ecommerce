@@ -14,13 +14,13 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 // 檢查登入狀態 每次一打開頁面
 router.get('/check', async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT * FROM users WHERE user_id=?', [
+    const result = await db.query('SELECT * FROM users WHERE user_id=$1', [
       req.user.user_id,
     ])
-    if (!rows.length) {
+    if (result.rows.length === 0) {
       return res.status(404).json({ status: 'error', message: '找不到使用者' })
     }
-    const user = rows[0]
+    const user = result.rows[0]
     delete user.password
     return res.json({ status: 'success', data: { user } })
   } catch (error) {
