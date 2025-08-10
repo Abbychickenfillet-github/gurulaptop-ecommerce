@@ -1,6 +1,8 @@
 import express from 'express'
 import authenticate from '#middlewares/authenticate.js'
-import db from '##/configs/mysql.js'
+// import db from '##/configs/mysql.js'
+import pool from '##/configs/pgClient.js'
+
 import multer from 'multer'
 import jsonwebtoken from 'jsonwebtoken'
 import { compareHash } from '#db-helpers/password-hash.js'
@@ -15,11 +17,11 @@ router.post('/', upload.none(), async (req, res, next) => {
     // console.log(req.body)
     const { email, password } = req.body
 
-    const [row] = await db.query(
-      'SELECT * FROM users WHERE email = ? AND valid = 1',
+    const { rows: users } = await pool.query(
+      'SELECT * FROM users WHERE email = $1 AND valid = 1',
       [email]
     )
-    const user = row[0]
+    const user = users[0]
     // 這邊實際上是帳號錯誤
     if (row.length === 0) {
       return res.json({

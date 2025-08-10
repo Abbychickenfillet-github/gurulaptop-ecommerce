@@ -4,7 +4,7 @@ const router = express.Router()
 // 資料庫使用
 // import sequelize from '#configs/db.js'
 // const { purchase_order } = sequelize.models
-import db from '##/configs/mysql.js'
+import db from '##/configs/pgClient.js' 
 
 // 中介軟體，存取隱私會員資料用
 import authenticate from '#middlewares/authenticate.js'
@@ -25,10 +25,10 @@ const linePayClient = createLinePayClient({
 })
 
 // 在資料庫建立order資料(需要會員登入才能使用)
-router.post('/create-order', async (req, res) => {
+router.post('/create-order', authenticate, async (req, res) => {
   // 會員id由authenticate中介軟體提供
-  const userId = req.body.userId
-  const orderId = req.body.orderId
+  const userId = req.user.id
+  const orderId = req.body.orderId || uuidv4()
 
   //產生 orderId與packageId
   // const orderId = uuidv4()
@@ -62,9 +62,12 @@ router.post('/create-order', async (req, res) => {
 
   // 儲存到資料庫
   // await purchase_order.create(dbOrder)
-  const result = await db.query('INSERT INTO purchase_order SET ?', dbOrder)
+  const { rows } = await db.query(
+    'INSERT INTO purchase_order (id, user_id, amount, status, order_info) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+    [dbOrder.id, dbOrder.user_id, dbOrder.amount, dbOrder.status, dbOrder.order_info]
+  )
 
-  console.log(result)
+  console.log(rows[0]) // PostgreSQL 返回插入的完整记录
 
   // 回傳給前端的資料
   res.json({ status: 'success', data: { order } })
@@ -83,8 +86,8 @@ router.get('/reserve', async (req, res) => {
     cancelUrl: process.env.REACT_REDIRECT_CANCEL_URL,
   }
 
-  const [orderRecord] = await db.query(
-    'SELECT order_info FROM purchase_order WHERE id = ?',
+  const { rows: orderRecord } = await db.query(
+    'SELECT order_info FROM purchase_order WHERE id = $1',
     [orderId]
   )
 
@@ -111,7 +114,7 @@ router.get('/reserve', async (req, res) => {
 
     // 在db儲存reservation資料
     await db.query(
-      'UPDATE purchase_order SET reservation = ?, transaction_id = ? WHERE id = ?',
+      'UPDATE purchase_order SET reservation = $1, transaction_id = $2 WHERE id = $3',
       [JSON.stringify(reservation), reservation.transactionId, orderId]
     )
 
@@ -137,8 +140,8 @@ router.get('/confirm', async (req, res) => {
   //   where: { transaction_id: transactionId },
   //   raw: true, // 只需要資料表中資料
   // })
-  const [dbOrder] = await db.query(
-    'SELECT * FROM purchase_order WHERE transaction_id = ?',
+  const { rows: dbOrder } = await db.query(
+    'SELECT * FROM purchase_order WHERE transaction_id = $1',
     [transactionId]
   )
 
@@ -188,12 +191,12 @@ router.get('/confirm', async (req, res) => {
     //   }
     // )
     const result = await db.query(
-      'UPDATE purchase_order SET status = ?, return_code = ?, confirm = ? WHERE id = ?',
+      'UPDATE purchase_order SET status = $1, return_code = $2, confirm = $3 WHERE id = $4',
       [
         status,
         linePayResponse.body.returnCode,
         JSON.stringify(linePayResponse.body),
-        dbOrder.id,
+        dbOrder[0].id,
       ]
     )
 

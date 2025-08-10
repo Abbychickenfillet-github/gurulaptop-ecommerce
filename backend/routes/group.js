@@ -2,12 +2,13 @@ import express from 'express'
 const router = express.Router()
 import multer from 'multer'
 import path from 'path'
-import db from '../configs/mysql.js'
+// import db from '../configs/mysql.js'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
 import cors from 'cors'
 import { checkAuth } from './auth.js'
 import 'dotenv/config.js'
+import pool from '##/configs/pgClient.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -62,18 +63,18 @@ const upload = multer({
 
 // GET - 取得所有群組
 router.get('/all', async function (req, res) {
-  let connection
+  let client
   try {
-    connection = await db.getConnection()
-    const [groups] = await connection.query(`
+    client = await pool.connect()
+    const { rows: groups } = await client.query(`
       SELECT g.*, u.name as creator_name, 
              COUNT(DISTINCT gm.member_id) as member_count,
              e.event_name 
-      FROM \`group\` g
+      FROM "group" g
       LEFT JOIN users u ON g.creator_id = u.user_id
       LEFT JOIN group_members gm ON g.group_id = gm.group_id
       LEFT JOIN event_type e ON g.event_id = e.event_id
-      GROUP BY g.group_id
+      GROUP BY g.group_id, u.name, e.event_name
       ORDER BY g.creat_time DESC
     `)
 
@@ -88,18 +89,18 @@ router.get('/all', async function (req, res) {
       message: '獲取群組失敗',
     })
   } finally {
-    if (connection) connection.release()
+    if (client) client.release()
   }
 })
 
 // GET - 獲取所有活動的揪團
 router.get('/events', async function (req, res) {
-  let connection
+  let client
   try {
-    connection = await db.getConnection()
-    const [events] = await connection.query(`
+    client = await pool.connect()
+    const { rows: events } = await client.query(`
       SELECT DISTINCT e.event_id, e.event_name 
-      FROM \`group\` g 
+      FROM "group" g 
       JOIN event_type e ON g.event_id = e.event_id
       WHERE g.event_id IS NOT NULL
       GROUP BY e.event_id
@@ -118,29 +119,26 @@ router.get('/events', async function (req, res) {
       message: '獲取活動揪團失敗',
     })
   } finally {
-    if (connection) connection.release()
+    if (client) client.release()
   }
 })
 
 // GET - 獲取使用者參與的群組
 router.get('/user', checkAuth, async function (req, res) {
-  let connection
+  let client
   try {
-    connection = await db.getConnection()
-    const [groups] = await connection.query(
-      `
+    client = await pool.connect()
+    const { rows: groups } = await client.query(`
       SELECT g.*, 
              u.name as creator_name, 
              (SELECT COUNT(*) FROM group_members WHERE group_id = g.group_id AND status = 'accepted') as member_count
       FROM group_members gm
-      JOIN \`group\` g ON gm.group_id = g.group_id
+      JOIN "group" g ON gm.group_id = g.group_id
       JOIN users u ON g.creator_id = u.user_id
-      WHERE gm.member_id = ? AND gm.status = 'accepted'
-      GROUP BY g.group_id
+      WHERE gm.member_id = $1 AND gm.status = 'accepted'
+      GROUP BY g.group_id, u.name
       ORDER BY g.creat_time DESC
-    `,
-      [req.user.user_id]
-    )
+    `, [req.user.user_id])
 
     return res.json({
       status: 'success',
@@ -150,31 +148,28 @@ router.get('/user', checkAuth, async function (req, res) {
     console.error('獲取使用者群組失敗:', error)
     return res.status(500).json({
       status: 'error',
-      message: '獲取使用者群組失敗',
+      message: error.message || '獲取使用者群組失敗',
     })
   } finally {
-    if (connection) connection.release()
+    if (client) client.release()
   }
 })
 
 // GET - 獲取使用者創建的群組
 router.get('/creator', checkAuth, async function (req, res) {
-  let connection
+  let client
   try {
-    connection = await db.getConnection()
-    const [groups] = await connection.query(
-      `
+    client = await pool.connect()
+    const { rows: groups } = await client.query(`
       SELECT g.*, 
              u.name as creator_name, 
              (SELECT COUNT(*) FROM group_members WHERE group_id = g.group_id AND status = 'accepted') as member_count
-      FROM \`group\` g
+      FROM "group" g
       LEFT JOIN users u ON g.creator_id = u.user_id
-      WHERE g.creator_id = ?
-      GROUP BY g.group_id
+      WHERE g.creator_id = $1
+      GROUP BY g.group_id, u.name
       ORDER BY g.creat_time DESC
-    `,
-      [req.user.user_id]
-    )
+    `, [req.user.user_id])
 
     return res.json({
       status: 'success',
@@ -184,27 +179,26 @@ router.get('/creator', checkAuth, async function (req, res) {
     console.error('獲取創建群組失敗:', error)
     return res.status(500).json({
       status: 'error',
-      message: '獲取創建群組失敗',
+      message: error.message || '獲取創建群組失敗',
     })
   } finally {
-    if (connection) connection.release()
+    if (client) client.release()
   }
 })
 
 // GET - 取得單一群組
 router.get('/:id', async function (req, res) {
-  let connection
+  let client
   try {
-    connection = await db.getConnection()
-    const [groups] = await connection.query(
-      `SELECT g.*, 
+    client = await pool.connect()
+    const { rows: groups } = await client.query(`
+      SELECT g.*, 
              (SELECT COUNT(*) FROM group_members WHERE group_id = g.group_id AND status = 'accepted') as member_count,
              u.name as creator_name
-      FROM \`group\` g
+      FROM "group" g
       LEFT JOIN users u ON g.creator_id = u.user_id
-      WHERE g.group_id = ?`,
-      [req.params.id]
-    )
+      WHERE g.group_id = $1
+    `, [req.params.id])
 
     if (groups.length === 0) {
       return res.json({
@@ -213,19 +207,18 @@ router.get('/:id', async function (req, res) {
       })
     }
 
-    // 獲取群組成員及其申請資訊
-    const [members] = await connection.query(
-      `SELECT u.user_id, u.name, u.image_path, gm.status, gm.join_time,
-              gr.game_id, gr.description
-       FROM group_members gm
-       JOIN users u ON gm.member_id = u.user_id
-       LEFT JOIN (
-         SELECT * FROM group_requests 
-         WHERE status = 'accepted'
-       ) gr ON gr.group_id = gm.group_id AND gr.sender_id = gm.member_id
-       WHERE gm.group_id = ? AND gm.status = 'accepted'`,
-      [req.params.id]
-    )
+    const { rows: members } = await client.query(`
+      SELECT u.user_id, u.name, u.image_path, gm.status, gm.join_time,
+             gr.game_id, gr.description
+      FROM group_members gm
+      JOIN users u ON gm.member_id = u.user_id
+      LEFT JOIN (
+        SELECT * FROM group_requests 
+        WHERE status = 'accepted'
+      ) gr ON gr.group_id = gm.group_id AND gr.sender_id = gm.member_id
+      WHERE gm.group_id = $1 AND gm.status = 'accepted'
+      ORDER BY gm.join_time DESC
+    `, [req.params.id])
 
     const group = groups[0]
     group.members = members
@@ -238,23 +231,22 @@ router.get('/:id', async function (req, res) {
     console.error('獲取群組失敗:', error)
     return res.json({
       status: 'error',
-      message: '獲取群組失敗',
+      message: error.message || '獲取群組失敗',
     })
   } finally {
-    if (connection) connection.release()
+    if (client) client.release()
   }
 })
+
 // POST - 建立新群組
 router.post('/', checkAuth, upload.single('group_img'), async (req, res) => {
-  let connection
+  let client
   try {
-    connection = await db.getConnection()
-    await connection.beginTransaction()
+    client = await pool.connect()
+    await client.query('BEGIN')
 
-    // 從 token 中獲取用戶 ID
     const creator_id = req.user.user_id
-    const { group_name, description, max_members, group_time, event_id } =
-      req.body
+    const { group_name, description, max_members, group_time, event_id } = req.body
     const group_img = req.file ? `/uploads/groups/${req.file.filename}` : ''
 
     // 驗證必要欄位
@@ -291,71 +283,53 @@ router.post('/', checkAuth, upload.single('group_img'), async (req, res) => {
       throw new Error('群組描述不能超過500字')
     }
 
-    // 建立聊天室
-    const [chatRoomResult] = await connection.query(
-      'INSERT INTO chat_rooms (name, creator_id) VALUES (?, ?)',
+    const { rows: [chatRoom] } = await client.query(
+      'INSERT INTO chat_rooms (name, creator_id) VALUES ($1, $2) RETURNING *',
       [group_name.trim(), creator_id]
     )
 
-    // 新增群組
-    const [groupResult] = await connection.query(
-      'INSERT INTO `group` (group_name, description, creator_id, max_members, group_img, chat_room_id, creat_time, group_time, event_id) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?)',
+    const { rows: [group] } = await client.query(
+      'INSERT INTO "group" (group_name, description, creator_id, max_members, group_img, chat_room_id, creat_time, group_time, event_id) VALUES ($1, $2, $3, $4, $5, $6, NOW(), $7, $8) RETURNING *',
       [
         group_name.trim(),
         description.trim(),
         creator_id,
-        maxMembersNum,
+        parseInt(max_members),
         group_img,
-        chatRoomResult.insertId,
+        chatRoom.room_id,
         group_time,
-        event_id || null,
+        event_id || null
       ]
     )
 
-    if (!groupResult.insertId) {
-      throw new Error('群組建立失敗')
-    }
-
-    // 加入創建者為成員
-    await connection.query(
-      'INSERT INTO group_members (group_id, member_id, join_time, status) VALUES (?, ?, NOW(), ?)',
-      [groupResult.insertId, creator_id, 'accepted']
+    await client.query(
+      'INSERT INTO group_members (group_id, member_id, join_time, status) VALUES ($1, $2, NOW(), $3)',
+      [group.group_id, creator_id, 'accepted']
     )
 
-    // 將創建者加入聊天室
-    await connection.query(
-      'INSERT INTO chat_room_members (room_id, user_id) VALUES (?, ?)',
-      [chatRoomResult.insertId, creator_id]
+    await client.query(
+      'INSERT INTO chat_room_members (room_id, user_id) VALUES ($1, $2)',
+      [chatRoom.room_id, creator_id]
     )
 
-    // 在 group 表中記錄關聯的聊天室 ID（需要先在 group 表添加 chat_room_id 欄位）
-    await connection.query(
-      'UPDATE `group` SET chat_room_id = ? WHERE group_id = ?',
-      [chatRoomResult.insertId, groupResult.insertId]
-    )
-
-    await connection.commit()
+    await client.query('COMMIT')
 
     res.json({
       status: 'success',
       message: '群組建立成功',
       data: {
-        group_id: groupResult.insertId,
-        chat_room_id: chatRoomResult.insertId,
+        group_id: group.group_id,
+        chat_room_id: chatRoom.room_id,
         group_name: group_name.trim(),
         description: description.trim(),
         creator_id,
-        max_members: maxMembersNum,
+        max_members: parseInt(max_members),
         group_img: group_img || null,
         group_time,
       },
     })
   } catch (error) {
-    console.error('Error in group creation:', error)
-
-    if (connection) {
-      await connection.rollback()
-    }
+    if (client) await client.query('ROLLBACK')
 
     if (req.file) {
       try {
@@ -365,29 +339,27 @@ router.post('/', checkAuth, upload.single('group_img'), async (req, res) => {
       }
     }
 
-    res.status(400).json({
+    return res.status(400).json({
       status: 'error',
       message: error.message || '建立群組失敗',
     })
   } finally {
-    if (connection) {
-      connection.release()
-    }
+    if (client) client.release()
   }
 })
 
 // PUT - 更新群組
 router.put('/:id', checkAuth, upload.single('group_img'), async (req, res) => {
-  let connection
+  let client
   try {
-    connection = await db.getConnection()
-    await connection.beginTransaction()
+    client = await pool.connect()
+    await client.query('BEGIN')
 
     const groupId = req.params.id
 
     // 檢查群組是否存在及使用者權限
-    const [groups] = await connection.query(
-      'SELECT * FROM `group` WHERE group_id = ?',
+    const { rows: groups } = await client.query(
+      'SELECT * FROM "group" WHERE group_id = $1',
       [groupId]
     )
 
@@ -404,19 +376,19 @@ router.put('/:id', checkAuth, upload.single('group_img'), async (req, res) => {
     const updateFields = []
 
     if (group_name) {
-      updateFields.push('group_name = ?')
+      updateFields.push('group_name = $' + (updateData.length + 1))
       updateData.push(group_name.trim())
     }
     if (description) {
-      updateFields.push('description = ?')
+      updateFields.push('description = $' + (updateData.length + 1))
       updateData.push(description.trim())
     }
     if (max_members) {
-      updateFields.push('max_members = ?')
+      updateFields.push('max_members = $' + (updateData.length + 1))
       updateData.push(parseInt(max_members))
     }
     if (req.file) {
-      updateFields.push('group_img = ?')
+      updateFields.push('group_img = $' + (updateData.length + 1))
       updateData.push(`/uploads/groups/${req.file.filename}`)
 
       // 刪除舊圖片
@@ -434,25 +406,25 @@ router.put('/:id', checkAuth, upload.single('group_img'), async (req, res) => {
 
     if (updateFields.length > 0) {
       updateData.push(groupId)
-      await connection.query(
-        `UPDATE \`group\` SET ${updateFields.join(', ')} WHERE group_id = ?`,
+      await client.query(
+        `UPDATE "group" SET ${updateFields.join(', ')} WHERE group_id = $${updateData.length}`,
         updateData
       )
     }
 
-    await connection.commit()
+    await client.query('COMMIT')
 
-    const [updatedGroup] = await connection.query(
-      'SELECT * FROM `group` WHERE group_id = ?',
+    const { rows: [updatedGroup] } = await client.query(
+      'SELECT * FROM "group" WHERE group_id = $1',
       [groupId]
     )
 
     return res.json({
       status: 'success',
-      data: { group: updatedGroup[0] },
+      data: { group: updatedGroup },
     })
   } catch (error) {
-    if (connection) await connection.rollback()
+    if (client) await client.query('ROLLBACK')
 
     if (req.file) {
       try {
@@ -467,19 +439,19 @@ router.put('/:id', checkAuth, upload.single('group_img'), async (req, res) => {
       message: error.message || '更新群組失敗',
     })
   } finally {
-    if (connection) connection.release()
+    if (client) client.release()
   }
 })
 
 // DELETE - 刪除群組
 router.delete('/:id', checkAuth, async (req, res) => {
-  let connection
+  let client
   try {
-    connection = await db.getConnection()
-    await connection.beginTransaction()
+    client = await pool.connect()
+    await client.query('BEGIN')
 
-    const [group] = await connection.query(
-      'SELECT * FROM `group` WHERE group_id = ?',
+    const { rows: group } = await client.query(
+      'SELECT * FROM "group" WHERE group_id = $1',
       [req.params.id]
     )
 
@@ -502,30 +474,30 @@ router.delete('/:id', checkAuth, async (req, res) => {
     }
 
     // 刪除群組成員記錄
-    await connection.query('DELETE FROM group_members WHERE group_id = ?', [
+    await client.query('DELETE FROM group_members WHERE group_id = $1', [
       req.params.id,
     ])
 
     // 刪除群組
-    await connection.query('DELETE FROM `group` WHERE group_id = ?', [
+    await client.query('DELETE FROM "group" WHERE group_id = $1', [
       req.params.id,
     ])
 
-    await connection.commit()
+    await client.query('COMMIT')
 
     return res.json({
       status: 'success',
       message: '群組已刪除',
     })
   } catch (error) {
-    if (connection) await connection.rollback()
+    if (client) await client.query('ROLLBACK')
 
     return res.status(400).json({
       status: 'error',
       message: error.message || '刪除群組失敗',
     })
   } finally {
-    if (connection) connection.release()
+    if (client) client.release()
   }
 })
 
@@ -564,17 +536,17 @@ router.use((err, req, res, next) => {
 
 // 發送群組申請
 router.post('/requests', checkAuth, async (req, res) => {
-  let connection
+  let client
   try {
-    connection = await db.getConnection()
-    await connection.beginTransaction()
+    client = await pool.connect()
+    await client.query('BEGIN')
 
     const { groupId, gameId, description } = req.body
     const senderId = req.user.user_id
 
     // 檢查群組是否存在
-    const [group] = await connection.query(
-      'SELECT creator_id, group_name FROM `group` WHERE group_id = ?',
+    const { rows: group } = await client.query(
+      'SELECT creator_id, group_name FROM "group" WHERE group_id = $1',
       [groupId]
     )
 
@@ -583,8 +555,8 @@ router.post('/requests', checkAuth, async (req, res) => {
     }
 
     // 檢查是否已經是成員
-    const [existingMember] = await connection.query(
-      'SELECT 1 FROM group_members WHERE group_id = ? AND member_id = ?',
+    const { rows: existingMember } = await client.query(
+      'SELECT 1 FROM group_members WHERE group_id = $1 AND member_id = $2',
       [groupId, senderId]
     )
 
@@ -593,8 +565,8 @@ router.post('/requests', checkAuth, async (req, res) => {
     }
 
     // 檢查是否已有待處理的申請
-    const [existingRequest] = await connection.query(
-      'SELECT 1 FROM group_requests WHERE group_id = ? AND sender_id = ? AND status = "pending"',
+    const { rows: existingRequest } = await client.query(
+      'SELECT 1 FROM group_requests WHERE group_id = $1 AND sender_id = $2 AND status = "pending"',
       [groupId, senderId]
     )
 
@@ -603,110 +575,103 @@ router.post('/requests', checkAuth, async (req, res) => {
     }
 
     // 新增申請記錄
-    const [requestResult] = await connection.query(
+    const { rows: [request] } = await client.query(
       `INSERT INTO group_requests 
        (group_id, sender_id, creator_id, game_id, description) 
-       VALUES (?, ?, ?, ?, ?)`,
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
       [groupId, senderId, group[0].creator_id, gameId, description]
     )
 
-    await connection.commit()
+    await client.query('COMMIT')
 
     res.json({
       status: 'success',
       message: '申請已送出',
-      data: { requestId: requestResult.insertId },
+      data: { requestId: request.id },
     })
   } catch (error) {
-    if (connection) await connection.rollback()
+    if (client) await client.query('ROLLBACK')
     console.error('發送群組申請錯誤:', error)
     res.status(400).json({
       status: 'error',
       message: error.message || '發送申請失敗',
     })
   } finally {
-    if (connection) connection.release()
+    if (client) client.release()
   }
 })
 
-// 處理群組申請
+// PATCH - 處理群組申請
 router.patch('/requests/:requestId', checkAuth, async (req, res) => {
-  let connection
+  let client
   try {
-    connection = await db.getConnection()
-    await connection.beginTransaction()
+    client = await pool.connect()
+    await client.query('BEGIN')
 
     const { requestId } = req.params
-    const { status } = req.body // 'accepted' or 'rejected'
+    const { status } = req.body
     const userId = req.user.user_id
 
-    // 獲取申請詳情
-    const [request] = await connection.query(
-      `SELECT gr.*, g.chat_room_id
-       FROM group_requests gr
-       JOIN \`group\` g ON gr.group_id = g.group_id
-       WHERE gr.id = ? AND gr.status = 'pending'`,
-      [requestId]
-    )
+    const { rows: requests } = await client.query(`
+      SELECT gr.*, g.chat_room_id
+      FROM group_requests gr
+      JOIN "group" g ON gr.group_id = g.group_id
+      WHERE gr.id = $1 AND gr.status = 'pending'
+    `, [requestId])
 
-    if (!request.length) {
+    if (!requests.length) {
       throw new Error('找不到該申請或已處理')
     }
 
-    if (request[0].creator_id !== userId) {
+    if (requests[0].creator_id !== userId) {
       throw new Error('只有群組創建者可以處理申請')
     }
 
-    // 更新申請狀態
-    await connection.query(
-      'UPDATE group_requests SET status = ? WHERE id = ?',
+    await client.query(
+      'UPDATE group_requests SET status = $1 WHERE id = $2',
       [status, requestId]
     )
 
     if (status === 'accepted') {
-      // 加入群組成員
-      await connection.query(
-        'INSERT INTO group_members (group_id, member_id, status) VALUES (?, ?, "accepted")',
-        [request[0].group_id, request[0].sender_id]
+      await client.query(
+        'INSERT INTO group_members (group_id, member_id, status) VALUES ($1, $2, $3)',
+        [requests[0].group_id, requests[0].sender_id, 'accepted']
       )
 
-      // 如果有聊天室，也加入聊天室成員
-      if (request[0].chat_room_id) {
-        await connection.query(
-          'INSERT INTO chat_room_members (room_id, user_id) VALUES (?, ?)',
-          [request[0].chat_room_id, request[0].sender_id]
+      if (requests[0].chat_room_id) {
+        await client.query(
+          'INSERT INTO chat_room_members (room_id, user_id) VALUES ($1, $2)',
+          [requests[0].chat_room_id, requests[0].sender_id]
         )
       }
     }
 
-    await connection.commit()
-
+    await client.query('COMMIT')
     res.json({
       status: 'success',
       message: status === 'accepted' ? '已接受申請' : '已拒絕申請',
       data: { status },
     })
   } catch (error) {
-    if (connection) await connection.rollback()
+    if (client) await client.query('ROLLBACK')
     console.error('處理群組申請錯誤:', error)
     res.status(400).json({
       status: 'error',
       message: error.message || '處理申請失敗',
     })
   } finally {
-    if (connection) connection.release()
+    if (client) client.release()
   }
 })
 
-// 獲取群組申請列表
+// GET - 獲取群組申請列表
 router.get('/requests/:groupId', checkAuth, async (req, res) => {
   try {
     const { groupId } = req.params
     const userId = req.user.user_id
 
-    // 驗證訪問權限
-    const [group] = await db.query(
-      'SELECT 1 FROM `group` WHERE group_id = ? AND creator_id = ?',
+    const { rows: group } = await pool.query(
+      `SELECT 1 FROM "group" WHERE group_id = $1 AND creator_id = $2`,
       [groupId, userId]
     )
 
@@ -717,12 +682,11 @@ router.get('/requests/:groupId', checkAuth, async (req, res) => {
       })
     }
 
-    // 獲取申請列表
-    const [requests] = await db.query(
+    const { rows: requests } = await pool.query(
       `SELECT gr.*, u.name as sender_name, u.image_path as sender_image
        FROM group_requests gr
        JOIN users u ON gr.sender_id = u.user_id
-       WHERE gr.group_id = ?
+       WHERE gr.group_id = $1
        ORDER BY gr.created_at DESC`,
       [groupId]
     )

@@ -15,10 +15,12 @@ const db = mysql.createPool({
   queueLimit: 0,
   dateStrings: true, // 轉換日期字串格式用
 })
+
+
 // 測試連線
 db.getConnection()
   .then((connection) => {
-    console.log('資料庫連線成功')
+    console.log('資料庫連線成功!!')
     connection.release()
   })
   .catch((err) => {

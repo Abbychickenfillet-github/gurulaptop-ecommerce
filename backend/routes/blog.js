@@ -1,84 +1,86 @@
 import express from 'express'
-import db from '##/configs/mysql.js'
 import multer from 'multer'
+import pool from '##/configs/pgClient.js'
+import { v4, uuidv4 } from 'uuid'
 
 const router = express.Router()
-// 指定router變成變數，router是一個方法，處理路由
-// 解析傳來的請求，目前我是用 fetch()
 
-// 有撈到了啦 json http://localhost:3005/api/article/1
-// 動態路由記得寫
+// 後端儲存路徑
+const uploadDir = 'public/blog-images'
 
-// 把假圖片全部儲存在後端統一路徑
-// 後端儲存路徑：public/blog-images
-// 後端完整儲存路徑 (不要用)：\laptopGuru\backend\public\blog-images\
-// 前端獲取資料路徑：http://localhost:3005/blog-image/
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: 'public/blog-images',
-    filename: (req, file, cb) => {
-      cb(null, `${file.originalname}`)
-    },
-  }),
+// 修改 multer 配置
+const storage = multer.diskStorage({
+  destination: uploadDir,
+  filename: (req, file, cb) => {
+    // 使用 UUID 生成唯一檔名
+    const uniqueSuffix = `${uuidv4()}-${file.originalname}`
+    cb(null, uniqueSuffix)
+  }
 })
 
-// -------------------------------時間戳記製作-------------------------------
+const upload = multer({ storage })
 
-// 後端路由
-// router.get('/test', async (req, res) => {
-//   console.log('apple') // 這會在伺服器控制台顯示 'apple'
-//   res.send('Test endpoint is working') // 回應 Postman 字串
-// })
-
+// 分頁查詢
 router.get('/', async (req, res) => {
   const { page = 1, limit = 2 } = req.query
   const offset = (page - 1) * limit
 
   try {
-    const [[{ total }]] = await db.query(
-      'SELECT COUNT(*) as total FROM blogoverview WHERE blog_valid_value = 1'
+    // 獲取總數
+    const { rows: [total] } = await pool.query(
+      'SELECT COUNT(*) as total FROM blogoverview WHERE blog_valid_value = TRUE;'
     )
 
-    const [blogs] = await db.query(
-      `SELECT * FROM blogoverview 
-       WHERE blog_valid_value = 1
-       ORDER BY blog_created_date DESC 
-       LIMIT ? OFFSET ?`,
-      [Number(limit), offset]
-    )
+    // 獲取分頁資料
+    const { rows: blogs } = await pool.query(`
+      SELECT * FROM blogoverview 
+      WHERE blog_valid_value = TRUE
+      ORDER BY blog_created_date DESC 
+      LIMIT $1 OFFSET $2;
+    `, [parseInt(limit), parseInt(offset)])
 
-    res.json({ blogs, total })
+    res.json({
+      blogs,
+      total: total.total,
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(total.total / parseInt(limit))
+    })
   } catch (error) {
     console.error('Latest blogs error:', error)
     res.status(500).json({ message: '伺服器錯誤' })
   }
 })
 
+// 博客卡片分頁
 router.get('/blogcardgroup', async (req, res) => {
   const { page = 1, limit = 6 } = req.query
   const offset = (page - 1) * limit
 
   try {
-    const [[{ total }]] = await db.query(
-      'SELECT COUNT(*) as total FROM blogoverview WHERE blog_valid_value = 1'
+    const { rows: [total] } = await pool.query(
+      'SELECT COUNT(*) as total FROM blogoverview WHERE blog_valid_value = TRUE;'
     )
 
-    const [blogs] = await db.query(
-      `SELECT * FROM blogoverview 
-       WHERE blog_valid_value = 1
-       ORDER BY blog_created_date DESC 
-       LIMIT ? OFFSET ?`,
-      [Number(limit), offset]
-    )
+    const { rows: blogs } = await pool.query(`
+      SELECT * FROM blogoverview 
+      WHERE blog_valid_value = TRUE
+      ORDER BY blog_created_date DESC 
+      LIMIT $1 OFFSET $2;
+    `, [parseInt(limit), parseInt(offset)])
 
-    res.json({ blogs, total })
+    res.json({
+      blogs,
+      total: total.total,
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(total.total / parseInt(limit))
+    })
   } catch (error) {
     console.error('Latest blogs error:', error)
     res.status(500).json({ message: '伺服器錯誤' })
   }
 })
 
+// 新增部落格
 router.post('/blog-created', upload.single('blog_image'), async (req, res) => {
   try {
     const {
@@ -93,11 +95,17 @@ router.post('/blog-created', upload.single('blog_image'), async (req, res) => {
       blog_created_date,
     } = req.body
 
-    // 獲取上傳的圖片路徑
-    const blog_image = req.file ? `/blog-images/${req.file.originalname}` : null
+    const blog_image = req.file ? `/blog-images/${req.file.filename}` : null
 
-    // 創建要插入的資料物件
-    const blogData = {
+    const { rows: [newBlog] } = await pool.query(`
+      INSERT INTO blogoverview (
+        user_id, blog_type, blog_title, blog_content, blog_brand,
+        blog_brand_model, blog_keyword, blog_valid_value, blog_created_date, blog_image
+      ) VALUES (
+        $1, $2, $3, $4, $5,
+        $6, $7, $8, $9, $10
+      ) RETURNING *;
+    `, [
       user_id,
       blog_type,
       blog_title,
@@ -105,37 +113,38 @@ router.post('/blog-created', upload.single('blog_image'), async (req, res) => {
       blog_brand,
       blog_brand_model,
       blog_keyword,
-      blog_valid_value,
+      blog_valid_value === '1',
       blog_created_date,
-      blog_image,
-    }
-
-    // 執行插入操作
-    const [result] = await db.query('INSERT INTO blogoverview SET ?', [
-      blogData,
+      blog_image
     ])
 
     res.json({
       success: true,
       message: '新增成功',
-      blog_id: result.insertId, // 返回新插入的 ID
+      blog_id: newBlog.blog_id
     })
   } catch (error) {
     console.error('資料庫錯誤:', error)
+    
+    // PostgreSQL 唯一鍵錯誤碼
+    if (error.code === '23505') {
+      return res.status(400).json({
+        success: false,
+        message: '此部落格已存在'
+      })
+    }
+
     res.status(500).json({
       success: false,
-      message: '新增失敗，請稍後再試',
+      message: '新增失敗，請稍後再試'
     })
   }
 })
 
+// 查看單一部落格（使用者視角）
 router.get('/blog-user-detail/:blog_id', async (req, res) => {
   try {
-    const blogId = req.params.blog_id // 從 URL 參數中獲取 blog_id
-
-    // 從 blogoverview 表中撈取符合條件的資料
-    const [blogData] = await db.query(
-      `
+    const { rows: blogs } = await pool.query(`
       SELECT 
         user_id,
         blog_type,
@@ -149,31 +158,33 @@ router.get('/blog-user-detail/:blog_id', async (req, res) => {
         blog_valid_value,
         blog_url
       FROM blogoverview
-      WHERE blog_valid_value = 1 AND blog_id = ?
-    `,
-      [blogId]
-    )
+      WHERE blog_valid_value = TRUE AND blog_id = $1;
+    `, [req.params.blog_id])
 
-    // 檢查是否有撈到資料
-    if (blogData.length === 0) {
-      return res.json({ status: 'error', message: '查無相關部落格資料' })
+    if (blogs.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: '查無相關部落格資料'
+      })
     }
 
-    // 回傳資料
-    res.json({ status: 'success', data: blogData[0] })
+    res.json({
+      status: 'success',
+      data: blogs[0]
+    })
   } catch (error) {
     console.error('Error fetching blog data:', error)
-    res.status(500).json({ status: 'error', message: '伺服器錯誤' })
+    res.status(500).json({
+      status: 'error',
+      message: '伺服器錯誤'
+    })
   }
 })
 
+// 查看單一部落格（一般）
 router.get('/blog-detail/:blog_id', async (req, res) => {
   try {
-    const blogId = req.params.blog_id // 從 URL 參數中獲取 blog_id
-
-    // 從 blogoverview 表中撈取符合條件的資料
-    const [blogData] = await db.query(
-      `
+    const { rows: blogs } = await pool.query(`
       SELECT 
         user_id,
         blog_type,
@@ -187,314 +198,276 @@ router.get('/blog-detail/:blog_id', async (req, res) => {
         blog_valid_value,
         blog_url
       FROM blogoverview
-      WHERE blog_valid_value = 1 AND blog_id = ?
-    `,
-      [blogId]
-    )
+      WHERE blog_valid_value = TRUE AND blog_id = $1;
+    `, [req.params.blog_id])
 
-    // 檢查是否有撈到資料
-    if (blogData.length === 0) {
-      return res.json({ status: 'error', message: '查無相關部落格資料' })
+    if (blogs.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: '查無相關部落格資料'
+      })
     }
 
-    // 回傳資料
-    res.json({ status: 'success', data: blogData[0] })
+    res.json({
+      status: 'success',
+      data: blogs[0]
+    })
   } catch (error) {
     console.error('Error fetching blog data:', error)
-    res.status(500).json({ status: 'error', message: '伺服器錯誤' })
+    res.status(500).json({
+      status: 'error',
+      message: '伺服器錯誤'
+    })
   }
 })
 
-router.get('/bloguseroverview/:blog_id', async (req, res) => {
+// 查看部落格（管理）
+router.get('/bloguseroverview/:user_id', async (req, res) => {
   try {
-    const [blogData] = await db.query(
-      `SELECT * FROM blogoverview WHERE blog_id = ? AND blog_valid_value = 1`,
-      [req.params.blog_id]
-    )
+    const { rows: blogs } = await pool.query(`
+      SELECT b.*, u.name as user_name 
+      FROM blogoverview b
+      JOIN users u ON b.user_id = u.user_id
+      WHERE b.user_id = $1 AND b.blog_valid_value = TRUE
+      ORDER BY b.blog_created_date DESC;
+    `, [req.params.user_id])
 
-    if (blogData.length === 0) {
-      return res.json({ status: 'error', message: '查無資料' })
-    }
-
-    res.json({ status: 'success', data: blogData[0] })
-  } catch (error) {
-    res.status(500).json({ message: '伺服器錯誤' })
-  }
-})
-
-router.get('/blog-edit/:blog_id', async (req, res) => {
-  try {
-    const [rows] = await db.query(
-      'SELECT * FROM blogoverview WHERE blog_id = ?',
-      [req.params.blog_id]
-    )
-    // console.log('後端返回的資料:', rows[0]) // 檢查資料
-    res.json(rows[0])
-  } catch (error) {
-    res.status(500).json({ error: '獲取失敗' })
-  }
-})
-
-router.put(
-  '/blog-edit/:blog_id',
-  upload.single('blog_image'),
-  async (req, res) => {
-    try {
-      const {
-        user_id,
-        blog_type,
-        blog_title,
-        blog_content,
-        blog_brand,
-        blog_brand_model,
-        blog_keyword,
-        originalImage,
-      } = req.body
-
-      // 修改圖片處理邏輯
-      let blog_image = null
-      if (req.file) {
-        // 有新上傳的圖片
-        blog_image = `/blog-images/${req.file.originalname}`
-      } else if (originalImage) {
-        // 使用原始圖片
-        blog_image = originalImage
-      }
-
-      const sql = `
-      UPDATE blogoverview 
-      SET user_id=?, blog_type=?, blog_title=?, blog_content=?, 
-          blog_brand=?, blog_brand_model=?, blog_keyword=?, 
-          blog_image=?
-      WHERE blog_id=?
-    `
-
-      await db.query(sql, [
-        user_id,
-        blog_type,
-        blog_title,
-        blog_content,
-        blog_brand,
-        blog_brand_model,
-        blog_keyword,
-        blog_image,
-        req.params.blog_id,
-      ])
-
-      res.json({
-        success: true,
-        blog_image: blog_image, // 返回最終使用的圖片路徑
+    if (blogs.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: '找不到該文章'
       })
-    } catch (error) {
-      console.error('更新錯誤:', error)
-      res.status(500).json({ error: '更新失敗' })
-    }
-  }
-)
-
-// 軟刪除部落格（把valid設為0）
-router.put('/blog-delete/:blog_id', async (req, res) => {
-  try {
-    await db.query(
-      'UPDATE blogoverview SET blog_valid_value = 0 WHERE blog_id = ?',
-      [req.params.blog_id]
-    )
-    res.json({ success: true })
-  } catch (error) {
-    res.status(500).json({ error: '刪除失敗' })
-  }
-})
-
-router.get('/blog_user_overview/:user_id', async (req, res) => {
-  try {
-    const [rows] = await db.query(
-      `SELECT b.*, u.name as user_name 
-       FROM blogoverview b
-       JOIN users u ON b.user_id = u.user_id 
-       WHERE b.user_id = ? AND b.blog_valid_value = 1 
-       ORDER BY b.blog_created_date DESC`,
-      [req.params.user_id]
-    )
-
-    // 檢查是否有資料
-    if (!rows || rows.length === 0) {
-      return res.status(404).json({ message: '找不到該文章' })
     }
 
-    // 回傳整個陣列
-    res.json(rows)
+    res.json({
+      status: 'success',
+      data: blogs
+    })
   } catch (error) {
     console.error('部落格查詢錯誤:', error)
-    res.status(500).json({ message: '伺服器錯誤' })
+    res.status(500).json({
+      status: 'error',
+      message: '伺服器錯誤'
+    })
   }
 })
 
-// GET 評論路由
+// 編輯部落格
+router.put('/blog-edit/:blog_id', upload.single('blog_image'), async (req, res) => {
+  try {
+    const {
+      user_id,
+      blog_type,
+      blog_title,
+      blog_content,
+      blog_brand,
+      blog_brand_model,
+      blog_keyword,
+      originalImage
+    } = req.body
+
+    let blog_image = null
+    if (req.file) {
+      blog_image = `/blog-images/${req.file.filename}`
+    } else if (originalImage) {
+      blog_image = originalImage
+    }
+
+    const { rows: [updatedBlog] } = await pool.query(`
+      UPDATE blogoverview 
+      SET user_id = $1,
+          blog_type = $2,
+          blog_title = $3,
+          blog_content = $4,
+          blog_brand = $5,
+          blog_brand_model = $6,
+          blog_keyword = $7,
+          blog_image = $8
+      WHERE blog_id = $9
+      RETURNING *;
+    `, [
+      user_id,
+      blog_type,
+      blog_title,
+      blog_content,
+      blog_brand,
+      blog_brand_model,
+      blog_keyword,
+      blog_image,
+      req.params.blog_id
+    ])
+
+    res.json({
+      success: true,
+      blog_image: updatedBlog.blog_image
+    })
+  } catch (error) {
+    console.error('更新錯誤:', error)
+    
+    // 如果是唯一鍵錯誤
+    if (error.code === '23505') {
+      return res.status(400).json({
+        success: false,
+        message: '此部落格已存在'
+      })
+    }
+
+    res.status(500).json({
+      success: false,
+      message: '更新失敗'
+    })
+  }
+})
+
+// 軟刪除部落格
+router.put('/blog-delete/:blog_id', async (req, res) => {
+  try {
+    const { rows: [blog] } = await pool.query(
+      'SELECT blog_image FROM blogoverview WHERE blog_id = $1;',
+      [req.params.blog_id]
+    )
+
+    // 刪除圖片
+    if (blog.blog_image) {
+      const imagePath = path.join(__dirname, '..', blog.blog_image)
+      try {
+        await fs.promises.unlink(imagePath)
+      } catch (err) {
+        console.error('Error deleting blog image:', err)
+      }
+    }
+
+    // 執行刪除
+    const { rows: [result] } = await pool.query(
+      'UPDATE blogoverview SET blog_valid_value = FALSE WHERE blog_id = $1 RETURNING *;',
+      [req.params.blog_id]
+    )
+
+    res.json({
+      success: true,
+      data: result
+    })
+  } catch (error) {
+    console.error('刪除錯誤:', error)
+    res.status(500).json({
+      success: false,
+      message: '刪除失敗'
+    })
+  }
+})
+
+// 查看評論
 router.get('/blog-comment/:blog_id', async (req, res) => {
   try {
-    const [blogComment] = await db.query(
-      `SELECT 
+    const { rows: blogComments } = await pool.query(`
+      SELECT 
         bc.*,
         users.name,
         users.image_path
       FROM blogcomment bc
       LEFT JOIN users ON bc.user_id = users.user_id
-      WHERE bc.blog_id = ?
-      ORDER BY bc.blog_created_date ASC`,
-      [req.params.blog_id]
-    )
+      WHERE bc.blog_id = $1
+      ORDER BY bc.blog_created_date ASC;
+    `, [req.params.blog_id])
 
-    // 處理每條評論的圖片路徑
-    const processedComments = blogComment.map((comment) => {
-      if (!comment.image_path) {
-        return comment
-      }
-
-      // 檢查是否已經是完整的 base64 或檔案路徑
-      if (
-        comment.image_path.startsWith('data:image') ||
-        comment.image_path.startsWith('http') ||
-        comment.image_path.startsWith('/')
-      ) {
-        return comment
-      }
-
-      // 檢查是否為純 base64 字串
-      if (comment.image_path.startsWith('/9j/')) {
-        // JPEG 圖片
-        return {
-          ...comment,
-          image_path: `data:image/jpeg;base64,${comment.image_path}`,
-        }
-      } else if (comment.image_path.startsWith('iVBOR')) {
-        // PNG 圖片
-        return {
-          ...comment,
-          image_path: `data:image/png;base64,${comment.image_path}`,
-        }
-      }
-
-      // 如果都不是，回傳原始資料
-      return comment
-    })
-
-    // 記錄處理結果（開發時可用）
-    console.log('處理第一筆資料的圖片：', {
-      original: blogComment[0]?.image_path?.substring(0, 50),
-      processed: processedComments[0]?.image_path?.substring(0, 50),
-    })
-
-    res.json(processedComments || [])
+    res.json(blogComments)
   } catch (error) {
     console.error('部落格查詢錯誤:', error)
-    res.status(500).json({ message: '伺服器錯誤' })
+    res.status(500).json({
+      status: 'error',
+      message: '伺服器錯誤'
+    })
   }
 })
 
-// POST 評論路由
+// 新增評論
 router.post('/blog-comment/:blog_id', async (req, res) => {
   const { blog_id } = req.params
   const { user_id, blog_content, blog_created_date } = req.body
 
   try {
-    // 1. 新增評論
-    const [result] = await db.execute(
-      `INSERT INTO blogcomment 
+    const { rows: [newComment] } = await pool.query(`
+      INSERT INTO blogcomment 
       (blog_id, user_id, blog_content, blog_created_date) 
-      VALUES (?, ?, ?, ?)`,
-      [blog_id, user_id, blog_content, blog_created_date]
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;
+    `, [blog_id, user_id, blog_content, blog_created_date])
+
+    // 獲取用戶資料
+    const { rows: [user] } = await pool.query(
+      'SELECT name, image_path FROM users WHERE user_id = $1;',
+      [newComment.user_id]
     )
 
-    // 2. 獲取剛新增的評論及用戶資料
-    const [newComment] = await db.query(
-      `SELECT 
-        bc.*,
-        users.name,
-        users.image_path
-      FROM blogcomment bc
-      LEFT JOIN users ON bc.user_id = users.user_id
-      WHERE bc.blog_comment_id = ?`,
-      [result.insertId]
-    )
-
-    res.json(newComment[0])
+    res.json({
+      ...newComment,
+      name: user.name,
+      image_path: user.image_path
+    })
   } catch (error) {
     console.error('新增評論錯誤:', error)
-    res.status(500).json({ error: 'Error posting comment' })
+    res.status(500).json({
+      status: 'error',
+      message: 'Error posting comment'
+    })
   }
 })
 
-// 後端修改 - blog.js router
+// 搜尋路由
 router.get('/search', async (req, res) => {
-  const {
-    page = 1,
-    limit = 6,
-    search = '',
-    types = '',
-    brands = '',
-  } = req.query
+  const { page = 1, limit = 6, search = '', types = '', brands = '' } = req.query
   const offset = (page - 1) * limit
 
   try {
-    let whereConditions = ['blog_valid_value = 1']
+    let whereConditions = ['blog_valid_value = TRUE']
     let params = []
 
     if (search) {
-      whereConditions.push('(blog_content LIKE ? OR blog_title LIKE ?)')
+      whereConditions.push('(blog_content ILIKE $1 OR blog_title ILIKE $2)')
       params.push(`%${search}%`, `%${search}%`)
     }
 
     if (types) {
       const typeArray = types.split(',').filter(Boolean)
       if (typeArray.length) {
-        whereConditions.push(
-          `blog_type IN (${typeArray.map(() => '?').join(',')})`
-        )
-        params.push(...typeArray)
+        whereConditions.push(`blog_type IN (${typeArray.map(() => '$' + (params.length + 1)).join(',')})`)
+        params = params.concat(typeArray)
       }
     }
 
     if (brands) {
       const brandArray = brands.split(',').filter(Boolean)
       if (brandArray.length) {
-        whereConditions.push(
-          `blog_brand IN (${brandArray.map(() => '?').join(',')})`
-        )
-        params.push(...brandArray)
+        whereConditions.push(`blog_brand IN (${brandArray.map(() => '$' + (params.length + 1)).join(',')})`)
+        params = params.concat(brandArray)
       }
     }
 
-    const whereClause = whereConditions.length
-      ? `WHERE ${whereConditions.join(' AND ')}`
-      : ''
-
-    const query = `
-      SELECT * FROM blogoverview 
-      ${whereClause}
-      ORDER BY blog_created_date DESC
-      LIMIT ? OFFSET ?
-    `
-
-    const countQuery = `
-      SELECT COUNT(*) as total 
-      FROM blogoverview 
-      ${whereClause}
-    `
+    const whereClause = whereConditions.length > 1 ? `WHERE ${whereConditions.join(' AND ')}` : ''
+    const paramsWithLimit = [...params, parseInt(limit), parseInt(offset)]
 
     const [countResult, blogsResult] = await Promise.all([
-      db.query(countQuery, params),
-      db.query(query, [...params, parseInt(limit), parseInt(offset)]),
+      pool.query(`SELECT COUNT(*) as total FROM blogoverview ${whereClause};`, params),
+      pool.query(`
+        SELECT * FROM blogoverview 
+        ${whereClause}
+        ORDER BY blog_created_date DESC
+        LIMIT $${params.length + 1} OFFSET $${params.length + 2};
+      `, paramsWithLimit)
     ])
 
     res.json({
-      blogs: blogsResult[0],
-      total: countResult[0][0].total,
+      blogs: blogsResult.rows,
+      total: countResult.rows[0].total,
       currentPage: parseInt(page),
-      totalPages: Math.ceil(countResult[0][0].total / parseInt(limit)),
+      totalPages: Math.ceil(countResult.rows[0].total / parseInt(limit)),
     })
   } catch (error) {
     console.error('Search error:', error)
-    res.status(500).json({ message: '伺服器錯誤' })
+    res.status(500).json({
+      status: 'error',
+      message: '伺服器錯誤'
+    })
   }
 })
 

@@ -1,100 +1,103 @@
 import express from 'express'
-const router = express.Router()
-
-import db from '##/configs/mysql.js'
-
 import multer from 'multer'
+import pool from '##/configs/pgClient.js'
+
+const router = express.Router()
 const upload = multer()
 
 /* GET home page. */
 router.get('/:user_id', upload.none(), async (req, res, next) => {
-  const user_id = req.params.user_id
-  const status = req.params.status
+  const { user_id } = req.params
+  const { status } = req.query
+
   // 檢查user_id是否存在
   if (!user_id) {
-    return res.json({ status: 'error', message: '請先登入' })
-  }
-
-  const [user] = await db.query('SELECT * FROM users WHERE user_id = ?', [
-    user_id,
-  ])
-  if ([user].length === 0) {
-    return res.json({ status: 'error', message: '使用者不存在' })
+    return res.status(401).json({
+      status: 'error',
+      message: '請先登入'
+    })
   }
 
   try {
-    const [data] = await db.query(
-      'SELECT * FROM order_list WHERE user_id = ?',
+    // 檢查使用者是否存在
+    const { rows: users } = await pool.query(
+      'SELECT * FROM users WHERE user_id = $1;',
       [user_id]
     )
-
-    if (data.length == 0) {
-      return res.json({ status: 'success', message: '無訂單資料' })
+    
+    if (users.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: '使用者不存在'
+      })
     }
-    return res.json({ status: 'success', data, clause: status })
 
-    // if (status == 'all-orders') {
-    //   const [data] = await db.query(
-    //     'SELECT * FROM order_list WHERE user_id = ?',
-    //     [user_id]
-    //   )
+    // 根據狀態篩選訂單
+    let query = 'SELECT * FROM order_list WHERE user_id = $1'
+    let params = [user_id]
+    
+    if (status === 'processing') {
+      query += ' AND already_pay = FALSE'
+    } else if (status === 'completed') {
+      query += ' AND already_pay = TRUE'
+    }
 
-    //   if (data.length == 0) {
-    //     return res.json({ status: 'success', message: '無訂單資料' })
-    //   }
-    //   return res.json({ status: 'success', data, clause: status })
-    // }
+    const { rows: data } = await pool.query(query, params)
 
-    // if (status == 'processing') {
-    //   const [data] = await db.query(
-    //     'SELECT * FROM order_list WHERE user_id = ? AND already_pay = 0',
-    //     [user_id]
-    //   )
+    if (data.length === 0) {
+      return res.json({
+        status: 'success',
+        message: '無訂單資料'
+      })
+    }
 
-    //   if (data.length == 0) {
-    //     return res.json({ status: 'success', message: '無訂單資料' })
-    //   }
-    //   return res.json({ status: 'success', data, clause: status })
-    // }
-
-    // if (status == 'completed') {
-    //   const [data] = await db.query(
-    //     'SELECT * FROM order_list WHERE user_id = ? AND already_pay = 1',
-    //     [user_id]
-    //   )
-
-    //   if (data.length == 0) {
-    //     return res.json({ status: 'success', message: '無訂單資料' })
-    //   }
-    //   return res.json({ status: 'success', data, clause: status })
-    // }
+    return res.json({
+      status: 'success',
+      data,
+      clause: status
+    })
   } catch (error) {
+    console.error('Order query error:', error)
     res.status(500).json({
       status: 'error',
-      message: '伺服器錯誤',
+      message: '伺服器錯誤'
     })
   }
 })
 
+// 訂單明細
 router.get('/detail/:order_id', upload.none(), async (req, res, next) => {
-  const order_id = req.params.order_id
-  // 檢查user_id是否存在
+  const { order_id } = req.params
 
   try {
-    const [result] = await db.query(
-      'SELECT order_detail.*, product.product_name, product.list_price, product_img.product_img_path FROM order_detail JOIN product ON order_detail.product_id = product.product_id JOIN product_img ON product.product_id = product_img.img_product_id WHERE order_id = ?',
-      [order_id]
-    )
+    const { rows: result } = await pool.query(`
+      SELECT 
+        od.*,
+        p.product_name,
+        p.list_price,
+        pi.product_img_path
+      FROM order_detail od
+      JOIN product p ON od.product_id = p.product_id
+      JOIN product_img pi ON p.product_id = pi.img_product_id
+      WHERE od.order_id = $1;
+    `, [order_id])
 
-    if (result.length == 0) {
-      return res.json({ status: 'success', message: '無訂單資料' })
+    if (result.length === 0) {
+      return res.json({
+        status: 'success',
+        message: '無訂單資料'
+      })
     }
 
-    res.json({ status: 'success', data: result })
+    res.json({
+      status: 'success',
+      data: result
+    })
   } catch (error) {
+    console.error('Order detail error:', error)
     res.status(500).json({
       status: 'error',
-      message: '伺服器錯誤',
+      message: '伺服器錯誤'
     })
   }
 })

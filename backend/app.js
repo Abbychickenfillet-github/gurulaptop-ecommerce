@@ -3,7 +3,9 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import createError from 'http-errors'
 import express from 'express'
-import db from '##/configs/mysql.js'
+// import db from '##/configs/mysql.js'
+import pool from '##/configs/pgClient.js'
+
 import logger from 'morgan'
 import path from 'path'
 import session from 'express-session'
@@ -109,11 +111,11 @@ app.use('/api/google-login', googleLoginRouter)
 
 async function testConnection() {
   try {
-    const connection = await db.getConnection()
-    console.log('Database connection successful')
+    const connection = await pool.connect()
+    console.log('✅ PostgreSQL 資料庫連線成功')
     connection.release()
   } catch (error) {
-    console.error('Database connection failed:', error)
+    console.error('❌ PostgreSQL 資料庫連線失敗:', error)
     process.exit(1) // 如果連線失敗就終止程式
   }
 }

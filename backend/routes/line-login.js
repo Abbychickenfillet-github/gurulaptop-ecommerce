@@ -1,9 +1,9 @@
 import express from 'express'
+import jsonwebtoken from 'jsonwebtoken'
+import sequelize from '#configs/db.js'
 const router = express.Router()
 
-import jsonwebtoken from 'jsonwebtoken'
 
-import sequelize from '#configs/db.js'
 const { User } = sequelize.models
 
 // line-login模組

@@ -1,12 +1,12 @@
 import ChatRoom from '../models/ChatRoom.js'
 import { chatService } from '../services/chatService.js'
-import db from '../configs/mysql.js'
-
+// import db from '../configs/mysql.js'
+import pool from '##/configs/pgClient.js' 
 export const chatController = {
   // 群組申請相關方法
   getPendingRequests: async (userId) => {
     try {
-      const [requests] = await db.execute(
+      const { rows: requests } = await pool.query(
         `SELECT 
           gr.*,
           u.name as sender_name,

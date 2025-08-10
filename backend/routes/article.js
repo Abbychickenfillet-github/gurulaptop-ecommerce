@@ -1,31 +1,54 @@
 import express from 'express'
-import db from '##/configs/mysql.js'
 import multer from 'multer'
+import pool from '##/configs/pgClient.js'
 
 const router = express.Router()
-// 指定router變成變數，router是一個方法，處理路由
 const upload = multer()
-// 解析傳來的請求，文章目前我是用 fetch()
 
-// 有撈到了啦 json http://localhost:3005/api/article/1
-// 動態路由記得寫
+router.get('/article_detail/:article_id', upload.none(), async (req, res, next) => {
+  const { article_id } = req.params
 
-router.get(
-  '/article_detail/:article_id',
-  upload.none(),
-  async (req, res, next) => {
-    const article_id = req.params.article_id
-    console.log(article_id)
-    const [data] = await db.query(
-      'SELECT * FROM articleoverview WHERE article_id = ?',
+  try {
+    const { rows: data } = await pool.query(
+      'SELECT * FROM articleoverview WHERE article_id = $1;',
       [article_id]
     )
-    if (data.length == 0) {
-      return res.json({ status: 'error', message: '查無此文章' })
+
+    if (data.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: '查無此文章'
+      })
     }
 
-    res.json({ status: 'success', data: data })
+    res.json({
+      status: 'success',
+      data: data
+    })
+  } catch (error) {
+    console.error('文章查詢錯誤:', error)
+    next(error)
   }
-)
+})
+
+// 新增文章路由示例
+router.post('/create', upload.none(), async (req, res, next) => {
+  const { title, content, author_id } = req.body
+
+  try {
+    const { rows: [newArticle] } = await pool.query(
+      'INSERT INTO articleoverview (title, content, author_id) VALUES ($1, $2, $3) RETURNING *;',
+      [title, content, author_id]
+    )
+
+    res.status(201).json({
+      status: 'success',
+      data: newArticle
+    })
+  } catch (error) {
+    console.error('建立文章錯誤:', error)
+    next(error)
+  }
+})
 
 export default router

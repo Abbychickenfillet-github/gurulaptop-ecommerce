@@ -2,7 +2,7 @@ import express from 'express'
 import { chatController } from '../controllers/chatController.js'
 import { chatService } from '../services/chatService.js'
 import { checkAuth } from './auth.js'
-import db from '../configs/mysql.js'
+import pool from '../configs/pgClient.js'
 
 const router = express.Router()
 
@@ -11,83 +11,83 @@ router.use(checkAuth)
 
 // === 聊天室成員管理 ===
 router.post('/rooms/:roomId/leave', async (req, res) => {
-  const connection = await db.getConnection()
-  try {
-    await connection.beginTransaction()
+  const client = await pool.connect()
+  const { roomId } = req.params
+  const userId = req.user.user_id
 
-    const { roomId } = req.params
-    const userId = req.user.user_id
+  try {
+    await client.query('BEGIN')
 
     // 獲取群組資訊
-    const [[groupInfo]] = await connection.execute(
-      'SELECT group_id FROM `group` WHERE chat_room_id = ?',
+    const { rows: groupInfo } = await client.query(
+      'SELECT group_id FROM "group" WHERE chat_room_id = $1',
       [roomId]
     )
 
-    if (!groupInfo) {
+    if (groupInfo.length === 0) {
       throw new Error('找不到該群組')
     }
 
     // 從聊天室成員中移除
-    await connection.execute(
-      'DELETE FROM chat_room_members WHERE room_id = ? AND user_id = ?',
+    await client.query(
+      'DELETE FROM chat_room_members WHERE room_id = $1 AND user_id = $2',
       [roomId, userId]
     )
 
     // 從群組成員中移除
-    await connection.execute(
-      'DELETE FROM group_members WHERE group_id = ? AND member_id = ?',
-      [groupInfo.group_id, userId]
+    await client.query(
+      'DELETE FROM group_members WHERE group_id = $1 AND member_id = $2',
+      [groupInfo[0].group_id, userId]
     )
 
-    // 新增系統消息記錄離開事件
-    const [[userData]] = await connection.execute(
-      'SELECT name FROM users WHERE user_id = ?',
+    // 新增系統消息
+    const { rows: userData } = await client.query(
+      'SELECT name FROM users WHERE user_id = $1',
       [userId]
     )
 
     const systemMessage = JSON.stringify({
       type: 'system',
-      content: `使用者 ${userData.name || '未知用戶'} 已離開群組`,
+      content: `使用者 ${userData[0]?.name || '未知用戶'} 已離開群組`,
     })
 
-    await connection.execute(
-      'INSERT INTO chat_messages (room_id, sender_id, message, is_system) VALUES (?, ?, ?, 1)',
+    await client.query(
+      'INSERT INTO chat_messages (room_id, sender_id, message, is_system) VALUES ($1, $2, $3, TRUE)',
       [roomId, 0, systemMessage]
     )
 
-    await connection.commit()
+    await client.query('COMMIT')
 
     // 更新在線成員數量
-    const [[memberCount]] = await connection.execute(
-      'SELECT COUNT(*) as count FROM group_members WHERE group_id = ? AND status = "accepted"',
-      [groupInfo.group_id]
+    const { rows: memberCount } = await client.query(
+      'SELECT COUNT(*) as count FROM group_members WHERE group_id = $1 AND status = $2',
+      [groupInfo[0].group_id, 'accepted']
     )
 
     // 廣播更新消息
     chatService.broadcastToRoom(roomId, {
       type: 'memberLeft',
-      userId: userId,
-      userName: userData.name || '未知用戶',
-      groupId: groupInfo.group_id,
-      memberCount: memberCount.count,
+      userId,
+      userName: userData[0]?.name || '未知用戶',
+      groupId: groupInfo[0].group_id,
+      memberCount: memberCount[0].count,
       timestamp: new Date().toISOString(),
     })
 
     res.json({
       status: 'success',
       message: '已成功離開聊天室',
-      data: { memberCount: memberCount.count },
+      data: { memberCount: memberCount[0].count },
     })
   } catch (error) {
-    await connection.rollback()
+    await client.query('ROLLBACK')
     console.error('離開聊天室失敗:', error)
     res.status(500).json({
       status: 'error',
       message: error.message || '離開聊天室失敗',
     })
   } finally {
-    connection.release()
+    client.release()
   }
 })
 
@@ -154,7 +154,6 @@ router.get('/requests/history', async (req, res) => {
   }
 })
 
-// 處理群組申請
 router.patch('/requests/:requestId', async (req, res) => {
   try {
     const userId = req.user.user_id
@@ -192,19 +191,17 @@ router.patch('/requests/:requestId', async (req, res) => {
 
 // === 使用者相關路由 ===
 router.get('/users', async (req, res) => {
-  let connection
   try {
-    connection = await db.getConnection()
-    const [users] = await connection.execute(
-      `SELECT 
-          user_id,
-          name,
-          email,
-          image_path,
-          created_at
-        FROM users 
-        WHERE valid = 1`
-    )
+    const { rows: users } = await pool.query(`
+      SELECT 
+        user_id,
+        name,
+        email,
+        image_path,
+        created_at
+      FROM users 
+      WHERE valid = TRUE
+    `)
 
     res.json({
       status: 'success',
@@ -222,8 +219,6 @@ router.get('/users', async (req, res) => {
       status: 'error',
       message: '獲取使用者列表失敗',
     })
-  } finally {
-    if (connection) connection.release()
   }
 })
 
