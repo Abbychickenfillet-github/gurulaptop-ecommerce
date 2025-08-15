@@ -1,26 +1,26 @@
-import db from '../configs/mysql.js'
-
+// import db from '../configs/mysql.js'
+import pool from '##/configs/pgClient.js'
 export const messageService = {
   // 儲存私人訊息
   savePrivateMessage: async (senderId, receiverId, content, type = 'text') => {
-    const connection = await db.getConnection()
+    const client = await pool.connect()
     try {
-      await connection.beginTransaction()
+      await client.query('BEGIN')
 
-      const [result] = await connection.execute(
+      const { rows } = await client.query(
         `INSERT INTO messages 
         (sender_id, receiver_id, type, content, status, created_at) 
-        VALUES (?, ?, ?, ?, 'sent', NOW())`,
+        VALUES ($1, $2, $3, $4, 'sent', NOW()) RETURNING id`,
         [senderId, receiverId, type, content]
       )
 
-      await connection.commit()
-      return result.insertId
+      await client.query('COMMIT')
+      return rows[0].id
     } catch (error) {
-      await connection.rollback()
+      await client.query('ROLLBACK')
       throw error
     } finally {
-      connection.release()
+      client.release()
     }
   },
 

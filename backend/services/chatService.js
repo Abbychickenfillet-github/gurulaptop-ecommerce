@@ -1,6 +1,6 @@
 import WebSocket from 'ws'
 import { ChatRoom } from '../models/ChatRoom.js'
-import db from '../configs/mysql.js'
+import pool from '##/configs/pgClient.js'
 
 class ChatService {
   constructor() {
@@ -120,15 +120,15 @@ class ChatService {
     const { roomID, message, fromID } = data
 
     try {
-      const connection = await db.getConnection()
+      const connection = await pool.connect()
       try {
-        await connection.beginTransaction()
+        await connection.query('BEGIN')
 
         // 檢查是否為群組成員
-        const [[memberCheck]] = await connection.execute(
+        const [[memberCheck]] = await connection.query(
           `SELECT gm.* 
            FROM group_members gm
-           JOIN \`group\` g ON gm.group_id = g.group_id
+           JOIN "group" g ON gm.group_id = g.group_id
            WHERE g.chat_room_id = ? AND gm.member_id = ? 
            AND gm.status = 'accepted'`,
           [roomID, fromID]
@@ -139,8 +139,8 @@ class ChatService {
         }
 
         // 儲存消息
-        const [result] = await connection.execute(
-          'INSERT INTO chat_messages (room_id, sender_id, message, is_private, is_system) VALUES (?, ?, ?, 0, 0)',
+        const { rows } = await connection.query(
+          'INSERT INTO chat_messages (room_id, sender_id, message, is_private, is_system) VALUES ($1, $2, $3, 0, 0)',
           [roomID, fromID, message]
         )
 
@@ -305,21 +305,21 @@ class ChatService {
         // 通知申請者處理結果
         const applicantWs = this.clients.get(request.sender_id)
         if (applicantWs?.readyState === WebSocket.OPEN) {
-          applicantWs.send(
+            applicantWs.send(
             JSON.stringify({
               type: 'groupRequestResult',
               requestId,
               status,
               message:
-                message ||
-                (status === 'accepted'
-                  ? '您的申請已被接受'
-                  : '您的申請已被拒絕'),
+              message ||
+              (status === 'accepted'
+                ? '您的申請已被接受'
+                : '您的申請已被拒絕'),
               sender_name: request.sender_name,
               sender_image: request.sender_image,
               timestamp: new Date().toISOString(),
             })
-          )
+            )
         }
 
         // 廣播群組更新

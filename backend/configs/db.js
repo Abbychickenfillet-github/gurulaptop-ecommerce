@@ -1,28 +1,36 @@
-import { Sequelize } from 'sequelize'
-import 'dotenv/config.js'
-import applyModels from '#db-helpers/sequelize/models-setup.js'
+import { Sequelize } from 'sequelize';
+import 'dotenv/config.js';
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
-  logging: false,
-  timezone: '+08:00',
-  define: {
-    freezeTableName: true,
-    charset: 'utf8',
-    collate: 'utf8_general_ci',
+  protocol: 'postgres',
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false // Render.com 需要這個設定
+    }
   },
-})
+  logging: process.env.NODE_ENV === 'development' ? console.log : false,
+  pool: {
+    max: 10,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
+});
 
-// 測試連線
-try {
-  await sequelize.authenticate()
-  console.log('✅ Database connected')
-} catch (err) {
-  console.error('❌ Unable to connect to the database:', err)
-}
+// 測試連接
+const testConnection = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('✅ Sequelize PostgreSQL 連接成功');
+  } catch (error) {
+    console.error('❌ Unable to connect to the database:', error);
+    throw error;
+  }
+};
 
-await applyModels(sequelize)
-await sequelize.sync({})
-console.log('✅ All models synced')
+// 立即測試連接
+testConnection();
 
-export default sequelize
+export default sequelize;

@@ -1,13 +1,13 @@
 import express from 'express'
 const router = express.Router()
-import db from '##/configs/mysql.js'
-
-// import sequelize from '#configs/db.js'
-// const { User } = sequelize.models
+import pool from '##/configs/pgClient.js'
 
 import jsonwebtoken from 'jsonwebtoken'
 // 存取`.env`設定檔案使用
 import 'dotenv/config.js'
+
+// import sequelize from '#configs/db.js'
+// const { User } = sequelize.models
 
 // 定義安全的私鑰字串
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
@@ -35,18 +35,18 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
       }
       console.log("後端google-login");
       //資料表有沒有這個google_uid了，將得出的答案存進users陣列中。如果這個陣列長度>1會在else
-      const [users] = await db.query(
-        'SELECT * FROM users WHERE google_uid = ?',
+      const {rows:users} = await pool.query(
+        'SELECT * FROM users WHERE google_uid = $1',
         [providerData.uid]
       )
   
       let user_id
       if (users.length === 0) {
         // 新用戶，建立帳號
-        const [result] = await db.query(
+        const {rows:result} = await pool.query(
           `INSERT INTO users 
            (name, email, google_uid, photo_url, level, valid) 
-           VALUES (?, ?, ?, ?, 0, 1)`,
+           VALUES ($1, $2, $3, $4, 0, 1) RETURNING user_id`,
           [
             providerData.displayName,
             providerData.email,
@@ -54,11 +54,11 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
             providerData.photoURL
           ]
         )
-        user_id = result.insertId
+        user_id = result.rows[0].user_id
       } else {
         // 舊用戶，更新資料
         user_id = users[0].user_id
-        await db.query(
+        await pool.query(
           `UPDATE users 
            SET google_uid=?, name=?, email=?, photo_url=? 
            WHERE user_id=?`,
