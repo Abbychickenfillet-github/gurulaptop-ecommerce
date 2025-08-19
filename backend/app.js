@@ -13,13 +13,12 @@ import authRouter from './routes/auth.js'
 import loginRouter from './routes/login.js'
 import signupRouter from './routes/signup.js'
 import dashboardRouter from './routes/dashboard.js'
-// import usersRouter from './routes/users.js'
 import eventsRouter from './routes/events.js'
 import couponRouter from './routes/coupon.js'
 import couponUserRouter from './routes/coupon-user.js'
 import chatRoutes from './routes/chat.js'
 import GroupRequests from './routes/group-request.js'
-import googleLoginRouter from './routes/google-login.js'
+// import googleLoginRouter from './routes/google-login.js'
 import forgotPasswordRouter from './routes/forgot-password.js'
 
 
@@ -96,7 +95,6 @@ app.use('/api/auth', authRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/signup', signupRouter)
 app.use('/api/dashboard', dashboardRouter)
-app.use('/api/users', usersRouter)
 app.use('/api/events', eventsRouter)
 app.use('/api/forgot-password', forgotPasswordRouter)
 app.use('/api/auth', authRouter)
@@ -105,7 +103,7 @@ app.use('/api/auth', authRouter)
 //優惠卷路由
 app.use('/api/coupon', couponRouter)
 app.use('/api/coupon-user', couponUserRouter)
-app.use('/api/google-login', googleLoginRouter)
+// app.use('/api/google-login', googleLoginRouter)
 
 
 

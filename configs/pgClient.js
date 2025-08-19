@@ -164,8 +164,7 @@ export const ChatRoom = {
       console.error('獲取待處理申請錯誤:', error)
       throw error
     }
-  },
-
+  },// 為什麼又突然資料庫連線失敗
   getGroupRequestHistory: async (userId) => {
     try {
       const { rows: history } = await pool.query(`

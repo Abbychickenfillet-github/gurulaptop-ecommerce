@@ -1,7 +1,7 @@
 import express from 'express'
 const router = express.Router()
 
-import pool from '##/configs/postgres.js' // 修改数据库配置导入路径
+import pool from '##/configs/pgClient.js' // 修改数据库配置导入路径
 import multer from 'multer'
 
 const upload = multer()
