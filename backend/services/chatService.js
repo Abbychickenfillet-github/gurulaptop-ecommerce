@@ -185,7 +185,7 @@ class ChatService {
   async handleGroupRequest(ws, { fromID, groupId, gameId, description }) {
     try {
       // 獲取申請者資訊
-      const [[sender]] = await db.execute(
+      const {sender} = await pool.execute(
         'SELECT name, image_path FROM users WHERE user_id = ?',
         [fromID]
       )
@@ -212,7 +212,7 @@ class ChatService {
       }
 
       // 保存申請記錄
-      const [result] = await db.execute(
+      const {result} = await pool.execute(
         `INSERT INTO group_requests 
          (group_id, sender_id, creator_id, game_id, description) 
          VALUES (?, ?, ?, ?, ?)`,
@@ -245,7 +245,7 @@ class ChatService {
   async handleGroupRequestResponse(ws, { requestId, status, message }) {
     try {
       // 獲取申請詳情
-      const [[request]] = await db.execute(
+      const {request} = await pool.execute(
         `SELECT gr.*, g.chat_room_id, g.group_name,
                 u.name as sender_name, u.image_path as sender_image
          FROM group_requests gr
@@ -257,26 +257,26 @@ class ChatService {
 
       if (!request) throw new Error('找不到該申請')
 
-      await db.execute(
-        'UPDATE group_requests SET status = ?, updated_at = NOW() WHERE id = ?',
+      await pool.execute(
+        'UPDATE group_requests SET status = $1, updated_at = NOW() WHERE id = $2',
         [status, requestId]
       )
 
-      const connection = await db.getConnection()
+      const connection = await pool.connect()
       try {
         await connection.beginTransaction()
 
         if (status === 'accepted') {
           // 將申請者加入群組
           await connection.execute(
-            'INSERT INTO group_members (group_id, member_id, status) VALUES (?, ?, "accepted")',
+            'INSERT INTO group_members (group_id, member_id, status) VALUES ($1, $2, "accepted")',
             [request.group_id, request.sender_id]
           )
 
           if (request.chat_room_id) {
             // 將申請者加入聊天室
             await connection.execute(
-              'INSERT INTO chat_room_members (room_id, user_id) VALUES (?, ?)',
+              'INSERT INTO chat_room_members (room_id, user_id) VALUES ($1, $2)',
               [request.chat_room_id, request.sender_id]
             )
 
@@ -287,7 +287,7 @@ class ChatService {
             })
 
             await connection.execute(
-              'INSERT INTO chat_messages (room_id, sender_id, message, is_system) VALUES (?, 0, ?, 1)',
+              'INSERT INTO chat_messages (room_id, sender_id, message, is_system) VALUES ($1, 0, $2, 1)',
               [request.chat_room_id, systemMessage]
             )
 

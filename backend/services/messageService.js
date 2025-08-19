@@ -30,12 +30,12 @@ export const messageService = {
     try {
       await connection.beginTransaction()
 
-      const [result] = await connection.execute(
+      const {result} = await connection.execute(
         `INSERT INTO chat_messages 
         (room_id, sender_id, message, message_type, status, created_at) 
-        VALUES (?, ?, ?, ?, 'sent', NOW())`,
-        [roomId, senderId, content, type]
+        VALUES ($1, $2, $3, $4, 'sent', NOW()) RETURNING *`,
       )
+      const values = [roomId, senderId, content, type];
 
       await connection.commit()
       return result.insertId

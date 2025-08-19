@@ -50,7 +50,7 @@ ALTER TABLE `messages`
   ADD KEY `idx_sender` (`sender_id`),
   ADD KEY `idx_receiver` (`receiver_id`),
   ADD KEY `idx_type` (`type`);
-
+-- 這邊的 `metadata` 欄位是用來存儲 JSON 格式的資料，並且有一個檢查約束來確保其內容是有效的 JSON。ADD KEY是用來為 `sender_id`, `receiver_id`, 和 `type` 欄位建立索引，以提高查詢效率。
 --
 -- 在傾印的資料表使用自動遞增(AUTO_INCREMENT)
 --

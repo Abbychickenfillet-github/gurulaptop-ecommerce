@@ -19,7 +19,7 @@ import { compareHash } from '#db-helpers/password-hash.js'
 import path from 'path'
 import multer from 'multer'
 
-import pool from '##/configs/mysql.js'
+import pool from '##/configs/pgClient.js'
 
 // multer的設定值 - START
 const storage = multer.diskStorage({
