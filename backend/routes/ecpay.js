@@ -5,8 +5,9 @@ import * as crypto from 'crypto'
 // 存取`.env`設定檔案使用
 import 'dotenv/config.js'
 // 資料庫使用
-import sequelize from '#configs/db.js'
-const { Purchase_Order } = sequelize.models
+// import sequelize from '#configs/db.js'
+import pool from '##/configs/pgClient.js'
+// const { Purchase_Order } = sequelize.models
 
 // 中介軟體，存取隱私會員資料用
 import authenticate from '#middlewares/authenticate.js'
@@ -34,10 +35,14 @@ router.get('/payment', authenticate, async (req, res, next) => {
   // 從資料庫得到order資料
   const id = req.query.orderId
   // 從資料庫取得訂單資料
-  const orderRecord = await Purchase_Order.findByPk(id, {
-    raw: true, // 只需要資料表中資料
-  })
-
+  // const orderRecord = await Purchase_Order.findByPk(id, {
+  //   raw: true, // 只需要資料表中資料
+  // })
+  const { rows: orderRecords } = await pool.query(
+    'SELECT * FROM purchase_order WHERE id = $1',
+    [id]
+  )
+  const orderRecord = orderRecords[0] // 取得第一筆資料
   console.log('獲得訂單資料，內容如下：')
   console.log(orderRecord)
 
