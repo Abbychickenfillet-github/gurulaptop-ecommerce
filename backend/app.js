@@ -101,9 +101,6 @@ app.use('/api/auth', authRouter)
 //優惠卷路由
 app.use('/api/coupon', couponRouter)
 app.use('/api/coupon-user', couponUserRouter)
-// app.use('/api/google-login', googleLoginRouter)
-
-
 
 async function testConnection() {
   try {

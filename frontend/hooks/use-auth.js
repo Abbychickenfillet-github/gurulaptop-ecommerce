@@ -151,10 +151,17 @@ export const AuthProvider = ({ children }) => {
         // 使用 setTimeout 來檢查狀態是否更新
         setTimeout(() => {
           console.log('狀態更新後的 auth:', auth)
+<<<<<<< HEAD
         }, 1000)
         
         // 登入成功後跳轉
         router.replace('/dashboard')
+=======
+        }, 100)
+        
+        // 登入成功後跳轉
+        router.push('/dashboard')
+>>>>>>> 2c82f642fa5fb7dc5f9ebf6ecc9e640b0ba9b69c
         
       } else {
         console.error('登入失敗:', result.message || result)
@@ -296,12 +303,36 @@ export const AuthProvider = ({ children }) => {
     
   }, [ router?.pathname, auth?.isAuth])
 
+  // 已經登入的使用者不得再進入註冊和登入頁面
+  const publicOnlyRoutes = ['/member/login', '/member/signup']
+  
+  useEffect(() => {
+    if (router.isReady) {
+      // router.pathname 是目前頁面的完整路徑
+      if (auth?.isAuth && publicOnlyRoutes.includes(router.pathname)) {
+        router.replace('/dashboard')
+      }
+    }
+  }, [router?.isReady, router?.pathname, auth?.isAuth])
+
   // didMount(初次渲染)後，向伺服器要求檢查會員是否登入中
   // useEffect(() => {
   //   if (router.isReady) {
   //     handleCheckAuth()
   //   }
   // }, [router.isReady, router.pathname])
+
+  // 加入狀態變化的 debug log
+  useEffect(() => {
+<<<<<<< HEAD
+    console.log('Auth 狀態變化:', auth)
+  }, [auth])
+=======
+    if (router.isReady) {
+      handleCheckAuth()
+    }
+  }, [router.isReady, router.pathname])
+>>>>>>> 2c82f642fa5fb7dc5f9ebf6ecc9e640b0ba9b69c
 
   // 加入狀態變化的 debug log
   useEffect(() => {
@@ -317,7 +348,10 @@ export const AuthProvider = ({ children }) => {
         setAuth,
         // favorites,
         // setFavorites,
+<<<<<<< HEAD
         handleCheckAuth
+=======
+>>>>>>> 2c82f642fa5fb7dc5f9ebf6ecc9e640b0ba9b69c
       }}
     >
       {children}

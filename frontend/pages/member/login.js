@@ -14,6 +14,10 @@ import { useLoader } from '@/hooks/use-loader'
 import Head from 'next/head'
 import GlitchText from '@/components/dashboard/glitch-text/glitch-text'
 import GlowingText from '@/components/dashboard/glowing-text/glowing-text';
+<<<<<<< HEAD
+=======
+import {auth} from '@/hooks/use-auth'
+>>>>>>> 2c82f642fa5fb7dc5f9ebf6ecc9e640b0ba9b69c
 
 export default function LogIn(props) {
   const [showpassword, setShowpassword] = useState(false)
