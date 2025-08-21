@@ -184,4 +184,44 @@ app.use('/api/', GroupRequests)
 //     }
 //   })
 // })
+// 動態端口設定 - 如果 3005 被佔用，嘗試其他端口
+// const findAvailablePort = (startPort = 3005) => {
+//   return new Promise((resolve) => {
+//     const server = app.listen(startPort, () => {
+//       const port = server.address().port
+//       server.close(() => resolve(port))
+//     }).on('error', () => {
+//       // 如果端口被佔用，嘗試下一個端口
+//       findAvailablePort(startPort + 1).then(resolve)
+//     })
+//   })
+// }
+
+// 啟動伺服器
+// const startServer = async () => {
+//   try {
+//     const port = await findAvailablePort()
+    
+//     app.listen(port, () => {
+//       console.log(`✅ 伺服器成功啟動在 http://localhost:${port}`)
+//       console.log(`🚀 環境: ${process.env.NODE_ENV || 'development'}`)
+//     })
+//   } catch (error) {
+//     console.error('❌ 伺服器啟動失敗:', error)
+//     process.exit(1)
+//   }
+// }
+
+// 優雅關閉處理
+// process.on('SIGTERM', () => {
+//   console.log('🛑 收到 SIGTERM 信號，正在關閉伺服器...')
+//   process.exit(0)
+// })
+
+// process.on('SIGINT', () => {
+//   console.log('🛑 收到 SIGINT 信號，正在關閉伺服器...')
+//   process.exit(0)
+// })
+
+
 export default app

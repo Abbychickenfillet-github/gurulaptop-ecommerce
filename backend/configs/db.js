@@ -1,13 +1,13 @@
 import { Sequelize } from 'sequelize';
 import 'dotenv/config.js';
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const sequelize = new Sequelize(process.env.zeabur_connection_string, {
   dialect: 'postgres',
   protocol: 'postgres',
   dialectOptions: {
     ssl: {
       require: true,
-      rejectUnauthorized: false // Render.com 需要這個設定
+      rejectUnauthorized: false 
     }
   },
   logging: process.env.NODE_ENV === 'development' ? console.log : false,

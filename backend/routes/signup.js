@@ -1,5 +1,5 @@
 import express from 'express'
-import db from '##/configs/pgClient.js' // ✅ 使用PostgreSQL配置
+import pool from '##/configs/pgClient.js' // ✅ 使用PostgreSQL配置
 import multer from 'multer'
 const upload = multer()
 const router = express.Router()
@@ -31,7 +31,7 @@ router.post('/', upload.none(), async (req, res) => {
     // 檢查是否已經有相同的email
     // console.log('開始資料庫操作')
 
-    const { rows: existingUsers } = await db.query(
+    const { rows: existingUsers } = await pool.query(
       'SELECT * FROM users WHERE email = $1',
       [email]
     )
@@ -44,7 +44,10 @@ router.post('/', upload.none(), async (req, res) => {
     }
 
     const hashedPassword = await generateHash(password)
-
+    // 處理空值，確保 PostgreSQL 接受有效值
+    const userPhone = phone || null;
+    const userBirthdate = birthdate === '' ? null : birthdate;
+    const userGender = gender === '' ? null : gender;
     const sql = `
       INSERT INTO users (
         email, password, phone, birthdate, gender,
@@ -59,13 +62,13 @@ router.post('/', upload.none(), async (req, res) => {
 
     const params = [
       email,
-      hashedPassword, // 使用加密後的密碼
-      phone || null,
-      birthdate || null,
-      gender === '' ? null : gender,  // 明確檢查空字串
+      hashedPassword,
+      userPhone,
+      userBirthdate,
+      userGender,
     ]
 
-    const { rows } = await db.query(sql, params)
+    const { rows } = await pool.query(sql, params)
     console.log('插入結果:', rows[0])
 
     if (rows.length > 0) {
@@ -79,8 +82,11 @@ router.post('/', upload.none(), async (req, res) => {
       })
     }
 
-    // } catch (error) {
-    //   console.error('註冊失敗:', error)
+    // 如果沒有 rows，可能是插入失敗
+    return res.status(500).json({
+      status: 'error',
+      message: '資料庫寫入失敗',
+    });
   } catch (error) {
     if (error.code === '23505') { // ✅ PostgreSQL 的唯一约束冲突错误码
       return res.status(400).json({

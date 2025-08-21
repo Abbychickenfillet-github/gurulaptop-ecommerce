@@ -4,12 +4,12 @@
 CREATE TABLE IF NOT EXISTS users (
   user_id INTEGER PRIMARY KEY, -- PostgreSQL 中 UNSIGNED 不支援，預設正整數使用 INTEGER
   level SMALLINT NOT NULL DEFAULT 0, -- 對應 tinyint(2)
-  password TEXT NOT NULL,
+  password VARCHAR NOT NULL,
   name VARCHAR(30),
   phone VARCHAR(30),
   email VARCHAR(30) NOT NULL,
   valid BOOLEAN NOT NULL DEFAULT TRUE, -- 使用 boolean 替代 tinyint(1)
-  created_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   gender VARCHAR(10),
   country VARCHAR(30) NOT NULL,
   city VARCHAR(30) NOT NULL,

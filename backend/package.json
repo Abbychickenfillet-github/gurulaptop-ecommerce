@@ -3,12 +3,31 @@
   "version": "1.2.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./bin/www",
+    "dev": "nodemon --delay 2 --watch . --ext js,json --ignore node_modules/ ./bin/www",
     "seed": "node ./cli/db-init.js",
     "backup": "node ./cli/db-backup.js",
     "debug": "DEBUG=express:* node ./bin/www",
     "debug-win": "set DEBUG=express:* & node ./bin/www",
     "start": "node ./bin/www"
+  },
+  "nodemonConfig": {
+    "delay": "2000",
+    "watch": [
+      "routes",
+      "bin",
+      "configs",
+      "db-helpers"
+    ],
+    "ignore": [
+      "node_modules",
+      "public",
+      "uploads",
+      "*.log"
+    ],
+    "ext": "js,json",
+    "env": {
+      "NODE_ENV": "development"
+    }
   },
   "dependencies": {
     "app-root-path": "^3.1.0",
@@ -66,15 +85,7 @@
     "yarn": ">= 1.6",
     "node": ">= 16.0"
   },
-  "nodemonConfig": {
-    "ignore": [
-      "sessions/*",
-      "data/*",
-      "seeds/*",
-      "public/*",
-      "node_modules/*"
-    ]
-  },
+
   "imports": {
     "##/*": "./*",
     "#configs/*": "./configs/*",
