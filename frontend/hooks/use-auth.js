@@ -54,10 +54,12 @@ export const initUserData = {
 
 // 可以視為webtoken要押的資料
 // 承接登入以後用的
+// 創了一個叫做AuthProvider的元件
 export const AuthProvider = ({ children }) => {
+    // 使用 useState 來管理認證狀態，是初始值所以isAuth會是false
   const [auth, setAuth] = useState({
-    isAuth: false,
-    userData: initUserData,
+    isAuth: false, // 判斷使用者是否已登入
+    userData: initUserData, // 儲存使用者資料
     // isLoading: true,
   })
   // 只在應用啟動時檢查一次認證狀態
@@ -285,28 +287,29 @@ export const AuthProvider = ({ children }) => {
     }))
   }
 }
+
   // 已經登入的使用者不得再進入註冊和登入頁面
-  const publicOnlyRoutes = ['/member/login', '/member/signup']
+  // const publicOnlyRoutes = ['/member/login', '/member/signup']
   
-  useEffect(() => {
+  // useEffect(() => {
    
-      if (auth?.isAuth && publicOnlyRoutes.includes(router.pathname)) {
-        router.replace('/dashboard')
-      }
+  //     if (auth?.isAuth && publicOnlyRoutes.includes(router.pathname)) {
+  //       router.replace('/dashboard')
+  //     }
     
-  }, [ router?.pathname, auth?.isAuth])
+  // }, [ router?.pathname, auth?.isAuth])
 
   // 已經登入的使用者不得再進入註冊和登入頁面
 
   
-  useEffect(() => {
-    if (router.isReady) {
-      // router.pathname 是目前頁面的完整路徑
-      if (auth?.isAuth && publicOnlyRoutes.includes(router.pathname)) {
-        router.replace('/dashboard')
-      }
-    }
-  }, [router?.isReady, router?.pathname, auth?.isAuth])
+  // useEffect(() => {
+  //   if (router.isReady) {
+  //     // router.pathname 是目前頁面的完整路徑
+  //     if (auth?.isAuth && publicOnlyRoutes.includes(router.pathname)) {
+  //       router.replace('/dashboard')
+  //     }
+  //   }
+  // }, [router?.isReady, router?.pathname, auth?.isAuth])
 
   // didMount(初次渲染)後，向伺服器要求檢查會員是否登入中
   // useEffect(() => {

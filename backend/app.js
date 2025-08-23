@@ -82,8 +82,12 @@ app.use(express.json({
 
 // 這個limit:'20mb'是傳入參數
 app.use(express.urlencoded({ extended: false, limit: '20mb' }))// 中間件4
-// 剖折 Cookie 標頭與增加至 req.cookies
+
+// 剖折 Cookie 標頭與增加至 req.cookies 
+// cookie-parser 的作用就是簡化後端伺服器對 Cookie 的處理，將原始的字串格式轉換為易於使用的 JavaScript 物件，從而讓開發者能專注於處理業務邏輯，而不必費心於底層的資料解析。
 app.use(cookieParser())// 中間件5
+
+
 // 在 public 的目錄，提供影像、CSS 等靜態檔案
 app.use(express.static(path.join(__dirname, 'public')))// 中間件6
 // 路由1

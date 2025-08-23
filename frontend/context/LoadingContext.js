@@ -1,4 +1,4 @@
-// context/LoadingContext.js
+// context/LoadingContext.js 這一支檔案是kuma寫的
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import LoadingAnimation from '@/components/LoadingAnimation/LoadingAnimation';
 

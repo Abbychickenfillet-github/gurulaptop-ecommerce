@@ -47,7 +47,7 @@ export default function LogIn(props) {
       if (result.status === 'success') {
         console.log('登入前端接上後端成功')
         // await login(formData.get('email'), formData.get('password'))
-        // console.log('登入成功，auth 狀態:', auth) // 加入 debug
+        console.log('登入成功，auth 狀態:', auth) // 加入 debug
         router.push('/dashboard')
       } else {
         setErrors({

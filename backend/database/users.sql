@@ -23,3 +23,9 @@ CREATE TABLE IF NOT EXISTS users (
   iat VARCHAR(50),
   exp VARCHAR(50)
 );
+
+INSERT INTO users (
+  user_id, level, password, name, phone, email, valid, created_at, gender, country, city, district, road_name, detailed_address, image_path, remarks, birthdate, google_uid, iat, exp
+) VALUES (
+  1, 0, '$2a$10$kuGvOL4FF1YWE3Y.r53uWeyHEPou8URsAd.BIkgNqrXmGhHWDuvi.', 'John Doe', '+886987654321', 'john@example.com', TRUE, CURRENT_TIMESTAMP, 'Male', 'Taiwan', 'Taipei', 'Daan', 'Xiaonan', 'No.123', '/images/profile1.jpg', 'Test user', '1990-01-01', 12345, '1731661684', '1731661684'
+);

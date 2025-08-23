@@ -9,7 +9,11 @@ export default function RouterGuard({ children }) {
     const { auth } = useAuth()
     const protectedRoutes = ['/dashboard', '/coupon/coupon-user'] // 修正：加上 /
     const publicOnlyRoutes = ['/member/login', '/member/signup']
-
+    // 顯示載入動畫
+    if (auth?.isLoading) {
+        return <LoadingAnimation />
+    }
+    
     useEffect(() => {
         // 等待認證檢查完成
         if (!router?.isReady || auth?.isLoading) {
@@ -18,8 +22,9 @@ export default function RouterGuard({ children }) {
 
         // 檢查受保護路由
         if (protectedRoutes?.includes(router.pathname) && !auth?.isAuth) {
-            console.log('router?.pathname', router.pathname)
-            console.log('auth?.isAuth', auth.isAuth)
+            console.log(`路由router.pathname: ${router.pathname}`)
+
+            console.log(`auth?.isAuth: ${auth.isAuth}`)
             console.log('未登入用戶嘗試存取受保護頁面，跳轉登入頁')
             router.replace('/member/login')
             return
@@ -33,10 +38,7 @@ export default function RouterGuard({ children }) {
         }
     }, [router.isReady, router.pathname, auth.isAuth, auth.isLoading]) // 添加完整依賴
 
-    // 顯示載入動畫
-    if (auth?.isLoading) {
-        return <LoadingAnimation />
-    }
+
 
     return <>{children}</>
 }

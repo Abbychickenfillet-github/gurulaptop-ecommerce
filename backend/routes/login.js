@@ -1,12 +1,16 @@
 import express from 'express'
+// 引入 Express.js 框架，用於建立伺服器和路由
 import authenticate from '#middlewares/authenticate.js'
+// 引入自定義的認證中間件
 // import db from '##/configs/mysql.js'
 import pool from '##/configs/pgClient.js'
 
 import multer from 'multer'
+// 引入 Multer 中間件，用於處理 multipart/form-data 格式的請求 (例如表單)
 import jsonwebtoken from 'jsonwebtoken'
+// 引入 jsonwebtoken，用於生成和驗證 JWT
 import { compareHash } from '#db-helpers/password-hash.js'
-
+// 引入密碼比對函式
 const upload = multer()
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 const router = express.Router()
@@ -14,37 +18,35 @@ const router = express.Router()
 /* GET home page. */
 router.post('/', upload.none(), async (req, res, next) => {
   try {
-    // console.log(req.body)
     const { email, password } = req.body
 
+    // 從資料庫查詢使用者，並確保帳號是有效的
     const { rows: users } = await pool.query(
-      'SELECT * FROM users WHERE email = $1 AND valid = 1',
+      'SELECT * FROM users WHERE email = $1 AND valid = TRUE',
       [email]
     )
     const user = users[0]
-    // 這邊實際上是帳號錯誤
-    if (row.length === 0) {
+
+    // 檢查是否有找到使用者。如果找不到，表示帳號不存在或已被停用。
+    if (!user) {
       return res.json({
         status: 'error',
         message: '帳號或密碼錯誤。或已停用本帳號，請聯繫客服',
       })
     }
-    if (user.valid !== 1) {
-      return res.json({
-        status: 'error',
-        message: '此帳號已被停用',
-      })
-    }
-    // compareHash比對輸入與資料庫中的密碼~
+
+    // 密碼比對，使用 compareHash 函數
     const passwordMatch = await compareHash(password, user.password)
-    //  這邊實際上是密碼錯誤
+    
+    // 如果密碼不匹配，返回錯誤訊息
     if (!passwordMatch) {
       return res.json({
         status: 'error',
         message: '帳號或密碼錯誤',
       })
     }
-    // 之後想改這邊邏輯，因為帳號密碼應該只能有比對出一組，如果email一樣不予註冊才對。
+
+    // 如果帳號密碼都正確，生成 JWT Token
     const token = jsonwebtoken.sign(
       {
         user_id: user.user_id,
@@ -60,22 +62,23 @@ router.post('/', upload.none(), async (req, res, next) => {
       { expiresIn: '2d' }
     )
 
-    res.cookie('accessToken', token)
-
-    res.json({
+    // 登入成功，返回 JWT Token
+    return res.json({
       status: 'success',
-      data: {
-        token,
-      },
+      token,
+      message: '登入成功',
     })
   } catch (error) {
+    // 捕獲所有其他錯誤並返回
     console.error('登入錯誤:', error)
-    res.status(500).json({
+    return res.status(500).json({
       status: 'error',
-      message: '系統錯誤或帳號已停用',
+      message: '伺服器錯誤',
+      detail: error.message
     })
   }
 })
+
 
 router.post('/logout', authenticate, (req, res) => {
   // 清除cookie
