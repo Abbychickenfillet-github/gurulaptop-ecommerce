@@ -33,9 +33,6 @@ const nextConfig = {
       },
     ]
   },
-}
-
-module.exports = {
   async redirects() {
     return [
       {
