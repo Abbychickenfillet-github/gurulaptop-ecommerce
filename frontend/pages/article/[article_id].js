@@ -1,56 +1,47 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
-// 定义组件 ArticleDetail
+// 定義組件 ArticleDetail
 export default function ArticleDetail(props) {
   // 使用 Router()
   const router = useRouter()
 
-  // 初始化文章状态
-  const [article, setArticle] = useState({
-    article_id: 0,
-    article_title: '',
-    article_content: '',
-    article_created_date: '',
-    article_brand: '',
-    article_type: '',
-    article_valid_value: '',
-    article_url: '',
-  })
+  // 初始化文章狀態
+  const [article, setArticle] = useState(null)
   console.log('13245')
 
-  const [loading, setLoading] = useState(true) // 加载状态
+  const [loading, setLoading] = useState(true) // 加載狀態
 
   const getArticle = async (article_id) => {
-    const url = `http://localhost:3005/api/article/article_detail/${article_id}`
+    const url = `NEXT_PUBLIC_API_BASE_URL/api/article/article_detail/${article_id}`
 
     try {
       const res = await fetch(url)
       const resData = await res.json()
-      console.log('Response Data:', resData) // 调试信息
-      // 检查返回的状态和数据结构
+      console.log('Response Data:', resData) // 調試信息
+      // 檢查返回的狀態和數據結構
       if (
         resData.status === 'success' &&
         Array.isArray(resData.data) &&
         resData.data.length > 0
       ) {
         setArticle(resData.data[0])
-        console.log('Article Loaded:', resData.data[0]) // 确认加载的文章内容
+        console.log('Article Loaded:', resData.data[0]) // 確認加載的文章内容
       } else {
         console.log('資料錯誤:', resData)
       }
     } catch (e) {
       console.log('Fetch error:', e)
     } finally {
-      setLoading(false) // 完成加载
+      setLoading(false) // 完成加載
     }
   }
 
   useEffect(() => {
-    console.log('Router query:', router.query) // 调试信息
-    console.log('Router is ready:', router.isReady) // 检查 router.isReady 的状态
+    console.log('Router query:', router.query) // 調試信息
+    console.log('Router is ready:', router.isReady) // 檢查 router.isReady 的狀態
     if (router.isReady && router.query.article_id) {
-      console.log('Fetching article with ID:', router.query.article_id) // 调试信息
+      console.log('Fetching article with ID:', router.query.article_id) // 調試信息
       console.log('11111')
 
       getArticle(router.query.article_id)

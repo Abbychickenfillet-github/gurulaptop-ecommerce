@@ -28,7 +28,7 @@ export default function Chat() {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch('http://localhost:3005/api/auth/check', {
+      const response = await fetch('NEXT_PUBLIC_API_BASE_URL/api/auth/check', {
         credentials: 'include',
       })
 
@@ -55,10 +55,10 @@ export default function Chat() {
   const fetchInitialData = async (userId) => {
     try {
       const [groupsResponse, usersResponse] = await Promise.all([
-        fetch('http://localhost:3005/api/chat/user/groups', {
+        fetch('NEXT_PUBLIC_API_BASE_URL/api/chat/user/groups', {
           credentials: 'include',
         }),
-        fetch('http://localhost:3005/api/chat/users', {
+        fetch('NEXT_PUBLIC_API_BASE_URL/api/chat/users', {
           credentials: 'include',
         }),
       ])

@@ -66,10 +66,10 @@ export default function List() {
     if (search) {
       where += `&search=${search}`
     }
-    console.log('請求 URL:', `http://localhost:3005/api/products/list?${where}`)
+    console.log('請求 URL:', `NEXT_PUBLIC_API_BASE_URL/api/products/list?${where}`)
 
     const response = await fetch(
-      `http://localhost:3005/api/products/list?${where}`,
+      `NEXT_PUBLIC_API_BASE_URL/api/products/list?${where}`,
       {
         method: 'GET',
         headers: {

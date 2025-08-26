@@ -30,7 +30,7 @@ export default function GroupCreat() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3005/api/auth/check', {
+        const response = await fetch('NEXT_PUBLIC_API_BASE_URL/api/auth/check', {
           credentials: 'include',
         })
 
@@ -235,7 +235,7 @@ export default function GroupCreat() {
       }
 
       // 發送請求
-      const response = await fetch('http://localhost:3005/api/group', {
+      const response = await fetch('NEXT_PUBLIC_API_BASE_URL/api/group', {
         method: 'POST',
         credentials: 'include',
         body: submitFormData,

@@ -117,7 +117,7 @@ export default function Event() {
       if (showLoading) setLoading(true)
       setError(null)
 
-      const response = await axios.get('http://localhost:3005/api/events', {
+      const response = await axios.get('NEXT_PUBLIC_API_BASE_URL/api/events', {
         params: {
           page,
           pageSize: 12,

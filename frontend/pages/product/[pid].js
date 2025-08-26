@@ -32,7 +32,7 @@ export default function Detail() {
       // 確保只在瀏覽器端執行 localStorage 的操作
       if (typeof window !== 'undefined') {
         const response = await fetch(
-          `http://localhost:3005/api/favorites/${userData.user_id}/${pid}`
+          `NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData.user_id}/${pid}`
         )
         const result = await response.json()
 
@@ -83,7 +83,7 @@ export default function Detail() {
       //抓取商品資料
       try {
         const response = await fetch(
-          `http://localhost:3005/api/products/${pid}`
+          `NEXT_PUBLIC_API_BASE_URL/api/products/${pid}`
         )
         const result = await response.json()
         setData(result?.data?.product)
@@ -145,7 +145,7 @@ export default function Detail() {
     async function fetchRelatedProducts() {
       try {
         const response = await fetch(
-          `http://localhost:3005/api/products/related/${pid}`
+          `NEXT_PUBLIC_API_BASE_URL/api/products/related/${pid}`
         )
         const result = await response.json()
         setRelatedProducts(result.data.randomRelatedProducts)
@@ -166,7 +166,7 @@ export default function Detail() {
         //刪除favorite_management資料庫
         try {
           const response = await fetch(
-            `http://localhost:3005/api/favorites/${userData.user_id}/${pid}`,
+            `NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData.user_id}/${pid}`,
             {
               method: 'DELETE',
               headers: {
@@ -189,7 +189,7 @@ export default function Detail() {
         //寫入favorite management資料庫
         try {
           const response = await fetch(
-            `http://localhost:3005/api/favorites/${userData.user_id}/${pid}`,
+            `NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData.user_id}/${pid}`,
             {
               method: 'PUT',
               headers: {
@@ -219,7 +219,7 @@ export default function Detail() {
     if (isAuth) {
       // 加入購物車資料庫
       try {
-        const response = await fetch(`http://localhost:3005/api/cart/add`, {
+        const response = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/cart/add`, {
           method: 'PUT',
           body: JSON.stringify({
             user_id: userData.user_id,

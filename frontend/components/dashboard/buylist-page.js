@@ -20,7 +20,7 @@ export default function BuylistPage(props) {
   const getOrder = async () => {
     if (!user_id) return
     try {
-      const res = await fetch(`http://localhost:3005/api/buy-list/${user_id}`)
+      const res = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/buy-list/${user_id}`)
       const data = await res.json()
       
       if ((data.status === 'success') && !data.data) {

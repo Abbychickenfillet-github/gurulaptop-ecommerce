@@ -11,10 +11,17 @@ import { useJumpingLetters } from '@/hooks/jumping-letters-hook'
 import Head from 'next/head'
 import 'animate.css';
 import GlowingText from '@/components/dashboard/glowing-text/glowing-text';
-import {auth} from '@/hooks/use-auth'
+import {useAuth} from '@/hooks/use-auth'
 export default function Signup() {
   // 處理失焦
   // const { renderJumpingText } = useJumpingLetters()
+  const { auth, handleCheckAuth } = useAuth() // 添加 handleCheckAuth
+
+  // 页面加载时检查认证状态
+  useEffect(() => {
+    console.log('Signup 頁面載入，檢查認證狀態...')
+    handleCheckAuth()
+  }, []) // 只在页面加载时执行一次
 
   const validatePassword = (password) => {
     //函式內宣告2個變數
@@ -130,7 +137,7 @@ export default function Signup() {
       
 
       const response = await axios.post(
-        `http://localhost:3005/api/signup`,
+        `NEXT_PUBLIC_API_BASE_URL/api/signup`,
         user
       )
 

@@ -29,7 +29,7 @@ export default function CouponList() {
 
   const getCouponData = async () => {
     try {
-      const res = await fetch('http://localhost:3005/api/coupon')
+      const res = await fetch('NEXT_PUBLIC_API_BASE_URL/api/coupon')
       const resData = await res.json()
 
       if (resData.data?.coupons) {
@@ -61,7 +61,7 @@ export default function CouponList() {
 
     try {
       const addResponse = await fetch(
-        `http://localhost:3005/api/coupon-user/add/${userId}`,
+        `NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/${userId}`,
         {
           method: 'POST',
           headers: {
@@ -77,7 +77,7 @@ export default function CouponList() {
       const getUserCoupons = async (userId) => {
         try {
           const res = await fetch(
-            `http://localhost:3005/api/coupon-user/${userId}`
+            `NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`
           )
           const data = await res.json()
 
@@ -124,7 +124,7 @@ export default function CouponList() {
     if (!userId) return
 
     try {
-      const res = await fetch(`http://localhost:3005/api/coupon-user/${userId}`)
+      const res = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`)
       const data = await res.json()
 
       if (data.status === 'success') {
@@ -238,7 +238,7 @@ export default function CouponList() {
         for (const coupon of unclaimedCoupons) {
           try {
             const addResponse = await fetch(
-              `http://localhost:3005/api/coupon-user/add/${userId}`,
+              `NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/${userId}`,
               {
                 method: 'POST',
                 headers: {

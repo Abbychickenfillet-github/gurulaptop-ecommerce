@@ -15,6 +15,7 @@ import BlogUserOverview from '@/components/blog/bloguseroverview'
 import Link from 'next/link'
 import Head from 'next/head'
 import { LoadingSpinner } from '@/components/dashboard/loading-spinner'
+import LoadingAnimation from '@/components/LoadingAnimation/LoadingAnimation'
 // import MarioGame from '@/components/dashboard/MarioGame'
 
 export default function DashboardIndex() {
@@ -117,9 +118,9 @@ export default function DashboardIndex() {
                   src={
                     auth?.userData?.image_path ||
                     (auth?.userData?.gender === 'male'
-                      ? 'signup_login/undraw_profile_2.svg'
+                      ? '/signup_login/undraw_profile_2.svg'
                       : auth?.userData?.gender === 'female'
-                      ? 'signup_login/undraw_profile_1.svg'
+                      ? '/signup_login/undraw_profile_1.svg'
                       : '/Vector.svg')
                   }
                   alt="Profile"
@@ -128,6 +129,10 @@ export default function DashboardIndex() {
                     width: '70px',
                     height: '70px',
                     objectFit: 'cover',
+                  }}
+                  onError={(e) => {
+                    // 如果圖片加載失敗，使用默認頭像
+                    e.target.src = '/signup_login/avatar.svg'
                   }}
                 />
                 <h5 className="mb-2">{auth?.userData?.name}</h5>

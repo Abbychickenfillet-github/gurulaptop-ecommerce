@@ -28,7 +28,7 @@ export default function BlogComment({ blog_id }) {
 
   useEffect(() => {
     if (blog_id) {
-      fetch(`http://localhost:3005/api/blog/blog-comment/${blog_id}`)
+      fetch(`NEXT_PUBLIC_API_BASE_URL/api/blog/blog-comment/${blog_id}`)
         .then((response) => response.json())
         .then((data) => {
           const commentArray = Array.isArray(data) ? data : []
@@ -62,7 +62,7 @@ export default function BlogComment({ blog_id }) {
 
     try {
       const response = await fetch(
-        `http://localhost:3005/api/blog/blog-comment/${blog_id}`,
+        `NEXT_PUBLIC_API_BASE_URL/api/blog/blog-comment/${blog_id}`,
         {
           method: 'POST',
           headers: {
@@ -124,7 +124,7 @@ export default function BlogComment({ blog_id }) {
                     comment.image_path?.startsWith('data:image')
                       ? comment.image_path
                       : comment.image_path
-                      ? `http://localhost:3005${comment.image_path}`
+                      ? `NEXT_PUBLIC_API_BASE_URL${comment.image_path}`
                       : 'https://th.bing.com/th/id/R.88c444f63f40cfa9b49801f826befa80?rik=QAme0H3xbxieEQ&pid=ImgRaw&r=0'
                   }
                   alt={comment.name || '匿名用戶'}

@@ -32,7 +32,8 @@
   "dependencies": {
     "app-root-path": "^3.1.0",
     "axios": "^1.7.7",
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
     "bluebird": "^3.7.2",
     "ckeditor5": "^43.3.0",
     "colors": "^1.4.0",
@@ -85,7 +86,6 @@
     "yarn": ">= 1.6",
     "node": ">= 16.0"
   },
-
   "imports": {
     "##/*": "./*",
     "#configs/*": "./configs/*",

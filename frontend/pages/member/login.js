@@ -19,7 +19,7 @@ export default function LogIn(props) {
   const [showpassword, setShowpassword] = useState(false)
   const { renderJumpingText } = useJumpingLetters(true, 2000)
   const router = useRouter()
-  const { login, auth } = useAuth()
+  const { login, auth, handleCheckAuth } = useAuth() // 添加 handleCheckAuth
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({ error: ' ' })
@@ -31,7 +31,7 @@ export default function LogIn(props) {
     showLoader() // 開始載入時顯示
 
     try {
-      const response = await fetch(`http://localhost:3005/api/login`, {
+      const response = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/login`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -70,11 +70,15 @@ export default function LogIn(props) {
 
   useEffect(() => {
     // 如果用戶已登入，重定向到儀表板
-      console.log('Login 頁面 auth 狀態:', auth) // 加入 debug
+    console.log('Login 頁面 auth 狀態:', auth) // 加入 debug
     if (auth?.isAuth) {
       router.replace('/dashboard')
       console.log('用戶已登入，跳轉到 dashboard')
+      return
     }
+
+    console.log('Login 頁面載入，handleCheckAuth檢查認證狀態...')
+    handleCheckAuth()
   }, [auth?.isAuth, router])
   return (
     <>

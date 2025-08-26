@@ -37,7 +37,7 @@ export default function Toolbar({ handleShow }) {
           <li>
             <p className="text-center">
               <Image
-                src="/avatar.svg"
+                src="/signup_login/Vector.svg"
                 className="rounded-circle d-block mx-auto"
                 alt="..."
                 width={80}

@@ -35,7 +35,7 @@ export default function BlogUserEdit() {
       }
 
       // 獲取文章數據並驗證
-      fetch(`http://localhost:3005/api/blog/blog-edit/${blog_id}`, {
+      fetch(`NEXT_PUBLIC_API_BASE_URL/api/blog/blog-edit/${blog_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ export default function BlogUserEdit() {
 
   useEffect(() => {
     if (blog_id) {
-      fetch(`http://localhost:3005/api/blog/blog-edit/${blog_id}`, {
+      fetch(`NEXT_PUBLIC_API_BASE_URL/api/blog/blog-edit/${blog_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ export default function BlogUserEdit() {
       }
 
       const response = await fetch(
-        `http://localhost:3005/api/blog/blog-edit/${blog_id}`,
+        `NEXT_PUBLIC_API_BASE_URL/api/blog/blog-edit/${blog_id}`,
         {
           method: 'PUT',
           body: formDataToSend,
@@ -195,7 +195,7 @@ export default function BlogUserEdit() {
               src={
                 formData.blog_image instanceof File
                   ? URL.createObjectURL(formData.blog_image)
-                  : `http://localhost:3005${
+                  : `NEXT_PUBLIC_API_BASE_URL${
                       formData.originalImage || formData.blog_image
                     }`
               }
@@ -385,7 +385,7 @@ export default function BlogUserEdit() {
                 if (result.isConfirmed) {
                   try {
                     const res = await fetch(
-                      `http://localhost:3005/api/blog/blog-delete/${blog_id}`,
+                      `NEXT_PUBLIC_API_BASE_URL/api/blog/blog-delete/${blog_id}`,
                       {
                         method: 'PUT',
                       }

@@ -34,8 +34,8 @@ const EventNavbar = ({ onFilterChange }) => {
     const fetchFilters = async () => {
       try {
         const [typesResponse, platformsResponse] = await Promise.all([
-          axios.get('http://localhost:3005/api/events/filters/types'),
-          axios.get('http://localhost:3005/api/events/filters/platforms'),
+          axios.get('NEXT_PUBLIC_API_BASE_URL/api/events/filters/types'),
+          axios.get('NEXT_PUBLIC_API_BASE_URL/api/events/filters/platforms'),
         ])
 
         if (typesResponse.data.code === 200) {

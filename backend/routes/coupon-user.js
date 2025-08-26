@@ -147,9 +147,11 @@ router.get('/:user_id', async (req, res) => {
     })
   } catch (error) {
     console.error('Error:', error)
+    console.error('Error stack:', error.stack)
     res.status(500).json({
       status: 'error',
       message: '系統錯誤',
+      details: error.message
     })
   }
 })

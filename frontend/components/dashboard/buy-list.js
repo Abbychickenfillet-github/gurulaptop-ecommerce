@@ -20,7 +20,7 @@ export default function BuyList(order) {
 
   const getOrderDetail = async () => {
     const res = await fetch(
-      `http://localhost:3005/api/buy-list/detail/${order_id}`
+      `NEXT_PUBLIC_API_BASE_URL/api/buy-list/detail/${order_id}`
     )
     const data = await res.json()
     setOrderDetail(data.data)
@@ -28,7 +28,7 @@ export default function BuyList(order) {
 
   const getCouponData = async () => {
     try {
-      const res = await fetch(`http://localhost:3005/api/coupon/${coupon_id}`, {
+      const res = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/coupon/${coupon_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ export default function BuyList(order) {
     }).then((result) => {
       localStorage.removeItem('store711')
       if (result.isConfirmed) {
-        window.location.href = `http://localhost:3005/api/line-pay/reserve?orderId=${order_id}`
+        window.location.href = `NEXT_PUBLIC_API_BASE_URL/api/line-pay/reserve?orderId=${order_id}`
       }
     })
   }
@@ -69,7 +69,7 @@ export default function BuyList(order) {
     })
 
     if (check.isConfirmed) {
-      window.location.href = `http://localhost:3005/api/ecpay-test-only/?orderId=${order_id}&amount=${order.order.order_amount}`
+      window.location.href = `NEXT_PUBLIC_API_BASE_URL/api/ecpay-test-only/?orderId=${order_id}&amount=${order.order.order_amount}`
     }
   }
 

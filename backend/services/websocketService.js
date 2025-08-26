@@ -17,7 +17,7 @@ class WebSocketService {
     if (this.isConnecting || (this.ws && this.ws.readyState === WebSocket.OPEN)) return
     this.isConnecting = true
     try {
-      this.ws = new WebSocket('ws://localhost:3005')
+      this.ws = new WebSocket('ws://guru-laptop-lavendarbug-vqq.zeabur.app')
       // [事件] 連線成功：重置狀態並向伺服器送出註冊訊息
       this.ws.onopen = () => {
         console.log('WebSocket連線成功')

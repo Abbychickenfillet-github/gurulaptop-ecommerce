@@ -138,7 +138,7 @@ const IndividualRegistration = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3005/api/events/${eventId}/register/individual`,
+        `NEXT_PUBLIC_API_BASE_URL/api/events/${eventId}/register/individual`,
         {
           participantInfo: {
             name: formData.participant.name,

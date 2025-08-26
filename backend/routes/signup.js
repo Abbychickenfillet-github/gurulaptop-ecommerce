@@ -52,11 +52,11 @@ router.post('/', upload.none(), async (req, res) => {
       INSERT INTO users (
         email, password, phone, birthdate, gender,
         level, valid, created_at,
-        country, city, district, road_name, detailed_address
+        country, city, district, road_name, detailed_address, image_path
       ) VALUES (
         $1, $2, $3, $4, $5,
         0, TRUE, CURRENT_TIMESTAMP,
-        '', '', '', '', ''
+        NULL, NULL, NULL, NULL, NULL, NULL
       ) RETURNING user_id
     `
 

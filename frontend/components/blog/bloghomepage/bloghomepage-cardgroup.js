@@ -19,7 +19,7 @@ export default function BloghomepageCardgroup() {
           limit: 6, // 限制只撈6筆
         })
 
-        const res = await fetch(`http://localhost:3005/api/blog/blogcardgroup`)
+        const res = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/blog/blogcardgroup`)
         const data = await res.json()
 
         if (data.blogs) {
@@ -50,8 +50,8 @@ export default function BloghomepageCardgroup() {
                     <img
                       src={
                         data.blog_image
-                          ? `http://localhost:3005${data.blog_image}`
-                          : 'http://localhost:3005/blog-images/nolaptopupload.jpeg'
+                          ? `NEXT_PUBLIC_API_BASE_URL${data.blog_image}`
+                          : 'NEXT_PUBLIC_API_BASE_URL/blog-images/nolaptopupload.jpeg'
                       }
                       className="w-100 h-100 ratio object-fit-cover position-center"
                       alt="..."

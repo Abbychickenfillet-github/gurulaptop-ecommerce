@@ -18,7 +18,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
   // 初始化
   const init = async () => {
     const response = await fetch(
-      `http://localhost:3005/api/favorites/${userData?.user_id}/${product_id}`
+      `NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData?.user_id}/${product_id}`
     )
     const result = await response.json()
     if (result.status === 'success') {
@@ -39,7 +39,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
       if (product_id) {
         try {
           const response = await fetch(
-            `http://localhost:3005/api/products/card/${product_id}`
+            `NEXT_PUBLIC_API_BASE_URL/api/products/card/${product_id}`
           )
           const result = await response.json()
           setData(result?.data?.product)
@@ -91,7 +91,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
         //刪除favorite_management資料庫
         try {
           const response = await fetch(
-            `http://localhost:3005/api/favorites/${userData.user_id}/${product_id}`,
+            `NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData.user_id}/${product_id}`,
             {
               method: 'DELETE',
               headers: {
@@ -114,7 +114,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
         //寫入favorite management資料庫
         try {
           const response = await fetch(
-            `http://localhost:3005/api/favorites/${userData.user_id}/${product_id}`,
+            `NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData.user_id}/${product_id}`,
             {
               method: 'PUT',
               headers: {
@@ -144,7 +144,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
     if (isAuth) {
       // 加入購物車資料庫
       try {
-        const response = await fetch(`http://localhost:3005/api/cart/add`, {
+        const response = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/cart/add`, {
           method: 'PUT',
           body: JSON.stringify({
             user_id: userData.user_id,

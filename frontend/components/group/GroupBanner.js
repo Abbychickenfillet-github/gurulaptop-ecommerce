@@ -31,9 +31,9 @@ export default function GroupBanner({ groupData, onOpenDetail, onOpenJoin }) {
   // 處理圖片路徑
   const getImageUrl = (imagePath) => {
     if (!imagePath) {
-      return 'http://localhost:3005/uploads/groups/group-default.png' // 改成 .png
+      return 'NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png' // 改成 .png
     }
-    return `http://localhost:3005${imagePath}`
+    return `NEXT_PUBLIC_API_BASE_URL${imagePath}`
   }
 
   return (
@@ -46,7 +46,7 @@ export default function GroupBanner({ groupData, onOpenDetail, onOpenJoin }) {
             className={styles.image}
             onError={(e) => {
               e.target.src =
-                'http://localhost:3005/uploads/groups/group-default.png' // 改成 .png
+                'NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png' // 改成 .png
             }}
           />
           <div className={styles.text}>

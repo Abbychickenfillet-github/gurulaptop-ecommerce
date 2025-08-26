@@ -15,7 +15,7 @@ export default function BlogUserOverview({ specificUserId = null }) {
     const targetUserId = specificUserId || userData?.user_id
 
     if (targetUserId) {
-      fetch(`http://localhost:3005/api/blog/blog_user_overview/${targetUserId}`)
+              fetch(`NEXT_PUBLIC_API_BASE_URL/api/blog/blog_user_overview/${targetUserId}`)
         .then((response) => response.json())
         .then((data) => {
           console.log('API回傳的資料:', data)
@@ -61,16 +61,16 @@ export default function BlogUserOverview({ specificUserId = null }) {
   ) : (
     // 如果有資料，顯示部落格列表
     <div className="container d-flex flex-column gap-5">
-      {blogData.map((blog) => (
+      {blogData.map((blog, index) => (
         <Link
-          key={blog.blog_id}
+          key={blog.blog_id || index}
           href={`/blog/blog-user-detail/${blog.blog_id}`}
           style={{ textDecoration: 'none', cursor: 'pointer' }}
         >
           <div className="card d-flex flex-row BlogUserOverviewCard">
             <img
               src={
-                `http://localhost:3005${blog.blog_image}` ||
+                `NEXT_PUBLIC_API_BASE_URL${blog.blog_image}` ||
                 'https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain'
               }
               className="card-img-top w-25 h-100 object-fit-cover BlogUserOverviewCardImg"
@@ -80,9 +80,9 @@ export default function BlogUserOverview({ specificUserId = null }) {
               <div className="BlogUserOverviewCardBodyContent m-3">
                 <div className="d-flex row">
                   <p className="BlogUserOverviewCardTitle">{blog.blog_title}</p>
-                  <h7 className="card-text mb-4 BlogUserOverviewCardContent">
+                  <p className="card-text mb-4 BlogUserOverviewCardContent">
                     {blog.blog_content}
-                  </h7>
+                  </p>
                 </div>
                 <div
                   style={{ width: '60%' }}

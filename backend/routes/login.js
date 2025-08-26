@@ -62,11 +62,40 @@ router.post('/', upload.none(), async (req, res, next) => {
       { expiresIn: '2d' }
     )
 
-    // 登入成功，返回 JWT Token
+    // 设置 JWT token 到 cookie
+    res.cookie('accessToken', token, {
+      httpOnly: false, // 改为 false，让前端可以读取
+      secure: false, // 开发环境设为 false
+      sameSite: 'lax', // 改为 lax，避免跨域问题
+      maxAge: 2 * 24 * 60 * 60 * 1000, // 2天
+      path: '/'
+    })
+
+    // 登入成功，這裡是負責看JWT有沒有問題。如果有問題可能是這裡。返回 JWT Token 和用户数据
     return res.json({
       status: 'success',
       token,
       message: '登入成功',
+      data: {
+        user_id: user.user_id,
+        name: user.name || '',
+        phone: user.phone || '',
+        email: user.email || '',
+        gender: user.gender || '',
+        birthdate: user.birthdate || '',
+        country: user.country || '',
+        city: user.city || '',
+        district: user.district || '',
+        road_name: user.road_name || '',
+        detailed_address: user.detailed_address || '',
+        remarks: user.remarks || '',
+        level: user.level || 0,
+        google_uid: user.google_uid || null,
+        line_uid: user.line_uid || null,
+        photo_url: user.photo_url || '',
+        iat: Math.floor(Date.now() / 1000),
+        exp: Math.floor(Date.now() / 1000) + (2 * 24 * 60 * 60) // 2天后过期
+      }
     })
   } catch (error) {
     // 捕獲所有其他錯誤並返回
@@ -83,6 +112,7 @@ router.post('/', upload.none(), async (req, res, next) => {
 router.post('/logout', authenticate, (req, res) => {
   // 清除cookie
   res.clearCookie('accessToken', { httpOnly: true })
+  // httpOnly真正含義是：這個 Cookie 只能透過 HTTP(S) 請求 來傳輸和存取，而不能被 JavaScript(document.cookie) 存取。
   res.json({ status: 'success', data: null })
 })
 

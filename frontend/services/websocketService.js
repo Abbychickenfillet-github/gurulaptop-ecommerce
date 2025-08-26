@@ -28,7 +28,7 @@ class WebSocketService {
     this.isConnecting = true
 
     // 建立WebSocket連線
-    this.ws = new WebSocket('ws://localhost:3005')
+          this.ws = new WebSocket('wss://guru-laptop-lavendarbug-vqq.zeabur.app')
 
     // 連線成功時的處理
     this.ws.onopen = () => {

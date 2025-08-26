@@ -18,7 +18,7 @@ export default function BlogId() {
 
   useEffect(() => {
     if (blog_id) {
-      fetch(`http://localhost:3005/api/blog/blog-detail/${blog_id}`) // 這裡替換為你實際的 API 路徑
+      fetch(`NEXT_PUBLIC_API_BASE_URL/api/blog/blog-detail/${blog_id}`) // 這裡替換為你實際的 API 路徑
         .then((response) => response.json())
         .then((data) => {
           setBlogData(data.data) // 設定資料
@@ -33,7 +33,7 @@ export default function BlogId() {
   }
   // 確認一下圖片路徑
   console.log(`確認一下圖片路徑`)
-  console.log(`http://localhost:3005${blogData.blog_image}`)
+  console.log(`NEXT_PUBLIC_API_BASE_URL${blogData.blog_image}`)
 
   return (
     <>
@@ -99,7 +99,7 @@ export default function BlogId() {
         <div className="d-flex align-items-center justify-content-center">
           <img
             className="w-50 h-50 ratio mb-5"
-            src={`http://localhost:3005${blogData.blog_image}`}
+            src={`NEXT_PUBLIC_API_BASE_URL${blogData.blog_image}`}
             alt
           />
         </div>

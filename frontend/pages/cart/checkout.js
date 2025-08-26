@@ -27,7 +27,7 @@ export default function Checkout(props) {
   }, [])
 
   const handleUpdate = async (order_id) => {
-    const result = await fetch(`http://localhost:3005/api/order`, {
+    const result = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/order`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

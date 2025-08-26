@@ -1,162 +1,145 @@
-import React, { useState, useContext, createContext, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { checkAuth, getFavs } from '@/services/user'
 
-const AuthContext = createContext(null)
+// ========================================
+// 🔐 認證上下文 (Authentication Context)
+// ========================================
+// 這個 Context 用於在整個應用中共享用戶的認證狀態
+// 包括：是否已登入、用戶數據、登入/登出函數等
+const AuthContext = createContext()
 
-// 註: 如果使用google登入會多幾個欄位(iat, exp是由jwt token來的)
-// 上面資料由express來(除了password之外)
-//   {
-//     "id": 1,
-//     "name": "哈利",
-//     "username": "herry",
-//     "email": "herry@test.com",
-//     "birth_date": "1980-07-13",
-//     "sex": "男",
-//     "phone": "0906102808",
-//     "postcode": "330",
-//     "address": "桃園市桃園區劉南路377號18樓",
-//     "google_uid": null,
-//     "line_uid": null,
-//     "photo_url": null,
-//     "line_access_token": null,
-//     "created_at": "2023-11-01T14:12:59.000Z",
-//     "updated_at": "2023-11-01T14:12:59.000Z",
-//     "iat": 1698852277,
-//     "exp": 1698938677
-// }
-
-// 初始化會員狀態(登出時也要用)
-// 只需要必要的資料即可，沒有要多個頁面或元件用的資料不需要加在這裡
-// !!注意JWT存取令牌中只有id, username, google_uid, line_uid在登入時可以得到
-export const initUserData = {
-  user_id: 0,
-  name: '',
-  password: '',
-  gender: '',
-  birthdate: '',
-  phone: '',
-  email: '',
-  country: '',
-  city: '',
-  district: '',
-  road_name: '',
-  detailed_address: '',
-  image_path: '',
-  remarks: '',
-  level: 0,
-  google_uid: null,
-  line_uid: null,
-  photo_url: '',
-  iat: '',
-  exp: '',
+// ========================================
+// 🎯 初始用戶數據結構
+// ========================================
+// 定義用戶數據的默認值，確保數據結構一致
+const initUserData = {
+  user_id: 0,           // 用戶ID，0表示未登入
+  name: '',             // 用戶姓名
+  password: '',         // 密碼（前端不存儲明文密碼）
+  gender: '',           // 性別
+  birthdate: '',        // 生日
+  phone: '',            // 手機號碼
+  email: '',            // 郵箱地址
+  country: '',          // 國家
+  city: '',             // 城市
+  district: '',         // 區域
+  road_name: '',        // 道路名稱
+  detailed_address: '', // 詳細地址
+  image_path: '',       // 頭像路徑
+  remarks: '',          // 備註
+  level: 0,             // 用戶等級
+  google_uid: null,     // Google登入ID
+  line_uid: null,       // Line登入ID
+  photo_url: '',        // 照片URL
+  iat: '',              // 令牌簽發時間
+  exp: ''               // 令牌過期時間
 }
 
-// 可以視為webtoken要押的資料
-// 承接登入以後用的
-// 創了一個叫做AuthProvider的元件
+// ========================================
+// 🏠 主組件：AuthProvider
+// ========================================
+// 這個組件包裝整個應用，提供認證相關的狀態和函數
 export const AuthProvider = ({ children }) => {
-    // 使用 useState 來管理認證狀態，是初始值所以isAuth會是false
+  // ========================================
+  // 📊 狀態管理
+  // ========================================
+  // auth: 存儲用戶的認證狀態和用戶數據
+  // isLoading: 表示是否正在檢查認證狀態
   const [auth, setAuth] = useState({
-    isAuth: false, // 判斷使用者是否已登入
-    userData: initUserData, // 儲存使用者資料
-    // isLoading: true,
+    isAuth: false,       // 是否已認證（登入）
+    userData: initUserData, // 用戶數據
+    isLoading: true      // 是否正在加載（檢查認證狀態）
   })
-  // 只在應用啟動時檢查一次認證狀態
-  useEffect(() => {
-    // handleCheckAuth()
-  }, []) // 空依賴陣列，只執行一次
 
-  // 我的最愛清單使用
-  // 變數 函式後面的函式 更改前面變數的內容
-  // const [favorites, setFavorites] = useState([])
-  
-  // 得到我的最愛
-  // const handleGetFavorites = async () => {
-  //   const res = await getFavs()
-  //   //console.log(res.data)
-  //   if (res.data.status === 'success') {
-  //     setFavorites(res.data.data.favorites)
-  //   }
-  // }
-      
-  // useEffect(() => {
-  //   if (auth.isAuth) {
-  //     // 成功登入後要執行一次向伺服器取得我的最愛清單
-  //     handleGetFavorites()
-  //   } else {
-  //     // 登出時要設回空陣列
-  //     setFavorites([])
-  //   }
-  // }, [auth])
-
+  // ========================================
+  // 🚀 路由相關
+  // ========================================
   const router = useRouter()
-
-  // 登入頁路由
+  
+  // 登入頁面路由
   const loginRoute = '/member/login'
-  // 隱私頁面路由，未登入時會，檢查後跳轉至登入頁
+  
+  // 受保護的路由（需要登入才能訪問）
   const protectedRoutes = ['/dashboard', '/coupon/coupon-user']
 
+  // ========================================
+  // 🔑 登入函數
+  // ========================================
+  // 功能：處理用戶登入
+  // 參數：email（郵箱）、password（密碼）
   const login = async (email, password) => {
     try {
       console.log('開始登入請求...')
       
-      const response = await fetch('/api/login', {  // 改為絕對路徑
+      // 向後端發送登入請求
+      const response = await fetch('NEXT_PUBLIC_API_BASE_URL/api/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',  // 加入必要 header
+          'Content-Type': 'application/json',
         },
-        credentials: 'include',  // 處理 cookie
+        credentials: 'include',  // 包含 cookies
         body: JSON.stringify({ email, password }),
       })
       
       console.log('Response status:', response.status)
       console.log('Response ok:', response.ok)
       
+      // 檢查 HTTP 響應狀態
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
       
+      // 解析響應數據
       const result = await response.json()
       console.log('API 回應結果:', result)
+      console.log('Response headers:', response.headers)
+      console.log('Cookies after login:', document.cookie)
       
+      // 檢查登入是否成功
       if (result.status === 'success') {
         console.log('登入成功，設定狀態...')
         
-        const newAuthState = {
-          isAuth: true,
-          userData: {
-            user_id: result.data.user_id,
-            name: result.data.name,
-            phone: result.data.phone,
-            email: result.data.email,
-            gender: result.data.gender,
-            birthdate: result.data.birthdate,
-            country: result.data.country,
-            city: result.data.city,
-            district: result.data.district,
-            road_name: result.data.road_name,
-            detailed_address: result.data.detailed_address,
-            remarks: result.data.remarks,
-            level: result.data.level,
-            google_uid: result.data.google_uid || null,
-            line_uid: result.data.line_uid || null,
-            photo_url: result.data.photo_url || '',
-            iat: result.data.iat || '',
-            exp: result.data.exp || '',
+        // 使用函數式更新確保狀態正確設置
+        setAuth(prevAuth => {
+          console.log('更新前的狀態:', prevAuth)
+          
+          // 構建新的認證狀態
+          const newState = {
+            isAuth: true,  // 設置為已登入
+            userData: {
+              user_id: result.data.user_id,
+              name: result.data.name,
+              phone: result.data.phone,
+              email: result.data.email,
+              gender: result.data.gender,
+              birthdate: result.data.birthdate,
+              country: result.data.country,
+              city: result.data.city,
+              district: result.data.district,
+              road_name: result.data.road_name,
+              detailed_address: result.data.detailed_address,
+              remarks: result.data.remarks,
+              level: result.data.level,
+              google_uid: result.data.google_uid || null,
+              line_uid: result.data.line_uid || null,
+              photo_url: result.data.photo_url || '',
+              iat: result.data.iat || '',
+              exp: result.data.exp || '',
+            }
           }
-        }
+          
+          console.log('更新後的狀態:', newState)
+          return newState
+        })
         
-        console.log('要設定的新狀態:', newAuthState)
-        setAuth(newAuthState)
-        
-        // 使用 setTimeout 來檢查狀態是否更新
+        // 等待狀態更新完成後再跳轉
+        // 延遲200ms確保狀態更新完成
         setTimeout(() => {
-          console.log('狀態更新後的 auth:', auth)
-        }, 1000)
-        
-        // 登入成功後跳轉
-        router.replace('/dashboard')
+          console.log('延遲後的 auth 狀態:', auth)
+          console.log('延遲後的 cookies:', document.cookie)
+          router.replace('/dashboard')  // 跳轉到儀表板
+        }, 200)
         
       } else {
         console.error('登入失敗:', result.message || result)
@@ -167,37 +150,26 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  // ========================================
+  // 🧹 清除認證狀態函數
+  // ========================================
+  // 功能：將認證狀態重置為未登入狀態
   const clearAuthState = () => {
     setAuth({
-      isAuth: false,
-      userData: {
-        user_id: 0,
-        name: '',
-        password: '',
-        gender: '',
-        birthdate: '',
-        phone: '',
-        email: '',
-        country: '',
-        city: '',
-        district: '',
-        road_name: '',
-        detailed_address: '',
-        image_path: '',
-        remarks: '',
-        level: 0,
-        google_uid: null,
-        line_uid: null,
-        photo_url: '',
-        iat: '',
-        exp: ''
-      }
+      isAuth: false,        // 設置為未登入
+      userData: initUserData, // 重置用戶數據為初始值
+      isLoading: false      // 設置加載狀態為false
     })
   }
 
+  // ========================================
+  // 🚪 登出函數
+  // ========================================
+  // 功能：處理用戶登出
   const logout = async () => {
     try {
-      const response = await fetch('http://localhost:3005/api/auth/logout', {
+      // 向後端發送登出請求
+      const response = await fetch('NEXT_PUBLIC_API_BASE_URL/api/auth/logout', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -208,31 +180,69 @@ export const AuthProvider = ({ children }) => {
       if (!response.ok) {
         throw new Error('登出失敗')
       }
+      
       const result = await response.json()
       
       if (result.status === 'success') {
-        // 清除本地的 auth 狀態
+        // 登出成功，執行清理操作
         await Promise.all([
-          // 清除狀態
+          // 清除本地認證狀態
           new Promise((resolve) => {
             clearAuthState()
             resolve()
           }),
-          // 立即導航到登入頁
+          // 立即導航到首頁
           router.replace('/'),
         ])
+        
+        // 清除瀏覽器中的 accessToken cookie
         document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
       }
 
     } catch (error) {
       console.error('登出錯誤:', error)
-      // 處理錯誤
     }
   }
 
-  // 檢查會員認証用
-  // 每次重新到網站中，或重新整理，都會執行這個函式，用於向伺服器查詢取回原本登入會員的資料
-  // 這個頁面載入時，useAuth hook 會自動執行 handleCheckAuth
+  // ========================================
+  // 🔍 檢查認證狀態函數
+  // ========================================
+  // 功能：檢查用戶是否仍然保持登入狀態
+  // 每次重新訪問網站或刷新頁面時都會執行
+  
+  // ========================================
+  // 📍 handleCheckAuth 使用情況分析
+  // ========================================
+  // 
+  // 🎯 1. 在 use-auth.js 內部使用：
+  //    - 第292行：在 AuthContext.Provider 中提供給子組件
+  //    - 作為 Context 值的一部分，供外部組件調用
+  // 
+  // 🌐 2. 在外部檔案中的使用情況：
+  //    - 目前沒有直接調用 handleCheckAuth 的組件
+  //    - 大部分組件都是通過 useAuth() 獲取 auth 狀態
+  // 
+  // 🔗 3. 調用 auth 路由的組件：
+  //    - 登入頁面：/pages/member/login.js (使用 login 函數)
+  //    - 註冊頁面：/pages/member/signup.js (使用 auth 狀態)
+  //    - 儀表板：/pages/dashboard/index.js (使用 auth 狀態)
+  //    - 購物車：/pages/cart/index.js (使用 auth 狀態)
+  //    - 部落格：/pages/blog/**/*.js (使用 auth 狀態)
+  //    - 產品頁：/pages/product/[pid].js (使用 auth 狀態)
+  //    - 群組管理：/components/group/GroupManagement.js (使用 auth 狀態)
+  //    - 優惠券：/components/coupon/**/*.js (使用 auth 狀態)
+  // 
+  // 📊 4. 使用 useAuth() 的組件統計：
+  //    - 總計約 30+ 個組件使用 useAuth()
+  //    - 主要用於檢查用戶登入狀態 (auth.isAuth)
+  //    - 獲取用戶數據 (auth.userData)
+  //    - 執行登入/登出操作 (login/logout 函數)
+  // 
+  // ⚠️ 5. 注意事項：
+  //    - handleCheckAuth 主要用於頁面刷新後的認證狀態檢查
+  //    - 大部分組件不需要直接調用此函數
+  //    - 組件只需要使用 useAuth() 獲取當前狀態即可
+  // 
   const handleCheckAuth = async () => {
     try {
       console.log('檢查認證狀態...')
@@ -240,104 +250,82 @@ export const AuthProvider = ({ children }) => {
       console.log('Cookie:', document.cookie)
       console.log('當前 isAuth:', auth.isAuth)
       
-      // 如果沒有 token 且在受保護路由，跳轉登入
+      // 檢查是否在受保護路由且沒有token
       if (protectedRoutes.includes(router.pathname) && !document.cookie.includes('accessToken')) {
         console.log('沒有 token 且在受保護路由，跳轉登入')
         router.push(loginRoute)
         return
       }
       
+      // 如果沒有 accessToken，直接返回
       if (!document.cookie.includes('accessToken')) {
-      console.log('沒有 accessToken')
-      setAuth(prev => ({ ...prev, isLoading: false }))
-      return
-    }
-    
-    const res = await checkAuth()
-    console.log('伺服器驗證結果:', res)
-    
-    if (res.data.status === 'success') {
-      const dbUser = res.data.data.user
-      const userData = { ...initUserData }
-      
-      for (const key in userData) {
-        if (Object.hasOwn(dbUser, key)) {
-          userData[key] = dbUser[key] || ''
-        }
+        console.log('沒有 accessToken')
+        setAuth(prev => ({ ...prev, isLoading: false }))
+        return
       }
+    
+      // 向後端驗證token是否有效
       
-      setAuth({ 
-        isAuth: true, 
-        userData,
-        isLoading: false
-      })
-    } else {
+      const res = await checkAuth()
+      console.log('伺服器驗證結果:', res)
+      
+      if (res.data.status === 'success') {
+        // token有效，更新用戶數據
+        const dbUser = res.data.data.user
+        const userData = { ...initUserData }
+        
+        // 將後端返回的用戶數據合併到本地狀態
+        for (const key in userData) {
+          if (Object.hasOwn(dbUser, key)) {
+            userData[key] = dbUser[key] || ''
+          }
+        }
+        
+        // 設置為已登入狀態
+        setAuth({ 
+          isAuth: true, 
+          userData,
+          isLoading: false
+        })
+      } else {
+        // token無效，設置為未登入狀態
+        setAuth(prev => ({ 
+          ...prev, 
+          isAuth: false,
+          isLoading: false
+        }))
+      }
+    } catch (error) {
+      console.error('檢查認證失敗:', error)
+      // 出錯時設置為未登入狀態
       setAuth(prev => ({ 
         ...prev, 
         isAuth: false,
         isLoading: false
       }))
     }
-  } catch (error) {
-    console.error('檢查認證失敗:', error)
-    setAuth(prev => ({ 
-      ...prev, 
-      isAuth: false,
-      isLoading: false
-    }))
   }
-}
 
-  // 已經登入的使用者不得再進入註冊和登入頁面
-  // const publicOnlyRoutes = ['/member/login', '/member/signup']
-  
-  // useEffect(() => {
-   
-  //     if (auth?.isAuth && publicOnlyRoutes.includes(router.pathname)) {
-  //       router.replace('/dashboard')
-  //     }
-    
-  // }, [ router?.pathname, auth?.isAuth])
-
-  // 已經登入的使用者不得再進入註冊和登入頁面
-
-  
-  // useEffect(() => {
-  //   if (router.isReady) {
-  //     // router.pathname 是目前頁面的完整路徑
-  //     if (auth?.isAuth && publicOnlyRoutes.includes(router.pathname)) {
-  //       router.replace('/dashboard')
-  //     }
-  //   }
-  // }, [router?.isReady, router?.pathname, auth?.isAuth])
-
-  // didMount(初次渲染)後，向伺服器要求檢查會員是否登入中
-  // useEffect(() => {
-  //   if (router.isReady) {
-  //     handleCheckAuth()
-  //   }
-  // }, [router.isReady, router.pathname])
-
-  // 加入狀態變化的 debug log
+  // ========================================
+  // 🔄 狀態變化監聽器
+  // ========================================
+  // 監聽 auth 狀態的變化，用於調試
   useEffect(() => {
     console.log('Auth 狀態變化:', auth)
   }, [auth])
 
-  // 加入狀態變化的 debug log
-  useEffect(() => {
-    console.log('Auth 狀態變化:', auth)
-  }, [auth])
-
+  // ========================================
+  // 📤 返回 Context Provider
+  // ========================================
+  // 將認證相關的狀態和函數提供給子組件使用
   return (
     <AuthContext.Provider
       value={{
-        auth,
-        login,
-        logout,
-        setAuth,
-        // favorites,
-        // setFavorites,
-        handleCheckAuth
+        auth,              // 認證狀態和用戶數據
+        login,             // 登入函數
+        logout,            // 登出函數
+        setAuth,           // 設置認證狀態的函數
+        handleCheckAuth    // 檢查認證狀態的函數
       }}
     >
       {children}
@@ -345,4 +333,9 @@ export const AuthProvider = ({ children }) => {
   )
 }
 
+// ========================================
+// 🎣 自定義 Hook：useAuth
+// ========================================
+// 功能：讓組件能夠訪問認證相關的狀態和函數
+// 使用方式：const { auth, login, logout } = useAuth()
 export const useAuth = () => useContext(AuthContext)

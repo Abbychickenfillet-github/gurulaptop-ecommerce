@@ -41,7 +41,7 @@ export default function CouponBtn({ price, setCouponValue }) {
     }
 
     try {
-      const res = await fetch(`http://localhost:3005/api/coupon-user/${userId}`)
+      const res = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`)
 
       // if (!res.ok) {
       //   throw new Error('請求失敗')
@@ -90,7 +90,7 @@ export default function CouponBtn({ price, setCouponValue }) {
 
     try {
       const res = await fetch(
-        `http://localhost:3005/api/coupon-user/update/${userId}`,
+        `NEXT_PUBLIC_API_BASE_URL/api/coupon-user/update/${userId}`,
         {
           method: 'PUT',
           headers: {

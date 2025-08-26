@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import styles from './GroupManagement.module.css'
 import EditGroupModal from './EditGroupModal'
 import Swal from 'sweetalert2'
-import {auth, } from '@/hooks/use-auth'
+import { useAuth } from '@/hooks/use-auth'
 const GroupManagement = () => {
+  const { auth } = useAuth()
   const [groups, setGroups] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -14,10 +15,10 @@ const GroupManagement = () => {
     if(!auth?.isAuth) return
     try {
       const [memberResponse, creatorResponse] = await Promise.all([
-        fetch('http://localhost:3005/api/group/user', {
+        fetch('NEXT_PUBLIC_API_BASE_URL/api/group/user', {
           credentials: 'include',
         }),
-        fetch('http://localhost:3005/api/group/creator', {
+        fetch('NEXT_PUBLIC_API_BASE_URL/api/group/creator', {
           credentials: 'include',
         }),
       ])
@@ -87,7 +88,7 @@ const GroupManagement = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3005/api/group/${groupId}`,
+        `NEXT_PUBLIC_API_BASE_URL/api/group/${groupId}`,
         {
           method: 'DELETE',
           credentials: 'include',
@@ -127,7 +128,7 @@ const GroupManagement = () => {
   const handleEditSave = async (updatedData) => {
     try {
       const response = await fetch(
-        `http://localhost:3005/api/group/${selectedGroup.group_id}`,
+        `NEXT_PUBLIC_API_BASE_URL/api/group/${selectedGroup.group_id}`,
         {
           method: 'PUT',
           credentials: 'include',
@@ -178,9 +179,9 @@ const GroupManagement = () => {
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) {
-      return 'http://localhost:3005/uploads/groups/group-default.png'
+      return 'NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png'
     }
-    return `http://localhost:3005${imagePath}`
+    return `NEXT_PUBLIC_API_BASE_URL${imagePath}`
   }
 
   if (loading) {
@@ -228,7 +229,7 @@ const GroupManagement = () => {
                   className={styles.groupImg}
                   onError={(e) => {
                     e.target.src =
-                      'http://localhost:3005/uploads/groups/group-default.png'
+                      'NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png'
                   }}
                 />
               </div>
@@ -272,7 +273,7 @@ const GroupManagement = () => {
                   className={styles.groupImg}
                   onError={(e) => {
                     e.target.src =
-                      'http://localhost:3005/uploads/groups/group-default.png'
+                      'NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png'
                   }}
                 />
               </div>

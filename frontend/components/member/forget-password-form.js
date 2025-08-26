@@ -42,7 +42,7 @@ export default function ForgetPasswordForm() {
       }
 
       const response = await axios.post(
-        'http://localhost:3005/api/forgot-password/send',
+        'NEXT_PUBLIC_API_BASE_URL/api/forgot-password/send',
         { email }
       )
 

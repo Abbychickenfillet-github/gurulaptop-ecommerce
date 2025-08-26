@@ -42,7 +42,7 @@ export default function BlogSearchPage() {
         })
 
         const res = await fetch(
-          `http://localhost:3005/api/blog/search?${queryParams}`
+          `NEXT_PUBLIC_API_BASE_URL/api/blog/search?${queryParams}`
         )
         const data = await res.json()
 
@@ -226,8 +226,8 @@ export default function BlogSearchPage() {
                       <img
                         src={
                           blog.blog_image
-                            ? `http://localhost:3005${blog.blog_image}`
-                            : 'http://localhost:3005/blog-images/nolaptopupload.jpeg'
+                            ? `NEXT_PUBLIC_API_BASE_URL${blog.blog_image}`
+                            : 'NEXT_PUBLIC_API_BASE_URL/blog-images/nolaptopupload.jpeg'
                         }
                         className="card-img-top w-50 h-100 BlogCardImg"
                         alt={blog.blog_title}

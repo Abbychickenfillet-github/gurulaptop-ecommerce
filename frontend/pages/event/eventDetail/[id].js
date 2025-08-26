@@ -38,7 +38,7 @@ const EventDetail = () => {
       try {
         setLoading(true)
         const response = await axios.get(
-          `http://localhost:3005/api/events/${id}`,
+          `NEXT_PUBLIC_API_BASE_URL/api/events/${id}`,
           { withCredentials: true }
         )
 

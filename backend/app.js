@@ -6,9 +6,19 @@ import express from 'express'
 // import db from '##/configs/mysql.js'
 import pool from '##/configs/pgClient.js'
 
+// 載入環境變數 - 必須在最前面！
+import 'dotenv/config.js'
+
+// 調試：確認環境變數是否被載入
+console.log('🔍 環境變數載入檢查:')
+console.log('NODE_ENV:', process.env.NODE_ENV)
+console.log('LINE_CHANNEL_ID:', process.env.LINE_CHANNEL_ID ? '✅ 已設置' : '❌ 未設置')
+console.log('LINE_CHANNEL_SECRET:', process.env.LINE_CHANNEL_SECRET ? '✅ 已設置' : '❌ 未設置')
+console.log('LINE_LOGIN_CALLBACK_URL:', process.env.LINE_LOGIN_CALLBACK_URL ? '✅ 已設置' : '❌ 未設置')
+
 import logger from 'morgan'
 import path from 'path'
-import session from 'express-session'
+// import session from 'express-session'
 import authRouter from './routes/auth.js'
 import loginRouter from './routes/login.js'
 import signupRouter from './routes/signup.js'
@@ -21,13 +31,13 @@ import GroupRequests from './routes/group-request.js'
 // import googleLoginRouter from './routes/google-login.js'
 import forgotPasswordRouter from './routes/forgot-password.js'
 // 使用檔案的session store，存在sessions資料夾
-import sessionFileStore from 'session-file-store'
-const FileStore = sessionFileStore(session)
+// import sessionFileStore from 'session-file-store'
+// const FileStore = sessionFileStore(session)
 // FileStore 是一個將 session 數據存儲在伺服器文件系統中的方案，而不是存在記憶體中。為什麼要用 FileStore：
 // 持久化保存：當伺服器重啟時，session 資料不會丟失
 // 開發階段方便：可以直接查看 session 文件內容進行除錯
 // 不需要額外的數據庫服務：適合小型專案或開發環境
-
+// 我的電腦哪裡有用到session store?
 // 但在生產環境中通常不建議使用 FileStore：
 
 // 性能較差：讀寫文件比操作記憶體慢
@@ -99,13 +109,14 @@ app.use('/api/signup', signupRouter)
 app.use('/api/dashboard', dashboardRouter)
 app.use('/api/events', eventsRouter)
 app.use('/api/forgot-password', forgotPasswordRouter)
-app.use('/api/auth', authRouter)
+// 移除重复的 auth 路由
+// app.use('/api/auth', authRouter)
 
 
 //優惠卷路由
 app.use('/api/coupon', couponRouter)
 app.use('/api/coupon-user', couponUserRouter)
-
+// 看看資料庫連線是如何被呼叫的：
 async function testConnection() {
   try {
     const connection = await pool.connect()
@@ -119,19 +130,20 @@ async function testConnection() {
 
 testConnection()
 // fileStore的選項 session-cookie使用
-const fileStoreOptions = { logFn: function () {} }
-app.use(
-  session({
-    store: new FileStore(fileStoreOptions), // 使用檔案記錄session
-    name: 'SESSION_ID', // cookie名稱，儲存在瀏覽器裡
-    secret: '67f71af4602195de2450faeb6f8856c0', // 安全字串，應用一個高安全字串
-    cookie: {
-      maxAge: 30 * 86400000, // 30 * (24 * 60 * 60 * 1000) = 30 * 86400000 => session保存30天
-    },
-    resave: false,
-    saveUninitialized: false,
-  })
-)
+// const fileStoreOptions = { logFn: function () {} }
+// fileStore現在也要一起註解嗎？
+// app.use(
+  // session({
+    // store: new FileStore(fileStoreOptions), // 使用檔案記錄session
+    // name: 'SESSION_ID', // cookie名稱，儲存在瀏覽器裡
+    // secret: '67f71af4602195de2450faeb6f8856c0', // 安全字串，應用一個高安全字串
+    // cookie: {
+      // maxAge: 30 * 86400000, // 30 * (24 * 60 * 60 * 1000) = 30 * 86400000 => session保存30天
+    // },
+    // resave: false,
+    // saveUninitialized: false,
+  // })
+// )
 // 以上那個session-cookie 應該不是我們的
 // 載入routes中的各路由檔案，並套用api路由 START
 const apiPath = '/api' // 預設路由
@@ -139,6 +151,21 @@ const routePath = path.join(__dirname, 'routes')
 const filenames = await fs.promises.readdir(routePath)
 
 for (const filename of filenames) {
+  // 跳过已经手动注册的路由文件和 index.js
+  if (filename === 'index.js' || 
+      filename === 'dashboard.js' || 
+      filename === 'auth.js' || 
+      filename === 'login.js' || 
+      filename === 'signup.js' || 
+      filename === 'events.js' || 
+      filename === 'forgot-password.js' || 
+      filename === 'coupon.js' || 
+      filename === 'coupon-user.js' || 
+      filename === 'chat.js' || 
+      filename === 'group-request.js' ||
+      filename === 'line-login.js') {  // 排除 line-login.js
+    continue
+  }
   const item = await import(pathToFileURL(path.join(routePath, filename)))
   const slug = filename.split('.')[0]
   app.use(`${apiPath}/${slug === 'index' ? '' : slug}`, item.default)

@@ -39,7 +39,7 @@ const EventRegistration = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:3005/api/events/${eventId}`,
+          `NEXT_PUBLIC_API_BASE_URL/api/events/${eventId}`,
           { withCredentials: true }
         )
         const eventData = response.data.data
@@ -300,7 +300,7 @@ const EventRegistration = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3005/api/events/${eventId}/register/team`,
+        `NEXT_PUBLIC_API_BASE_URL/api/events/${eventId}/register/team`,
         {
           teamName: formData.teamName,
           captainInfo: formData.captain,

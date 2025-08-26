@@ -32,9 +32,9 @@ export default function UserProfile() {
   const [profilePic, setProfilePic] = useState(
     editableUser.image_path ||
       (editableUser.gender === 'male'
-        ? 'signup_login/undraw_profile_2.svg'
+        ? '/signup_login/undraw_profile_2.svg'
         : editableUser.gender === 'female'
-        ? 'signup_login/undraw_profile_1.svg'
+        ? '/signup_login/undraw_profile_1.svg'
         : '/Vector.svg')
   )
   const [uploadStatus, setUploadStatus] = useState('')
@@ -180,9 +180,9 @@ export default function UserProfile() {
     setProfilePic(
       editableUser.image_path ||
         (editableUser.gender === 'male'
-          ? 'signup_login/undraw_profile_2.svg'
+          ? '/signup_login/undraw_profile_2.svg'
           : editableUser.gender === 'female'
-          ? 'signup_login/undraw_profile_1.svg'
+          ? '/signup_login/undraw_profile_1.svg'
           : '/Vector.svg')
     )
   }, [editableUser.gender, editableUser.image_path]) // 加入相依性
@@ -192,7 +192,7 @@ export default function UserProfile() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3005/api/dashboard/${user_id}`
+          `NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`
         )
 
         if (response.data.status === 'success') {
@@ -243,7 +243,8 @@ export default function UserProfile() {
         }
       } catch (error) {
         console.error('無法獲取資料:', error)
-        Swal.fire('錯誤', '獲取用戶資料失敗', 'error')
+        console.error('錯誤詳情:', error.response?.data || error.message)
+        Swal.fire('錯誤', `獲取用戶資料失敗: ${error.response?.data?.message || error.message}`, 'error')
       }
     }
     if (auth.userData?.user_id) {
@@ -338,7 +339,7 @@ export default function UserProfile() {
       // delete dataToSubmit.newPassword // 移除 newPassword 欄位
 
       const response = await axios.put(
-        `http://localhost:3005/api/dashboard/${user_id}`,
+        `NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
         // editableUser
         dataToSubmit
       )
@@ -388,7 +389,7 @@ export default function UserProfile() {
       }
       //s停用button跟更新button用的是同一個路由所以停用
       const response = await axios.put(
-        `http://localhost:3005/api/dashboard/${user_id}`,
+        `NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
         {
           ...editableUser,
           valid: 0,
@@ -431,7 +432,7 @@ export default function UserProfile() {
 
     try {
       const response = await axios.put(
-        `http://localhost:3005/api/dashboard/${user_id}`,
+        `NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
         {
           ...editableUser,
           image_path: selectedImg,
@@ -449,7 +450,7 @@ export default function UserProfile() {
           },
         }))
         const headerResponse = await axios.post(
-          'http://localhost:3005/api/header',
+          'NEXT_PUBLIC_API_BASE_URL/api/header',
           {
             user_id: user_id,
           }

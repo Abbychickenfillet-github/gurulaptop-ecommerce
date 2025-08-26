@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS coupon_user (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     coupon_id INT NOT NULL,
-    valid SMALLINT DEFAULT 1
+    valid BOOLEAN DEFAULT TRUE
 );
 
 -- 為 valid 欄位新增註解
@@ -16,8 +16,8 @@ CREATE INDEX IF NOT EXISTS idx_coupon_user_user_id ON coupon_user (user_id);
 CREATE INDEX IF NOT EXISTS idx_coupon_user_coupon_id ON coupon_user (coupon_id);
 
 INSERT INTO coupon_user (id, user_id, coupon_id, valid) VALUES
-(1, 101, 1, 1),
-(2, 102, 10, 1),
-(3, 103, 21, 0),
-(4, 104, 15, 1),
-(5, 105, 14, 0);
+(1, 1, 1, TRUE),
+(2, 1, 2, TRUE),
+(3, 1, 3, FALSE),
+(4, 1, 4, TRUE),
+(5, 1, 5, FALSE);

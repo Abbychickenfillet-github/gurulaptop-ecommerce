@@ -18,7 +18,17 @@ import 'dotenv/config.js'
 
 var port = normalizePort(process.env.PORT || '6005')
 app.set('port', port)
+// app.set('port', port) 設定 Express 應用程式的埠號
+// 這裡的作用：將埠號儲存到 Express 應用程式中，供其他部分使用
 
+// name: 設定值的名稱
+// value: 設定值的值
+// 設定值的值可以是字串、數字、布林值、物件、陣列等
+// 設定一個名為 'port' 的配置值
+// app.set('port', 3005)
+
+// 之後可以用 app.get('port') 來取得
+// var currentPort = app.get('port')  // 回傳：3005
 /**
  * Create HTTP server.
  */
@@ -38,19 +48,27 @@ server.on('listening', onListening)
  * Normalize a port into a number, string, or false.
  */
 
+// 正規化埠號
+// 輸入：接收一個值 val (可能是字串或數字)
 function normalizePort(val) {
+  // 處理：將輸入值轉換成有效的埠號
+
+  // 將輸入值轉換成數字
   var port = parseInt(val, 10)
 
+  // 檢查是否為有效的數字
   if (isNaN(port)) {
-    // named pipe
+    // 如果無效，則返回原始值
     return val
   }
 
+  // 檢查是否為有效的埠號
   if (port >= 0) {
-    // port number
+    // 如果有效，則返回埠號
     return port
   }
 
+  // 如果無效，則返回 false
   return false
 }
 

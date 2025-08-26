@@ -13,7 +13,7 @@ import '@/styles/footer.scss'
 import '@/styles/frontPage.scss'
 //會員註冊
 // import '@/styles/transitions_Abby.scss'
-import RouterGuard from '@/hooks/router-guard'
+// import RouterGuard from '@/hooks/router-guard'
 
 // 文章/部落格用 css
 import '@/styles/ArticleDetail.scss'
@@ -111,7 +111,7 @@ export default function MyApp({ Component, pageProps }) {
 // 在你的 _app.js 檔案中，有多個 Provider 元件，它們的巢狀順序是基於它們所提供的功能以及這些功能之間的依賴關係。
   return (
     <AuthProvider>
-      <RouterGuard>
+      {/* <RouterGuard> */}
       <LoadingProviderAnimation close={1} CustomLoader={LoadingAnimation}>
         <LoaderProvider
           close={1}
@@ -125,7 +125,7 @@ export default function MyApp({ Component, pageProps }) {
           </GroupAuthProvider>
         </LoaderProvider>
       </LoadingProviderAnimation>
-      </RouterGuard>
+      {/* </RouterGuard> */}
     </AuthProvider>
   )
 }

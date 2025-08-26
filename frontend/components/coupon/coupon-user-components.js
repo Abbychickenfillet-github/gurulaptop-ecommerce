@@ -38,39 +38,43 @@ export default function CouponUser() {
   // 獲取使用者優惠券資料
   const getUserCoupons = async () => {
     if (!userId) {
-      setError('請先登入3')
+      console.log('userId 為空，無法獲取優惠券')
+      setError('請先登入')
       setLoading(false)
       return
     }
 
     try {
-      const res = await fetch(`http://localhost:3005/api/coupon-user/${userId}`)
+      console.log('正在請求優惠券資料，用戶ID:', userId)
+      console.log('請求URL:', `NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`)
+      
+      const res = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`)
+
+      console.log('API 回應狀態:', res.status, res.statusText)
+      console.log('API 回應 headers:', res.headers)
 
       if (!res.ok) {
-        throw new Error('請求失敗')
+        const errorText = await res.text()
+        console.error('API 錯誤回應:', errorText)
+        throw new Error(`請求失敗: ${res.status} ${res.statusText}`)
       }
 
       const resData = await res.json()
+      console.log('API 回應資料:', resData)
 
       if (resData.status === 'success') {
         setCouponDataList(resData.data)
-
-        // if (resData.data.length === 0) {
-        //   MySwal.fire({
-        //     title: '提示',
-        //     text: '目前沒有可用的優惠券',
-        //     icon: 'info',
-        //   })
-        // }
+        console.log('優惠券資料已設定:', resData.data)
       } else {
         throw new Error(resData.message || '獲取資料失敗')
       }
     } catch (err) {
-      console.error('錯誤:', err)
+      console.error('獲取優惠券錯誤:', err)
+      console.error('錯誤詳情:', err)
       setError(err.message)
       MySwal.fire({
         title: '錯誤',
-        text: err.message,
+        text: `獲取優惠券失敗: ${err.message}`,
         icon: 'error',
       })
     } finally {
@@ -104,12 +108,15 @@ export default function CouponUser() {
   }
 
   useEffect(() => {
-    if (userId) {
+    console.log('useEffect 觸發，userId:', userId, 'auth:', auth)
+    if (userId && auth?.userData) {
+      console.log('開始獲取優惠券資料')
       getUserCoupons()
     } else {
+      console.log('userId 或 auth.userData 不存在，設置 loading 為 false')
       setLoading(false)
     }
-  }, [userId]) // 加入 userId 作為依賴項
+  }, [userId, auth]) // 加入 auth 作為依賴項
 
   // 未登入時的顯示
   if (!userId) {

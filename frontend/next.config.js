@@ -26,10 +26,13 @@ const nextConfig = {
   // distDir: 'dist',
   // avoid cors with proxy
   async rewrites() {
+    // 根據環境選擇 API 地址
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
+    
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:3005/:path*', // Proxy to Backend
+        destination: `${apiUrl}/:path*`, // 使用環境變數
       },
     ]
   },

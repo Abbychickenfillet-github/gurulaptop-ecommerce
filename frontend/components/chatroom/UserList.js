@@ -32,16 +32,16 @@ export default function UserList({
     try {
       const [pendingResponse, historyResponse, chatsResponse, groupsResponse] =
         await Promise.all([
-          fetch('http://localhost:3005/api/chat/requests/pending', {
+          fetch('NEXT_PUBLIC_API_BASE_URL/api/chat/requests/pending', {
             credentials: 'include',
           }),
-          fetch('http://localhost:3005/api/chat/requests/history', {
+                      fetch('NEXT_PUBLIC_API_BASE_URL/api/chat/requests/history', {
             credentials: 'include',
           }),
-          fetch('http://localhost:3005/api/chat/messages/private', {
+                      fetch('NEXT_PUBLIC_API_BASE_URL/api/chat/messages/private', {
             credentials: 'include',
           }),
-          fetch('http://localhost:3005/api/chat/user/groups', {
+                      fetch('NEXT_PUBLIC_API_BASE_URL/api/chat/user/groups', {
             credentials: 'include',
           }),
         ])
@@ -143,7 +143,7 @@ export default function UserList({
 
     try {
       const response = await fetch(
-        `http://localhost:3005/api/chat/requests/${requestId}`,
+        `NEXT_PUBLIC_API_BASE_URL/api/chat/requests/${requestId}`,
         {
           method: 'PATCH',
           headers: {
@@ -310,7 +310,7 @@ export default function UserList({
                             onError={(e) => {
                               e.target.onerror = null
                               e.target.src =
-                                'http://localhost:3005/uploads/default-avatar.png'
+                                'NEXT_PUBLIC_API_BASE_URL/uploads/default-avatar.png'
                             }}
                           />
                         ) : (
@@ -357,7 +357,7 @@ export default function UserList({
                           onError={(e) => {
                             e.target.onerror = null
                             e.target.src =
-                              'http://localhost:3005/uploads/groups/group-default.png'
+                              'NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png'
                           }}
                         />
                       ) : (

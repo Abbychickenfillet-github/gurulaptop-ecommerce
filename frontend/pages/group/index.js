@@ -40,7 +40,7 @@ const Group = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch('http://localhost:3005/api/group/events', {
+      const response = await fetch('NEXT_PUBLIC_API_BASE_URL/api/group/events', {
         credentials: 'include',
       })
       const data = await response.json()
@@ -54,7 +54,7 @@ const Group = () => {
 
   const fetchGroups = async () => {
     try {
-      const response = await fetch('http://localhost:3005/api/group/all', {
+      const response = await fetch('NEXT_PUBLIC_API_BASE_URL/api/group/all', {
         credentials: 'include',
       })
       const data = await response.json()

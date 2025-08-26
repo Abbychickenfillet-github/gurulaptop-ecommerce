@@ -56,7 +56,7 @@ const GroupJoin = ({ onClose, groupData }) => {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('http://localhost:3005/api/group/requests', {
+      const response = await fetch('NEXT_PUBLIC_API_BASE_URL/api/group/requests', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
