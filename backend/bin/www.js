@@ -6,9 +6,12 @@ import app from '../app.js'
 import debugLib from 'debug'
 import http from 'http'
 const debug = debugLib('node-express-es6:server')
-import { exit } from 'node:process'
+// 使用全域的 process 物件，不需要 import
 import { initializeWebSocket } from '../configs/websocket.js'
 
+// 從全域 process 物件解構 exit 函數
+const { exit } = process
+// node:process 語法：Node.js 18+ 的新特性，用於明確指定內建模組。ESLint 相容性：某些 ESLint 規則可能不支援這個新語法。全域變數：process 在 Node.js 環境中本來就是全域可用的。
 // 導入dotenv 使用 .env 檔案中的設定值 process.env
 import 'dotenv/config.js'
 
