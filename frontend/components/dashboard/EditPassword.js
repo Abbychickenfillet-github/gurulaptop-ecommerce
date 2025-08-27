@@ -5,7 +5,7 @@ import axios from 'axios'
 import Accordion from 'react-bootstrap/Accordion'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
-export default function EditPassword(props) {
+export default function EditPassword() {
   const { auth } = useAuth()
 
   // 所有的 state 要在最前面定義
@@ -19,12 +19,14 @@ export default function EditPassword(props) {
     newPassword1: '',
     newPassword2: '',
   })
+
   // user_id 的聲明要在 state 之後
   // 保持 hooks 的使用順序一致（React Hooks 規則）
 
   // State 的順序很重要，因為 React 是依靠 hooks 調用的順序來維護狀態的。這樣修改後，錯誤應該就會解決了。
   // 另外，建議在開發過程中使用 React DevTools 來幫助調試狀態的變化。
   const user_id = auth?.userData?.user_id
+  
   useEffect(() => {
     // 檢查 user_id 是否存在
     if (!auth?.userData?.user_id) {
@@ -32,7 +34,7 @@ export default function EditPassword(props) {
       return
     }
     console.log('Current user_id:', user_id) // 用來檢查 user_id 是否正確獲取
-  }, [user_id])
+  }, [auth?.userData?.user_id, user_id])
 
   const pwdCheck = async () => {
     // 移除 e 參數，因為我們改用 onClick
@@ -50,7 +52,7 @@ export default function EditPassword(props) {
     // createObjectURL(file) 這個是瀏覽器端還沒有傳送到伺服器用previewURL,setPreviewURL 暫時性的預覽長得很像一個網址可以直接用網址就可以看到那張圖。改成用useEffect主要是因為createObjectURL會占掉記憶體空間，用revokeObjectURL(objectURL)
     try {
       const responsePwdSend = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/pwdCheck/${user_id}/`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/pwdCheck/${user_id}/`,
         {
           method: 'PUT',
           credentials: 'include',
@@ -81,6 +83,7 @@ export default function EditPassword(props) {
       Swal.fire('錯誤', '密碼輸入錯誤或伺服器回應錯誤', 'error')
     }
   }
+  
   const validatePassword = (password) => {
     const minLength = 8
     const hasUpperCase = /[A-Z]/.test(password)
@@ -103,28 +106,28 @@ export default function EditPassword(props) {
     try {
       // 檢查新密碼是否有值
       if (!editableUser.newPassword1) {
-        newErrors.confirmpassword = '確認密碼為必填'
-      } else if (editableUser.newPassword1 !== editableUser.newPassword2) {
-        newErrors.newPassword = '密碼與確認密碼不相符'
+        Swal.fire('錯誤', '請輸入新密碼', 'error')
+        return
       }
+      if (!editableUser.newPassword2) {
+        Swal.fire('錯誤', '請輸入確認密碼', 'error')
+        return
+      }
+      if (editableUser.newPassword1 !== editableUser.newPassword2) {
+        Swal.fire('錯誤', '密碼與確認密碼不相符', 'error')
+        return
+      }
+      
       // 驗證密碼格式
       const validationError = validatePassword(editableUser.newPassword1)
       if (validationError) {
         Swal.fire('錯誤', validationError, 'error')
         return
       }
-      if (!editableUser.newPassword1) {
-        Swal.fire('錯誤', '請輸入新密碼1', 'error')
-        return
-      }
-      if (!editableUser.newPassword2) {
-        Swal.fire('錯誤', '請輸入新密碼2', 'error')
-        return
-      }
 
       const user_id = auth?.userData?.user_id
       const response = await axios.put(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}/pwdReset`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${user_id}/pwdReset`,
         {
           newPassword1: editableUser.newPassword1,
           newPassword2: editableUser.newPassword2,
@@ -151,7 +154,7 @@ export default function EditPassword(props) {
       )
     }
   }
-
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target
     console.log('輸入值型別:', typeof value) // 檢查型別
@@ -161,6 +164,7 @@ export default function EditPassword(props) {
       [name]: value,
     }))
   }
+  
   return (
     <>
       <div className="mt-5 row">

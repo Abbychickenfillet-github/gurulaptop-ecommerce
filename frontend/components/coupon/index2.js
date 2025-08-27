@@ -1,11 +1,11 @@
 // Coupon 元件
+import Image from 'next/image'
+
 export default function Coupon2({
-  coupon_id, // 加入這個
   coupon_code,
   coupon_content,
   coupon_discount,
   discount_method,
-  coupon_start_time,
   coupon_end_time,
 }) {
   const getDiscountText = () => {
@@ -23,7 +23,13 @@ export default function Coupon2({
 
   return (
     <div className="coupon-wrapper">
-      <img className="coupon-bg" src="/coupon_3.svg" alt="coupon background" />
+      <Image 
+        className="coupon-bg" 
+        src="/coupon_3.svg" 
+        alt="coupon background"
+        width={300}
+        height={150}
+      />
       <div className="coupon-content">
         <h2 className="store-name2">GURU Laptop</h2>
         <p className="offer-text2">{coupon_content}</p>

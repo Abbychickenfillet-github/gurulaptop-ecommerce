@@ -6,9 +6,8 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useAuth } from '@/hooks/use-auth'
 import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai'
-import { AiOutlineSearch } from "react-icons/ai";
-import { AiTwotoneDelete } from "react-icons/ai";
-
+import { AiOutlineSearch } from 'react-icons/ai'
+import { AiTwotoneDelete } from 'react-icons/ai'
 
 const MySwal = withReactContent(Swal)
 
@@ -46,9 +45,14 @@ export default function CouponUser() {
 
     try {
       console.log('正在請求優惠券資料，用戶ID:', userId)
-      console.log('請求URL:', `process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`)
-      
-      const res = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`)
+      console.log(
+        '請求URL:',
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`
+      )
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`
+      )
 
       console.log('API 回應狀態:', res.status, res.statusText)
       console.log('API 回應 headers:', res.headers)
@@ -109,6 +113,7 @@ export default function CouponUser() {
 
   useEffect(() => {
     console.log('useEffect 觸發，userId:', userId, 'auth:', auth)
+    console.log(`useEffect觸發userId:${userId}`)
     if (userId && auth?.userData) {
       console.log('開始獲取優惠券資料')
       getUserCoupons()
@@ -116,7 +121,9 @@ export default function CouponUser() {
       console.log('userId 或 auth.userData 不存在，設置 loading 為 false')
       setLoading(false)
     }
-  }, [userId, auth]) // 加入 auth 作為依賴項
+  }, [userId, auth, getUserCoupons]) 
+  // 加入 auth 作為依賴項
+  //缺少getUserCoupons作為依賴項Terminal會出現  react-hooks/exhaustive-deps
 
   // 未登入時的顯示
   if (!userId) {
@@ -195,14 +202,16 @@ export default function CouponUser() {
                 }}
                 className="me-2"
               >
-                <AiOutlineSearch />{/* 搜尋 */}
+                <AiOutlineSearch />
+                {/* 搜尋 */}
               </Button>
               {searchTerm && (
                 <Button
                   variant="outline-secondary"
                   onClick={() => setSearchTerm('')}
                 >
-                  <AiTwotoneDelete />{/* 清除 */}
+                  <AiTwotoneDelete />
+                  {/* 清除 */}
                 </Button>
               )}
             </div>
@@ -242,7 +251,7 @@ export default function CouponUser() {
           </div>
         ) : (
           filteredCoupons.map((coupon) => (
-            <div
+            <button
               key={coupon.id}
               className="col-md-6 coupon-item"
               onClick={() => handleCartCoupon(coupon.coupon_id)}
@@ -257,7 +266,7 @@ export default function CouponUser() {
                 coupon_end_time={coupon.coupon_end_time}
                 isValid={coupon.user_coupon_valid === 1}
               />
-            </div>
+            </button>
           ))
         )}
       </div>
