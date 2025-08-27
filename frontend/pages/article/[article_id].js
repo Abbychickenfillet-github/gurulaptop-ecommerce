@@ -13,7 +13,7 @@ export default function ArticleDetail(props) {
   const [loading, setLoading] = useState(true) // 加載狀態
 
   const getArticle = async (article_id) => {
-    const url = `NEXT_PUBLIC_API_BASE_URL/api/article/article_detail/${article_id}`
+    const url = `process.env.NEXT_PUBLIC_API_BASE_URL/api/article/article_detail/${article_id}`
 
     try {
       const res = await fetch(url)

@@ -29,7 +29,7 @@ export default function BlogUserDetail() {
     }
 
     setIsLoading(true)
-    fetch(`NEXT_PUBLIC_API_BASE_URL/api/blog/blog-user-detail/${blog_id}`)
+    fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/blog/blog-user-detail/${blog_id}`)
       .then((response) => response.json())
       .then((data) => {
         const blogUserId = String(data.data.user_id)
@@ -101,7 +101,7 @@ export default function BlogUserDetail() {
           <div className="d-flex align-items-center justify-content-center mb-5">
             <img
               className="w-50 h-50 ratio"
-              src={`NEXT_PUBLIC_API_BASE_URL${blogData.blog_image}`}
+              src={`process.env.NEXT_PUBLIC_API_BASE_URL${blogData.blog_image}`}
               alt={blogData.blog_title}
             />
           </div>

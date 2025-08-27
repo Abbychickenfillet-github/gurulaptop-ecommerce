@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
-export default function BlogcreatedCategoryselection(props) {
+export default function BlogcreatedCategoryselection() {
   return (
     <>
       <div className="container d-flex flex-row justify-content-between align-items-start col-12">

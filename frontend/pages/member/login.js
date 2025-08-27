@@ -31,7 +31,7 @@ export default function LogIn(props) {
     showLoader() // 開始載入時顯示
 
     try {
-      const response = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/login`, {
+      const response = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/login`, {
         method: 'POST',
         credentials: 'include',
         headers: {

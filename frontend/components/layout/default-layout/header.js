@@ -88,7 +88,7 @@ export default function Header() {
 
   useEffect(() => {
     if (user_id) {
-      fetch(`NEXT_PUBLIC_API_BASE_URL/api/header`, {
+      fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/header`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

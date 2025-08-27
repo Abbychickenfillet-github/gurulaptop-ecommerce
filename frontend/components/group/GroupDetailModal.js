@@ -15,7 +15,7 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
   const fetchGroupMembers = async () => {
     try {
       const response = await fetch(
-        `NEXT_PUBLIC_API_BASE_URL/api/group/${groupData.id}`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/api/group/${groupData.id}`,
         {
           credentials: 'include',
         }
@@ -46,7 +46,7 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
         return cleanPath
       }
 
-      return `NEXT_PUBLIC_API_BASE_URL${
+      return `process.env.NEXT_PUBLIC_API_BASE_URL${
         cleanPath.startsWith('/') ? '' : '/'
       }${cleanPath}`
     } catch (error) {

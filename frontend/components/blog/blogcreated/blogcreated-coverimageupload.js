@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
-export default function BlogcreatedCoverimageupload(props) {
+export default function BlogcreatedCoverimageupload() {
   return (
     <>
       <div className="container BlogImgUploadDiv d-flex align-items-center justify-content-center">

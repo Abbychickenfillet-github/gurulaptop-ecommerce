@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
-export default function ArticleDetailMainArea(props) {
+export default function ArticleDetailMainArea() {
   return (
     <>
       <div className="ArticleSectionContainer">

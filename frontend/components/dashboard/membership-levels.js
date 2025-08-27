@@ -33,7 +33,7 @@ export default function MembershipLevels() {
     const fetchMembershipData = async () => {
       try {
         const response = await axios.get(
-          `NEXT_PUBLIC_API_BASE_URL/api/membership/${auth?.userData?.user_id}`
+          `process.env.NEXT_PUBLIC_API_BASE_URL/api/membership/${auth?.userData?.user_id}`
         )
         setMembershipData(prev => ({
           ...response.data,

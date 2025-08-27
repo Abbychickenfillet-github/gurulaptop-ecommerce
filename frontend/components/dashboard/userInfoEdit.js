@@ -192,7 +192,7 @@ export default function UserProfile() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`
+          `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`
         )
 
         if (response.data.status === 'success') {
@@ -339,7 +339,7 @@ export default function UserProfile() {
       // delete dataToSubmit.newPassword // 移除 newPassword 欄位
 
       const response = await axios.put(
-        `NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
         // editableUser
         dataToSubmit
       )
@@ -389,7 +389,7 @@ export default function UserProfile() {
       }
       //s停用button跟更新button用的是同一個路由所以停用
       const response = await axios.put(
-        `NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
         {
           ...editableUser,
           valid: 0,
@@ -432,7 +432,7 @@ export default function UserProfile() {
 
     try {
       const response = await axios.put(
-        `NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
         {
           ...editableUser,
           image_path: selectedImg,
@@ -450,7 +450,7 @@ export default function UserProfile() {
           },
         }))
         const headerResponse = await axios.post(
-          'NEXT_PUBLIC_API_BASE_URL/api/header',
+          'process.env.NEXT_PUBLIC_API_BASE_URL/api/header',
           {
             user_id: user_id,
           }

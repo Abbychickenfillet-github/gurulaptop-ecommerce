@@ -10,7 +10,7 @@ export default function ArticleDetailSection() {
     // 確保 ArticleId 存在後進行 fetch
     if (ArticleId) {
       fetch(`/article/${ArticleId}`) // 假設你的 API 路徑是這樣
-        // NEXT_PUBLIC_API_BASE_URL/api/article/${ArticleId}
+        // process.env.NEXT_PUBLIC_API_BASE_URL/api/article/${ArticleId}
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok')

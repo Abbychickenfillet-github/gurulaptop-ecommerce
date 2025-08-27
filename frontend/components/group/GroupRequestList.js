@@ -17,7 +17,7 @@ const GroupRequestList = ({ groupId }) => {
   const loadRequests = async () => {
     try {
       const response = await fetch(
-        `NEXT_PUBLIC_API_BASE_URL/api/group/requests/${groupId}`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/api/group/requests/${groupId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -50,7 +50,7 @@ const GroupRequestList = ({ groupId }) => {
   const handleRequest = async (requestId, status) => {
     try {
       const response = await fetch(
-        `NEXT_PUBLIC_API_BASE_URL/api/group/requests/${requestId}`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/api/group/requests/${requestId}`,
         {
           method: 'PATCH',
           headers: {

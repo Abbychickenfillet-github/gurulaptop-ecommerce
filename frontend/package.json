@@ -3,7 +3,7 @@
     "version": "1.2.0",
     "private": true,
     "scripts": {
-        "dev": "rimraf .next && next dev --turbo",
+        "dev": "next dev",
         "build": "next build",
         "start": "next start",
         "lint": "next lint"
@@ -55,22 +55,10 @@
         "ws": "^8.18.0"
     },
     "devDependencies": {
-        "@babel/preset-env": "^7.26.0",
-        "@babel/preset-react": "^7.25.9",
         "@types/node": "^20",
         "@types/react": "^18",
         "@types/react-dom": "^18",
-        "eslint": "^8.57.1",
-        "eslint-config-next": "^14.1.4",
-        "eslint-config-prettier": "^8.10.0",
-        "eslint-import-resolver-alias": "^1.1.2",
-        "eslint-plugin-import": "^2.31.0",
-        "eslint-plugin-jsx-a11y": "^6.10.2",
-        "eslint-plugin-prettier": "^4.2.1",
-        "eslint-plugin-react": "^7.37.2",
-        "eslint-plugin-react-hooks": "^4.6.2",
         "npm-run-all": "^2.1.0",
-        "prettier": "^2.8.8",
         "sass": "^1.89.2"
     },
     "packageManager": "pnpm@10.15.0+sha512.486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b"

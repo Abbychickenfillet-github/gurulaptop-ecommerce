@@ -32,16 +32,16 @@ export default function UserList({
     try {
       const [pendingResponse, historyResponse, chatsResponse, groupsResponse] =
         await Promise.all([
-          fetch('NEXT_PUBLIC_API_BASE_URL/api/chat/requests/pending', {
+          fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/requests/pending', {
             credentials: 'include',
           }),
-                      fetch('NEXT_PUBLIC_API_BASE_URL/api/chat/requests/history', {
+                      fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/requests/history', {
             credentials: 'include',
           }),
-                      fetch('NEXT_PUBLIC_API_BASE_URL/api/chat/messages/private', {
+                      fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/messages/private', {
             credentials: 'include',
           }),
-                      fetch('NEXT_PUBLIC_API_BASE_URL/api/chat/user/groups', {
+                      fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/user/groups', {
             credentials: 'include',
           }),
         ])
@@ -143,7 +143,7 @@ export default function UserList({
 
     try {
       const response = await fetch(
-        `NEXT_PUBLIC_API_BASE_URL/api/chat/requests/${requestId}`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/requests/${requestId}`,
         {
           method: 'PATCH',
           headers: {
@@ -310,7 +310,7 @@ export default function UserList({
                             onError={(e) => {
                               e.target.onerror = null
                               e.target.src =
-                                'NEXT_PUBLIC_API_BASE_URL/uploads/default-avatar.png'
+                                'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/default-avatar.png'
                             }}
                           />
                         ) : (
@@ -357,7 +357,7 @@ export default function UserList({
                           onError={(e) => {
                             e.target.onerror = null
                             e.target.src =
-                              'NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png'
+                              'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png'
                           }}
                         />
                       ) : (

@@ -33,18 +33,18 @@ export default function Compare() {
       else if (compareProduct.length === 1) {
         {
           const responseFirst = await fetch(
-            `NEXT_PUBLIC_API_BASE_URL/api/products/${compareProduct[0]}`
+            `process.env.NEXT_PUBLIC_API_BASE_URL/api/products/${compareProduct[0]}`
           )
           setProductDataFirst((await responseFirst.json()).data.product)
         }
       } else if (compareProduct.length === 2) {
         {
           const responseFirst = await fetch(
-            `NEXT_PUBLIC_API_BASE_URL/api/products/${compareProduct[0]}`
+            `process.env.NEXT_PUBLIC_API_BASE_URL/api/products/${compareProduct[0]}`
           )
           setProductDataFirst((await responseFirst.json()).data.product)
           const responseSecond = await fetch(
-            `NEXT_PUBLIC_API_BASE_URL/api/products/${compareProduct[1]}`
+            `process.env.NEXT_PUBLIC_API_BASE_URL/api/products/${compareProduct[1]}`
           )
           setProductDataSecond((await responseSecond.json()).data.product)
         }

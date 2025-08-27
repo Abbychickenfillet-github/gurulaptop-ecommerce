@@ -11,7 +11,7 @@ const Carousel = () => {
   useEffect(() => {
     const fetchUpcomingEvents = async () => {
       try {
-        const response = await axios.get('NEXT_PUBLIC_API_BASE_URL/api/events', {
+        const response = await axios.get('process.env.NEXT_PUBLIC_API_BASE_URL/api/events', {
           params: {
             status: '即將開始報名',
             sort: 'nearest', 

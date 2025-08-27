@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
 export default function BlogcreatedTitleinput(props) {
   return (
@@ -6,7 +6,7 @@ export default function BlogcreatedTitleinput(props) {
       <div className="container d-flex align-items-start justify-content-start">
         <div className="BlogEditSmallTitle text-nowrap col-4">
           <p className>
-            <i className="fa-solid fa-diamond TitleDiamond" />  標題
+            <i className="fa-solid fa-diamond TitleDiamond" />標題
           </p>
         </div>
         <div className="col-8 col-lg-8 col-md-10">

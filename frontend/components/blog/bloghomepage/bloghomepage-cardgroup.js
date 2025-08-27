@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function BloghomepageCardgroup() {
   // 設定狀態存放文章資料
@@ -15,11 +16,9 @@ export default function BloghomepageCardgroup() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const queryParams = new URLSearchParams({
-          limit: 6, // 限制只撈6筆
-        })
-
-        const res = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/blog/blogcardgroup`)
+        const res = await fetch(
+          `${process.env.process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blogcardgroup`
+        )
         const data = await res.json()
 
         if (data.blogs) {
@@ -47,14 +46,16 @@ export default function BloghomepageCardgroup() {
               >
                 <div className="card d-flex flex-row bg-white ArticleSmallerCard">
                   <div className="w-50 position-relative">
-                    <img
+                    <Image
                       src={
                         data.blog_image
-                          ? `NEXT_PUBLIC_API_BASE_URL${data.blog_image}`
-                          : 'NEXT_PUBLIC_API_BASE_URL/blog-images/nolaptopupload.jpeg'
+                          ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${data.blog_image}`
+                          : `${process.env.NEXT_PUBLIC_API_BASE_URL}/blog-images/nolaptopupload.jpeg`
                       }
                       className="w-100 h-100 ratio object-fit-cover position-center"
-                      alt="..."
+                      alt="Blog image"
+                      width={300}
+                      height={200}
                       style={{ objectPosition: 'center' }}
                     />
                     <div className="ArticleSmallerCardHeadHover position-absolute left-0 bottom-0 w-100 h-25 container">

@@ -4,8 +4,11 @@ import { useAuth } from '@/hooks/use-auth'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
+import Image from 'next/image'
 
-export default function BlogComment({ blog_id }) {
+// 這個是blogdetail的留言功能 要先登入才能留言
+export default function BlogComment() {
+  const { blog_id } = useRouter().query
   const [blogComment, setBlogComment] = useState([])
   const [newComment, setNewComment] = useState('')
   const router = useRouter()
@@ -28,7 +31,7 @@ export default function BlogComment({ blog_id }) {
 
   useEffect(() => {
     if (blog_id) {
-      fetch(`NEXT_PUBLIC_API_BASE_URL/api/blog/blog-comment/${blog_id}`)
+      fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/blog/blog-comment/${blog_id}`)
         .then((response) => response.json())
         .then((data) => {
           const commentArray = Array.isArray(data) ? data : []
@@ -62,7 +65,7 @@ export default function BlogComment({ blog_id }) {
 
     try {
       const response = await fetch(
-        `NEXT_PUBLIC_API_BASE_URL/api/blog/blog-comment/${blog_id}`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/api/blog/blog-comment/${blog_id}`,
         {
           method: 'POST',
           headers: {
@@ -118,13 +121,13 @@ export default function BlogComment({ blog_id }) {
             <hr />
             <div className="w-100 h-50 d-flex flex-row align-items-start justify-content-between">
               <div className="overflow-hidden BlogDetailCommentImg">
-                <img
+                <Image
                   className="w-100 h-100 object-fit-cover"
                   src={
                     comment.image_path?.startsWith('data:image')
                       ? comment.image_path
                       : comment.image_path
-                      ? `NEXT_PUBLIC_API_BASE_URL${comment.image_path}`
+                      ? `process.env.NEXT_PUBLIC_API_BASE_URL${comment.image_path}`
                       : 'https://th.bing.com/th/id/R.88c444f63f40cfa9b49801f826befa80?rik=QAme0H3xbxieEQ&pid=ImgRaw&r=0'
                   }
                   alt={comment.name || '匿名用戶'}

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
-export default function BlogcreatedBrandselection(props) {
+export default function BlogcreatedBrandselection() {
   return (
     <>
       <div className="container d-flex flex-row justify-content-between align-items-start col-12">
         <div className="BlogSmallTitleAlign d-flex justify-content-start align-items-start col-6">
           <div className="BlogEditSmallTitle text-nowrap">
             <p className>
-              <i className="fa-solid fa-diamond TitleDiamond" />  品牌
+              <i className="fa-solid fa-diamond TitleDiamond" />品牌
             </p>
           </div>
         </div>

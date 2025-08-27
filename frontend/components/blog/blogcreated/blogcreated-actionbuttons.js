@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
-export default function BlogcreatedActionbuttons(props) {
+export default function BlogcreatedActionbuttons() {
   return (
     <>
       <div className="container d-flex flex-row justify-content-around align-items-center">

@@ -10,7 +10,7 @@ import Swal from 'sweetalert2'
 export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
   const [messages, setMessages] = useState([])
   const messageListRef = useRef(null)
-  const defaultAvatar = 'NEXT_PUBLIC_API_BASE_URL/uploads/default-avatar.png'
+  const defaultAvatar = 'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/default-avatar.png'
 
   const scrollToBottom = useCallback(() => {
     if (!messageListRef.current) return
@@ -30,7 +30,7 @@ export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
     if (result.isConfirmed) {
       try {
         const response = await fetch(
-          `NEXT_PUBLIC_API_BASE_URL/api/chat/rooms/${currentRoom}/leave`,
+          `process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/rooms/${currentRoom}/leave`,
           {
             method: 'POST',
             headers: {

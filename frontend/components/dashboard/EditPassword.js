@@ -50,7 +50,7 @@ export default function EditPassword(props) {
     // createObjectURL(file) 這個是瀏覽器端還沒有傳送到伺服器用previewURL,setPreviewURL 暫時性的預覽長得很像一個網址可以直接用網址就可以看到那張圖。改成用useEffect主要是因為createObjectURL會占掉記憶體空間，用revokeObjectURL(objectURL)
     try {
       const responsePwdSend = await fetch(
-        `NEXT_PUBLIC_API_BASE_URL/api/dashboard/pwdCheck/${user_id}/`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/pwdCheck/${user_id}/`,
         {
           method: 'PUT',
           credentials: 'include',
@@ -124,7 +124,7 @@ export default function EditPassword(props) {
 
       const user_id = auth?.userData?.user_id
       const response = await axios.put(
-        `NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}/pwdReset`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}/pwdReset`,
         {
           newPassword1: editableUser.newPassword1,
           newPassword2: editableUser.newPassword2,

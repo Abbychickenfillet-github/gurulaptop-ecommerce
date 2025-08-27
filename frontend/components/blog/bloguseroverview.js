@@ -15,7 +15,7 @@ export default function BlogUserOverview({ specificUserId = null }) {
     const targetUserId = specificUserId || userData?.user_id
 
     if (targetUserId) {
-              fetch(`NEXT_PUBLIC_API_BASE_URL/api/blog/blog_user_overview/${targetUserId}`)
+              fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/blog/blog_user_overview/${targetUserId}`)
         .then((response) => response.json())
         .then((data) => {
           console.log('API回傳的資料:', data)
@@ -70,7 +70,7 @@ export default function BlogUserOverview({ specificUserId = null }) {
           <div className="card d-flex flex-row BlogUserOverviewCard">
             <img
               src={
-                `NEXT_PUBLIC_API_BASE_URL${blog.blog_image}` ||
+                `process.env.NEXT_PUBLIC_API_BASE_URL${blog.blog_image}` ||
                 'https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain'
               }
               className="card-img-top w-25 h-100 object-fit-cover BlogUserOverviewCardImg"

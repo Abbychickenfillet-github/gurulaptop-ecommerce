@@ -23,7 +23,7 @@ export default function Favorites() {
       const fetchFavorites = async () => {
         try {
           const response = await fetch(
-            `NEXT_PUBLIC_API_BASE_URL/api/favorites/${user_id}`
+            `process.env.NEXT_PUBLIC_API_BASE_URL/api/favorites/${user_id}`
           )
           const result = await response.json()
           if (result.status === 'success') {

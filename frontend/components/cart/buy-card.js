@@ -15,7 +15,7 @@ export default function BuyCard({ item, onDataChange }) {
   }, [item.list_price, item.quantity])
 
   const handleUpdate = async () => {
-    const response = await fetch('NEXT_PUBLIC_API_BASE_URL/api/cart/update', {
+    const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/cart/update', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export default function BuyCard({ item, onDataChange }) {
   }
 
   const handleDelete = async () => {
-    const response = await fetch('NEXT_PUBLIC_API_BASE_URL/api/cart/delete', {
+    const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/cart/delete', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

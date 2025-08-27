@@ -91,7 +91,7 @@ export default function CartIndex() {
 
   // 處理7-11選擇
   const { store711, openWindow } = useShip711StoreOpener(
-    'NEXT_PUBLIC_API_BASE_URL/api/shipment/711',
+    'process.env.NEXT_PUBLIC_API_BASE_URL/api/shipment/711',
     { autoCloseMins: 3 } // x分鐘沒完成選擇會自動關閉，預設5分鐘。
   )
 
@@ -157,7 +157,7 @@ export default function CartIndex() {
       return
     }
 
-    const result = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/cart/order`, {
+    const result = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/cart/order`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ export default function CartIndex() {
 
     if (couponDetails.coupon_id !== '') {
       const couponResult = await fetch(
-        `NEXT_PUBLIC_API_BASE_URL/api/coupon-user/update/${user_id}/${couponDetails.coupon_id}`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/update/${user_id}/${couponDetails.coupon_id}`,
         {
           method: 'PUT',
           headers: {
@@ -195,7 +195,7 @@ export default function CartIndex() {
       setCartdata([])
       setAddress('')
       localStorage.removeItem('store711')
-      window.location.href = `NEXT_PUBLIC_API_BASE_URL/api/ecpay-test-only/?orderId=${order_id}&amount=${couponDetails.finalPrice}`
+      window.location.href = `process.env.NEXT_PUBLIC_API_BASE_URL/api/ecpay-test-only/?orderId=${order_id}&amount=${couponDetails.finalPrice}`
     }
   }
 
@@ -212,7 +212,7 @@ export default function CartIndex() {
       setAddress('')
       localStorage.removeItem('store711')
       if (result.isConfirmed) {
-        window.location.href = `NEXT_PUBLIC_API_BASE_URL/api/line-pay/reserve?orderId=${lineOrder.orderId}`
+        window.location.href = `process.env.NEXT_PUBLIC_API_BASE_URL/api/line-pay/reserve?orderId=${lineOrder.orderId}`
       }
     })
   }
@@ -278,7 +278,7 @@ export default function CartIndex() {
       return
     }
 
-    const result = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/cart/order`, {
+    const result = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/cart/order`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -297,7 +297,7 @@ export default function CartIndex() {
 
     if (couponDetails.coupon_id !== '') {
       const couponResult = await fetch(
-        `NEXT_PUBLIC_API_BASE_URL/api/coupon-user/update/${user_id}/${couponDetails.coupon_id}`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/update/${user_id}/${couponDetails.coupon_id}`,
         {
           method: 'PUT',
           headers: {
@@ -407,7 +407,7 @@ export default function CartIndex() {
 
   useEffect(() => {
     async function fetchData() {
-      const result = await fetch(`NEXT_PUBLIC_API_BASE_URL/api/cart/`, {
+      const result = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/cart/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

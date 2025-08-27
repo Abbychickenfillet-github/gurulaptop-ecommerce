@@ -137,7 +137,7 @@ export default function Signup() {
       
 
       const response = await axios.post(
-        `NEXT_PUBLIC_API_BASE_URL/api/signup`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/api/signup`,
         user
       )
 

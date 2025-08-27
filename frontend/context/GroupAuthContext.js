@@ -9,7 +9,7 @@ export const GroupAuthProvider = ({ children }) => {
   const sendGroupRequest = async (groupId, gameId, description) => {
     try {
       // 從 cookie 中獲取 token
-      const response = await fetch('NEXT_PUBLIC_API_BASE_URL/api/group/requests', {
+      const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/group/requests', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
