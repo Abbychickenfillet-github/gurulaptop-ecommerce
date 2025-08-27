@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react'
 
 export default function EnhancedSelect({
   id,
@@ -7,87 +7,94 @@ export default function EnhancedSelect({
   disabled,
   value,
   onChange,
-  placeholder = "請選擇",
-  children //這邊的children是什麼
+  placeholder = '請選擇',
+  children, // 這邊的children是什麼
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const wrapperRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const wrapperRef = useRef(null)
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setIsOpen(false);
+        setIsOpen(false)
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const getFilteredOptions = () => {
-    if (!children) return [];
-    
-    const options = React.Children.toArray(children);
-    return options.map(child => {
-      if (child.type === 'optgroup') {
-        const filteredChildren = React.Children.toArray(child.props.children)
-          .filter(option => {
-            const optionText = option.props.children.toString().toLowerCase();
-            return optionText.includes(searchTerm.toLowerCase());
-          });
-        
-        return filteredChildren.length > 0 
-          ? React.cloneElement(child, {}, filteredChildren)
-          : null;
-      }
-      
-      if (child.type === 'option') {
-        const optionText = child.props.children.toString().toLowerCase();
-        return optionText.includes(searchTerm.toLowerCase()) ? child : null;
-      }
-      
-      return null;
-    }).filter(Boolean);
-  };
+    if (!children) return []
 
-  const handleSelect = (optionValue, optionLabel) => {
+    const options = React.Children.toArray(children)
+    return options
+      .map((child) => {
+        if (child.type === 'optgroup') {
+          const filteredChildren = React.Children.toArray(
+            child.props.children
+          ).filter((option) => {
+            const optionText = option.props.children.toString().toLowerCase()
+            return optionText.includes(searchTerm.toLowerCase())
+          })
+
+          return filteredChildren.length > 0
+            ? React.cloneElement(child, {}, filteredChildren)
+            : null
+        }
+
+        if (child.type === 'option') {
+          const optionText = child.props.children.toString().toLowerCase()
+          return optionText.includes(searchTerm.toLowerCase()) ? child : null
+        }
+
+        return null
+      })
+      .filter(Boolean)
+  }
+
+  const handleSelect = (optionValue) => {
     if (typeof onChange === 'function') {
-      onChange({ target: { name, value: optionValue } });
+      onChange({ target: { name, value: optionValue } })
     }
-    setIsOpen(false);
-    setSearchTerm('');
-  };
+    setIsOpen(false)
+    setSearchTerm('')
+  }
 
   return (
     <div className="position-relative" ref={wrapperRef}>
       {/* 美化的選擇框 */}
-      <div
+      <button
+        type="button"
         className={`form-control d-flex align-items-center justify-content-between ${
           disabled ? 'bg-light' : 'cursor-pointer'
         }`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
+        disabled={disabled}
         style={{
           minHeight: '38px',
           background: disabled ? '#e9ecef' : 'white',
-          transition: 'all 0.2s'
+          transition: 'all 0.2s',
         }}
       >
         <span className={!value ? 'text-muted' : ''}>
           {value || placeholder}
         </span>
-        <i className={`bi bi-chevron-${isOpen ? 'up' : 'down'}`} 
-           style={{ color: '#6c757d' }}></i>
-      </div>
+        <i
+          className={`bi bi-chevron-${isOpen ? 'up' : 'down'}`}
+          style={{ color: '#6c757d' }}
+        ></i>
+      </button>
 
       {/* 美化的下拉選單 */}
       {isOpen && !disabled && (
-        <div 
+        <div
           className="position-absolute start-0 w-100 mt-1 bg-white border rounded shadow"
-          style={{ 
-            zIndex: 1000, 
+          style={{
+            zIndex: 1000,
             maxHeight: '300px',
             overflow: 'auto',
-            animation: 'fadeIn 0.2s ease-in-out'
+            animation: 'fadeIn 0.2s ease-in-out',
           }}
         >
           {/* 搜尋框 */}
@@ -98,11 +105,13 @@ export default function EnhancedSelect({
                 className="form-control form-control-sm ps-4"
                 placeholder="輸入關鍵字搜尋..."
                 value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-                onClick={e => e.stopPropagation()}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
               />
-              <i className="bi bi-search position-absolute start-0 top-50 translate-middle-y ms-2"
-                 style={{ color: '#6c757d' }}></i>
+              <i
+                className="bi bi-search position-absolute start-0 top-50 translate-middle-y ms-2"
+                style={{ color: '#6c757d' }}
+              ></i>
             </div>
           </div>
 
@@ -115,14 +124,19 @@ export default function EnhancedSelect({
                     <div className="dropdown-header text-primary fw-bold py-2">
                       {child.props.label}
                     </div>
-                    {React.Children.map(child.props.children, option => (
+                    {React.Children.map(child.props.children, (option) => (
                       <button
                         type="button"
                         className="dropdown-item d-flex align-items-center"
-                        onClick={() => handleSelect(option.props.value, option.props.children)}
-                        style={{ 
+                        onClick={() =>
+                          handleSelect(
+                            option.props.value,
+                            option.props.children
+                          )
+                        }
+                        style={{
                           transition: 'all 0.2s',
-                          padding: '0.5rem 1rem'
+                          padding: '0.5rem 1rem',
                         }}
                       >
                         <span style={{ flex: 1 }}>{option.props.children}</span>
@@ -132,7 +146,7 @@ export default function EnhancedSelect({
                       </button>
                     ))}
                   </div>
-                );
+                )
               }
 
               if (child.type === 'option' && child.props.value) {
@@ -141,10 +155,12 @@ export default function EnhancedSelect({
                     type="button"
                     key={child.props.value}
                     className="dropdown-item d-flex align-items-center"
-                    onClick={() => handleSelect(child.props.value, child.props.children)}
-                    style={{ 
+                    onClick={() =>
+                      handleSelect(child.props.value, child.props.children)
+                    }
+                    style={{
                       transition: 'all 0.2s',
-                      padding: '0.5rem 1rem'
+                      padding: '0.5rem 1rem',
                     }}
                   >
                     <span style={{ flex: 1 }}>{child.props.children}</span>
@@ -152,10 +168,10 @@ export default function EnhancedSelect({
                       <i className="bi bi-check2 text-primary"></i>
                     )}
                   </button>
-                );
+                )
               }
 
-              return null;
+              return null
             })}
           </div>
         </div>
@@ -187,11 +203,11 @@ export default function EnhancedSelect({
 
         .dropdown-item:hover {
           background-color: #f8f9fa;
-          color: #805AF5;
+          color: #805af5;
         }
 
         .dropdown-item:active {
-          background-color: #805AF5;
+          background-color: #805af5;
           color: white;
         }
 
@@ -215,5 +231,5 @@ export default function EnhancedSelect({
         }
       `}</style>
     </div>
-  );
+  )
 }

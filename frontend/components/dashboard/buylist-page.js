@@ -5,12 +5,10 @@ import { useAuth } from '@/hooks/use-auth'
 export default function BuylistPage(props) {
   const { orderStatus } = props
   const [order, setOrder] = useState([])
-  const [whereClause, setWhereClause] = useState(orderStatus)
-  
   const { auth } = useAuth()
   const { userData } = auth
   const [user_id, setUser_id] = useState(null)
-  
+
   useEffect(() => {
     if (userData) {
       setUser_id(userData.user_id)
@@ -20,10 +18,12 @@ export default function BuylistPage(props) {
   const getOrder = async () => {
     if (!user_id) return
     try {
-      const res = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/buy-list/${user_id}`)
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/buy-list/${user_id}`
+      )
       const data = await res.json()
-      
-      if ((data.status === 'success') && !data.data) {
+
+      if (data.status === 'success' && !data.data) {
         return setOrder([])
       }
       setOrder(data.data)
@@ -35,7 +35,7 @@ export default function BuylistPage(props) {
 
   useEffect(() => {
     getOrder()
-  }, [user_id])
+  }, [user_id, getOrder])
 
   return (
     <>

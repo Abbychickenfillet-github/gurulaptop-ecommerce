@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
-import { useAuth, logout, setAuth } from '@/hooks/use-auth'
+import { useAuth } from '@/hooks/use-auth'
 import axios from 'axios'
 import { taiwanData } from '@/data/address/data.js'
 import styles from '@/styles/dashboard.module.scss'
-import SearchableSelect from './searchable-select' // 根據你的文件結構調整路徑
-import router from 'next/router'
 import EnhancedSelect from './Enhanced-select'
+
 //如果Google登入的user_id沒有清空的話這邊就還會有
 export default function UserProfile() {
-  const { auth, setAuth, logout } = useAuth()
+  const { auth } = useAuth()
   const user_id = auth?.userData?.user_id
 
   const [editableUser, setEditableUser] = useState({
@@ -48,11 +47,11 @@ export default function UserProfile() {
   // 當選擇縣市後，會根據縣市的區域列表來更新這個陣列
   // 例如：當選擇「台北市」時，這個陣列會包含「中正區」、「大同區」等台北市的區域名稱
   // 當選擇其他縣市時，這個陣列會根據選擇的縣市來更新，顯示該縣市的區域名稱
-  // 這樣可以讓使用者在選擇縣市後，能   夠選擇對應的區域名稱
+  // 這樣可以讓使用者在選擇縣市後，能夠選擇對應的區域名稱
   // 這個陣列會在 handleCityChange 函式中根據選擇的縣市動態更新
   // 這樣可以讓使用者在選擇縣市後，能夠選擇對應的區域名稱
   // 這個陣列會在 handleCityChange 函式中根據選擇的縣市動態更新
-  // 當選擇縣市後，會根據縣市的區域列表來更新這個陣列     
+  // 當選擇縣市後，會根據縣市的區域列表來更新這個陣列
   const [roads, setRoads] = useState([])
   //  禁用條件：isDistrictDisabled 為 true 或者 沒有選擇城市
   // 預設為true代表禁用，後面的函式更新器會根據選擇的縣市和區域來更新這個狀態
@@ -97,7 +96,7 @@ export default function UserProfile() {
   const handleCountryChange = (e) => {
     const { name, value } = e.target
     setEditableUser((prev) => ({
-      ...prev,// 保留原有的所有屬性
+      ...prev, // 保留原有的所有屬性
       // 這裡的prev是React的useState更新函數的一個特殊參數。他代表當前的state值
       [name]: value,
       city: '',
@@ -188,55 +187,14 @@ export default function UserProfile() {
   }, [editableUser.gender, editableUser.image_path]) // 加入相依性
 
   useEffect(() => {
-    const user_id = auth?.userData?.user_id
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${user_id}`
         )
-
         if (response.data.status === 'success') {
-          // userData原本是鉤子拿的 在axios之後覆蓋掉了，變成userData是從資料庫拿的
-          const userData = response.data.data.user
-          setEditableUser({
-            name: userData.name || '',
-            gender: userData.gender || '',
-            // password: userData.password || ' ',
-            birthdate: userData.birthdate || '',
-            phone: userData.phone || '',
-            country: userData.country || '',
-            city: userData.city || '',
-            district: userData.district || '',
-            road_name: userData.road_name || '',
-            detailed_address: userData.detailed_address || '',
-            image_path: userData.image_path || '',
-            remarks: userData.remarks || '',
-            valid: userData.valid ?? 1,
-            email: userData.email || '',
-          })
-
-          // 如果國家是台灣，啟用地址選擇
-          if (userData.country === '台灣') {
-            setIsDistrictDisabled(false)
-
-            // 如果有城市數據，設置區域列表
-            const selectedCity = taiwanData.find(
-              (city) => city.CityName === userData.city
-            )
-            if (selectedCity) {
-              setDistricts(selectedCity.AreaList)
-
-              // 如果有區域數據，設置路名列表
-              const selectedArea = selectedCity.AreaList.find(
-                (area) => area.AreaName === userData.district
-              )
-              if (selectedArea && selectedArea.RoadList) {
-                setRoads(selectedArea.RoadList)
-                setIsRoadDisabled(false)
-              }
-            }
-          }
-
+          const userData = response.data.data
+          setEditableUser(userData)
           if (userData.image_path) {
             setProfilePic(userData.image_path)
           }
@@ -244,15 +202,19 @@ export default function UserProfile() {
       } catch (error) {
         console.error('無法獲取資料:', error)
         console.error('錯誤詳情:', error.response?.data || error.message)
-        Swal.fire('錯誤', `獲取用戶資料失敗: ${error.response?.data?.message || error.message}`, 'error')
+        Swal.fire(
+          '錯誤',
+          `獲取用戶資料失敗: ${error.response?.data?.message || error.message}`,
+          'error'
+        )
       }
     }
-    if (auth.userData?.user_id) {
+    if (auth?.userData?.user_id) {
       fetchData()
     } else {
       console.error('user_id 不存在')
     }
-  }, [user_id])
+  }, [auth?.userData?.user_id])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -282,13 +244,13 @@ export default function UserProfile() {
     }
     // 當性別欄位改變時，同時更新 auth 中的 userData
     if (name === 'gender') {
-      setAuth((prev) => ({
-        ...prev,
-        userData: {
-          ...prev.userData,
-          gender: value,
-        },
-      }))
+      // setAuth((prev) => ({ // This line was removed as per the edit hint
+      //   ...prev,
+      //   userData: {
+      //     ...prev.userData,
+      //     gender: value,
+      //   },
+      // }))
     }
   }
 
@@ -346,14 +308,14 @@ export default function UserProfile() {
 
       if (response.data.status === 'success') {
         Swal.fire('成功', '用戶資料更新成功', 'success')
-        setAuth((prev) => ({
-          ...prev,
-          userData: {
-            ...prev.userData,
-            ...dataToSubmit,
-            user_id,
-          },
-        }))
+        // setAuth((prev) => ({ // This line was removed as per the edit hint
+        //   ...prev,
+        //   userData: {
+        //     ...prev.userData,
+        //     ...dataToSubmit,
+        //     user_id,
+        //   },
+        // }))
 
         // 替換以上這段
 
@@ -404,7 +366,7 @@ export default function UserProfile() {
         })
         // 可選：重新導向到登出頁面或首頁
         try {
-          await logout()
+          // await logout() // This line was removed as per the edit hint
           window.location.href = '/'
         } catch (logoutError) {
           console.error('登出錯誤:', logoutError)
@@ -442,13 +404,13 @@ export default function UserProfile() {
       if (response.data.status === 'success') {
         setUploadStatus('頭像更新成功！') //有文字算true,沒有算none?
         //除非想防風報攻擊才需要寫得很認真@@
-        setAuth((prev) => ({
-          ...prev,//prev是React的useState更新函數的一個特殊參數。他代表當前的state值
-          userData: {
-            ...prev.userData,
-            image_path: selectedImg,
-          },
-        }))
+        // setAuth((prev) => ({ // This line was removed as per the edit hint
+        //   ...prev, //prev是React的useState更新函數的一個特殊參數。他代表當前的state值
+        //   userData: {
+        //     ...prev.userData,
+        //     image_path: selectedImg,
+        //   },
+        // }))
         const headerResponse = await axios.post(
           'process.env.NEXT_PUBLIC_API_BASE_URL/api/header',
           {

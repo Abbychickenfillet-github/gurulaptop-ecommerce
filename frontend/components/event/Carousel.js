@@ -11,12 +11,15 @@ const Carousel = () => {
   useEffect(() => {
     const fetchUpcomingEvents = async () => {
       try {
-        const response = await axios.get('process.env.NEXT_PUBLIC_API_BASE_URL/api/events', {
-          params: {
-            status: '即將開始報名',
-            sort: 'nearest', 
-          },
-        })
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events`,
+          {
+            params: {
+              status: '即將開始報名',
+              sort: 'nearest',
+            },
+          }
+        )
 
         if (response.data.code === 200) {
           // 取前三個最接近的活動
@@ -50,7 +53,7 @@ const Carousel = () => {
 
     const timer = setInterval(nextSlide, 5000) // 每5秒切換一次
     return () => clearInterval(timer)
-  }, [upcomingEvents.length])
+  }, [upcomingEvents.length, nextSlide])
 
   // 格式化時間顯示
   const formatDateTime = (dateString) => {

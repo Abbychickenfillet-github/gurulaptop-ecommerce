@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useAuth } from '@/hooks/use-auth'
 import Accordion from 'react-bootstrap/Accordion'
 import BuyItemCard from './buy-item-card'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+
 const MySwal = withReactContent(Swal)
 
 export default function BuyList(order) {
@@ -20,7 +20,7 @@ export default function BuyList(order) {
 
   const getOrderDetail = async () => {
     const res = await fetch(
-      `process.env.NEXT_PUBLIC_API_BASE_URL/api/buy-list/detail/${order_id}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/buy-list/detail/${order_id}`
     )
     const data = await res.json()
     setOrderDetail(data.data)
@@ -28,12 +28,15 @@ export default function BuyList(order) {
 
   const getCouponData = async () => {
     try {
-      const res = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon/${coupon_id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon/${coupon_id}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
       const data = await res.json()
       setCouponCode(data.data.coupon.coupon_code)
     } catch (err) {
@@ -51,7 +54,7 @@ export default function BuyList(order) {
     }).then((result) => {
       localStorage.removeItem('store711')
       if (result.isConfirmed) {
-        window.location.href = `process.env.NEXT_PUBLIC_API_BASE_URL/api/line-pay/reserve?orderId=${order_id}`
+        window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/line-pay/reserve?orderId=${order_id}`
       }
     })
   }
@@ -69,7 +72,7 @@ export default function BuyList(order) {
     })
 
     if (check.isConfirmed) {
-      window.location.href = `process.env.NEXT_PUBLIC_API_BASE_URL/api/ecpay-test-only/?orderId=${order_id}&amount=${order.order.order_amount}`
+      window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/ecpay-test-only/?orderId=${order_id}&amount=${order.order.order_amount}`
     }
   }
 
@@ -82,7 +85,7 @@ export default function BuyList(order) {
       getOrderDetail()
     }
     // console.log(orderDetail)
-  }, [order_id])
+  }, [order_id, getOrderDetail])
 
   useEffect(() => {
     if (order.order.already_pay == 1) {
@@ -94,7 +97,7 @@ export default function BuyList(order) {
     if (coupon_id !== 0) {
       getCouponData()
     }
-  }, [coupon_id])
+  }, [coupon_id, getCouponData])
 
   return (
     <>

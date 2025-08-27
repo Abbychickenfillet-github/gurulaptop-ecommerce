@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import styles from "@/styles/MarioGame.module.scss"; // Separate CSS file to keep styling modular
+import React, { useState } from 'react'
+import styles from '@/styles/MarioGame.module.scss'
+ // Separate CSS file to keep styling modular
 
 const MarioGame = () => {
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(0)
 
   const handleCoinCollection = () => {
-    setScore(score + 1); // Increment score on coin collection
-  };
+    setScore(score + 1) // Increment score on coin collection
+  }
 
   return (
     <div className={`${styles.world}`}>
@@ -18,14 +19,19 @@ const MarioGame = () => {
       <div className={`${styles.blocks}`}>
         <div className={`${styles.brick}`}></div>
         <div className={`${styles.brick}`}></div>
-        <div className={`${styles.questionblock}`} onClick={handleCoinCollection}>
+        <button
+          type="button"
+          className={`${styles.questionblock}`}
+          onClick={handleCoinCollection}
+          aria-label="Collect coin"
+        >
           <div className={`${styles.coin}`}></div>
-        </div>
+        </button>
         <div className={`${styles.brick}`}></div>
       </div>
       <div className={`${styles.scoredisplay}`}>Score: {score}</div>
     </div>
-  );
-};
+  )
+}
 
-export default MarioGame;
+export default MarioGame

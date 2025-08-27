@@ -3,18 +3,15 @@ import { useAuth } from '@/hooks/use-auth'
 import ProgressBar from 'react-bootstrap/ProgressBar'
 import axios from 'axios'
 import Image from 'next/image'
-import styles from '@/styles/membership-levels.module.scss'
 
 export default function MembershipLevels() {
   const { auth } = useAuth()
-  const level_chinese = auth?.userData?.level
   const [membershipData, setMembershipData] = useState({
     totalSpent: 0,
     nextLevelRequired: 0,
     created_at: null,
     daysToThreeYears: 0,
   })
-  const user_id = auth?.userData?.user_id
 
   const calculateDateProgress = () => {
     if (!membershipData.created_at) return [0, 0, 0, 0]
@@ -33,12 +30,12 @@ export default function MembershipLevels() {
     const fetchMembershipData = async () => {
       try {
         const response = await axios.get(
-          `process.env.NEXT_PUBLIC_API_BASE_URL/api/membership/${auth?.userData?.user_id}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/membership/${auth?.userData?.user_id}`
         )
-        setMembershipData(prev => ({
+        setMembershipData((prev) => ({
           ...response.data,
           totalSpent: Number(response.data.totalSpent) || 0,
-          nextLevelRequired: Number(response.data.nextLevelRequired) || 0
+          nextLevelRequired: Number(response.data.nextLevelRequired) || 0,
         }))
       } catch (error) {
         console.error('Error fetching membership data:', error)
@@ -49,6 +46,7 @@ export default function MembershipLevels() {
       fetchMembershipData()
     }
   }, [auth?.userData?.user_id])
+
   const totalSpent = membershipData.totalSpent
   const getMembershipLevel = (totalSpent) => {
     // 確保 totalSpent 是數字

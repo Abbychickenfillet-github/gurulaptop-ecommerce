@@ -1,12 +1,12 @@
 // components/dashboard/LoadingSpinner.js
 import React from 'react'
-import { PacmanLoader } from 'react-spinners'
+// import { PacmanLoader } from 'react-spinners'
 
 export const LoadingSpinner = ({ show }) => {
   console.log('LoadingSpinner rendered', { show })
   if (!show) return null
 
-  return
+  return null
   // <div
   //   className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-black bg-opacity-25"
   //   style={{ zIndex: 9999 }}
