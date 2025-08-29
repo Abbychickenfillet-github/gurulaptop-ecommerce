@@ -47,11 +47,11 @@ export default function CouponUser() {
       console.log('正在請求優惠券資料，用戶ID:', userId)
       console.log(
         '請求URL:',
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
       )
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
       )
 
       console.log('API 回應狀態:', res.status, res.statusText)

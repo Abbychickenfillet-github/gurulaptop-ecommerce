@@ -10,7 +10,7 @@ import CouponList from '@/components/coupon/coupon-list-components'
 import { useRouter } from 'next/router'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-
+import Image from 'next/image'
 const MySwal = withReactContent(Swal)
 
 export default function CouponPageJquery() {
@@ -22,7 +22,7 @@ export default function CouponPageJquery() {
       <div className="row d-flex justify-content-center">
         <div className="card col-2 border-0">
           <div className=" text-center ">
-            <img
+            <Image
               src="https://via.placeholder.com/70x70"
               alt="Profile"
               className="rounded-circle img-fluid mb-3"

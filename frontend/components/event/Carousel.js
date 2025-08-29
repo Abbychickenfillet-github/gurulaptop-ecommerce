@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import axios from 'axios'
 import styles from './Carousel.module.css'
-
+import Image from 'next/image'
 const Carousel = () => {
   const [activeIndex, setActiveIndex] = useState(0)
   const [upcomingEvents, setUpcomingEvents] = useState([])
@@ -124,7 +124,7 @@ const Carousel = () => {
                 role="button"
                 tabIndex={0}
               >
-                <img
+                <Image
                   src={event.picture || '/images/event/default-event.jpg'}
                   alt={event.name}
                   onError={(e) => {

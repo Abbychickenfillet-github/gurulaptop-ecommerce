@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
 import { MessageCircle, ShoppingCart, Menu } from 'lucide-react'
 import useFirebase from '@/hooks/use-firebase'
-
+import Image from 'next/image'
 
 export default function Header() {
   const { logoutFirebase } = useFirebase()  // 加入這行
@@ -138,7 +138,7 @@ export default function Header() {
         <>
           <div className="mobile-header">
             <Link href="/" className="logo-link">
-              <img src="/logo.svg" alt="Logo" className="logo" />
+              <Image src="/logo.svg" alt="Logo" className="logo" />
             </Link>
 
             <div className="mobile-controls">
@@ -174,7 +174,7 @@ export default function Header() {
                   <div className="mobile-icons">
                     <Link href="/dashboard" className="icon-wrapper">
                       <div className="user-avatar">
-                        <img
+                        <Image
                           src={
                             auth?.userData?.image_path ||
                             (auth?.userData?.gender === 'male'
@@ -206,7 +206,7 @@ export default function Header() {
         <div className="nav-container">
           <div className="nav-left">
             <Link href="/" className="logo-link">
-              <img src="/logo.svg" alt="Logo" className="logo" />
+              <Image src="/logo.svg" alt="Logo" className="logo" />
             </Link>
           </div>
 
@@ -233,7 +233,7 @@ export default function Header() {
               <div className="auth-section">
                 <Link href="/dashboard">
                   <div className="user-avatar">
-                    <img
+                    <Image
                       src={
                         auth?.userData?.image_path ||
                         getDefaultImage(auth?.userData?.gender)

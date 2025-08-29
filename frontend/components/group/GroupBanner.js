@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import styles from './GroupBanner.module.css'
 import EventButton from '../event/EventButton'
-
+import Image from 'next/image'
 export default function GroupBanner({ groupData, onOpenDetail, onOpenJoin }) {
   const [timeAgo, setTimeAgo] = useState('')
 
@@ -40,7 +40,7 @@ export default function GroupBanner({ groupData, onOpenDetail, onOpenJoin }) {
     <div className={styles.wrapper}>
       <div className={styles.banner}>
         <div className={styles.content}>
-          <img
+          <Image
             src={getImageUrl(groupData.image)}
             alt="遊戲圖片"
             className={styles.image}

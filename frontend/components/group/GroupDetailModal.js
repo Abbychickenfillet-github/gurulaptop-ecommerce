@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from './GroupDetailModal.module.css'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
-
+import Image from 'next/image'
 const DEFAULT_AVATAR = '/images/group/default-avatar.png'
 
 const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
@@ -122,7 +122,7 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
                     key={member.user_id}
                     className={styles.userAvatarWrapper}
                   >
-                    <img
+                    <Image
                       src={getImageUrl(member.image_path)}
                       alt={member.name}
                       className={styles.userAvatar}

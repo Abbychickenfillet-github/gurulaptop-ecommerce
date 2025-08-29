@@ -1,7 +1,7 @@
 // src/components/HomeSection.js
 import React, { useState, useEffect } from 'react'
 import { bannerData } from './bannerData'
-
+import Image from 'next/image'
 export default function HomeSection() {
   const [currentImage, setCurrentImage] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -55,7 +55,7 @@ export default function HomeSection() {
       </div>
       <div className="home-banner">
         <div className="home-one">
-          <img
+          <Image
             src={bannerData[currentImage].image}
             alt={bannerData[currentImage].title}
             className={isTransitioning ? 'transitioning' : ''}

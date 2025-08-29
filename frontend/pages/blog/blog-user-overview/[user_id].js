@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
-
+import Image from 'next/image'
 export default function BlogUserOverview() {
   // 1. 所有的 hooks
   const router = useRouter()
@@ -70,7 +70,7 @@ export default function BlogUserOverview() {
             className="card d-flex flex-row BlogUserOverviewCard"
             href={`/blog/blog-detail/${blog.blog_id}`}
           >
-            <img
+            <Image
               src={
                 `process.env.NEXT_PUBLIC_API_BASE_URL${blog.blog_image}` ||
                 'https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain'

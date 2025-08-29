@@ -4,7 +4,7 @@ import { FaFire } from 'react-icons/fa'
 import EventButton from './EventButton'
 import Link from 'next/link'
 import styles from './EventCard.module.css'
-
+import Image from 'next/image'
 export default function EventCard({
   id,
   name,
@@ -62,7 +62,7 @@ export default function EventCard({
     <div className={styles.cardWrapper}>
       <div className={styles.card}>
         <div className={styles.cardImgWrapper}>
-          <img
+          <Image
             src={picture || '/images/event-default.png'}
             className={styles.cardImg}
             alt={name || '活動圖片'}

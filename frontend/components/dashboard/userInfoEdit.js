@@ -5,7 +5,7 @@ import axios from 'axios'
 import { taiwanData } from '@/data/address/data.js'
 import styles from '@/styles/dashboard.module.scss'
 import EnhancedSelect from './Enhanced-select'
-
+import Image from 'next/image'
 //如果Google登入的user_id沒有清空的話這邊就還會有
 export default function UserProfile() {
   const { auth } = useAuth()
@@ -760,7 +760,7 @@ export default function UserProfile() {
                   <div className="col-md-4">
                     <form onSubmit={handleProfilePicSubmit}>
                       <div className="text-center">
-                        <img
+                        <Image
                           src={profilePic}
                           alt="Profile"
                           className="rounded-circle img-fluid mb-3"

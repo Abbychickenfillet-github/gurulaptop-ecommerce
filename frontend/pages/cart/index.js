@@ -11,7 +11,7 @@ import CouponBtn from '@/components/coupon/coupon-btn'
 import axiosInstance from '@/services/axios-instance'
 import Head from 'next/head'
 import NextBreadCrumb from '@/components/common/next-breadcrumb'
-
+import Image from 'next/image'
 export default function CartIndex() {
   const router = useRouter()
   const { auth } = useAuth()
@@ -456,7 +456,7 @@ export default function CartIndex() {
         <NextBreadCrumb isHomeIcon isChevron bgClass="bg-transparent" />
         <div className="tilte d-flex mb-3">
           <div className="logo border-end me-3">
-            <img src="/logo-black.svg" />
+            <Image src="/logo-black.svg" />
           </div>
           <div className="h2 align-items-center">
             <h2>購物車</h2>
@@ -489,7 +489,7 @@ export default function CartIndex() {
             <div className="card p-3 border-primary">
               <div className="row border-bottom border-primary mb-2 pb-2">
                 <div className="col-6 text-primary">
-                  <img src="/diamond.svg" />
+                  <Image src="/diamond.svg" />
                   清單資訊
                 </div>
               </div>

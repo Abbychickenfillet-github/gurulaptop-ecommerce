@@ -1,6 +1,6 @@
 // src/components/frontPage/Section4.js
 import React, { useState } from 'react';
-
+import Image from 'next/image'
 // 將 laptopData 移到組件外部
 // const laptopData = [
 //   {
@@ -54,7 +54,7 @@ export default function Section4() {
                           `
                         }}
                       >
-                        <img src={image.image} alt={`Laptop ${index + 1}`} />
+                        <Image src={image.image} alt={`Laptop ${index + 1}`} />
                       </div>
                     ))}
                   </div>

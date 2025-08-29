@@ -16,7 +16,9 @@ export default function BlogUserOverview({ specificUserId = null }) {
     const targetUserId = specificUserId || userData?.user_id
 
     if (targetUserId) {
-              fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog_user_overview/${targetUserId}`)
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog_user_overview/${targetUserId}`,
+      )
         .then((response) => response.json())
         .then((data) => {
           console.log('API回傳的資料:', data)

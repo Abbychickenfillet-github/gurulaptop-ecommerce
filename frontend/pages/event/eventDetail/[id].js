@@ -4,7 +4,7 @@ import EventButton from '@/components/event/EventButton'
 import axios from 'axios'
 import NextBreadCrumb from '@/components/common/next-breadcrumb'
 import Head from 'next/head'
-
+import Image from 'next/image'
 const EventDetail = () => {
   const router = useRouter()
   const { id } = router.query
@@ -208,7 +208,7 @@ const EventDetail = () => {
 
               {/* 右側內容 */}
               <div className="col-12 col-md-8 order-md-2 order-1">
-                <img
+                Image
                   src={event.picture}
                   alt="活動圖片"
                   className="eventDetail-image mb-4"

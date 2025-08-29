@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/use-auth'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import Head from 'next/head'
-
+import Image from 'next/image'
 export default function BlogUserDetail() {
   const router = useRouter()
   const { blog_id } = router.query
@@ -99,7 +99,7 @@ export default function BlogUserDetail() {
             </p>
           </div>
           <div className="d-flex align-items-center justify-content-center mb-5">
-            <img
+            <Image
               className="w-50 h-50 ratio"
               src={`process.env.NEXT_PUBLIC_API_BASE_URL${blogData.blog_image}`}
               alt={blogData.blog_title}

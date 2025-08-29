@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styles from './GroupRequestList.module.css'
 import { useGroupAuth } from '@/context/GroupAuthContext'
 import websocketService from '../../services/websocketService'
-
+import Image from 'next/image'
 const GroupRequestList = ({ groupId }) => {
   const { user } = useGroupAuth()
   const [requests, setRequests] = useState([])
@@ -95,7 +95,7 @@ const GroupRequestList = ({ groupId }) => {
         requests.map((request) => (
           <div key={request.id} className={styles.requestItem}>
             <div className={styles.userInfo}>
-              <img
+              <Image
                 src={request.sender_image || '/default-avatar.png'}
                 alt={request.sender_name}
                 className={styles.avatar}

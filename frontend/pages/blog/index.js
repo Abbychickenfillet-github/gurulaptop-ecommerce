@@ -8,7 +8,7 @@ import MyFooter from '@/components/layout/default-layout/my-footer'
 import NextBreadCrumb from '@/components/common/next-breadcrumb'
 import Head from 'next/head'
 import { Search } from 'lucide-react'
-
+import Image from 'next/image'
 export default function BlogSearchPage() {
   const [blogs, setBlogs] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -223,7 +223,7 @@ export default function BlogSearchPage() {
                 <div className="col-md-12 col-lg-6 mb-5" key={blog.blog_id}>
                   <Link href={`/blog/blog-detail/${blog.blog_id}`} passHref>
                     <div className="card d-flex flex-row BlogCard shadow w-100">
-                      <img
+                      <Image
                         src={
                           blog.blog_image
                             ? `process.env.NEXT_PUBLIC_API_BASE_URL${blog.blog_image}`

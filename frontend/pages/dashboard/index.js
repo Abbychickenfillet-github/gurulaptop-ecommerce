@@ -17,7 +17,7 @@ import Head from 'next/head'
 import { LoadingSpinner } from '@/components/dashboard/loading-spinner'
 import LoadingAnimation from '@/components/LoadingAnimation/LoadingAnimation'
 // import MarioGame from '@/components/dashboard/MarioGame'
-
+import Image from 'next/image'
 export default function DashboardIndex() {
   const { auth } = useAuth()
   const [activeKey, setActiveKey] = useState('home')
@@ -114,7 +114,7 @@ export default function DashboardIndex() {
             {/* Left Sidebar */}
             <div className="col-md-2">
               <div className="text-center">
-                <img
+                <Image
                   src={
                     auth?.userData?.image_path ||
                     (auth?.userData?.gender === 'male'

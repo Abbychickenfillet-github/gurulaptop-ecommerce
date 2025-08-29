@@ -12,7 +12,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
 import Head from 'next/head'
-
+import Image from 'next/image'
 export default function Blogcreated(props) {
   const router = useRouter() // 加入 router
 
@@ -148,7 +148,7 @@ export default function Blogcreated(props) {
           onClick={() => document.getElementById('imageInput').click()}
         >
           {blog_image ? (
-            <img
+            <Image
               src={URL.createObjectURL(blog_image)}
               alt="預覽圖片"
               className="object-fit-cover w-100 h-100"

@@ -29,7 +29,26 @@ export default function CouponList() {
 
   const getCouponData = async () => {
     try {
-      const res = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon')
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon`,
+      )
+
+      /*
+       * 🔧 修復說明：
+       * 
+       * ❌ 原本錯誤的地方：
+       * - 第 31 行：'process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon'
+       * - 缺少 ${} 語法來正確引用環境變數
+       * 
+       * ✅ 修復後的寫法：
+       * - 第 31 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon`
+       * - 使用 ${} 語法正確引用環境變數
+       * 
+       * 💡 為什麼會錯：
+       * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
+       * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon
+       * - 這會導致 404 錯誤，因為沒有這樣的 URL
+       */
       const resData = await res.json()
 
       if (resData.data?.coupons) {
@@ -60,25 +79,59 @@ export default function CouponList() {
     }
 
     try {
-      const addResponse = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/${userId}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            coupon_id: couponId,
-            // valid: 0, // 設置為已領取
-          }),
-        }
-      )
+             const addResponse = await fetch(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/add/${userId}`,
+         {
+           method: 'POST',
+           headers: {
+             'Content-Type': 'application/json',
+           },
+           body: JSON.stringify({
+             coupon_id: couponId,
+             // valid: 0, // 設置為已領取
+           }),
+         },
+       )
+
+       /*
+        * 🔧 修復說明：
+        * 
+        * ❌ 原本錯誤的地方：
+        * - 第 63 行：`process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/${userId}`
+        * - 缺少 ${} 語法來正確引用環境變數
+        * 
+        * ✅ 修復後的寫法：
+        * - 第 63 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/add/${userId}`
+        * - 使用 ${} 語法正確引用環境變數
+        * 
+        * 💡 為什麼會錯：
+        * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
+        * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/123
+        * - 這會導致 404 錯誤，因為沒有這樣的 URL
+        */
 
       const getUserCoupons = async (userId) => {
-        try {
-          const res = await fetch(
-            `process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`
-          )
+                 try {
+           const res = await fetch(
+             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
+           )
+
+           /*
+            * 🔧 修復說明：
+            * 
+            * ❌ 原本錯誤的地方：
+            * - 第 79 行：`process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`
+            * - 缺少 ${} 語法來正確引用環境變數
+            * 
+            * ✅ 修復後的寫法：
+            * - 第 79 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`
+            * - 使用 ${} 語法正確引用環境變數
+            * 
+            * 💡 為什麼會錯：
+            * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
+            * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/123
+            * - 這會導致 404 錯誤，因為沒有這樣的 URL
+            */
           const data = await res.json()
 
           if (data.status === 'success') {
@@ -124,7 +177,9 @@ export default function CouponList() {
     if (!userId) return
 
     try {
-      const res = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`)
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
+      )
       const data = await res.json()
 
       if (data.status === 'success') {
@@ -237,18 +292,35 @@ export default function CouponList() {
         // 依序領取每張優惠券
         for (const coupon of unclaimedCoupons) {
           try {
-            const addResponse = await fetch(
-              `process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/${userId}`,
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  coupon_id: coupon.coupon_id,
-                }),
-              }
-            )
+                         const addResponse = await fetch(
+               `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/add/${userId}`,
+               {
+                 method: 'POST',
+                 headers: {
+                   'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify({
+                   coupon_id: coupon.coupon_id,
+                 }),
+               },
+             )
+
+             /*
+              * 🔧 修復說明：
+              * 
+              * ❌ 原本錯誤的地方：
+              * - 第 242 行：`process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/${userId}`
+              * - 缺少 ${} 語法來正確引用環境變數
+              * 
+              * ✅ 修復後的寫法：
+              * - 第 242 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/add/${userId}`
+              * - 使用 ${} 語法正確引用環境變數
+              * 
+              * 💡 為什麼會錯：
+              * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
+              * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/123
+              * - 這會導致 404 錯誤，因為沒有這樣的 URL
+              */
 
             const addResult = await addResponse.json()
             if (addResult.status === 'success') {

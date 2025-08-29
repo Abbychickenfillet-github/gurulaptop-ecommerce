@@ -3,6 +3,7 @@ import styles from './GroupManagement.module.css'
 import EditGroupModal from './EditGroupModal'
 import Swal from 'sweetalert2'
 import { useAuth } from '@/hooks/use-auth'
+import Image from 'next/image'
 const GroupManagement = () => {
   const { auth } = useAuth()
   const [groups, setGroups] = useState([])
@@ -223,7 +224,7 @@ const GroupManagement = () => {
           <div key={group.group_id} className={styles.listRow}>
             <div className="row align-items-center d-none d-md-flex">
               <div className="col-2">
-                <img
+                <Image
                   src={getImageUrl(group.group_img)}
                   alt="揪團圖片"
                   className={styles.groupImg}
@@ -267,7 +268,7 @@ const GroupManagement = () => {
 
             <div className={`${styles.mobileLayout} d-block d-md-none`}>
               <div className={styles.mobileImgWrapper}>
-                <img
+                <Image
                   src={getImageUrl(group.group_img)}
                   alt="揪團圖片"
                   className={styles.groupImg}

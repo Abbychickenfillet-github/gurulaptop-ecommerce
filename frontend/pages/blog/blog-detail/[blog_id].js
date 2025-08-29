@@ -9,6 +9,7 @@ import { faDiamond } from '@fortawesome/free-solid-svg-icons'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import { IoArrowBackCircleOutline } from 'react-icons/io5'
+import Image from 'next/image'
 
 export default function BlogId() {
   const router = useRouter()
@@ -57,7 +58,7 @@ export default function BlogId() {
             <p className="fs-5 fw-bold">Swift 14 AI AMD</p>
           </div>
           <div className="w-100 h-25 overflow-hidden m-auto">
-            <img
+            <Image
               className="object-fit-cover w-100 h-100"
               src="https://images.acer.com/is/image/acer/acer-laptop-swift-14-ai-amd-designed-to-unfold-your-potential:KSP-with-Specs-XL"
               alt
@@ -97,7 +98,7 @@ export default function BlogId() {
           </p>
         </div>
         <div className="d-flex align-items-center justify-content-center">
-          <img
+          <Image
             className="w-50 h-50 ratio mb-5"
                          src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${blogData.blog_image}`}
             alt

@@ -12,6 +12,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
 import Head from 'next/head'
+import Image from 'next/image'
 
 export default function BlogUserEdit() {
   const router = useRouter()
@@ -191,7 +192,7 @@ export default function BlogUserEdit() {
           onClick={() => document.getElementById('imageInput').click()}
         >
           {formData.blog_image || formData.originalImage ? (
-            <img
+            <Image
               src={
                 formData.blog_image instanceof File
                   ? URL.createObjectURL(formData.blog_image)

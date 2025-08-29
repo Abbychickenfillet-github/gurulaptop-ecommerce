@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '@/styles/lease.module.css';
 import BackToTop from '../BackToTop/BackToTop'
-
+import Image from 'next/image'
 
 export default function LeaseDetail(props) {
   return (
@@ -9,32 +9,32 @@ export default function LeaseDetail(props) {
       <section className={styles.col1}>
         <div className={styles.menu}>
           <div className={styles.square}>
-            <img
+            <Image
               src="/images/lease/15-fd1149TU.png"
               alt="Alienware"
             />
             <div className={`${styles.carouselBtn} ${styles.leftBtn}`}>
-              <img src="/images/lease/array_left.svg" alt="Previous" />
+              <Image src="/images/lease/array_left.svg" alt="Previous" />
             </div>
             <div className={`${styles.carouselBtn} ${styles.rightBtn}`}>
-              <img src="/images/lease/array_right.svg" alt="Next" />
+              <Image src="/images/lease/array_right.svg" alt="Next" />
             </div>
           </div>
           <div className={styles.menu2}>
             <div className={styles.list}>
-              <img
+              <Image
                 src="/images/lease/Alienware m16 R2.png"
                 alt="AORUS 16"
               />
             </div>
             <div className={styles.list}>
-              <img
+              <Image
                 src="/images/lease/AORUS 5 (Intel 12th Gen).png"
                 alt="ASUS Vivobook"
               />
             </div>
             <div className={styles.list}>
-              <img
+              <Image
                 src="/images/lease/AORUS 5 (Intel 12th Gen).png"
                 alt="G634JZ Model"
               />
@@ -47,8 +47,8 @@ export default function LeaseDetail(props) {
             <div className={styles.brand}>
               <span>ASUS</span>
               <div className={styles.icon}>
-                <img className={styles.cart} src="/images/lease/cart.svg" alt="Cart" />
-                <img
+                <Image className={styles.cart} src="/images/lease/cart.svg" alt="Cart" />
+                <Image
                   className={styles.heart}
                   src="/images/lease/heart.svg"
                   alt="Favorite"

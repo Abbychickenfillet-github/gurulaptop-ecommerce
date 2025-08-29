@@ -126,7 +126,7 @@ export default function BlogComment() {
                       ? comment.image_path
                       : comment.image_path
                       ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${comment.image_path}`
-                      : 'https://th.bing.com/th/id/R.88c444f63f40cfa9b49801f826befa80?rik=QAme0H3xbxieEQ&pid=ImgRaw&r=0'
+                      : 'https://th.bing.com/th/id/R.88c444f63f40cfa9b49801f826befa80?rik=QAme0H3xbxieEQ&pid=ImgRaw&r=0',
                   }
                   alt={comment.name || '匿名用戶'}
                 />
