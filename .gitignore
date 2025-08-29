@@ -23,16 +23,14 @@ yarn-error.log*
 /seeds-tmp
 /sessions
 
-package-lock.json
-yarn.lock
+
 data/json/faker-users.json
 testotp.js
 data/json/fake-product.json
-.env
+
 
 make-product-sample.js
 data/product-n2m.sql
 data/test_sql
 /test-only
 
-settings.json
