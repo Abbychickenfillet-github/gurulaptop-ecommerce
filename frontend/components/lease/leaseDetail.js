@@ -109,8 +109,8 @@ export default function LeaseDetail(props) {
 
             <div className={styles.description}>
               <p>
-                16" Mini LED WQXGA(2560x1600),16:10,240Hz,3ms,DCI-P3
-                100%；副螢幕：14" IPS ScreenPad Plus (3840x1100)4K
+                16&quot; Mini LED WQXGA(2560x1600),16:10,240Hz,3ms,DCI-P3
+                100%；副螢幕：14&quot; IPS ScreenPad Plus (3840x1100)4K
               </p>
               <p>AMD Ryzen 9 7945HX (2.5GHz up to 5.4GHz,64MB)16 Cores</p>
               <p>64GB(32GB*2) DDR5-4800 SO-DIMM (2Slot,Max.64GB)</p>
@@ -126,8 +126,8 @@ export default function LeaseDetail(props) {
           <div className={styles.title2}>產品規格</div>
           <ul>
             <li>
-              16" Mini LED WQXGA (2560x1600), 16:10, 240Hz, 3ms, DCI-P3
-              100%；副螢幕：14" IPS ScreenPad Plus (3840x1100) 4K
+              16&quot; Mini LED WQXGA (2560x1600), 16:10, 240Hz, 3ms, DCI-P3
+              100%；副螢幕：14&quot; IPS ScreenPad Plus (3840x1100) 4K
             </li>
             <li>AMD Ryzen 9 7945HX (2.5GHz up to 5.4GHz, 64MB) 16 Cores</li>
             <li>64GB (32GB*2) DDR5-4800 SO-DIMM (2Slot, Max.64GB)</li>

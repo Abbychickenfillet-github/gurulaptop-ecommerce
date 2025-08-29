@@ -98,7 +98,6 @@ export default function CouponPageJquery() {
               <Tab.Pane eventKey="shopping">
                 <div>
                   <h4>購買清單</h4>
-                  <CardExample />
                 </div>
               </Tab.Pane>
 

@@ -50,8 +50,6 @@ export default function ArticleDetail(props) {
 
   return (
     <>
-      <ArticleDetailMainArea />
-
       {article ? (
         <section className="ArticleDetailSectionContentArea">
           <p className="fs-5 fw-bold ArticleDetailSectionContentAreaTitle">

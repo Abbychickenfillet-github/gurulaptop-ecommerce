@@ -305,7 +305,6 @@ export default function UserProfile() {
         // editableUser
         dataToSubmit
       )
-
       if (response.data.status === 'success') {
         Swal.fire('成功', '用戶資料更新成功', 'success')
         // setAuth((prev) => ({ // This line was removed as per the edit hint

@@ -33,15 +33,16 @@ if (process.env.NODE_ENV === 'production') {
     console.log('🚀 使用環境變數生產環境連線')
   }
 } else {
-  // 開發環境：使用本地資料庫
+  // 開發環境：使用本地資料庫，禁用 SSL
   poolConfig = {
     user: process.env.DB_USER || 'postgres',
     host: process.env.DB_HOST || 'localhost',
     database: process.env.DB_NAME || 'project_db',
     password: process.env.DB_PASSWORD || 'abc123',
     port: process.env.DB_PORT || 5432,
+    ssl: false, // 本地開發環境完全禁用 SSL
   }
-  console.log('🛠️ 使用本地開發環境連線')
+  console.log('🛠️ 使用開發環境連線配置')
 }
 
 // 調試：檢查連線配置

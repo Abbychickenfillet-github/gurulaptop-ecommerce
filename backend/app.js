@@ -1,3 +1,5 @@
+// 載入環境變數 - 必須在最前面！
+import 'dotenv/config.js'
 import * as fs from 'fs'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -6,8 +8,6 @@ import express from 'express'
 // import db from '##/configs/mysql.js'
 import pool from '##/configs/pgClient.js'
 
-// 載入環境變數 - 必須在最前面！
-import 'dotenv/config.js'
 
 // 調試：確認環境變數是否被載入
 console.log('🔍 環境變數載入檢查:')

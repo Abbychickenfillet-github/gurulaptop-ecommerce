@@ -48,7 +48,7 @@ export default function CardLoading({ loading = true }) {
                 className="btn btn-primary disabled placeholder col-6"
                 aria-disabled="true"
               >
-                {' '}
+                &nbsp;
               </a>
             ) : (
               <a href="#" className="btn btn-primary">

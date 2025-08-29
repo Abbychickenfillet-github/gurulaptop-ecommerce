@@ -22,12 +22,13 @@ const nextConfig = {
     ],
     unoptimized: true,
   },
-  // output: 'export', // don't use with `next start` or api route
-  // distDir: 'dist',
+  output: 'export', 
+  // // don't use with `next start` or api route
+  distDir: 'dist',
   // avoid cors with proxy
   // async rewrites() {
   //   // 根據環境選擇 API 地址
-  //   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
+  //   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3005';
     
   //   return [
   //     {
