@@ -24,7 +24,7 @@ export default function Header() {
     }
   }
 
-  const [image_path, setImagePath] = useState(
+  const [setImagePath] = useState(
     () => auth?.userData?.image_path || getDefaultImage(auth?.userData?.gender)
   )
 
@@ -45,7 +45,7 @@ export default function Header() {
       })
 
       if (!result.isConfirmed) return
-      if(auth?.userData?.google_uid){
+      if (auth?.userData?.google_uid) {
         await logoutFirebase()
       }
       await logout()
@@ -88,7 +88,7 @@ export default function Header() {
 
   useEffect(() => {
     if (user_id) {
-      fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/header`, {
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

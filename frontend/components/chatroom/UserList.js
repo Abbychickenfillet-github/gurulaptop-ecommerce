@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import styles from '@/styles/Chat.module.css'
 import requestStyles from '@/components/group/GroupRequestList.module.css'
-import { Nav, ListGroup } from 'react-bootstrap'
+import { ListGroup } from 'react-bootstrap'
 import Image from 'next/image'
 import websocketService from '@/services/websocketService'
 import { getGroupImage } from '@/utils/imageUtils'
@@ -9,7 +9,6 @@ import Swal from 'sweetalert2'
 
 export default function UserList({
   users,
-  rooms,
   currentUser,
   currentRoom,
   onPrivateChat,
@@ -19,29 +18,28 @@ export default function UserList({
   const [myPrivateChats, setMyPrivateChats] = useState([])
   const [myGroups, setMyGroups] = useState([])
   const [requests, setRequests] = useState([])
-  const [requestHistory, setRequestHistory] = useState([])
 
   useEffect(() => {
     if (currentUser) {
       fetchInitialData()
       setupWebSocket()
     }
-  }, [currentUser])
+  }, [currentUser, fetchInitialData, setupWebSocket])
 
   const fetchInitialData = async () => {
     try {
       const [pendingResponse, historyResponse, chatsResponse, groupsResponse] =
         await Promise.all([
-          fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/requests/pending', {
+          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/pending`, {
             credentials: 'include',
           }),
-                      fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/requests/history', {
+          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/history`, {
             credentials: 'include',
           }),
-                      fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/messages/private', {
+          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/messages/private`, {
             credentials: 'include',
           }),
-                      fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/user/groups', {
+          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/user/groups`, {
             credentials: 'include',
           }),
         ])

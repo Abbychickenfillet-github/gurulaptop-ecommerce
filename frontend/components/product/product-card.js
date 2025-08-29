@@ -144,7 +144,7 @@ export default function ProductCard({ onSendMessage, product_id }) {
     if (isAuth) {
       // 加入購物車資料庫
       try {
-        const response = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/cart/add`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`, {
           method: 'PUT',
           body: JSON.stringify({
             user_id: userData.user_id,
@@ -165,7 +165,7 @@ export default function ProductCard({ onSendMessage, product_id }) {
         onSendMessage('加入購物車失敗，請洽管理員！', `error`)
       }
     } else {
-      window.location.href = 'http://localhost:3000/member/login'
+      window.location.href = '/member/login'
     }
   }
 

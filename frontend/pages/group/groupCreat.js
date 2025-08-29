@@ -14,7 +14,7 @@ export default function GroupCreat() {
   const eventId = searchParams.get('eventId')
   const eventName = searchParams.get('eventName')
   const eventStartTime = searchParams.get('eventStartTime')
-  const eventEndTime = searchParams.get('eventEndTime')
+  // const eventEndTime = searchParams.get('eventEndTime')
 
   const [formData, setFormData] = useState({
     group_name: eventName ? `${eventName}揪團` : '',

@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import Image from 'next/image'
 
-export default function LeaseCard(props) {
+export default function LeaseCard() {
   return (
     <>
       <div className="card p-3 border-primary mb-3">
         <div className="row border-bottom border-primary">
           <div className="col-8 text-primary">
-            <img src="/diamond.svg" alt />
+            <Image src="/diamond.svg" alt="" width={20} height={20} />
             租賃資訊
           </div>
           <div className="col-2">數量</div>
@@ -15,7 +16,7 @@ export default function LeaseCard(props) {
         <div className="row align-items-center border-bottom border-primary mb-2">
           <div className="col-3">
             <div className="cart-photo">
-              <img src="/images/lease/15-fd1149TU.png" alt />
+              <Image src="/images/lease/15-fd1149TU.png" alt="" width={100} height={100} />
             </div>
           </div>
           <div className="col-5">15-fd1149TU</div>

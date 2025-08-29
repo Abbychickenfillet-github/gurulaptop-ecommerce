@@ -1,12 +1,11 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Virtual, Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import Image from 'next/image'
 import 'swiper/css'
 import 'swiper/css/navigation'
 
 const HotProducts = () => {
-  const [swiperRef, setSwiperRef] = useState(null)
-
   const products = [
     {
       id: 1,
@@ -38,7 +37,6 @@ const HotProducts = () => {
         <div className="home-card1">
           <Swiper
             modules={[Virtual, Navigation]}
-            onSwiper={setSwiperRef}
             slidesPerView={3}
             centeredSlides={true}
             spaceBetween={30}
@@ -82,7 +80,12 @@ const HotProducts = () => {
                   className="product-link"
                 >
                   <div className="home-laptop-item">
-                    <img src={product.image} alt={product.title} />
+                    <Image 
+                      src={product.image} 
+                      alt={product.title}
+                      width={300}
+                      height={200}
+                    />
                   </div>
                   <div className="product-title">
                     <h3>{product.title}</h3>

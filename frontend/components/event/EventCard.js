@@ -8,7 +8,6 @@ import styles from './EventCard.module.css'
 export default function EventCard({
   id,
   name,
-  type,
   picture,
   eventStartTime,
   teamType,

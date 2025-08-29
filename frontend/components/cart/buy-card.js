@@ -15,17 +15,20 @@ export default function BuyCard({ item, onDataChange }) {
   }, [item.list_price, item.quantity])
 
   const handleUpdate = async () => {
-    const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/cart/update', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user_id: item.user_id,
-        product_id: item.product_id,
-        quantity: item.quantity,
-      }),
-    })
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/update`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: item.user_id,
+          product_id: item.product_id,
+          quantity: item.quantity,
+        }),
+      }
+    )
 
     const data = await response.json()
     const message = data.message
@@ -40,16 +43,19 @@ export default function BuyCard({ item, onDataChange }) {
   }
 
   const handleDelete = async () => {
-    const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/cart/delete', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user_id: item.user_id,
-        product_id: item.product_id,
-      }),
-    })
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/delete`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: item.user_id,
+          product_id: item.product_id,
+        }),
+      }
+    )
 
     const data = await response.json()
     const message = data.message
@@ -68,7 +74,7 @@ export default function BuyCard({ item, onDataChange }) {
       <div className="card p-3 border-primary mb-2">
         <div className="row align-items-center mb-2">
           <div className="col-5 text-primary">
-            <img src="diamond.svg" alt />
+            <Image src="diamond.svg" alt="" width={20} height={20} />
             購買資訊
           </div>
           <div className="col-2 d-none d-md-block">單價</div>

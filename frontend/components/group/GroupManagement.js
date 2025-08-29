@@ -12,13 +12,13 @@ const GroupManagement = () => {
   const [selectedGroup, setSelectedGroup] = useState(null)
 
   const fetchUserGroups = async () => {
-    if(!auth?.isAuth) return
+    if (!auth?.isAuth) return
     try {
       const [memberResponse, creatorResponse] = await Promise.all([
-        fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/group/user', {
+        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/user`, {
           credentials: 'include',
         }),
-        fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/group/creator', {
+        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/creator`, {
           credentials: 'include',
         }),
       ])
@@ -72,7 +72,7 @@ const GroupManagement = () => {
 
   useEffect(() => {
     fetchUserGroups()
-  }, [])
+  }, [fetchUserGroups])
 
   const handleDeleteGroup = async (groupId) => {
     const result = await Swal.fire({
@@ -88,7 +88,7 @@ const GroupManagement = () => {
 
     try {
       const response = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/group/${groupId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/${groupId}`,
         {
           method: 'DELETE',
           credentials: 'include',
@@ -179,9 +179,9 @@ const GroupManagement = () => {
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) {
-      return 'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png'
+      return `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
     }
-    return `process.env.NEXT_PUBLIC_API_BASE_URL${imagePath}`
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}${imagePath}`
   }
 
   if (loading) {
@@ -229,7 +229,7 @@ const GroupManagement = () => {
                   className={styles.groupImg}
                   onError={(e) => {
                     e.target.src =
-                      'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png'
+                      `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
                   }}
                 />
               </div>
@@ -273,7 +273,7 @@ const GroupManagement = () => {
                   className={styles.groupImg}
                   onError={(e) => {
                     e.target.src =
-                      'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png'
+                      `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
                   }}
                 />
               </div>

@@ -1,3 +1,4 @@
+import dotenv from 'dotenv/config'
 export const getGroupImage = (imagePath) => {
   if (!imagePath || imagePath.trim() === '') {
     return 'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png'

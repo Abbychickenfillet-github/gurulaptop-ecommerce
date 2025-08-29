@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Card from 'react-bootstrap/Card';
 
 
-export default function Card() {
+export default function CardLoader() {
   return (
     <>
       <div className="card" aria-hidden="true">

@@ -38,7 +38,7 @@ export default function CartList() {
           </tr>
         </thead>
         <tbody>
-          {items.map((v, i) => {
+          {items.map((v) => {
             return (
               <tr key={v.id}>
                 <td>{v.id}</td>

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import HomeSection from './HomeSection'
-import Section4 from './xSection4'
 import BackToTop from '../BackToTop/BackToTop'
 import NewProducts from './NewProducts'
 import HotProducts from './HotProducts'
 import ArticleSlider from './ArticleSlider'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function FrontPage(props) {
   return (
@@ -23,52 +23,7 @@ export default function FrontPage(props) {
       </div>
 
       <div className="main-body ">
-        {/* <div className="home-section1">
-          <div className="home-welcome">
-            <span>Welcome</span>
-          </div>
-          <div className="home-guru">
-            <span>Guru</span>
-          </div>
-          <div className="home-laptop">
-            <span>laptop</span>
-          </div>
-          <div className="home-banner">
-            <div className="home-one">
-              <img src="./images/index/laptop-banner.jpg" alt />
-            </div>
-            <div className="home-two">
-              <div className="home-item">
-                <div className="home-circle">
-                  <span>01</span>
-                </div>
-                <div className="home-item2">
-                  <span>ITEM</span>
-                </div>
-              </div>
-            </div>
-            <div className="home-three">
-              <div className="home-item">
-                <div className="home-circle">
-                  <span>02</span>
-                </div>
-                <div className="home-item2">
-                  <span>ITEM</span>
-                </div>
-              </div>
-            </div>
-            <div className="home-four">
-              <div className="home-item">
-                <div className="home-circle">
-                  <span>03</span>
-                </div>
-                <div className="home-item2">
-                  <span>ITEM</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
+
         <HomeSection />
 
         <div className="home-section2">
@@ -78,56 +33,56 @@ export default function FrontPage(props) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Acer.png" alt="Acer" />
+              <Image src="/images/index/icon/Acer.png" alt="Acer" width={50} height={50} />
             </Link>
             <Link
               href="https://www.asus.com/tw/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Asus-w.png" alt="Asus" />
+              <Image src="/images/index/icon/Asus-w.png" alt="Asus" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=DELL&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Dell.png" alt="Dell" />
+              <Image src="/images/index/icon/Dell.png" alt="Dell" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=%E6%8A%80%E5%98%89&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/gigabyte_白.png" alt="Gigabyte" />
+              <Image src="/images/index/icon/gigabyte_白.png" alt="Gigabyte" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=HP&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/HP.png" alt="HP" />
+              <Image src="/images/index/icon/HP.png" alt="HP" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=MSI&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/msi_w.png" alt="MSI" />
+              <Image src="/images/index/icon/msi_w.png" alt="MSI" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=RAZER&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Razer.png" alt="Razer" />
+              <Image src="/images/index/icon/Razer.png" alt="Razer" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ROG&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/rog.png" alt="ROG" />
+              <Image src="/images/index/icon/rog.png" alt="ROG" width={50} height={50} />
             </Link>
           </div>
 
@@ -137,56 +92,56 @@ export default function FrontPage(props) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Acer.png" alt="Acer" />
+              <Image src="/images/index/icon/Acer.png" alt="Acer" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ASUS&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Asus-w.png" alt="Asus" />
+              <Image src="/images/index/icon/Asus-w.png" alt="Asus" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=DELL&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Dell.png" alt="Dell" />
+              <Image src="/images/index/icon/Dell.png" alt="Dell" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=%E6%8A%80%E5%98%89&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/gigabyte_白.png" alt="Gigabyte" />
+              <Image src="/images/index/icon/gigabyte_白.png" alt="Gigabyte" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=HP&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/HP.png" alt="HP" />
+              <Image src="/images/index/icon/HP.png" alt="HP" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=MSI&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/msi_w.png" alt="MSI" />
+              <Image src="/images/index/icon/msi_w.png" alt="MSI" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=RAZER&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Razer.png" alt="Razer" />
+              <Image src="/images/index/icon/Razer.png" alt="Razer" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ROG&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/rog.png" alt="ROG" />
+              <Image src="/images/index/icon/rog.png" alt="ROG" width={50} height={50} />
             </Link>
           </div>
 
@@ -196,56 +151,56 @@ export default function FrontPage(props) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Acer.png" alt="Acer" />
+              <Image src="/images/index/icon/Acer.png" alt="Acer" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ASUS&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Asus-w.png" alt="Asus" />
+              <Image src="/images/index/icon/Asus-w.png" alt="Asus" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=DELL&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Dell.png" alt="Dell" />
+              <Image src="/images/index/icon/Dell.png" alt="Dell" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=%E6%8A%80%E5%98%89&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/gigabyte_白.png" alt="Gigabyte" />
+              <Image src="/images/index/icon/gigabyte_白.png" alt="Gigabyte" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=HP&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/HP.png" alt="HP" />
+              <Image src="/images/index/icon/HP.png" alt="HP" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=MSI&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/msi_w.png" alt="MSI" />
+              <Image src="/images/index/icon/msi_w.png" alt="MSI" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=RAZER&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Razer.png" alt="Razer" />
+              <Image src="/images/index/icon/Razer.png" alt="Razer" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ROG&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/rog.png" alt="ROG" />
+              <Image src="/images/index/icon/rog.png" alt="ROG" width={50} height={50} />
             </Link>
           </div>
 
@@ -255,56 +210,56 @@ export default function FrontPage(props) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Acer.png" alt="Acer" />
+              <Image src="/images/index/icon/Acer.png" alt="Acer" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ASUS&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Asus-w.png" alt="Asus" />
+              <Image src="/images/index/icon/Asus-w.png" alt="Asus" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=DELL&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Dell.png" alt="Dell" />
+              <Image src="/images/index/icon/Dell.png" alt="Dell" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=%E6%8A%80%E5%98%89&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/gigabyte_白.png" alt="Gigabyte" />
+              <Image src="/images/index/icon/gigabyte_白.png" alt="Gigabyte" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=HP&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/HP.png" alt="HP" />
+              <Image src="/images/index/icon/HP.png" alt="HP" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=MSI&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/msi_w.png" alt="MSI" />
+              <Image src="/images/index/icon/msi_w.png" alt="MSI" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=RAZER&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/Razer.png" alt="Razer" />
+              <Image src="/images/index/icon/Razer.png" alt="Razer" width={50} height={50} />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ROG&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/images/index/icon/rog.png" alt="ROG" />
+              <Image src="/images/index/icon/rog.png" alt="ROG" width={50} height={50} />
             </Link>
           </div>
         </div>
@@ -364,18 +319,18 @@ export default function FrontPage(props) {
                       </div>
                     </div>
                   </div>
-                  <div className="home-pic2">
-                    <span />
-                    <img src="/images/index/banner_05.jpg" alt />
-                  </div>
-                  <div className="home-pic1">
-                    <span />
-                    <img src="/images/index/banner_06.jpg" alt />
-                  </div>
-                  <div className="home-pic3">
-                    <span />
-                    <img src="/images/index/banner_07.jpg" alt />
-                  </div>
+                                     <div className="home-pic2">
+                     <span />
+                     <Image src="/images/index/banner_05.jpg" alt="banner 5" width={300} height={200} />
+                   </div>
+                   <div className="home-pic1">
+                     <span />
+                     <Image src="/images/index/banner_06.jpg" alt="banner 6" width={300} height={200} />
+                   </div>
+                   <div className="home-pic3">
+                     <span />
+                     <Image src="/images/index/banner_07.jpg" alt="banner 7" width={300} height={200} />
+                   </div>
                 </div>
                 <p className="home-font">
                   Find your style in a unique collection
@@ -385,65 +340,7 @@ export default function FrontPage(props) {
           </section> */}
           <HotProducts />
 
-          {/* 文章這裡 */}
-          {/* <section className="home-section5">
-            <title className="home-title">◇品牌文章</title>
-            <div className="home-article-container">
-              <article className="home-article">
-                <div className="home-article-body">
-                  <div className="home-article-img">
-                    <img src="/images/index/banner_08.jpg" alt />
-                  </div>
-                  <div className="home-article-content">
-                    <div className="home-article-title2">
-                      <span>文章開頭</span>
-                    </div>
-                    <p className="home-article-text">
-                      經過上述討論，dbfdf的發生，到底需要如何做到，不dbfdf的發生，又會如何產生。所謂dbfdf，關鍵是dbfdf需要如何寫。我們不得不面對一個非常尷尬的事實，那就是，我們都知道，只要有意義，那麽就必須慎重考慮。富蘭克林曾經說過，讀書是易事，思索是難事，但兩者缺一，便全無用處。這讓我深深地想到，dbfdf，到底應該如何實現。dbfdf，發生了會如何，不發生又會如何。現在，解決dbfdf的問題，是非常非常重要的。
-                      所以，dbfdf真的是很值得探究，既然如此，要想清楚，dbfdf，到底是一種怎麽樣的存在。
-                    </p>
-                  </div>
-                </div>
-              </article>
-              <article className="home-article home-hide-on-mobile">
-                <div className="home-article-body">
-                  <div className="home-article-content">
-                    <div className="home-article-title2">
-                      <span>文章開頭</span>
-                    </div>
-                    <p className="home-article-text">
-                      經過上述討論，dbfdf的發生，到底需要如何做到，不dbfdf的發生，又會如何產生。所謂dbfdf，關鍵是dbfdf需要如何寫。我們不得不面對一個非常尷尬的事實，那就是，我們都知道，只要有意義，那麽就必須慎重考慮。富蘭克林曾經說過，讀書是易事，思索是難事，但兩者缺一，便全無用處。這讓我深深地想到，dbfdf，到底應該如何實現。dbfdf，發生了會如何，不發生又會如何。現在，解決dbfdf的問題，是非常非常重要的。
-                      所以，dbfdf真的是很值得探究，既然如此，要想清楚，dbfdf，到底是一種怎麽樣的存在。
-                    </p>
-                  </div>
-                  <div className="home-article-img">
-                    <img src="/images/index/banner_09.jpg" alt />
-                  </div>
-                </div>
-              </article>
-              <button className="home-article-btn">
-                <img src="/images/index/arrow.svg" alt />
-              </button>
 
-              <article className="home-article home-hide-on-mobile">
-                <div className="home-article-body">
-                  <div className="home-article-content">
-                    <div className="home-article-title2">
-                      <span>文章開頭</span>
-                    </div>
-                    <p className="home-article-text">
-                      經過上述討論，dbfdf的發生，到底需要如何做到，不dbfdf的發生，又會如何產生。所謂dbfdf，關鍵是dbfdf需要如何寫。我們不得不面對一個非常尷尬的事實，那就是，我們都知道，只要有意義，那麽就必須慎重考慮。富蘭克林曾經說過，讀書是易事，思索是難事，但兩者缺一，便全無用處。這讓我深深地想到，dbfdf，到底應該如何實現。dbfdf，發生了會如何，不發生又會如何。現在，解決dbfdf的問題，是非常非常重要的。
-                      所以，dbfdf真的是很值得探究，既然如此，要想清楚，dbfdf，到底是一種怎麽樣的存在。
-                    </p>
-                  </div>
-                  <div className="home-article-img">
-                    <img src="/images/index/banner_09.jpg" alt />
-                  </div>
-                </div>
-              </article>
-            </div>
-          </section> */}
-          {/* 到這裡 */}
           <ArticleSlider />
         </div>
 
@@ -462,10 +359,10 @@ export default function FrontPage(props) {
                   </div>
                   <div className="home-activity-card-footer1">
                     <a
-                      href="http://localhost:3000/event/eventDetail/1"
+                      href="/event/eventDetail/1"
                       className="home-activity-btn"
                     >
-                      <img src="/images/index/arrow.svg" alt />
+                      <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
                     </a>
                   </div>
                 </div>
@@ -478,10 +375,10 @@ export default function FrontPage(props) {
                   </div>
                   <div className="home-activity-card-footer1">
                     <a
-                      href="http://localhost:3000/event/eventDetail/9"
+                      href="/event/eventDetail/9"
                       className="home-activity-btn"
                     >
-                      <img src="/images/index/arrow.svg" alt />
+                      <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
                     </a>
                   </div>
                 </div>
@@ -495,10 +392,10 @@ export default function FrontPage(props) {
                   </div>
                   <div className="home-activity-card-footer2">
                     <a
-                      href="http://localhost:3000/event/eventDetail/11"
+                      href="/event/eventDetail/11"
                       className="home-activity-btn"
                     >
-                      <img src="/images/index/arrow.svg" alt />
+                      <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
                     </a>
                   </div>
                 </div>
@@ -509,10 +406,10 @@ export default function FrontPage(props) {
                   </div>
                   <div className="home-activity-card-footer2">
                     <a
-                      href="http://localhost:3000/event/eventDetail/13"
+                      href="/event/eventDetail/13"
                       className="home-activity-btn"
                     >
-                      <img src="/images/index/arrow.svg" alt />
+                      <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
                     </a>
                   </div>
                 </div>
@@ -527,10 +424,10 @@ export default function FrontPage(props) {
                 </div>
                 <div className="home-activity-card-footer3">
                   <a
-                    href="http://localhost:3000/event/eventDetail/37"
+                    href="/event/eventDetail/37"
                     className="home-activity-btn"
                   >
-                    <img src="/images/index/arrow.svg" alt />
+                    <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
                   </a>
                 </div>
               </div>
@@ -541,10 +438,10 @@ export default function FrontPage(props) {
                 </div>
                 <div className="home-activity-card-footer3">
                   <a
-                    href="http://localhost:3000/event/eventDetail/10"
+                    href="/event/eventDetail/10"
                     className="home-activity-btn"
                   >
-                    <img src="/images/index/arrow.svg" alt />
+                    <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
                   </a>
                 </div>
               </div>
@@ -555,10 +452,10 @@ export default function FrontPage(props) {
                 </div>
                 <div className="home-activity-card-footer3">
                   <a
-                    href="http://localhost:3000/event"
+                    href="/event"
                     className="home-activity-btn"
                   >
-                    <img src="/images/index/arrow.svg" alt />
+                    <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
                   </a>
                 </div>
               </div>

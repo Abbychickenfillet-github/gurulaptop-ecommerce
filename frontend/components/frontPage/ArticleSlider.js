@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import Image from 'next/image'
 
 const ArticleSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -108,7 +109,12 @@ const ArticleSection = () => {
                   {article.imageLeft ? (
                     <>
                       <div className="home-article-img">
-                        <img src={article.image} alt={`Article ${index + 1}`} />
+                        <Image 
+                          src={article.image} 
+                          alt={`Article ${index + 1}`}
+                          width={400}
+                          height={300}
+                        />
                       </div>
                       <div className="home-article-content">
                         <div className="home-article-title2">
@@ -126,7 +132,12 @@ const ArticleSection = () => {
                         <p className="home-article-text">{article.text}</p>
                       </div>
                       <div className="home-article-img">
-                        <img src={article.image} alt={`Article ${index + 1}`} />
+                        <Image 
+                          src={article.image} 
+                          alt={`Article ${index + 1}`}
+                          width={400}
+                          height={300}
+                        />
                       </div>
                     </>
                   )}
@@ -136,7 +147,12 @@ const ArticleSection = () => {
           ))}
         </div>
         <button className="home-article-btn" onClick={handleNext}>
-          <img src="/images/index/arrow.svg" alt="Next" />
+          <Image 
+            src="/images/index/arrow.svg" 
+            alt="Next"
+            width={24}
+            height={24}
+          />
         </button>
       </div>
     </section>

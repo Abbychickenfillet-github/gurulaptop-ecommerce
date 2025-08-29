@@ -17,11 +17,6 @@ export default function OrderSteps() {
 
   const [step, setStep] = useState(1)
 
-  const [errors, setErrors] = useState([])
-
-  // 狀態的範例，都集中在這裡接收
-  const [cartData, setCartData] = useState([])
-
   const [shipping, setShippingData] = useState({
     name: '',
     address: '',
@@ -31,9 +26,6 @@ export default function OrderSteps() {
   // 動態元件語法
   const components = [Cart, Ship, Pay, Detail]
   const BlockComponent = components[step - 1]
-
-  // 進度條使用
-  const progressNames = ['購物車', '運送', '付款', '明細']
 
   // 上一步 下一步按鈕
   const next = () => {

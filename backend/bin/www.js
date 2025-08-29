@@ -1,7 +1,6 @@
 /**
  * Module dependencies.
  */
-
 import app from '../app.js'
 import debugLib from 'debug'
 import http from 'http'
@@ -19,8 +18,16 @@ import 'dotenv/config.js'
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '6005')
+var port = normalizePort(process.env.PORT || '3005')
 app.set('port', port)
+
+// 調試：檢查端口配置
+console.log('🔍 端口配置檢查:')
+console.log('process.env.PORT:', process.env.PORT)
+console.log('process.env.PORT || 3005:', process.env.PORT || '3005')
+console.log('normalizePort 結果:', port)
+console.log('port 類型:', typeof port)
+console.log('port 值:', port)
 // app.set('port', port) 設定 Express 應用程式的埠號
 // 這裡的作用：將埠號儲存到 Express 應用程式中，供其他部分使用
 

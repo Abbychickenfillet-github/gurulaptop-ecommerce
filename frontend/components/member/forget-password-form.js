@@ -86,7 +86,7 @@ export default function ForgetPasswordForm() {
           {message && <div className="alert alert-success">{message}</div>}
           {error.email && <div className="alert alert-danger">{error.email}</div>}
           <p className={`text-white ${styles['text-note']}`}>
-            輸入你的會員電子郵件地址，按下"取得新密碼"按鈕後，我們會將密碼重設指示寄送給你。
+            輸入你的會員電子郵件地址，按下&quot;取得新密碼&quot;按鈕後，我們會將密碼重設指示寄送給你。
           </p>
         </div>
 

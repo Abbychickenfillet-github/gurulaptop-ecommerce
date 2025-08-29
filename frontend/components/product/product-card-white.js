@@ -14,11 +14,12 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
   const { userData } = auth // 獲取 userdata
 
   const [isChecked, setIsChecked] = useState(false) // 用來控制 checkbox 狀態
+  const [isCompared, setIsCompared] = useState(false) // 比較按鈕的狀態
 
   // 初始化
   const init = async () => {
     const response = await fetch(
-      `process.env.NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData?.user_id}/${product_id}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData?.user_id}/${product_id}`
     )
     const result = await response.json()
     if (result.status === 'success') {
@@ -31,15 +32,19 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
       setIsCompared(true)
     }
   }
-  // 初始化
-  init()
+
+  useEffect(() => {
+    if (userData?.user_id) {
+      init()
+    }
+  }, [userData?.user_id, product_id])
 
   useEffect(() => {
     async function fetchProduct() {
       if (product_id) {
         try {
           const response = await fetch(
-            `process.env.NEXT_PUBLIC_API_BASE_URL/api/products/card/${product_id}`
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/card/${product_id}`
           )
           const result = await response.json()
           setData(result?.data?.product)
@@ -52,12 +57,10 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
   }, [product_id]) // 加入依賴陣列，確保在 product_id 改變時重新執行
 
   //比較按鈕的狀態
-  const [isCompared, setIsCompared] = useState(false)
   const toggleCompare = () => {
     const productID = String(product_id) // 確保 product_id 是字串格式
 
     // 取得目前的比較清單或初始化為空陣列
-
     let compareProduct = localStorage.getItem('compareProduct')
       ? localStorage.getItem('compareProduct').split(',')
       : []
@@ -91,7 +94,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
         //刪除favorite_management資料庫
         try {
           const response = await fetch(
-            `process.env.NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData.user_id}/${product_id}`,
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData.user_id}/${product_id}`,
             {
               method: 'DELETE',
               headers: {
@@ -114,7 +117,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
         //寫入favorite management資料庫
         try {
           const response = await fetch(
-            `process.env.NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData.user_id}/${product_id}`,
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData.user_id}/${product_id}`,
             {
               method: 'PUT',
               headers: {
@@ -135,7 +138,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
         }
       }
     } else {
-      window.location.href = 'http://localhost:3000/member/login'
+      window.location.href = '/member/login'
     }
   }
 
@@ -144,7 +147,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
     if (isAuth) {
       // 加入購物車資料庫
       try {
-        const response = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/cart/add`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`, {
           method: 'PUT',
           body: JSON.stringify({
             user_id: userData.user_id,
@@ -165,7 +168,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
         onSendMessage('加入購物車失敗，請洽管理員！', 'error')
       }
     } else {
-      window.location.href = 'http://localhost:3000/member/login'
+      window.location.href = '/member/login'
     }
   }
 
@@ -249,11 +252,11 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
         </span>
         <span
           onClick={() =>
-            (window.location.href = `http://localhost:3000/product/${product_id}`)
+            (window.location.href = `/product/${product_id}`)
           }
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
-              window.location.href = `http://localhost:3000/product/${product_id}`
+              window.location.href = `/product/${product_id}`
             }
           }}
           role="button"

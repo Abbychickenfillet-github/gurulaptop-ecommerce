@@ -7,7 +7,7 @@ export default function GroupBanner({ groupData, onOpenDetail, onOpenJoin }) {
 
   useEffect(() => {
     calculateTimeAgo()
-  }, [groupData])
+  }, [groupData, calculateTimeAgo])
 
   const calculateTimeAgo = () => {
     const createDate = new Date(groupData.createTime)
@@ -31,9 +31,9 @@ export default function GroupBanner({ groupData, onOpenDetail, onOpenJoin }) {
   // 處理圖片路徑
   const getImageUrl = (imagePath) => {
     if (!imagePath) {
-      return 'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png' // 改成 .png
+      return `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png` // 改成 .png
     }
-    return `process.env.NEXT_PUBLIC_API_BASE_URL${imagePath}`
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}${imagePath}`
   }
 
   return (
@@ -46,7 +46,7 @@ export default function GroupBanner({ groupData, onOpenDetail, onOpenJoin }) {
             className={styles.image}
             onError={(e) => {
               e.target.src =
-                'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png' // 改成 .png
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png` // 改成 .png
             }}
           />
           <div className={styles.text}>

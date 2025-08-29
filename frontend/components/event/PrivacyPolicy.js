@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { X } from 'lucide-react'
 
 const PrivacyPolicy = () => {
   const [show, setShow] = useState(false)

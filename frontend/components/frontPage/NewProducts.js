@@ -4,8 +4,6 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 
 const NewProducts = () => {
-  const [swiperRef, setSwiperRef] = useState(null)
-
   const products = [
     {
       id: 1,
@@ -45,7 +43,6 @@ const NewProducts = () => {
       description: '筆電超值優惠，輕鬆帶回家，現在就行動',
       link: 'https://www.bilibili.com/video/BV1jkxyeVEG5/?spm_id_from=333.788.player.switch&vd_source=1b25005216ba454333811619f6788cea',
     },
-
   ]
 
   return (
@@ -56,7 +53,6 @@ const NewProducts = () => {
           <title className="home-title">最新消息</title>
         </div>
         <Swiper
-          onSwiper={setSwiperRef}
           slidesPerView={3}
           centeredSlides={true}
           spaceBetween={30}

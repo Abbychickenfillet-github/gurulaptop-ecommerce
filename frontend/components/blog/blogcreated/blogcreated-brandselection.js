@@ -7,7 +7,8 @@ export default function BlogcreatedBrandselection() {
         <div className="BlogSmallTitleAlign d-flex justify-content-start align-items-start col-6">
           <div className="BlogEditSmallTitle text-nowrap">
             <p className>
-              <i className="fa-solid fa-diamond TitleDiamond" />品牌
+              <i className="fa-solid fa-diamond TitleDiamond" />
+              品牌
             </p>
           </div>
         </div>

@@ -14,7 +14,7 @@ import { compareHash } from '#db-helpers/password-hash.js'
 const upload = multer()
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 const router = express.Router()
-
+console.log(`process.env.NEXT_PUBLIC_API_BASE_URL`, process.env.NEXT_PUBLIC_API_BASE_URL)
 /* GET home page. */
 router.post('/', upload.none(), async (req, res, next) => {
   try {

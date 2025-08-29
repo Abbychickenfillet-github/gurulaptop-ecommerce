@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
 
 // 改為接收props的組件
@@ -15,7 +16,7 @@ export default function BlogUserOverview({ specificUserId = null }) {
     const targetUserId = specificUserId || userData?.user_id
 
     if (targetUserId) {
-              fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/blog/blog_user_overview/${targetUserId}`)
+              fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog_user_overview/${targetUserId}`)
         .then((response) => response.json())
         .then((data) => {
           console.log('API回傳的資料:', data)
@@ -68,13 +69,15 @@ export default function BlogUserOverview({ specificUserId = null }) {
           style={{ textDecoration: 'none', cursor: 'pointer' }}
         >
           <div className="card d-flex flex-row BlogUserOverviewCard">
-            <img
+            <Image
               src={
-                `process.env.NEXT_PUBLIC_API_BASE_URL${blog.blog_image}` ||
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}${blog.blog_image}` ||
                 'https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain'
               }
               className="card-img-top w-25 h-100 object-fit-cover BlogUserOverviewCardImg"
               alt="blog"
+              width={300}
+              height={200}
             />
             <div className="card-body w-75 h-100">
               <div className="BlogUserOverviewCardBodyContent m-3">

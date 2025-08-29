@@ -17,7 +17,7 @@ const GroupJoin = ({ onClose, groupData }) => {
     if (auth.isAuth) {
       websocketService.connect(auth.user_id)
     }
-  }, [auth.isAuth])
+  }, [auth.isAuth, auth.user_id])
 
   const handleChange = (e) => {
     setFormData({
@@ -56,18 +56,21 @@ const GroupJoin = ({ onClose, groupData }) => {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/group/requests', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          groupId: groupData.group_id,
-          gameId: formData.gameId,
-          description: formData.description,
-        }),
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/requests`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            groupId: groupData.group_id,
+            gameId: formData.gameId,
+            description: formData.description,
+          }),
+        }
+      )
 
       const data = await response.json()
 

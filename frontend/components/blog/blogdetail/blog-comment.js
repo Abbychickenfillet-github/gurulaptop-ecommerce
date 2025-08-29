@@ -11,7 +11,6 @@ export default function BlogComment() {
   const { blog_id } = useRouter().query
   const [blogComment, setBlogComment] = useState([])
   const [newComment, setNewComment] = useState('')
-  const router = useRouter()
 
   // Single auth destructuring
   const { auth } = useAuth()
@@ -31,7 +30,7 @@ export default function BlogComment() {
 
   useEffect(() => {
     if (blog_id) {
-      fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/blog/blog-comment/${blog_id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-comment/${blog_id}`)
         .then((response) => response.json())
         .then((data) => {
           const commentArray = Array.isArray(data) ? data : []
@@ -44,7 +43,6 @@ export default function BlogComment() {
         })
     }
   }, [blog_id])
-
   const handleSubmit = async () => {
     if (!newComment.trim()) {
       alert('請輸入留言內容')
@@ -65,7 +63,7 @@ export default function BlogComment() {
 
     try {
       const response = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/blog/blog-comment/${blog_id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-comment/${blog_id}`,
         {
           method: 'POST',
           headers: {
@@ -127,7 +125,7 @@ export default function BlogComment() {
                     comment.image_path?.startsWith('data:image')
                       ? comment.image_path
                       : comment.image_path
-                      ? `process.env.NEXT_PUBLIC_API_BASE_URL${comment.image_path}`
+                      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${comment.image_path}`
                       : 'https://th.bing.com/th/id/R.88c444f63f40cfa9b49801f826befa80?rik=QAme0H3xbxieEQ&pid=ImgRaw&r=0'
                   }
                   alt={comment.name || '匿名用戶'}

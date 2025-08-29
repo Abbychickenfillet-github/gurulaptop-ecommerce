@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import styles from '@/styles/LoadingAnimation.module.css'
 
 const LoadingAnimation = () => {
@@ -13,7 +13,7 @@ const LoadingAnimation = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LoadingAnimation;
+export default LoadingAnimation

@@ -6,7 +6,8 @@ import useSWR from 'swr'
  */
 export const checkAuth = async () => {
   try {
-    const response = await axiosInstance.get('process.env.NEXT_PUBLIC_API_BASE_URL/api/auth/check')
+// ✅ 正確：使用反引號和 ${} 插值
+    const response = await axiosInstance.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/check`)
     return response
   } catch (error) {
     console.error('checkAuth 請求失敗:', error)

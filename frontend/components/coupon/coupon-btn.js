@@ -1,6 +1,5 @@
-import React, { useState, useEffect, use } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { Form, Button } from 'react-bootstrap'
 import Coupon from '@/components/coupon'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -20,7 +19,6 @@ export default function CouponBtn({ price, setCouponValue }) {
   console.log('用戶ID:', userId)
 
   const {
-    appliedCoupon,
     setAppliedCoupon,
     calculateFinalPrice,
     calculateDiscountAmount,
@@ -41,7 +39,7 @@ export default function CouponBtn({ price, setCouponValue }) {
     }
 
     try {
-      const res = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`)
 
       // if (!res.ok) {
       //   throw new Error('請求失敗')
@@ -76,51 +74,7 @@ export default function CouponBtn({ price, setCouponValue }) {
     }
   }
 
-  // 更新優惠券狀態
-  const updateCouponStatus = async (couponId) => {
-    if (!userId) {
-      MySwal.fire({
-        title: '請先登入1',
-        text: '需要登入才能使用優惠券',
-        icon: 'warning',
-      })
-      router.push('/member/login')
-      return false
-    }
-
-    try {
-      const res = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/update/${userId}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            coupon_id: couponId,
-            valid: 0,
-          }),
-        }
-      )
-
-      const data = await res.json()
-
-      if (data.status === 'success') {
-        await getCouponData()
-        return true
-      } else {
-        throw new Error(data.message || '更新失敗')
-      }
-    } catch (error) {
-      console.error('更新優惠券狀態失敗:', error)
-      MySwal.fire({
-        title: '錯誤',
-        text: error.message || '更新優惠券狀態失敗',
-        icon: 'error',
-      })
-      return false
-    }
-  }
+ 
 
   // 處理優惠券選擇
   const handleCouponSelect = async (coupon) => {
@@ -170,7 +124,7 @@ export default function CouponBtn({ price, setCouponValue }) {
     } else {
       setLoading(false)
     }
-  }, [userId])
+  }, [userId, getCouponData])
 
   // 搜尋功能
   const filteredCoupons = couponDataList.filter((coupon) => {

@@ -9,11 +9,11 @@ export default function HomeSection() {
   const getTitleText = (index, title) => {
     switch (index) {
       case 0:
-        return `ROG Strix G16`;
+        return 'ROG Strix G16'
       case 1:
-        return `MSI Cyborg 15`;
+        return 'MSI Cyborg 15'
       case 2:
-        return `Acer Predator`;
+        return 'Acer Predator'
       default:
         return title
     }
@@ -40,7 +40,7 @@ export default function HomeSection() {
     }, 5000) // 每5秒切換一次
 
     return () => clearInterval(interval)
-  }, [currentImage, isTransitioning])
+  }, [currentImage, isTransitioning, handleImageChange])
 
   return (
     <div className="home-section1">
@@ -63,12 +63,14 @@ export default function HomeSection() {
         </div>
 
         {bannerData.map((item, index) => (
-          <div
+          <button
             key={item.id}
+            type="button"
             className={`home-${
               index === 0 ? 'two' : index === 1 ? 'three' : 'four'
             } ${currentImage === index ? 'active' : ''}`}
             onClick={() => handleImageChange(index)}
+            aria-label={`切換到第 ${index + 1} 張圖片`}
           >
             <div className="home-item">
               <div className="home-circle">
@@ -78,7 +80,7 @@ export default function HomeSection() {
                 <span>{getTitleText(index, item.title)}</span>
               </div>
             </div>
-          </div>
+          </button>
         ))}
       </div>
     </div>
