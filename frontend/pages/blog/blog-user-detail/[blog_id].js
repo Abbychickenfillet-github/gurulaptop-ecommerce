@@ -29,7 +29,7 @@ export default function BlogUserDetail() {
     }
 
     setIsLoading(true)
-    fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/blog/blog-user-detail/${blog_id}`)
+          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-user-detail/${blog_id}`)
       .then((response) => response.json())
       .then((data) => {
         const blogUserId = String(data.data.user_id)

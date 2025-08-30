@@ -1,16 +1,23 @@
 import express from 'express'
-// 引入 Express.js 框架，用於建立伺服器和路由
 import authenticate from '#middlewares/authenticate.js'
-// 引入自定義的認證中間件
-// import db from '##/configs/mysql.js'
 import pool from '##/configs/pgClient.js'
-
 import multer from 'multer'
-// 引入 Multer 中間件，用於處理 multipart/form-data 格式的請求 (例如表單)
 import jsonwebtoken from 'jsonwebtoken'
-// 引入 jsonwebtoken，用於生成和驗證 JWT
 import { compareHash } from '#db-helpers/password-hash.js'
-// 引入密碼比對函式
+import {passwordMatch} from './auth.js'
+// ========================================
+// 🔐 統一的認證邏輯 - login.js
+// ========================================
+// 這個文件負責所有的認證相關邏輯：
+// - 登入 (POST /)
+// - 登出 (POST /logout)
+// - JWT token 生成和驗證
+// 
+// 其他文件中的重複邏輯已被註解掉：
+// - auth.js 中的登入/登出邏輯
+// - authenticate.js 中的重複驗證邏輯
+// ========================================
+
 const upload = multer()
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 const router = express.Router()
@@ -37,11 +44,9 @@ router.post('/', upload.none(), async (req, res, next) => {
       })
     }
 
-    // 密碼比對，使用 compareHash 函數
-    const passwordMatch = await compareHash(password, user.password)
-    
+
     // 如果密碼不匹配，返回錯誤訊息
-    if (!passwordMatch) {
+    if (!passwordMatch(password, user.password)) {
       return res.json({
         status: 'error',
         message: '帳號或密碼錯誤',
@@ -118,54 +123,45 @@ router.post('/logout', authenticate, (req, res) => {
   res.json({ status: 'success', data: null })
 })
 
-router.post('/status', checkToken, (req, res) => {
-  const user = req.decoded
-  // console.log('user', user)
-  if (user) {
-    const token = jsonwebtoken.sign(
-      {
-        account: user.account,
-        name: user.name,
-        mail: user.mail,
-        head: user.head,
-      },
-      accessTokenSecret,
-      { expiresIn: '30m' }
-    )
-    res.json({
-      status: 'token ok',
-      token,
-    })
-  } else {
-    res.status(401).json({
-      status: 'error',
-      message: '請登入',
-    })
-  }
-})
+// 註解：使用統一的 authenticate 中間件
+// router.post('/status', authenticate, (req, res) => {
+//   const user = req.user
+//   if (user) {
+//     res.json({
+//       status: 'token ok',
+//       user,
+//     })
+//   } else {
+//     res.status(401).json({
+//       status: 'error',
+//       message: '請登入',
+//     })
+//   }
+// })
 
 export default router
 
-function checkToken(req, res, next) {
-  const token = req.get('Authorization')
+// 註解：重複的 checkToken 函數已移除，統一使用 authenticate 中間件
+// function checkToken(req, res, next) {
+//   const token = req.get('Authorization')
 
-  if (token) {
-    jsonwebtoken.verify(token, accessTokenSecret, (err, decoded) => {
-      if (err) {
-        return res
-          .status(401)
-          .json({ status: 'error', message: '登入驗證失效，請重新登入。' })
-      } else {
-        req.decoded = decoded
-        next()
-      }
-    })
-  } else {
-    return res
-      .status(401)
-      .json({ status: 'error', message: '無登入驗證資料，請重新登入。' })
-  }
-}
+//   if (token) {
+//     jsonwebtoken.verify(token, accessTokenSecret, (err, decoded) => {
+//       if (err) {
+//         return res
+//           .status(401)
+//           .json({ status: 'error', message: '登入驗證失效，請重新登入。' })
+//       } else {
+//         req.decoded = decoded
+//         next()
+//       }
+//     })
+//   } else {
+//     return res
+//       .status(401)
+//       .json({ status: 'error', message: '無登入驗證資料，請重新登入。' })
+//   }
+// }
 
 // 用 POST 來處理 logout 行為是因為 RESTful API 的設計原則建議將「變更狀態」或「造成副作用」的操作用 POST、PUT、DELETE 等方法，而 GET 是用來取得資源、不應該改變伺服器的狀態。
 

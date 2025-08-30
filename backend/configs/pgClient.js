@@ -11,10 +11,7 @@ if (process.env.NODE_ENV === 'production') {
   if (process.env.ZEABUR_CONNECTION_STRING) {
     poolConfig = {
       connectionString: process.env.ZEABUR_CONNECTION_STRING,
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
+     
     }
     console.log('🚀 使用 Zeabur 生產環境連線')
   } else {
@@ -25,10 +22,7 @@ if (process.env.NODE_ENV === 'production') {
       database: process.env.DB_NAME,
       password: process.env.DB_PASSWORD,
       port: process.env.DB_PORT,
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
+     
     }
     console.log('🚀 使用環境變數生產環境連線')
   }

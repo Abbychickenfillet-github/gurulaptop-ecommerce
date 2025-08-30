@@ -21,7 +21,7 @@ router.post('/', upload.none(), async (req, res) => {
     // 3. 特別檢查 password
     // console.log('password 型別:', typeof password)
     // console.log('password 長度:', password ? password.length : 'undefined')
-
+    console.log(email);
     if (!password) {
       throw new Error('密碼未接收到')
     }
@@ -30,6 +30,7 @@ router.post('/', upload.none(), async (req, res) => {
     // console.log('準備插入的值:', [email, password, phone, birthdate, gender])
     // 檢查是否已經有相同的email
     // console.log('開始資料庫操作')
+
 
     const { rows: existingUsers } = await pool.query(
       'SELECT * FROM users WHERE email = $1',
