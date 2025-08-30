@@ -10,6 +10,10 @@ const router = express.Router()
 const upload = multer()
 // const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET // 註解：JWT 邏輯已移至 login.js
 
+export const passwordMatch = (password, userPassword) => {
+  return compareHash(password, userPassword)
+}
+
 // 檢查登入狀態
 router.get('/check', authenticate, async (req, res) => {
   try {
@@ -108,106 +112,103 @@ router.post('/', upload.none(), async (req, res) => {
   }
 })
 
-// 註解：登入邏輯已移至 login.js
-// router.post('/login', upload.none(), async (req, res) => {
-//   const { email, password } = req.body
+router.post('/login', upload.none(), async (req, res) => {
+  const { email, password } = req.body
 
-//   if (!email || !password) {
-//     return res.status(400).json({
-//       status: 'error',
-//       message: '缺少必要資料'
-//     })
-//   }
+  if (!email || !password) {
+    return res.status(400).json({
+      status: 'error',
+      message: '缺少必要資料'
+    })
+  }
 
-//   try {
-//     const { rows: [user] } = await pool.query(
-//       'SELECT * FROM users WHERE email = $1;',
-//       [email]
-//     )
+  try {
+    const { rows: [user] } = await pool.query(
+      'SELECT * FROM users WHERE email = $1;',
+      [email]
+    )
 
-//     if (!user) {
-//       return res.status(401).json({
-//         status: 'error',
-//         message: '帳號或密碼錯誤'
-//       })
-//     }
+    if (!user) {
+      return res.status(401).json({
+        status: 'error',
+        message: '帳號或密碼錯誤'
+      })
+    }
 
-//     const passwordMatch = await compareHash(password, user.password)
+ 
 
-//     if (!passwordMatch) {
-//       return res.status(401).json({
-//         status: 'error',
-//         message: '帳號或密碼錯誤'
-//       })
-//     }
+    if (!passwordMatch(password, user.password)) {
+      return res.status(401).json({
+        status: 'error',
+        message: '帳號或密碼錯誤'
+      })
+    }
 
-//     const tokenData = {
-//       user_id: user.user_id,
-//       email: user.email,
-//       city: user.city
-//     }
+    const tokenData = {
+      user_id: user.user_id,
+      email: user.email,
+      city: user.city
+    }
 
-//     const accessToken = jsonwebtoken.sign(tokenData, accessTokenSecret, {
-//       expiresIn: '3d'
-//     })
+    const accessToken = jsonwebtoken.sign(tokenData, accessTokenSecret, {
+      expiresIn: '3d'
+    })
 
-//     res.cookie('accessToken', accessToken, {
-//       httpOnly: true,
-//       secure: process.env.NODE_ENV === 'production',
-//       sameSite: 'lax',
-//       maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
-//     })
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
+    })
 
-//     return res.json({
-//       status: 'success',
-//       data: { accessToken },
-//       message: '登入成功'
-//     })
-//   } catch (error) {
-//     console.error('登入失敗:', error)
-//     return res.status(500).json({
-//       status: 'error',
-//       message: '登入失敗'
-//     })
-//   }
-// })
+    return res.json({
+      status: 'success',
+      data: { accessToken },
+      message: '登入成功'
+    })
+  } catch (error) {
+    console.error('登入失敗:', error)
+    return res.status(500).json({
+      status: 'error',
+      message: '登入失敗'
+    })
+  }
+})
 
-// 註解：登出邏輯已移至 login.js
-// router.post('/logout', authenticate, (req, res) => {
-//   res.clearCookie('accessToken', {
-//     httpOnly: true,
-//     secure: process.env.NODE_ENV === 'production',
-//     sameSite: 'lax',
-//     path: '/'
-//   })
-//   return res.json({
-//     status: 'success',
-//     message: '登出成功'
-//   })
-// })
+router.post('/logout', authenticate, (req, res) => {
+  res.clearCookie('accessToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/'
+  })
+  return res.json({
+    status: 'success',
+    message: '登出成功'
+  })
+})
 
-// 註解：身份驗證中間件已移至 authenticate.js
-// export const checkAuth = (req, res, next) => {
-//   try {
-//     const token = req.cookies.accessToken || req.headers.authorization?.split(' ')[1]
+export const checkAuth = (req, res, next) => {
+  try {
+    const token = req.cookies.accessToken || req.headers.authorization?.split(' ')[1]
 
-//     if (!token) {
-//       return res.status(401).json({
-//         status: 'error',
-//         message: '請先登入'
-//       })
-//     }
+    if (!token) {
+      return res.status(401).json({
+        status: 'error',
+        message: '請先登入'
+      })
+    }
 
-//     const decoded = jsonwebtoken.verify(token, accessTokenSecret)
-//     req.user = decoded
-//     next()
-//   } catch (error) {
-//     console.error('認證錯誤:', error)
-//     return res.status(401).json({
-//       status: 'error',
-//       message: '認證失敗，請重新登入'
-//     })
-//   }
-// }
+    const decoded = jsonwebtoken.verify(token, accessTokenSecret)
+    req.user = decoded
+    next()
+  } catch (error) {
+    console.error('認證錯誤:', error)
+    return res.status(401).json({
+      status: 'error',
+      message: '認證失敗，請重新登入'
+    })
+  }
+}
 
 export default router

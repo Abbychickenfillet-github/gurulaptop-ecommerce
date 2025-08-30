@@ -4,7 +4,7 @@ import pool from '##/configs/pgClient.js'
 import multer from 'multer'
 import jsonwebtoken from 'jsonwebtoken'
 import { compareHash } from '#db-helpers/password-hash.js'
-
+import {passwordMatch} from './auth.js'
 // ========================================
 // 🔐 統一的認證邏輯 - login.js
 // ========================================
@@ -44,10 +44,9 @@ router.post('/', upload.none(), async (req, res, next) => {
       })
     }
 
-    // 密碼比對，使用 compareHash 函數
-    const passwordMatch = await compareHash(password, user.password)
+
     // 如果密碼不匹配，返回錯誤訊息
-    if (!passwordMatch) {
+    if (!passwordMatch(password, user.password)) {
       return res.json({
         status: 'error',
         message: '帳號或密碼錯誤',
