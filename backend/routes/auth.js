@@ -1,14 +1,16 @@
 import express from 'express'
 import multer from 'multer'
 import pool from '##/configs/pgClient.js'
-// import jsonwebtoken from 'jsonwebtoken' // 註解：JWT 邏輯已移至 login.js
+import jwt from 'jsonwebtoken' 
+// // 註解：JWT 邏輯已移至 login.js
 import authenticate from '../middlewares/authenticate.js'
 import 'dotenv/config.js'
 import { compareHash, generateHash } from '../db-helpers/password-hash.js'
 
 const router = express.Router()
 const upload = multer()
-// const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET // 註解：JWT 邏輯已移至 login.js
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET 
+// // 註解：JWT 邏輯已移至 login.js
 
 export const passwordMatch = (password, userPassword) => {
   return compareHash(password, userPassword)
@@ -150,7 +152,7 @@ router.post('/login', upload.none(), async (req, res) => {
       city: user.city
     }
 
-    const accessToken = jsonwebtoken.sign(tokenData, accessTokenSecret, {
+    const accessToken = jwt.sign(tokenData, accessTokenSecret, {
       expiresIn: '3d'
     })
 
@@ -199,7 +201,7 @@ export const checkAuth = (req, res, next) => {
       })
     }
 
-    const decoded = jsonwebtoken.verify(token, accessTokenSecret)
+    const decoded = jwt.verify(token, accessTokenSecret)
     req.user = decoded
     next()
   } catch (error) {

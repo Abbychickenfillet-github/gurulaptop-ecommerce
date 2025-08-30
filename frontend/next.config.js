@@ -18,16 +18,18 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
+        port: '3005',
+      },
+      // 添加部署後的域名
+      {
+        protocol: 'https',
+        hostname: 'guru-laptop-lavendarbug-vqq.zeabur.app',
       },
     ],
     unoptimized: true,
   },
-  output: 'export', 
-  // // don't use with `next start` or api route
+  // 移除 output: 'export'，因為這會影響 SSR 和 API 路由
   trailingSlash: true,
-  images: {
-    unoptimized: true,
-  },
   distDir: 'dist'
   // avoid cors with proxy
   // async rewrites() {

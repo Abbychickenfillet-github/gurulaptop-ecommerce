@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import styles from '@/styles/product-card.module.scss'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
 
 export default function ProductCard({ onSendMessage, product_id }) {
+  const router = useRouter()
   // 產品卡片的 key 值，用於比較功能的 checkbox
   const key = Math.random()
   // 從後端撈取資料
@@ -135,7 +137,7 @@ export default function ProductCard({ onSendMessage, product_id }) {
         }
       }
     } else {
-      window.location.href = '/member/login'
+      router.push('/member/login')
     }
   }
 
@@ -168,7 +170,7 @@ export default function ProductCard({ onSendMessage, product_id }) {
         onSendMessage('加入購物車失敗，請洽管理員！', `error`)
       }
     } else {
-      window.location.href = '/member/login'
+      router.push('/member/login')
     }
   }
 
@@ -193,7 +195,7 @@ export default function ProductCard({ onSendMessage, product_id }) {
           src={
             data
               ? `/product/${data?.product_img_path}`
-              : '/images/product/placeholder.avif'
+              : '/product/placeholder.avif'
           }
           alt="Product"
           width={200}
@@ -252,12 +254,10 @@ export default function ProductCard({ onSendMessage, product_id }) {
             : '$0'}
         </span>
         <span
-          onClick={() =>
-            (window.location.href = `http://localhost:3000/product/${product_id}`)
-          }
+          onClick={() => router.push(`/product/${product_id}`)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
-              window.location.href = `http://localhost:3000/product/${product_id}`
+              router.push(`/product/${product_id}`)
             }
           }}
           role="button"
@@ -272,51 +272,3 @@ export default function ProductCard({ onSendMessage, product_id }) {
   )
 }
 
-/*
- * 為什麼該 fetch 需要使用模板字符串語法？
- * 
- * 1. 動態 URL 構建：
- *    - process.env.NEXT_PUBLIC_API_BASE_URL 是環境變數，會根據不同環境（開發/生產）有不同的值
- *    - product_id 是動態的產品 ID，每次渲染時可能不同
- *    - userData?.user_id 是當前登入用戶的 ID，也是動態值
- * 
- * 2. 模板字符串的優勢：
- *    - 可以嵌入變數：${variable}
- *    - 支援多行字符串，提高可讀性
- *    - 自動處理類型轉換，不需要手動轉換數字為字符串
- * 
- * 3. 錯誤的寫法：
- *    - `process.env.NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData?.user_id}/${product_id}`
- *    - 這樣寫會導致 process.env.NEXT_PUBLIC_API_BASE_URL 被當作字符串字面量，而不是環境變數
- * 
- * 4. 正確的寫法：
- *    - `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData?.user_id}/${product_id}`
- *    - 使用 ${} 語法來嵌入環境變數和動態值
- * 
- * 5. 實際效果：
- *    - 開發環境：http://localhost:3005/api/favorites/123/456
- *    - 生產環境：https://yourdomain.com/api/favorites/123/456
- * 
- * 6. 如果不使用 ${} 語法會發生什麼？
- * 
- *    ❌ 錯誤寫法：
- *    `process.env.NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData?.user_id}/${product_id}`
- *    
- *    🔍 實際結果：
- *    - 瀏覽器會將 "process.env.NEXT_PUBLIC_API_BASE_URL" 當作字串字面量
- *    - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/favorites/123/456
- *    - 這會導致 404 錯誤，因為沒有這樣的 URL
- *    
- *    💡 為什麼會這樣？
- *    - 模板字符串中的 ${} 是 JavaScript 的變數插值語法
- *    - 沒有 ${} 的話，JavaScript 不會解析變數，只會當作普通字串
- *    - 就像寫 "Hello ${name}" 如果沒有 ${}，就只是字串 "Hello ${name}"，而不是 "Hello John"
- * 
- *    ✅ 正確寫法：
- *    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData?.user_id}/${product_id}`
- *    
- *    🎯 實際結果：
- *    - JavaScript 會解析 ${} 內的變數
- *    - 環境變數會被替換為實際值
- *    - 最終 URL：http://localhost:3005/api/favorites/123/456
- */

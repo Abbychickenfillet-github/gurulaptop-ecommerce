@@ -71,10 +71,12 @@ export const AuthProvider = ({ children }) => {
   // 參數：email（郵箱）、password（密碼）
   const login = async (email, password) => {
     try {
-      console.log('開始登入請求...')
+      console.log('🚀 前端開始登入請求...')
+      console.log('📧 登入 email:', email)
+      console.log('🔑 登入 password:', password ? '[已隱藏]' : '未提供')
       
       // 向後端發送登入請求
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +101,7 @@ export const AuthProvider = ({ children }) => {
       
       // 檢查登入是否成功
       if (result.status === 'success') {
-        console.log('登入成功，設定狀態...')
+        console.log('✅ 前端登入成功，設定狀態...')
         
         // 使用函數式更新確保狀態正確設置
         setAuth(prevAuth => {
@@ -137,8 +139,9 @@ export const AuthProvider = ({ children }) => {
         // 等待狀態更新完成後再跳轉
         // 延遲200ms確保狀態更新完成
         setTimeout(() => {
-          console.log('延遲後的 auth 狀態:', auth)
-          console.log('延遲後的 cookies:', document.cookie)
+          console.log('🔄 延遲後的 auth 狀態:', auth)
+          console.log('🍪 延遲後的 cookies:', document.cookie)
+          console.log('🔄 導向 dashboard 頁面...')
           router.replace('/dashboard')  // 跳轉到儀表板
         }, 200)
         
@@ -170,7 +173,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       // 向後端發送登出請求
-      const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/auth/logout', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -246,29 +249,29 @@ export const AuthProvider = ({ children }) => {
   // 
   const handleCheckAuth = async () => {
     try {
-      console.log('檢查認證狀態...')
-      console.log('當前路徑:', router.pathname)
-      console.log('Cookie:', document.cookie)
-      console.log('當前 isAuth:', auth.isAuth)
+      console.log('🔍 開始檢查認證狀態...')
+      console.log('📍 當前路徑:', router.pathname)
+      console.log('🍪 Cookie:', document.cookie)
+      console.log('🔐 當前 isAuth:', auth.isAuth)
       
       // 檢查是否在受保護路由且沒有token
       if (protectedRoutes.includes(router.pathname) && !document.cookie.includes('accessToken')) {
-        console.log('沒有 token 且在受保護路由，跳轉登入')
+        console.log('⚠️ 沒有 token 且在受保護路由，跳轉登入')
         router.push(loginRoute)
         return
       }
       
       // 如果沒有 accessToken，直接返回
       if (!document.cookie.includes('accessToken')) {
-        console.log('沒有 accessToken')
+        console.log('❌ 沒有 accessToken')
         setAuth(prev => ({ ...prev, isLoading: false }))
         return
       }
     
       // 向後端驗證token是否有效
-      
+      console.log('🔐 向後端驗證 token...')
       const res = await checkAuth()
-      console.log('伺服器驗證結果:', res)
+      console.log('✅ 伺服器驗證結果:', res)
       
       if (res.data.status === 'success') {
         // token有效，更新用戶數據

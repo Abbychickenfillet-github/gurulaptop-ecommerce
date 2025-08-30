@@ -101,7 +101,11 @@ export default function BlogUserDetail() {
           <div className="d-flex align-items-center justify-content-center mb-5">
             <Image
               className="w-50 h-50 ratio"
-              src={`process.env.NEXT_PUBLIC_API_BASE_URL${blogData.blog_image}`}
+              src={
+                blogData.blog_image
+                  ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${blogData.blog_image}`
+                  : 'https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain'
+              }
               alt={blogData.blog_title}
             />
           </div>

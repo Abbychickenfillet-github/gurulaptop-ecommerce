@@ -2,12 +2,13 @@ import express from 'express'
 import multer from 'multer'
 import pool from '../configs/pgClient.js'
 import { generateHash, compareHash } from '../db-helpers/password-hash.js'
+import authenticate from '../middlewares/authenticate.js'
 
 const router = express.Router()
 const upload = multer()
 
 // 取得所有使用者資料
-router.get('/all', async function (req, res) {
+router.get('/all', authenticate, async function (req, res) {
   try {
     const { rows: users } = await pool.query('SELECT * FROM users;')
     
@@ -32,7 +33,7 @@ router.get('/all', async function (req, res) {
 })
 
 // 取得特定使用者資料
-router.get('/:user_id', async function (req, res) {
+router.get('/:user_id', authenticate, async function (req, res) {
   try {
     const { user_id } = req.params
     const { rows: users } = await pool.query(
@@ -61,7 +62,7 @@ router.get('/:user_id', async function (req, res) {
 })
 
 // 更新使用者資料
-router.put('/:user_id', async (req, res) => {
+router.put('/:user_id', authenticate, async (req, res) => {
   try {
     const { user_id } = req.params
     const { 

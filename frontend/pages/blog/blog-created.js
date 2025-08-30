@@ -70,7 +70,7 @@ export default function Blogcreated(props) {
 
     try {
       const response = await fetch(
-        'process.env.NEXT_PUBLIC_API_BASE_URL/api/blog/blog-created',
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-created`,
         {
           method: 'POST',
           body: formData,

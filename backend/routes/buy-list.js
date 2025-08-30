@@ -1,9 +1,24 @@
 import express from 'express'
 import multer from 'multer'
 import pool from '##/configs/pgClient.js'
-
 const router = express.Router()
 const upload = multer()
+
+// 簡單的 token 驗證函數
+const verifyToken = (req) => {
+  const token = req.cookies.accessToken
+  if (!token) {
+    return null
+  }
+  
+  try {
+    // 這裡可以添加 JWT 驗證邏輯
+    // 暫時簡單檢查 token 是否存在
+    return token
+  } catch (error) {
+    return null
+  }
+}
 
 /* GET home page. */
 router.get('/:user_id', upload.none(), async (req, res, next) => {
@@ -12,6 +27,15 @@ router.get('/:user_id', upload.none(), async (req, res, next) => {
 
   // 檢查user_id是否存在
   if (!user_id) {
+    return res.status(401).json({
+      status: 'error',
+      message: '請先登入'
+    })
+  }
+
+  // 簡單的 token 檢查
+  const token = verifyToken(req)
+  if (!token) {
     return res.status(401).json({
       status: 'error',
       message: '請先登入'
@@ -70,6 +94,14 @@ router.get('/detail/:order_id', upload.none(), async (req, res, next) => {
   const { order_id } = req.params
 
   try {
+    // 簡單的 token 檢查
+    const token = verifyToken(req)
+    if (!token) {
+      return res.status(401).json({
+        status: 'error',
+        message: '請先登入'
+      })
+    }
     const { rows: result } = await pool.query(`
       SELECT 
         od.*,

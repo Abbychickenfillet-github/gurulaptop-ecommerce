@@ -129,7 +129,7 @@ const GroupManagement = () => {
   const handleEditSave = async (updatedData) => {
     try {
       const response = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/group/${selectedGroup.group_id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/${selectedGroup.group_id}`,
         {
           method: 'PUT',
           credentials: 'include',

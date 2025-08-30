@@ -34,7 +34,7 @@ export default function Checkout() {
     // if(!product_id) return
 
     try {
-      const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/products/1')
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/1`)
       // const response = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/products/${product_id}`)
 
 

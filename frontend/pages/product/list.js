@@ -232,7 +232,7 @@ export default function List() {
                 value={tmpSearch}
               />
               <Image
-                src="/images/product/search.svg"
+                src="/product/search.svg"
                 className={`${styles.product_search_icon}`}
                 alt="search"
                 width={20}

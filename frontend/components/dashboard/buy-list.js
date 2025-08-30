@@ -20,7 +20,13 @@ export default function BuyList(order) {
 
   const getOrderDetail = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/buy-list/detail/${order_id}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/buy-list/detail/${order_id}`,
+      {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
     )
     const data = await res.json()
     setOrderDetail(data.data)
@@ -32,6 +38,7 @@ export default function BuyList(order) {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon/${coupon_id}`,
         {
           method: 'GET',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -136,9 +143,13 @@ export default function BuyList(order) {
                 <></>
               )}
             </div>
-            {orderDetail.map((item, index) => {
-              return <BuyItemCard key={index} item={item} />
-            })}
+            {orderDetail && orderDetail.length > 0 ? (
+              orderDetail.map((item, index) => {
+                return <BuyItemCard key={index} item={item} />
+              })
+            ) : (
+              <div className="text-center text-muted">沒有訂單詳情</div>
+            )}
             {alreadyPay ? (
               <></>
             ) : payment_method == 1 ? (

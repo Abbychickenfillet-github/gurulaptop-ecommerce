@@ -72,8 +72,9 @@ export default function BlogUserOverview() {
           >
             <Image
               src={
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}${blog.blog_image}` ||
-                'https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain'
+                blog.blog_image
+                  ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${blog.blog_image}`
+                  : 'https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain'
               }
               className="card-img-top w-25 h-100 object-fit-cover BlogUserOverviewCardImg"
               alt="blog"

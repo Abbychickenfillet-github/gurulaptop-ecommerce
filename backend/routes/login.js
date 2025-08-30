@@ -26,15 +26,21 @@ console.log(`process.env.NEXT_PUBLIC_API_BASE_URL`, process.env.NEXT_PUBLIC_API_
 
 /* GET home page. */
 router.post('/', upload.none(), async (req, res, next) => {
+  console.log('🔐 登入請求開始')
+  console.log('📧 接收到的 email:', email)
+  console.log('🔑 接收到的 password:', password ? '[已隱藏]' : '未提供')
+  
   try {
     const { email, password } = req.body
 
     // 從資料庫查詢使用者，並確保帳號是有效的
+    console.log('🔍 查詢資料庫中的使用者...')
     const { rows: users } = await pool.query(
       'SELECT * FROM users WHERE email = $1 AND valid = TRUE',
       [email]
     )
     const user = users[0]
+    console.log('👤 資料庫查詢結果:', user ? `找到使用者 ID: ${user.user_id}` : '未找到使用者')
 
     // 檢查是否有找到使用者。如果找不到，表示帳號不存在或已被停用。
     if (!user) {
@@ -46,7 +52,12 @@ router.post('/', upload.none(), async (req, res, next) => {
 
 
     // 如果密碼不匹配，返回錯誤訊息
-    if (!passwordMatch(password, user.password)) {
+    console.log('🔐 驗證密碼...')
+    const isPasswordValid = passwordMatch(password, user.password)
+    console.log('🔐 密碼驗證結果:', isPasswordValid ? '正確' : '錯誤')
+    
+    if (!isPasswordValid) {
+      console.log('❌ 密碼驗證失敗')
       return res.json({
         status: 'error',
         message: '帳號或密碼錯誤',
@@ -54,6 +65,7 @@ router.post('/', upload.none(), async (req, res, next) => {
     }
 
     // 如果帳號密碼都正確，生成 JWT Token
+    console.log('🎫 生成 JWT Token...')
     const token = jsonwebtoken.sign(
       {
         user_id: user.user_id,
@@ -68,17 +80,21 @@ router.post('/', upload.none(), async (req, res, next) => {
       accessTokenSecret,
       { expiresIn: '2d' }
     )
+    console.log('🎫 JWT Token 生成成功，使用者 ID:', user.user_id)
 
     // 设置 JWT token 到 cookie
+    console.log('🍪 設置 JWT Token 到 Cookie...')
     res.cookie('accessToken', token, {
-      httpOnly: false, // 改为 false，让前端可以读取
-      secure: false, // 开发环境设为 false
+      httpOnly: true, // 改回 true，提高安全性
+      secure: process.env.NODE_ENV === 'production', // 生產環境使用 HTTPS
       sameSite: 'lax', // 改为 lax，避免跨域问题
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2天
       path: '/'
     })
+    console.log('🍪 Cookie 設置完成')
 
     // 登入成功，這裡是負責看JWT有沒有問題。如果有問題可能是這裡。返回 JWT Token 和用户数据
+    console.log('✅ 登入成功，準備返回用戶資料')
     return res.json({
       status: 'success',
       token,

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import styles from '@/styles/lease.module.css';
+import React from 'react'
+import styles from '@/styles/lease.module.css'
 import BackToTop from '../BackToTop/BackToTop'
 import Image from 'next/image'
 
-export default function LeaseDetail(props) {
+export default function LeaseDetail() {
   return (
     <div className={styles.customContainer}>
       <section className={styles.col1}>
@@ -16,10 +16,20 @@ export default function LeaseDetail(props) {
               height={300}
             />
             <div className={`${styles.carouselBtn} ${styles.leftBtn}`}>
-              <Image src="/images/lease/array_left.svg" alt="Previous" width={24} height={24} />
+              <Image
+                src="/images/lease/array_left.svg"
+                alt="Previous"
+                width={24}
+                height={24}
+              />
             </div>
             <div className={`${styles.carouselBtn} ${styles.rightBtn}`}>
-              <Image src="/images/lease/array_right.svg" alt="Next" width={24} height={24} />
+              <Image
+                src="/images/lease/array_right.svg"
+                alt="Next"
+                width={24}
+                height={24}
+              />
             </div>
           </div>
           <div className={styles.menu2}>
@@ -55,7 +65,13 @@ export default function LeaseDetail(props) {
             <div className={styles.brand}>
               <span>ASUS</span>
               <div className={styles.icon}>
-                <Image className={styles.cart} src="/images/lease/cart.svg" alt="Cart" width={24} height={24} />
+                <Image
+                  className={styles.cart}
+                  src="/images/lease/cart.svg"
+                  alt="Cart"
+                  width={24}
+                  height={24}
+                />
                 <Image
                   className={styles.heart}
                   src="/images/lease/heart.svg"
@@ -178,5 +194,5 @@ export default function LeaseDetail(props) {
       </section>
       <BackToTop />
     </div>
-  );
+  )
 }

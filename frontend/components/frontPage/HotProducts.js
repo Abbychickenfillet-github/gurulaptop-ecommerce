@@ -23,7 +23,7 @@ const HotProducts = () => {
       id: 3,
       image: '/images/index/banner_07.png',
       title: 'ASUS ExpertBook B5 OLED',
-      link: 'http://localhost:3000/product/60',
+      link: '/product/60',
     },
   ]
 
