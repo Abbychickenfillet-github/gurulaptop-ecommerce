@@ -186,28 +186,28 @@ router.post('/', upload.none(), async (req, res) => {
 //   })
 // })
 
-// 身份驗證中間件
-export const checkAuth = (req, res, next) => {
-  try {
-    const token = req.cookies.accessToken || req.headers.authorization?.split(' ')[1]
+// 註解：身份驗證中間件已移至 authenticate.js
+// export const checkAuth = (req, res, next) => {
+//   try {
+//     const token = req.cookies.accessToken || req.headers.authorization?.split(' ')[1]
 
-    if (!token) {
-      return res.status(401).json({
-        status: 'error',
-        message: '請先登入'
-      })
-    }
+//     if (!token) {
+//       return res.status(401).json({
+//         status: 'error',
+//         message: '請先登入'
+//       })
+//     }
 
-    const decoded = jsonwebtoken.verify(token, accessTokenSecret)
-    req.user = decoded
-    next()
-  } catch (error) {
-    console.error('認證錯誤:', error)
-    return res.status(401).json({
-      status: 'error',
-      message: '認證失敗，請重新登入'
-    })
-  }
-}
+//     const decoded = jsonwebtoken.verify(token, accessTokenSecret)
+//     req.user = decoded
+//     next()
+//   } catch (error) {
+//     console.error('認證錯誤:', error)
+//     return res.status(401).json({
+//       status: 'error',
+//       message: '認證失敗，請重新登入'
+//     })
+//   }
+// }
 
 export default router

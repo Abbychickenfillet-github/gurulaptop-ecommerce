@@ -46,7 +46,6 @@ router.post('/', upload.none(), async (req, res, next) => {
 
     // 密碼比對，使用 compareHash 函數
     const passwordMatch = await compareHash(password, user.password)
-    
     // 如果密碼不匹配，返回錯誤訊息
     if (!passwordMatch) {
       return res.json({
