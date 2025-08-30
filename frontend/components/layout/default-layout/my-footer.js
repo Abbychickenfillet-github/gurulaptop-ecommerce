@@ -62,18 +62,18 @@ export default function MyFooter() {
           </div>
           <div className="col-3 d-flex justify-content-end footer-logo-container">
             <div className="footer-logo">
-              <Image src="/logo2.svg" alt="網站 Logo" />
+              <Image src="/logo2.svg" alt="網站 Logo" width={84} height={39} />
             </div>
           </div>
-          <div className="mb-4" />
+          <div className="mb-4"/>
         </div>
         <div className="p-3 footer-row">
           <div className="col mb-3">
             <Link className="text-secondary mb-2 text-decoration-none" href="">
-              <Image src="/Icon-fb2.svg" alt="Facebook 圖標" className="me-3" />
+              <Image src="/Icon-fb2.svg" alt="Facebook 圖標" className="me-3" width={24} height={24} />
             </Link>
             <Link className="text-secondary mb-2 text-decoration-none" href="">
-              <Image src="/Icon-ig2.svg" alt="Instagram 圖標" />
+              <Image src="/Icon-ig2.svg" alt="Instagram 圖標" width={24} height={24} />
             </Link>
           </div>
           <div className="col text-secondary text-end">© 2024 Hello, Inc.</div>

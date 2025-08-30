@@ -39,7 +39,7 @@ const Carousel = () => {
 
   const prevSlide = () => {
     setActiveIndex(
-      (current) => (current - 1 + upcomingEvents.length) % upcomingEvents.length
+      (current) => (current - 1 + upcomingEvents.length) % upcomingEvents.length,
     )
   }
 

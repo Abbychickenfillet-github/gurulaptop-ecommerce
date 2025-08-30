@@ -15,7 +15,7 @@ export default function BuyItemCard(item) {
       <div className="card p-2 border-primary mb-3">
         <div className="row align-items-center mb-2">
           <div className="col-md-6 col-3 text-primary">
-            <Image src="diamond.svg" alt />
+            <Image src="diamond.svg" alt="Diamond" width={20} height={20} />
             商品資訊
           </div>
           <div className="col-md-2 col-3">單價</div>

@@ -7,7 +7,7 @@ export default function GroupBanner({ groupData, onOpenDetail, onOpenJoin }) {
 
   useEffect(() => {
     calculateTimeAgo()
-  }, [groupData, calculateTimeAgo])
+  }, [groupData])
 
   const calculateTimeAgo = () => {
     const createDate = new Date(groupData.createTime)
@@ -44,9 +44,11 @@ export default function GroupBanner({ groupData, onOpenDetail, onOpenJoin }) {
             src={getImageUrl(groupData.image)}
             alt="遊戲圖片"
             className={styles.image}
+            width={300}
+            height={200}
             onError={(e) => {
               e.target.src =
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png` // 改成 .png
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
             }}
           />
           <div className={styles.text}>

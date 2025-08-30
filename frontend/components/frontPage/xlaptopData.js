@@ -11,5 +11,5 @@
 //       id: 3,
 //       image: "/images/index/banner_07.jpg",
 //     }
-//   ];
+//   ]
   

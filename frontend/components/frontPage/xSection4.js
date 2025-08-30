@@ -1,5 +1,5 @@
 // src/components/frontPage/Section4.js
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import Image from 'next/image'
 // 將 laptopData 移到組件外部
 // const laptopData = [
@@ -21,12 +21,12 @@ export default function Section4() {
   const [rotation, setRotation] = useState(0);
 
   const handleNext = () => {
-    setRotation(prev => prev - 120); // 順時針旋轉 120 度
-  };
+    setRotation((prev) => prev - 120) // 順時針旋轉 120 度
+  }
 
   const handlePrev = () => {
-    setRotation(prev => prev + 120); // 逆時針旋轉 120 度
-  };
+    setRotation((prev) => prev + 120) // 逆時針旋轉 120 度
+  }
 
   return (
     <section className="home-section4">
@@ -54,7 +54,7 @@ export default function Section4() {
                           `
                         }}
                       >
-                        <Image src={image.image} alt={`Laptop ${index + 1}`} />
+                        <Image src={image.image} alt={`Laptop ${index + 1}`} width={300} height={200} />
                       </div>
                     ))}
                   </div>

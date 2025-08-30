@@ -18,7 +18,7 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/${groupData.id}`,
         {
           credentials: 'include',
-        }
+        },
       )
       const data = await response.json()
 
@@ -126,6 +126,8 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
                       src={getImageUrl(member.image_path)}
                       alt={member.name}
                       className={styles.userAvatar}
+                      width={50}
+                      height={50}
                       onError={handleImageError}
                     />
                     <div className={styles.userNameTooltip}>

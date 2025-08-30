@@ -58,6 +58,8 @@ export default function HomeSection() {
           <Image
             src={bannerData[currentImage].image}
             alt={bannerData[currentImage].title}
+            width={800}
+            height={400}
             className={isTransitioning ? 'transitioning' : ''}
           />
         </div>

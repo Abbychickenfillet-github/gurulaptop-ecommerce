@@ -35,10 +35,10 @@ const EventNavbar = ({ onFilterChange }) => {
       try {
         const [typesResponse, platformsResponse] = await Promise.all([
           axios.get(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events/filters/types`
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events/filters/types`,
           ),
           axios.get(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events/filters/platforms`
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events/filters/platforms`,
           ),
         ])
 
@@ -80,12 +80,19 @@ const EventNavbar = ({ onFilterChange }) => {
           query,
         },
         undefined,
-        { shallow: true, scroll: false }
+        { shallow: true, scroll: false },
       )
 
       onFilterChange(filters)
     },
-    [selectedType, selectedPlatform, selectedTeamType, isInitialized, router, onFilterChange]
+    [
+      selectedType,
+      selectedPlatform,
+      selectedTeamType,
+      isInitialized,
+      router,
+      onFilterChange,
+    ],
   )
 
   const handleTypeChange = useCallback((type) => {
@@ -119,7 +126,6 @@ const EventNavbar = ({ onFilterChange }) => {
     selectedTeamType,
     searchTerm,
     isInitialized,
-    updateFilters,
   ])
 
   return (

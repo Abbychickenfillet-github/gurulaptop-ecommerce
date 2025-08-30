@@ -268,9 +268,9 @@ export default function ProductCard({ onSendMessage, product_id }) {
           →
         </span>
       </div>
-         </div>
-   )
- }
+    </div>
+  )
+}
 
 /*
  * 為什麼該 fetch 需要使用模板字符串語法？

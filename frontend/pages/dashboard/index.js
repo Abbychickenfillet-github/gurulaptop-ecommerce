@@ -87,12 +87,16 @@ export default function DashboardIndex() {
   }
     // 如果還在載入中，顯示載入動畫
   if (auth.isLoading) {
+    console.log('Dashboard: 正在載入中...', auth)
     return <LoadingAnimation />
   }
 
-  // 如果未登入，返回 null（Router Guard 會處理跳轉）
+  // 如果未登入，顯示調試信息並返回載入動畫
   if (!auth.isAuth) {
-    return null
+    console.log('Dashboard: 用戶未登入', auth)
+    console.log('Dashboard: 當前路徑:', window.location.pathname)
+    console.log('Dashboard: Cookies:', document.cookie)
+    return <LoadingAnimation />
   }
   return (
     <>
@@ -125,9 +129,9 @@ export default function DashboardIndex() {
                   }
                   alt="Profile"
                   className="rounded-circle img-fluid mb-3"
+                  width={70}
+                  height={70}
                   style={{
-                    width: '70px',
-                    height: '70px',
                     objectFit: 'cover',
                   }}
                   onError={(e) => {

@@ -233,8 +233,8 @@ export default function MembershipLevels() {
               <Image
                 src="signup_login/membership.png"
                 alt="background"
-                layout="fill"
-                // objectFit="cover"
+                fill
+                style={{ objectFit: 'cover' }}
                 quality={100}
               />
 

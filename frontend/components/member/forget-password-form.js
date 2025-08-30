@@ -74,7 +74,8 @@ export default function ForgetPasswordForm() {
     <Image
       src="/bgi/signup_bgi.png"
       alt="background"
-      layout="fill"
+      fill
+      style={{objectFit:'cover'}}
       quality={100}
     />
     <div className="container position-relative"> {/* 新增 container 和 position-relative */}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Virtual, Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import Image from 'next/image'
@@ -80,8 +80,8 @@ const HotProducts = () => {
                   className="product-link"
                 >
                   <div className="home-laptop-item">
-                    <Image 
-                      src={product.image} 
+                    <Image
+                      src={product.image}
                       alt={product.title}
                       width={300}
                       height={200}

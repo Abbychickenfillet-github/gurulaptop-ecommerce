@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import EventCard from '@/components/event/EventCard'
 import Carousel from '@/components/event/Carousel'
 import EventNavbar from '@/components/event/EventNavbar'
@@ -107,8 +107,8 @@ export default function Event() {
     }
   }
 
-  // 獲取活動資料
-  const fetchEvents = async (
+  // 獲取活動資料 - 使用 useCallback 避免無限迴圈
+  const fetchEvents = useCallback(async (
     page = currentPage,
     status = activeTab,
     showLoading = true
@@ -117,7 +117,8 @@ export default function Event() {
       if (showLoading) setLoading(true)
       setError(null)
 
-      const response = await axios.get('process.env.NEXT_PUBLIC_API_BASE_URL/api/events', {
+      // 修復：使用正確的環境變數語法
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events`, {
         params: {
           page,
           pageSize: 12,
@@ -141,9 +142,9 @@ export default function Event() {
     } finally {
       if (showLoading) setLoading(false)
     }
-  }
+  }, [currentPage, activeTab, filters.type, filters.platform, filters.teamType, filters.search])
 
-  // 初始載入
+  // 初始載入 - 只在組件掛載時執行一次
   useEffect(() => {
     fetchEvents()
 
@@ -154,14 +155,14 @@ export default function Event() {
 
     const interval = setInterval(throttledFetch, 30000)
     return () => clearInterval(interval)
-  }, [])
+  }, [fetchEvents]) // 添加 fetchEvents 依賴項
 
-  // 當篩選器改變時重新獲取數據
+  // 當篩選器改變時重新獲取數據 - 修復：使用具體的依賴項
   useEffect(() => {
     if (filters.type !== undefined) {
       fetchEvents(1, activeTab)
     }
-  }, [filters])
+  }, [filters.type, filters.platform, filters.teamType, filters.search, activeTab, fetchEvents])
 
   // 處理分頁變更
   const handlePageChange = (page) => {
@@ -181,7 +182,7 @@ export default function Event() {
   }
 
   // 處理篩選變更
-  const handleFilterChange = (newFilters) => {
+  const handleFilterChange = useCallback((newFilters) => {
     setFilters((prev) => ({
       ...prev,
       type: newFilters.type,
@@ -190,7 +191,7 @@ export default function Event() {
       search: newFilters.search,
     }))
     setCurrentPage(1)
-  }
+  }, [])
 
   return (
     <>
@@ -225,15 +226,11 @@ export default function Event() {
               </div>
             ) : (
               <div className="row g-4 justify-content-start">
-                {' '}
-                {/* 修改這裡 */}
                 {events.map((event) => (
                   <div
                     key={event.id}
                     className="col-12 col-sm-6 col-lg-4 col-xl-3"
                   >
-                    {' '}
-                    {/* 修改這裡 */}
                     <EventCard
                       id={event.id}
                       name={event.name}
@@ -267,4 +264,5 @@ export default function Event() {
     </>
   )
 }
+
 // Event.getLayout = (page) => page

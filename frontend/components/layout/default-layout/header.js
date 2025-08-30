@@ -8,7 +8,7 @@ import useFirebase from '@/hooks/use-firebase'
 import Image from 'next/image'
 
 export default function Header() {
-  const { logoutFirebase } = useFirebase()  // 加入這行
+  const { logoutFirebase } = useFirebase()
   const { auth, logout } = useAuth()
   const { isAuth, userData } = auth
   const [user_id, setUserId] = useState('')
@@ -24,8 +24,8 @@ export default function Header() {
     }
   }
 
-  const [setImagePath] = useState(
-    () => auth?.userData?.image_path || getDefaultImage(auth?.userData?.gender)
+  const [imagePath, setImagePath] = useState(
+    auth?.userData?.image_path || getDefaultImage(auth?.userData?.gender)
   )
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -102,14 +102,13 @@ export default function Header() {
           // 使用相同的 getDefaultImage 函數
           setImagePath(data?.image_path || getDefaultImage(data?.gender))
         })
-       
     }
 
     document.body.style.paddingTop = '75px'
     return () => {
       document.body.style.paddingTop = '0px'
     }
-  }, [user_id, auth?.userData?.gender, auth?.userData?.image_path])
+  }, [user_id])
 
   useEffect(() => {
     if (userData && userData.user_id) {
@@ -138,7 +137,7 @@ export default function Header() {
         <>
           <div className="mobile-header">
             <Link href="/" className="logo-link">
-              <Image src="/logo.svg" alt="Logo" className="logo" />
+              <Image src="/logo.svg" alt="Logo" className="logo" width={84} height={39} />
             </Link>
 
             <div className="mobile-controls">
@@ -175,15 +174,10 @@ export default function Header() {
                     <Link href="/dashboard" className="icon-wrapper">
                       <div className="user-avatar">
                         <Image
-                          src={
-                            auth?.userData?.image_path ||
-                            (auth?.userData?.gender === 'male'
-                              ? '/signup_login/undraw_profile_2.svg'
-                              : auth?.userData?.gender === 'female'
-                              ? '/signup_login/undraw_profile_1.svg'
-                              : '/Vector.svg')
-                          }
+                          src={imagePath}
                           alt="user-avatar"
+                          width={40}
+                          height={40}
                         />
                       </div>
                     </Link>
@@ -206,7 +200,7 @@ export default function Header() {
         <div className="nav-container">
           <div className="nav-left">
             <Link href="/" className="logo-link">
-              <Image src="/logo.svg" alt="Logo" className="logo" />
+              <Image src="/logo.svg" alt="Logo" className="logo" width={84} height={39} />
             </Link>
           </div>
 
@@ -234,11 +228,10 @@ export default function Header() {
                 <Link href="/dashboard">
                   <div className="user-avatar">
                     <Image
-                      src={
-                        auth?.userData?.image_path ||
-                        getDefaultImage(auth?.userData?.gender)
-                      }
+                      src={imagePath}
                       alt="User"
+                      width={40}
+                      height={40}
                     />
                   </div>
                 </Link>
@@ -299,6 +292,7 @@ export default function Header() {
 
         .logo {
           height: 45px;
+          width: auto;
           filter: drop-shadow(0 0 8px rgba(128, 90, 245, 0.3));
           transition: all 0.3s ease;
         }
@@ -468,6 +462,7 @@ export default function Header() {
 
         .mobile-header .logo {
           height: 35px;
+          width: auto;
         }
 
         .mobile-controls {

@@ -60,9 +60,9 @@ const GroupJoin = ({ onClose, groupData }) => {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/requests`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+                          headers: {
+          'Content-Type': 'application/json',
+        },
           credentials: 'include',
           body: JSON.stringify({
             groupId: groupData.group_id,

@@ -13,7 +13,7 @@ const EventManagement = () => {
   const fetchUserEvents = async () => {
     try {
       const response = await axios.get(
-        'process.env.NEXT_PUBLIC_API_BASE_URL/api/events/user/registered',
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events/user/registered`,
         {
           withCredentials: true,
           headers: {
@@ -69,8 +69,8 @@ const EventManagement = () => {
 
     try {
       const response = await axios.delete(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/events/${eventId}/registration`,
-        { withCredentials: true }
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events/${eventId}/registration`,
+        { withCredentials: true },
       )
 
       if (response.data.code === 200) {
@@ -102,7 +102,7 @@ const EventManagement = () => {
     if (imagePath.startsWith('http')) {
       return imagePath
     }
-    return `process.env.NEXT_PUBLIC_API_BASE_URL${imagePath}`
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}${imagePath}`
   }
 
   // 格式化時間

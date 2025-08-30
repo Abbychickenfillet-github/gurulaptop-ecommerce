@@ -21,7 +21,8 @@ export default function CouponPage() {
               src="https://via.placeholder.com/70x70"
               alt="Profile"
               className="rounded-circle img-fluid mb-3"
-              style={{ width: '70px', height: '70px' }}
+              width={70}
+              height={70}
             />
             <h5 className="mb-2">萊歐斯·托登</h5>
             <button

@@ -24,7 +24,11 @@ const nextConfig = {
   },
   output: 'export', 
   // // don't use with `next start` or api route
-  distDir: 'dist',
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
+  distDir: 'dist'
   // avoid cors with proxy
   // async rewrites() {
   //   // 根據環境選擇 API 地址

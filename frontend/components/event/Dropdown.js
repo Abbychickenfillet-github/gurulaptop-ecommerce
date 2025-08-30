@@ -13,7 +13,7 @@ const Dropdown = ({ title, items, onSelect }) => {
       }
       setIsOpen(false)
     },
-    [onSelect]
+    [onSelect],
   )
 
   // 處理點擊外部關閉下拉選單

@@ -34,7 +34,7 @@ export default function UserProfile() {
         ? '/signup_login/undraw_profile_2.svg'
         : editableUser.gender === 'female'
         ? '/signup_login/undraw_profile_1.svg'
-        : '/Vector.svg')
+        : '/Vector.svg'),
   )
   const [uploadStatus, setUploadStatus] = useState('')
   // 沒有寫就是false
@@ -107,7 +107,7 @@ export default function UserProfile() {
     if (value === '台灣') {
       // 如果選擇的是台灣，"啟用"縣市選擇
       setIsDistrictDisabled(false)
-    //這邊的else為了當選擇其他國家時，禁用縣市、區域和路名選擇 
+      // 這邊的else為了當選擇其他國家時，禁用縣市、區域和路名選擇 
     } else {
       // 禁用行政區
       setIsDistrictDisabled(true)
@@ -151,11 +151,11 @@ export default function UserProfile() {
     }))
 
     const selectedCity = taiwanData.find(
-      (city) => city.CityName === editableUser.city
+      (city) => city.CityName === editableUser.city,
     )
     if (selectedCity) {
       const selectedArea = selectedCity.AreaList.find(
-        (area) => area.AreaName === value
+        (area) => area.AreaName === value,
       )
       if (selectedArea && selectedArea.RoadList) {
         setRoads(selectedArea.RoadList)
@@ -182,7 +182,7 @@ export default function UserProfile() {
           ? '/signup_login/undraw_profile_2.svg'
           : editableUser.gender === 'female'
           ? '/signup_login/undraw_profile_1.svg'
-          : '/Vector.svg')
+          : '/Vector.svg'),
     )
   }, [editableUser.gender, editableUser.image_path]) // 加入相依性
 
@@ -300,11 +300,11 @@ export default function UserProfile() {
       // delete dataToSubmit.currentPassword // 移除 currentPassword 欄位
       // delete dataToSubmit.newPassword // 移除 newPassword 欄位
 
-      const response = await axios.put(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
-        // editableUser
-        dataToSubmit
-      )
+             const response = await axios.put(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${user_id}`,
+         // editableUser
+         dataToSubmit
+       )
       if (response.data.status === 'success') {
         Swal.fire('成功', '用戶資料更新成功', 'success')
         // setAuth((prev) => ({ // This line was removed as per the edit hint
@@ -325,7 +325,7 @@ export default function UserProfile() {
       Swal.fire(
         '錯誤',
         error.response?.data?.message || '更新失敗，請稍後再試',
-        'error'
+        'error',
       )
     }
   }
@@ -349,13 +349,13 @@ export default function UserProfile() {
         return
       }
       //s停用button跟更新button用的是同一個路由所以停用
-      const response = await axios.put(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
-        {
-          ...editableUser,
-          valid: 0,
-        }
-      )
+             const response = await axios.put(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${user_id}`,
+         {
+           ...editableUser,
+           valid: 0,
+         }
+       )
 
       if (response.data.status === 'success') {
         Swal.fire({
@@ -392,13 +392,13 @@ export default function UserProfile() {
     }
 
     try {
-      const response = await axios.put(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
-        {
-          ...editableUser,
-          image_path: selectedImg,
-        }
-      )
+             const response = await axios.put(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${user_id}`,
+         {
+           ...editableUser,
+           image_path: selectedImg,
+         }
+       )
 
       if (response.data.status === 'success') {
         setUploadStatus('頭像更新成功！') //有文字算true,沒有算none?
@@ -410,12 +410,12 @@ export default function UserProfile() {
         //     image_path: selectedImg,
         //   },
         // }))
-        const headerResponse = await axios.post(
-          'process.env.NEXT_PUBLIC_API_BASE_URL/api/header',
-          {
-            user_id: user_id,
-          }
-        )
+                 const headerResponse = await axios.post(
+           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header`,
+           {
+             user_id: user_id,
+           }
+         )
         Swal.fire('成功', '頭像更新成功', 'success')
       }
     } catch (error) {
@@ -423,7 +423,7 @@ export default function UserProfile() {
       Swal.fire(
         '錯誤',
         error.response?.data?.message || '上傳失敗，請稍後再試',
-        'error'
+        'error',
       )
     }
   }
@@ -764,11 +764,10 @@ export default function UserProfile() {
                           src={profilePic}
                           alt="Profile"
                           className="rounded-circle img-fluid mb-3"
+                          width={220}
+                          height={220}
                           style={{
-                            width: '220px',
-                            height: '220px',
-                            // margin:'0 auto',
-                            //  position:'relative',
+                            objectFit: 'cover',
                           }}
                         />
                         <div className="mb-3">

@@ -9,7 +9,7 @@ import ArticleSlider from './ArticleSlider'
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default function FrontPage(props) {
+export default function FrontPage() {
   return (
     <>
       <div className="position-relative" style={{ zIndex: 1 }}>

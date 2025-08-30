@@ -147,8 +147,8 @@ const ArticleSection = () => {
           ))}
         </div>
         <button className="home-article-btn" onClick={handleNext}>
-          <Image 
-            src="/images/index/arrow.svg" 
+          <Image
+            src="/images/index/arrow.svg"
             alt="Next"
             width={24}
             height={24}

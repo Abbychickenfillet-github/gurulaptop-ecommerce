@@ -99,6 +99,8 @@ const GroupRequestList = ({ groupId }) => {
                 src={request.sender_image || '/default-avatar.png'}
                 alt={request.sender_name}
                 className={styles.avatar}
+                width={50}
+                height={50}
               />
               <div className={styles.details}>
                 <h4>{request.sender_name}</h4>

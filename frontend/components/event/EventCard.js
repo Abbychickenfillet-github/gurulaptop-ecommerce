@@ -66,13 +66,15 @@ export default function EventCard({
             src={picture || '/images/event-default.png'}
             className={styles.cardImg}
             alt={name || '活動圖片'}
+            width={300}
+            height={200}
             onError={(e) => {
               e.target.src = '/images/event-default.png'
             }}
           />
           <span
             className={`position-absolute top-0 end-0 m-2 badge ${getStatusStyle(
-              status
+              status,
             )}`}
             style={{ zIndex: 3 }}
           >

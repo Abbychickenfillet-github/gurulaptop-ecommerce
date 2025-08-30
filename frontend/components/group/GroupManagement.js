@@ -152,8 +152,8 @@ const GroupManagement = () => {
           prevGroups.map((group) =>
             group.group_id === selectedGroup.group_id
               ? { ...group, ...result.data.group }
-              : group
-          )
+              : group,
+          ),
         )
         await Swal.fire({
           icon: 'success',
@@ -228,6 +228,8 @@ const GroupManagement = () => {
                   src={getImageUrl(group.group_img)}
                   alt="揪團圖片"
                   className={styles.groupImg}
+                  width={80}
+                  height={60}
                   onError={(e) => {
                     e.target.src =
                       `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
@@ -272,6 +274,8 @@ const GroupManagement = () => {
                   src={getImageUrl(group.group_img)}
                   alt="揪團圖片"
                   className={styles.groupImg}
+                  width={80}
+                  height={60}
                   onError={(e) => {
                     e.target.src =
                       `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`

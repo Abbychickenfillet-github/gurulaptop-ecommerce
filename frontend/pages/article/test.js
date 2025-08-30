@@ -35,14 +35,18 @@ export default function ArticleDetailSection() {
               <Image
                 className="w-100 h-100 ratio"
                 src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
-                alt=""
+                alt="Article image 1"
+                width={400}
+                height={300}
               />
             </div>
             <div className="col-6">
               <Image
                 className="w-100 h-100 ratio"
                 src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
-                alt=""
+                alt="Article image 2"
+                width={400}
+                height={300}
               />
             </div>
           </div>
@@ -53,14 +57,18 @@ export default function ArticleDetailSection() {
                 <Image
                   className="w-100 h-100 ratio"
                   src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
-                  alt=""
+                  alt="Article image 3"
+                  width={400}
+                  height={300}
                 />
               </div>
               <div className="col-6">
                 <Image
                   className="w-100 h-100 ratio"
                   src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
-                  alt=""
+                  alt="Article image 4"
+                  width={400}
+                  height={300}
                 />
               </div>
             </div>
@@ -69,7 +77,9 @@ export default function ArticleDetailSection() {
             <Image
               className="w-50 h-50 ratio"
               src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
-              alt=""
+              alt="Article image 5"
+              width={400}
+              height={300}
             />
           </div>
         </section>

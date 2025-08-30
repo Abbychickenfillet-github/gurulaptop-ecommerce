@@ -12,12 +12,14 @@ export default function LeaseDetail(props) {
             <Image
               src="/images/lease/15-fd1149TU.png"
               alt="Alienware"
+              width={400}
+              height={300}
             />
             <div className={`${styles.carouselBtn} ${styles.leftBtn}`}>
-              <Image src="/images/lease/array_left.svg" alt="Previous" />
+              <Image src="/images/lease/array_left.svg" alt="Previous" width={24} height={24} />
             </div>
             <div className={`${styles.carouselBtn} ${styles.rightBtn}`}>
-              <Image src="/images/lease/array_right.svg" alt="Next" />
+              <Image src="/images/lease/array_right.svg" alt="Next" width={24} height={24} />
             </div>
           </div>
           <div className={styles.menu2}>
@@ -25,18 +27,24 @@ export default function LeaseDetail(props) {
               <Image
                 src="/images/lease/Alienware m16 R2.png"
                 alt="AORUS 16"
+                width={150}
+                height={100}
               />
             </div>
             <div className={styles.list}>
               <Image
                 src="/images/lease/AORUS 5 (Intel 12th Gen).png"
                 alt="ASUS Vivobook"
+                width={150}
+                height={100}
               />
             </div>
             <div className={styles.list}>
               <Image
                 src="/images/lease/AORUS 5 (Intel 12th Gen).png"
                 alt="G634JZ Model"
+                width={150}
+                height={100}
               />
             </div>
           </div>
@@ -47,11 +55,13 @@ export default function LeaseDetail(props) {
             <div className={styles.brand}>
               <span>ASUS</span>
               <div className={styles.icon}>
-                <Image className={styles.cart} src="/images/lease/cart.svg" alt="Cart" />
+                <Image className={styles.cart} src="/images/lease/cart.svg" alt="Cart" width={24} height={24} />
                 <Image
                   className={styles.heart}
                   src="/images/lease/heart.svg"
                   alt="Favorite"
+                  width={24}
+                  height={24}
                 />
               </div>
             </div>
