@@ -1,35 +1,33 @@
 import jsonwebtoken from 'jsonwebtoken'
-// 與import jwt from 'jswonwebtoken'等效
-// 存取`.env`設定檔案使用
 import 'dotenv/config.js'
 
 // 獲得加密用字串
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 
 // 中介軟體middleware，用於檢查授權(authenticate)
+// 統一使用 login.js 中的 JWT 邏輯
 export default function authenticate(req, res, next) {
-  // const token = req.headers['authorization']
-  const token = req.cookies.accessToken
-  // console.log(token)
+  // 優先從 cookie 中獲取 token，其次從 Authorization header
+  const token = req.cookies.accessToken || req.headers.authorization?.split(' ')[1]
 
-  // if no token
+  // 如果沒有 token
   if (!token) {
-    return res.json({
+    return res.status(401).json({
       status: 'error',
       message: '授權失敗，沒有存取令牌',
     })
   }
 
-  // verify的callback會帶有decoded payload(解密後的有效資料)，就是user的資料
+  // 驗證 JWT token
   jsonwebtoken.verify(token, accessTokenSecret, (err, user) => {
     if (err) {
-      return res.json({
+      return res.status(401).json({
         status: 'error',
         message: '不合法的存取令牌',
       })
     }
 
-    // 將user資料加到req中
+    // 將用戶資料加到 req 中
     req.user = user
     next()
   })

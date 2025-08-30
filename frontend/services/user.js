@@ -144,8 +144,8 @@ export const useUser = (id) => {
 }
 
 // 解析accessToken用的函式
-export const parseJwt = (token) => {
-  const base64Payload = token.split('.')[1]
-  const payload = Buffer.from(base64Payload, 'base64')
-  return JSON.parse(payload.toString())
-}
+// export const parseJwt = (token) => {
+//   const base64Payload = token.split('.')[1]
+//   const payload = Buffer.from(base64Payload, 'base64')
+//   return JSON.parse(payload.toString())
+// }
