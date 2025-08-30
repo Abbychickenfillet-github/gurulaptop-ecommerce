@@ -515,26 +515,7 @@ export default function UserProfile() {
                           />
                         </div>
                       </div>
-                      test
-                      <div className="mb-3 row">
-                        <label
-                          htmlFor="test"
-                          className="col-sm-3 col-form-label"
-                        >
-                          test
-                        </label>
-                        <div className="col-sm-9">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="test"
-                            name="test"
-                            value={editableUser.test}
-                            onChange={handleInputChange}
-                            disabled={false}
-                          />
-                        </div>
-                      </div>
+                      
                       <div className="mb-3 row">
                         <label
                           htmlFor="phone"
