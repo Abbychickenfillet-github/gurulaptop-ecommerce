@@ -66,10 +66,10 @@ export default function List() {
     if (search) {
       where += `&search=${search}`
     }
-    console.log('請求 URL:', `process.env.NEXT_PUBLIC_API_BASE_URL/api/products/list?${where}`)
+    console.log('請求 URL:', `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/list?${where}`)
 
     const response = await fetch(
-      `process.env.NEXT_PUBLIC_API_BASE_URL/api/products/list?${where}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/list?${where}`,
       {
         method: 'GET',
         headers: {

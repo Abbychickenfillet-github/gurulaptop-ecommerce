@@ -49,7 +49,8 @@ export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
     isAuth: false,       // 是否已認證（登入）
     userData: initUserData, // 用戶數據
-    isLoading: true      // 是否正在加載（檢查認證狀態）
+    isLoading: true      
+    // 是否正在加載（檢查認證狀態）
   })
 
   // ========================================
@@ -73,7 +74,7 @@ export const AuthProvider = ({ children }) => {
       console.log('開始登入請求...')
       
       // 向後端發送登入請求
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -169,7 +170,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       // 向後端發送登出請求
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/logout`, {
+      const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/auth/logout', {
         method: 'POST',
         credentials: 'include',
         headers: {
