@@ -40,7 +40,8 @@ if (process.env.NODE_ENV === 'production') {
     dialect: 'postgres',
     protocol: 'postgres',
     dialectOptions: {
-      ssl: false  // 本地開發環境禁用 SSL
+      // ssl: false  
+      // 本地開發環境禁用 SSL
     }
   };
   console.log('🛠️ 使用開發環境配置')

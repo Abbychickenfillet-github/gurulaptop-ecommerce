@@ -34,7 +34,6 @@ if (process.env.NODE_ENV === 'production') {
     database: process.env.DB_NAME || 'project_db',
     password: process.env.DB_PASSWORD || 'abc123',
     port: process.env.DB_PORT || 5432,
-    ssl: false, // 本地開發環境完全禁用 SSL
   }
   console.log('🛠️ 使用開發環境連線配置')
 }
