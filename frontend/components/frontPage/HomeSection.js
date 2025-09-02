@@ -19,6 +19,17 @@ export default function HomeSection() {
     }
   }
 
+  // 自動輪播
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isTransitioning) {
+        setCurrentImage((prev) => (prev + 1) % bannerData.length)
+      }
+    }, 5000) // 每5秒切換一次
+
+    return () => clearInterval(interval)
+  }, [isTransitioning])
+
   // 處理圖片切換
   const handleImageChange = (index) => {
     if (isTransitioning) return // 如果正在轉換中，不執行切換
@@ -30,17 +41,6 @@ export default function HomeSection() {
       setIsTransitioning(false)
     }, 500) // 配合 CSS transition 時間
   }
-
-  // 自動輪播
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!isTransitioning) {
-        handleImageChange((currentImage + 1) % bannerData.length)
-      }
-    }, 5000) // 每5秒切換一次
-
-    return () => clearInterval(interval)
-  }, [currentImage, isTransitioning, handleImageChange])
 
   return (
     <div className="home-section1">

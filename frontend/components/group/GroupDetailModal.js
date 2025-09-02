@@ -9,28 +9,29 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
   const [members, setMembers] = useState([])
 
   useEffect(() => {
-    fetchGroupMembers()
-  }, [groupData.id, fetchGroupMembers])
-
-  const fetchGroupMembers = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/${groupData.id}`,
-        {
-          credentials: 'include',
-        },
-      )
-      const data = await response.json()
-
-      if (data.status === 'success') {
-        setMembers(data.data.group.members || [])
+    const fetchGroupMembers = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/${groupData.id}`,
+          {
+            credentials: 'include',
+          },
+        )
+        const data = await response.json()
+  
+        if (data.status === 'success') {
+          setMembers(data.data.group.members || [])
+        }
+      } catch (error) {
+        console.error('獲取群組成員失敗:', error)
+      } finally {
+        setLoading(false)
       }
-    } catch (error) {
-      console.error('獲取群組成員失敗:', error)
-    } finally {
-      setLoading(false)
     }
-  }
+    fetchGroupMembers()
+  }, [groupData.id])
+
+  
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) return DEFAULT_AVATAR

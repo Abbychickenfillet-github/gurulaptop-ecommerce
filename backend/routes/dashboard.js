@@ -13,10 +13,10 @@ const upload = multer()
 // 取得特定使用者資料
 router.get('/:user_id', authenticate, async function (req, res) {
   try {
-    const { user_id } = req.params
+    const { user_id, email, password } = req.params
     const { rows: users } = await pool.query(
-      'SELECT * FROM users WHERE user_id = $1;',
-      [user_id]
+      'SELECT * FROM users WHERE user_id = $1 AND email = $2 AND password = $3;',
+      [user_id, email, password]
     )
     
     if (users.length === 0) {

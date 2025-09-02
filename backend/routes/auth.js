@@ -192,6 +192,7 @@ router.post('/logout', authenticate, (req, res) => {
 
 export const checkAuth = (req, res, next) => {
   try {
+    // 從前端的cookie取得
     const token = req.cookies.accessToken || req.headers.authorization?.split(' ')[1]
 
     if (!token) {

@@ -1,4 +1,4 @@
-import jsonwebtoken from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import 'dotenv/config.js'
 
 // 獲得加密用字串

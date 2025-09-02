@@ -52,9 +52,13 @@ const Carousel = () => {
   useEffect(() => {
     if (upcomingEvents.length <= 1) return // 只有一張或沒有時不輪播
 
-    const timer = setInterval(nextSlide, 5000) // 每5秒切換一次
+    const timer = setInterval(() => {
+      setActiveIndex((prevIndex) =>
+        prevIndex === upcomingEvents.length - 1 ? 0 : prevIndex + 1,
+      )
+    }, 5000) // 每5秒切換一次
     return () => clearInterval(timer)
-  }, [upcomingEvents.length, nextSlide])
+  }, [upcomingEvents.length])
 
   // 格式化時間顯示
   const formatDateTime = (dateString) => {

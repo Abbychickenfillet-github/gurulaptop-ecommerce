@@ -6,27 +6,28 @@ export default function GroupBanner({ groupData, onOpenDetail, onOpenJoin }) {
   const [timeAgo, setTimeAgo] = useState('')
 
   useEffect(() => {
+    const calculateTimeAgo = () => {
+      const createDate = new Date(groupData.createTime)
+      const now = new Date()
+      const diffMs = now - createDate
+      const diffMins = Math.floor(diffMs / 60000)
+      const diffHours = Math.floor(diffMins / 60)
+      const diffDays = Math.floor(diffHours / 24)
+  
+      if (diffDays > 0) {
+        setTimeAgo(`${diffDays}天前發起揪團`)
+      } else if (diffHours > 0) {
+        setTimeAgo(`${diffHours}小時前發起揪團`)
+      } else if (diffMins > 0) {
+        setTimeAgo(`${diffMins}分鐘前發起揪團`)
+      } else {
+        setTimeAgo('剛剛發起揪團')
+      }
+    }
     calculateTimeAgo()
   }, [groupData])
 
-  const calculateTimeAgo = () => {
-    const createDate = new Date(groupData.createTime)
-    const now = new Date()
-    const diffMs = now - createDate
-    const diffMins = Math.floor(diffMs / 60000)
-    const diffHours = Math.floor(diffMins / 60)
-    const diffDays = Math.floor(diffHours / 24)
-
-    if (diffDays > 0) {
-      setTimeAgo(`${diffDays}天前發起揪團`)
-    } else if (diffHours > 0) {
-      setTimeAgo(`${diffHours}小時前發起揪團`)
-    } else if (diffMins > 0) {
-      setTimeAgo(`${diffMins}分鐘前發起揪團`)
-    } else {
-      setTimeAgo('剛剛發起揪團')
-    }
-  }
+  
 
   // 處理圖片路徑
   const getImageUrl = (imagePath) => {

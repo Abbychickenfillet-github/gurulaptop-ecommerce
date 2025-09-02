@@ -83,8 +83,6 @@ export default function LogIn(props) {
       console.log('用戶已登入，跳轉到 dashboard')
       return
     }
-
-    console.log('Login 頁面載入，handleCheckAuth檢查認證狀態...')
     handleCheckAuth()
   }, [auth?.isAuth, router, handleCheckAuth])
   return (

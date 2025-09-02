@@ -12,68 +12,68 @@ const GroupManagement = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [selectedGroup, setSelectedGroup] = useState(null)
 
-  const fetchUserGroups = async () => {
-    if (!auth?.isAuth) return
-    try {
-      const [memberResponse, creatorResponse] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/user`, {
-          credentials: 'include',
-        }),
-        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/creator`, {
-          credentials: 'include',
-        }),
-      ])
-
-      const [memberData, creatorData] = await Promise.all([
-        memberResponse.json(),
-        creatorResponse.json(),
-      ])
-
-      if (memberData.status === 'success' && creatorData.status === 'success') {
-        const combinedGroups = [
-          ...memberData.data.groups.map((group) => ({
-            ...group,
-            role: 'member',
-          })),
-          ...creatorData.data.groups.map((group) => ({
-            ...group,
-            role: 'creator',
-          })),
-        ]
-
-        const uniqueGroups = combinedGroups.reduce((acc, current) => {
-          const x = acc.find((item) => item.group_id === current.group_id)
-          if (!x) return acc.concat([current])
-          if (current.role === 'creator') {
-            return acc.map((item) =>
-              item.group_id === current.group_id ? current : item,
-            )
-          }
-          return acc
-        }, [])
-
-        setGroups(uniqueGroups)
-      } else {
-        throw new Error(memberData.message || creatorData.message)
-      }
-    } catch (error) {
-      console.error('獲取群組失敗:', error)
-      setError('獲取群組資料失敗')
-      await Swal.fire({
-        icon: 'error',
-        title: '錯誤',
-        text: '獲取群組資料失敗',
-        timer: 1500,
-        showConfirmButton: false,
-      })
-    } finally {
-      setLoading(false)
-    }
-  }
-
   useEffect(() => {
+    const fetchUserGroups = async () => {
+      if (!auth?.isAuth) return
+      try {
+        const [memberResponse, creatorResponse] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/user`, {
+            credentials: 'include',
+          }),
+          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/creator`, {
+            credentials: 'include',
+          }),
+        ])
+
+        const [memberData, creatorData] = await Promise.all([
+          memberResponse.json(),
+          creatorResponse.json(),
+        ])
+
+        if (memberData.status === 'success' && creatorData.status === 'success') {
+          const combinedGroups = [
+            ...memberData.data.groups.map((group) => ({
+              ...group,
+              role: 'member',
+            })),
+            ...creatorData.data.groups.map((group) => ({
+              ...group,
+              role: 'creator',
+            })),
+          ]
+
+          const uniqueGroups = combinedGroups.reduce((acc, current) => {
+            const x = acc.find((item) => item.group_id === current.group_id)
+            if (!x) return acc.concat([current])
+            if (current.role === 'creator') {
+              return acc.map((item) =>
+                item.group_id === current.group_id ? current : item,
+              )
+            }
+            return acc
+          }, [])
+
+          setGroups(uniqueGroups)
+        } else {
+          throw new Error(memberData.message || creatorData.message)
+        }
+      } catch (error) {
+        console.error('獲取群組失敗:', error)
+        setError('獲取群組資料失敗')
+        await Swal.fire({
+          icon: 'error',
+          title: '錯誤',
+          text: '獲取群組資料失敗',
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      } finally {
+        setLoading(false)
+      }
+    }
+
     fetchUserGroups()
-  }, [fetchUserGroups])
+  }, [auth?.isAuth])
 
   const handleDeleteGroup = async (groupId) => {
     const result = await Swal.fire({
@@ -105,7 +105,8 @@ const GroupManagement = () => {
           timer: 1500,
           showConfirmButton: false,
         })
-        fetchUserGroups()
+        // 重新載入群組列表
+        window.location.reload()
       } else {
         throw new Error(data.message)
       }

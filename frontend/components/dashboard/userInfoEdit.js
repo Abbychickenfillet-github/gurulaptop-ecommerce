@@ -8,7 +8,7 @@ import EnhancedSelect from './Enhanced-select'
 import Image from 'next/image'
 //如果Google登入的user_id沒有清空的話這邊就還會有
 export default function UserProfile() {
-  const { auth } = useAuth()
+  const { auth, setAuth } = useAuth()
   const user_id = auth?.userData?.user_id
 
   const [editableUser, setEditableUser] = useState({
@@ -304,22 +304,20 @@ export default function UserProfile() {
         // 確保有 email, email已經改成純顯示了所以之前的editableUser裡面的email應該要刪掉
       }
 
-
-        const response = await axios.put(
-         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
-         // editableUser
-         dataToSubmit,
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
+        // editableUser
+        dataToSubmit,
         {
           withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       )
       if (response.data.status === 'success') {
         Swal.fire('成功', '用戶資料更新成功', 'success')
-        setAuth((prev) => ({ 
-        // This line was removed as per the edit hint
+        setAuth((prev) => ({
           ...prev,
           userData: {
             ...prev.userData,

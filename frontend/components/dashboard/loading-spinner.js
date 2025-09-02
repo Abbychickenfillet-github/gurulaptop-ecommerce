@@ -1,5 +1,4 @@
 // components/dashboard/LoadingSpinner.js
-import React from 'react'
 // import { PacmanLoader } from 'react-spinners'
 
 export const LoadingSpinner = ({ show }) => {

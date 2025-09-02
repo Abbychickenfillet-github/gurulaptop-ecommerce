@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'production') {
     console.log('🚀 使用 Zeabur 生產環境連線')
   } else {
     // 如果沒有 zeabur 連線字串，使用環境變數
-    // 就是develo[ment]
+    // 就是development
     poolConfig = {
       user: process.env.DB_USER,
       host: process.env.DB_HOST,

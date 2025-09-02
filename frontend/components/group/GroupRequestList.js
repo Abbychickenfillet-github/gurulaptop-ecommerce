@@ -10,42 +10,42 @@ const GroupRequestList = ({ groupId }) => {
   const [error, setError] = useState('')
 
   useEffect(() => {
+    const loadRequests = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/requests/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          },
+        )
+
+        if (!response.ok) {
+          throw new Error('載入申請列表失敗')
+        }
+
+        const data = await response.json()
+        setRequests(data.data)
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    const setupWebSocket = () => {
+      // 監聽新的群組申請
+      websocketService.on('groupRequestReceived', (data) => {
+        if (data.groupId === groupId) {
+          setRequests((prev) => [data, ...prev])
+        }
+      })
+    }
+
     loadRequests()
     setupWebSocket()
-  }, [groupId, loadRequests, setupWebSocket])
-
-  const loadRequests = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/requests/${groupId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        },
-      )
-
-      if (!response.ok) {
-        throw new Error('載入申請列表失敗')
-      }
-
-      const data = await response.json()
-      setRequests(data.data)
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const setupWebSocket = () => {
-    // 監聽新的群組申請
-    websocketService.on('groupRequestReceived', (data) => {
-      if (data.groupId === groupId) {
-        setRequests((prev) => [data, ...prev])
-      }
-    })
-  }
+  }, [groupId])
 
   const handleRequest = async (requestId, status) => {
     try {
