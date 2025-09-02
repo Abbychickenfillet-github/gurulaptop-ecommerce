@@ -17,23 +17,23 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
   const [isCompared, setIsCompared] = useState(false) // 比較按鈕的狀態
 
   // 初始化
-  const init = async () => {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData?.user_id}/${product_id}`
-    )
-    const result = await response.json()
-    if (result.status === 'success') {
-      setIsChecked(true)
-    }
-    if (
-      localStorage.getItem('compareProduct')?.split(',')?.[0] == product_id ||
-      localStorage.getItem('compareProduct')?.split(',')?.[1] == product_id
-    ) {
-      setIsCompared(true)
-    }
-  }
-
   useEffect(() => {
+    const init = async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData?.user_id}/${product_id}`
+      )
+      const result = await response.json()
+      if (result.status === 'success') {
+        setIsChecked(true)
+      }
+      if (
+        localStorage.getItem('compareProduct')?.split(',')?.[0] == product_id ||
+        localStorage.getItem('compareProduct')?.split(',')?.[1] == product_id
+      ) {
+        setIsCompared(true)
+      }
+    }
+
     if (userData?.user_id) {
       init()
     }
