@@ -3,7 +3,6 @@ import multer from 'multer'
 import pool from '../configs/pgClient.js'
 import { generateHash, compareHash } from '../db-helpers/password-hash.js'
 import authenticate from '../middlewares/authenticate.js'
-
 const router = express.Router()
 const upload = multer()
 

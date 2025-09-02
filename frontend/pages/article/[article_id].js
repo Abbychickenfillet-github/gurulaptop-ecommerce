@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 // 定義組件 ArticleDetail
-export default function ArticleDetail(props) {
+export default function ArticleDetail() {
   // 使用 Router()
   const router = useRouter()
 
   // 初始化文章狀態
   const [article, setArticle] = useState(null)
-  console.log('13245')
-
   const [loading, setLoading] = useState(true) // 加載狀態
 
-  const getArticle = async (article_id) => {
+  const getArticle = useCallback(async (article_id) => {
     const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/article/article_detail/${article_id}`
 
     try {
@@ -35,7 +33,7 @@ export default function ArticleDetail(props) {
     } finally {
       setLoading(false) // 完成加載
     }
-  }
+  }, [])
 
   useEffect(() => {
     console.log('Router query:', router.query) // 調試信息
@@ -46,7 +44,12 @@ export default function ArticleDetail(props) {
 
       getArticle(router.query.article_id)
     }
-  }, [router.isReady, router.query.article_id])
+  }, [router.isReady, router.query.article_id, getArticle])
+
+  // 如果正在加載，顯示加載狀態
+  if (loading) {
+    return <p>Loading...</p>
+  }
 
   return (
     <>
@@ -110,7 +113,7 @@ export default function ArticleDetail(props) {
           </div>
         </section>
       ) : (
-        <p>Loading...</p> // 加載中的提示
+        <p>No article found</p> // 沒有找到文章的提示
       )}
     </>
   )

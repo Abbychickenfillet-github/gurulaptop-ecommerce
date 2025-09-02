@@ -2,12 +2,13 @@ import express from 'express'
 import pool from '../configs/pgClient.js'
 import multer from 'multer'
 import { v4 as uuidv4 } from 'uuid'
+import authenticate from '../middlewares/authenticate.js'
 
 const router = express.Router()
 const upload = multer()
 
 // 修改新增優惠券路由，使用 userId 參數
-router.post('/add/:user_id', upload.none(), async (req, res, next) => {
+router.post('/add/:user_id', authenticate, upload.none(), async (req, res, next) => {
   const client = await pool.connect()
   const { user_id } = req.params
   const { coupon_id } = req.body
@@ -23,6 +24,14 @@ router.post('/add/:user_id', upload.none(), async (req, res, next) => {
         status: 'error',
         message: '無效的參數',
         data: { user_id, coupon_id },
+      })
+    }
+
+    // 確保用戶只能為自己領取優惠券
+    if (req.user.user_id != user_id) {
+      return res.status(403).json({
+        status: 'error',
+        message: '無權限為其他用戶領取優惠券'
       })
     }
 
@@ -92,7 +101,7 @@ router.post('/add/:user_id', upload.none(), async (req, res, next) => {
 })
 
 // 修改取得使用者優惠券路由
-router.get('/:user_id', async (req, res) => {
+router.get('/:user_id', authenticate, async (req, res) => {
   const { user_id } = req.params
 
   try {
@@ -100,6 +109,14 @@ router.get('/:user_id', async (req, res) => {
       return res.status(400).json({
         status: 'error',
         message: '無效的用戶編號',
+      })
+    }
+
+    // 確保用戶只能查看自己的優惠券
+    if (req.user.user_id != user_id) {
+      return res.status(403).json({
+        status: 'error',
+        message: '無權限查看其他用戶的優惠券'
       })
     }
 

@@ -29,7 +29,13 @@ const GroupManagement = () => {
           memberResponse.json(),
           creatorResponse.json(),
         ])
-
+        // 加上註解說明
+        /**
+         * 合併參加者和創建者的群組
+         * 1. 先將參加者的群組和創建者的群組分開
+         * 2. 將參加者的群組和創建者的群組合併
+         * 3. 去除重複的群組
+         */
         if (memberData.status === 'success' && creatorData.status === 'success') {
           const combinedGroups = [
             ...memberData.data.groups.map((group) => ({

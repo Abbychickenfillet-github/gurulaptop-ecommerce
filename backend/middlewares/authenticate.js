@@ -26,7 +26,7 @@ export default function authenticate(req, res, next) {
 
   // 驗證 JWT token
   console.log('🔐 開始驗證 JWT token...')
-  jsonwebtoken.verify(token, accessTokenSecret, (err, user) => {
+  jwt.verify(token, accessTokenSecret, (err, user) => {
     if (err) {
       console.log('❌ JWT 驗證失敗:', err.message)
       return res.status(401).json({

@@ -179,12 +179,15 @@ export const AuthProvider = ({ children }) => {
       
       // 強制清除瀏覽器中的 accessToken cookie（多種方式確保清除）
       console.log('🧹 清除瀏覽器 cookie...')
+      // 清除所有可能的 cookie 組合
       document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost;'
       document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
       document.cookie = 'accessToken=; max-age=0; path=/; domain=localhost;'
       document.cookie = 'accessToken=; max-age=0; path=/;'
       document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost; secure;'
       document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure;'
+      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost; httpOnly;'
+      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; httpOnly;'
       
       // 向後端發送登出請求
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/logout`, {

@@ -6,7 +6,6 @@ const router = express.Router()
 
 // 獲取使用者報名的活動
 router.get('/user/registered', authenticate, async (req, res) => {
-  console.log("error");
   
   try {
     const { rows: events } = await pool.query(`

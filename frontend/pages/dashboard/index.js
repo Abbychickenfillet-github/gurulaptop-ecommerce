@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Nav, Tab } from 'react-bootstrap'
-import { FaPenFancy } from 'react-icons/fa'
 import { useAuth } from '@/hooks/use-auth'
 import UserProfile from '@/components/dashboard/userInfoEdit'
 import MembershipLevels from '@/components/dashboard/membership-levels'
@@ -12,14 +11,12 @@ import GroupManagement from '@/components/group/GroupManagement'
 import BuylistPage from '@/components/dashboard/buylist-page'
 import Favorites from '@/components/product/favorites'
 import BlogUserOverview from '@/components/blog/bloguseroverview'
-import Link from 'next/link'
 import Head from 'next/head'
-import { LoadingSpinner } from '@/components/dashboard/loading-spinner'
-import LoadingAnimation from '@/components/LoadingAnimation/LoadingAnimation'
+
 // import MarioGame from '@/components/dashboard/MarioGame'
 import Image from 'next/image'
 export default function DashboardIndex() {
-  const { auth, handleCheckAuth } = useAuth()
+  const { auth  } = useAuth()
   const [activeKey, setActiveKey] = useState('home')
   const [couponActiveKey, setCouponActiveKey] = useState('available')
   // 需要加入這個state

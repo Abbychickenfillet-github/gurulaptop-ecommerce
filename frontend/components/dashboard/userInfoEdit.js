@@ -190,7 +190,7 @@ export default function UserProfile() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth?.userData?.user_id}`,
           {
             withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
             headers: {

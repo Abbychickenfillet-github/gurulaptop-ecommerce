@@ -6,6 +6,8 @@ import { useRouter } from 'next/router'
 import { MessageCircle, ShoppingCart, Menu } from 'lucide-react'
 import useFirebase from '@/hooks/use-firebase'
 import Image from 'next/image'
+// import (logout) from 'auth.js'
+// 所以我要把Logout匯進去use-auth 因為這邊是使用useAuth的Logout
 
 export default function Header() {
   const { logoutFirebase } = useFirebase()
@@ -113,7 +115,7 @@ export default function Header() {
     return () => {
       document.body.style.paddingTop = '0px'
     }
-  }, [user_id])
+  }, [isAuth])
 
   useEffect(() => {
     if (userData && userData.user_id) {

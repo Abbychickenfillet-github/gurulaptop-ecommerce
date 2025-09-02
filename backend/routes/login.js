@@ -86,7 +86,7 @@ router.post('/', upload.none(), async (req, res, next) => {
     console.log('🍪 設置 JWT Token 到 Cookie...')
     res.cookie('accessToken', token, {
       httpOnly: true, // 改為 true，與 auth.js 保持一致
-      secure: process.env.NODE_ENV === 'production', // 動態判斷環境
+      secure: false, // 明確設置為 false，與實際環境一致
       sameSite: 'lax', // 改为 lax，避免跨域问题
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2天
       path: '/',
@@ -134,15 +134,51 @@ router.post('/', upload.none(), async (req, res, next) => {
 
 
 router.post('/logout', authenticate, (req, res) => {
-  // 清除cookie，確保參數與設置時一致
+  console.log('🚪 後端收到登出請求')
+  
+  // 強制清除 cookie，使用多種參數組合確保清除
+  // 第一次清除：使用與設置時完全相同的參數
+  res.clearCookie('accessToken', {
+    httpOnly: true,
+    secure: false, // 明確設置為 false，與設置時一致
+    sameSite: 'lax',
+    path: '/',
+    domain: 'localhost'
+  })
+  
+  // 第二次清除：不帶 domain
+  res.clearCookie('accessToken', {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'lax',
+    path: '/'
+  })
+  
+  // 第三次清除：嘗試不同的 secure 值
   res.clearCookie('accessToken', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-    domain: 'localhost' // 添加 domain 參數
+    domain: 'localhost'
   })
-  res.json({ status: 'success', data: null })
+  
+  // 設置過期的 cookie 來覆蓋
+  res.cookie('accessToken', '', {
+    httpOnly: true,
+    secure: false, // 明確設置為 false
+    sameSite: 'lax',
+    path: '/',
+    domain: 'localhost',
+    maxAge: 0,
+    expires: new Date(0)
+  })
+
+  console.log('✅ 後端登出完成')
+  return res.json({
+    status: 'success',
+    message: '登出成功'
+  })
 })
 
 // 註解：使用統一的 authenticate 中間件

@@ -2,7 +2,7 @@ import React from 'react'
 import { Nav, Tab } from 'react-bootstrap'
 import CouponUser from '@/components/coupon/coupon-user-components'
 import UserProfile from '@/components/dashboard/userInfoEdit'
-import Paginationcomponent from '@/components/paginationcomponent/paginationcomponent'
+
 // import 'bootstrap/dist/css/bootstrap.min.css'
 import Link from 'next/link'
 import { FaPenFancy } from 'react-icons/fa'
@@ -10,7 +10,7 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 export default function CouponPage() {
   const router = useRouter()
-  const { id } = router.query
+  // const { id } = router.query
 
   return (
     <div className="container">
@@ -107,31 +107,25 @@ export default function CouponPage() {
                 <div className="container">
                   <CouponUser />
 
-                  {/* 分頁 */}
-                  {/* <div className="pagination-section mt-4">
-                    <Paginationcomponent />
-                  </div> */}
+
                 </div>
               </Tab.Pane>
 
               <Tab.Pane eventKey="blog-record">
                 <div>
                   <h4>文章列表</h4>
-                  {/* 添加文章列表內容 */}
                 </div>
               </Tab.Pane>
 
               <Tab.Pane eventKey="activity-record">
                 <div>
                   <h4>活動列表</h4>
-                  {/* 添加活動列表內容 */}
                 </div>
               </Tab.Pane>
 
               <Tab.Pane eventKey="group-record">
                 <div>
                   <h4>揪團列表</h4>
-                  {/* 添加揪團列表內容 */}
                 </div>
               </Tab.Pane>
             </Tab.Content>
