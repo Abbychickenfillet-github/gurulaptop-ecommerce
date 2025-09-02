@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import BlogDetailMainArea from '@/components/blog/bloghomepage/articlehomepage-mainarea'
+import BlogDetailMainArea from '@/components/blog/blogdetail/blogdetail-mainarea'
 import Link from 'next/link'
 import BlogComment from '@/components/blog/blogdetail/blog-comment'
 import BloghomepageCardgroup from '@/components/blog/bloghomepage/bloghomepage-cardgroup'
@@ -9,6 +9,7 @@ import { faDiamond } from '@fortawesome/free-solid-svg-icons'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import { IoArrowBackCircleOutline } from 'react-icons/io5'
+import Image from 'next/image'
 
 export default function BlogId() {
   const router = useRouter()
@@ -18,7 +19,9 @@ export default function BlogId() {
 
   useEffect(() => {
     if (blog_id) {
-      fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/blog/blog-detail/${blog_id}`) // 這裡替換為你實際的 API 路徑
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-detail/${blog_id}`,
+      ) // 這裡替換為你實際的 API 路徑
         .then((response) => response.json())
         .then((data) => {
           setBlogData(data.data) // 設定資料
@@ -33,7 +36,7 @@ export default function BlogId() {
   }
   // 確認一下圖片路徑
   console.log(`確認一下圖片路徑`)
-  console.log(`process.env.NEXT_PUBLIC_API_BASE_URL${blogData.blog_image}`)
+  console.log(`${process.env.NEXT_PUBLIC_API_BASE_URL}${blogData.blog_image}`)
 
   return (
     <>
@@ -57,7 +60,7 @@ export default function BlogId() {
             <p className="fs-5 fw-bold">Swift 14 AI AMD</p>
           </div>
           <div className="w-100 h-25 overflow-hidden m-auto">
-            <img
+            <Image
               className="object-fit-cover w-100 h-100"
               src="https://images.acer.com/is/image/acer/acer-laptop-swift-14-ai-amd-designed-to-unfold-your-potential:KSP-with-Specs-XL"
               alt
@@ -97,10 +100,14 @@ export default function BlogId() {
           </p>
         </div>
         <div className="d-flex align-items-center justify-content-center">
-          <img
+          <Image
             className="w-50 h-50 ratio mb-5"
-            src={`process.env.NEXT_PUBLIC_API_BASE_URL${blogData.blog_image}`}
-            alt
+            src={
+              blogData.blog_image
+                ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${blogData.blog_image}`
+                : 'https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain'
+            }
+            alt={blogData.blog_title}
           />
         </div>
       </section>

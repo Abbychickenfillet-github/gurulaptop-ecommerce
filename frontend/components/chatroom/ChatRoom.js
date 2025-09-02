@@ -37,7 +37,7 @@ export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
               'Content-Type': 'application/json',
             },
             credentials: 'include',
-          }
+          },
         )
 
         if (!response.ok) {
@@ -74,13 +74,13 @@ export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
             (msg) =>
               msg.id === data.id ||
               (msg.created_at === data.created_at &&
-                msg.sender_id === data.sender_id)
+                msg.sender_id === data.sender_id),
           )
 
           if (messageExists) return prev
 
           const newMessages = [...prev, data].sort(
-            (a, b) => new Date(a.created_at) - new Date(b.created_at)
+            (a, b) => new Date(a.created_at) - new Date(b.created_at),
           )
 
           requestAnimationFrame(scrollToBottom)
@@ -88,7 +88,7 @@ export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
         })
       }
     },
-    [currentRoom, scrollToBottom]
+    [currentRoom, scrollToBottom],
   )
 
   const handleSystemMessage = useCallback(
@@ -130,7 +130,7 @@ export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
             (msg) =>
               msg.id === newMessage.id ||
               (msg.content === newMessage.content &&
-                msg.created_at === newMessage.created_at)
+                msg.created_at === newMessage.created_at),
           )
 
           if (exists) return prev
@@ -140,7 +140,7 @@ export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
         })
       }
     },
-    [currentRoom, scrollToBottom]
+    [currentRoom, scrollToBottom],
   )
 
   const handleRoomJoined = useCallback(
@@ -157,7 +157,7 @@ export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
             }))
 
           const combinedMessages = [...prev, ...newMessages].sort(
-            (a, b) => new Date(a.created_at) - new Date(b.created_at)
+            (a, b) => new Date(a.created_at) - new Date(b.created_at),
           )
 
           requestAnimationFrame(scrollToBottom)
@@ -165,7 +165,7 @@ export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
         })
       }
     },
-    [currentRoom, scrollToBottom]
+    [currentRoom, scrollToBottom],
   )
 
   const handleMemberUpdate = useCallback(
@@ -185,7 +185,7 @@ export default function ChatRoom({ currentUser, currentRoom, onLeaveRoom }) {
         })
       }
     },
-    [currentRoom, scrollToBottom]
+    [currentRoom, scrollToBottom],
   )
 
   useEffect(() => {

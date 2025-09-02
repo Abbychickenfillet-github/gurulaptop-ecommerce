@@ -11,29 +11,24 @@ if (process.env.NODE_ENV === 'production') {
   if (process.env.ZEABUR_CONNECTION_STRING) {
     poolConfig = {
       connectionString: process.env.ZEABUR_CONNECTION_STRING,
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
+     
     }
     console.log('🚀 使用 Zeabur 生產環境連線')
   } else {
     // 如果沒有 zeabur 連線字串，使用環境變數
+    // 就是development
     poolConfig = {
       user: process.env.DB_USER,
       host: process.env.DB_HOST,
       database: process.env.DB_NAME,
       password: process.env.DB_PASSWORD,
       port: process.env.DB_PORT,
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
+     
     }
     console.log('🚀 使用環境變數生產環境連線')
   }
 } else {
-  // 開發環境：使用本地資料庫
+  // 開發環境：使用本地資料庫，禁用 SSL
   poolConfig = {
     user: process.env.DB_USER || 'postgres',
     host: process.env.DB_HOST || 'localhost',
@@ -41,7 +36,7 @@ if (process.env.NODE_ENV === 'production') {
     password: process.env.DB_PASSWORD || 'abc123',
     port: process.env.DB_PORT || 5432,
   }
-  console.log('🛠️ 使用本地開發環境連線')
+  console.log('🛠️ 使用開發環境連線配置')
 }
 
 // 調試：檢查連線配置

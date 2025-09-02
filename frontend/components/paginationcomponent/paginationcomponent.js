@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
-export default function Paginationcomponent(props) {
+export default function Paginationcomponent() {
   return (
     <>
       <nav aria-label="Page navigation">

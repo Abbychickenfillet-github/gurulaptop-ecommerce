@@ -14,6 +14,13 @@ const { exit } = process
 // 導入dotenv 使用 .env 檔案中的設定值 process.env
 import 'dotenv/config.js'
 
+// 全域未捕獲異常處理
+process.on('uncaughtException', function (err) {
+    console.log('❌ 未捕獲的異常:', err);
+    // 在生產環境中，你可能想要記錄到檔案或發送通知
+    // 但不要立即退出，讓伺服器繼續運行
+});
+
 /**
  * Get port from environment and store in Express.
  */

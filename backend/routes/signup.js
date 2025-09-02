@@ -21,7 +21,7 @@ router.post('/', upload.none(), async (req, res) => {
     // 3. 特別檢查 password
     // console.log('password 型別:', typeof password)
     // console.log('password 長度:', password ? password.length : 'undefined')
-
+    console.log(email);
     if (!password) {
       throw new Error('密碼未接收到')
     }
@@ -30,6 +30,7 @@ router.post('/', upload.none(), async (req, res) => {
     // console.log('準備插入的值:', [email, password, phone, birthdate, gender])
     // 檢查是否已經有相同的email
     // console.log('開始資料庫操作')
+
 
     const { rows: existingUsers } = await pool.query(
       'SELECT * FROM users WHERE email = $1',
@@ -59,6 +60,8 @@ router.post('/', upload.none(), async (req, res) => {
         NULL, NULL, NULL, NULL, NULL, NULL
       ) RETURNING user_id
     `
+    // 如果是沒有需要更新的欄位fields
+    // 就算不打上去也不會出錯
 
     const params = [
       email,
@@ -67,7 +70,12 @@ router.post('/', upload.none(), async (req, res) => {
       userBirthdate,
       userGender,
     ]
-
+    // 這邊的插入第一筆資料就會存成rows物件ㄉ格式
+    // const rows = [
+    //   { id: 1, name: '張小華' },
+    //   { id: 2, name: '林小君' },
+    //   { id: 3, name: '陳大明' }
+    // ];
     const { rows } = await pool.query(sql, params)
     console.log('插入結果:', rows[0])
 

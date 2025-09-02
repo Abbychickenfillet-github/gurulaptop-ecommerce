@@ -1,3 +1,10 @@
+// 載入環境變數 - 必須在最前面！
+import { loadEnv } from '#utils/tool.js'
+
+// 根據 NODE_ENV 自動載入對應的環境變數文件
+// 如果 NODE_ENV=production，會載入 .env.production
+// 如果 NODE_ENV=development 或未設置，會載入 .env.development
+loadEnv()
 import * as fs from 'fs'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -6,8 +13,6 @@ import express from 'express'
 // import db from '##/configs/mysql.js'
 import pool from '##/configs/pgClient.js'
 
-// 載入環境變數 - 必須在最前面！
-import 'dotenv/config.js'
 
 // 調試：確認環境變數是否被載入
 console.log('🔍 環境變數載入檢查:')
@@ -28,6 +33,7 @@ import couponRouter from './routes/coupon.js'
 import couponUserRouter from './routes/coupon-user.js'
 import chatRoutes from './routes/chat.js'
 import GroupRequests from './routes/group-request.js'
+import buyListRouter from './routes/buy-list.js'
 // import googleLoginRouter from './routes/google-login.js'
 import forgotPasswordRouter from './routes/forgot-password.js'
 // 使用檔案的session store，存在sessions資料夾
@@ -61,7 +67,13 @@ const app = express()
 // cors設定，參數為必要，注意不要只寫`app.use(cors())`
 app.use(
   cors({
-    origin: ['http://localhost:3000','http://localhost:3001', 'https://localhost:9000'],
+    origin: [
+      'http://localhost:3000', 
+      'http://localhost:3001', 
+      'https://localhost:9000', 
+      'http://localhost:3005',
+      'https://guru-laptop-lavendarbug-vqq.zeabur.app'
+    ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   })
@@ -116,6 +128,8 @@ app.use('/api/forgot-password', forgotPasswordRouter)
 //優惠卷路由
 app.use('/api/coupon', couponRouter)
 app.use('/api/coupon-user', couponUserRouter)
+// 訂單路由
+app.use('/api/buy-list', buyListRouter)
 // 看看資料庫連線是如何被呼叫的：
 async function testConnection() {
   try {
@@ -163,7 +177,8 @@ for (const filename of filenames) {
       filename === 'coupon-user.js' || 
       filename === 'chat.js' || 
       filename === 'group-request.js' ||
-      filename === 'line-login.js') {  // 排除 line-login.js
+      filename === 'line-login.js' ||
+      filename === 'buy-list.js') {  // 排除 buy-list.js，我們會手動註冊
     continue
   }
   const item = await import(pathToFileURL(path.join(routePath, filename)))

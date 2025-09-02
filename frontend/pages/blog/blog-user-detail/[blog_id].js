@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/use-auth'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
 import Head from 'next/head'
-
+import Image from 'next/image'
 export default function BlogUserDetail() {
   const router = useRouter()
   const { blog_id } = router.query
@@ -29,7 +29,9 @@ export default function BlogUserDetail() {
     }
 
     setIsLoading(true)
-    fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/blog/blog-user-detail/${blog_id}`)
+    fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-user-detail/${blog_id}`,
+    )
       .then((response) => response.json())
       .then((data) => {
         const blogUserId = String(data.data.user_id)
@@ -99,9 +101,13 @@ export default function BlogUserDetail() {
             </p>
           </div>
           <div className="d-flex align-items-center justify-content-center mb-5">
-            <img
+            <Image
               className="w-50 h-50 ratio"
-              src={`process.env.NEXT_PUBLIC_API_BASE_URL${blogData.blog_image}`}
+              src={
+                blogData.blog_image
+                  ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${blogData.blog_image}`
+                  : 'https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain'
+              }
               alt={blogData.blog_title}
             />
           </div>

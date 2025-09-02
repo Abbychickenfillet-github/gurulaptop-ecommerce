@@ -13,7 +13,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai' // 記得�
 import { useLoader } from '@/hooks/use-loader'
 import Head from 'next/head'
 import GlitchText from '@/components/dashboard/glitch-text/glitch-text'
-import GlowingText from '@/components/dashboard/glowing-text/glowing-text';
+import GlowingText from '@/components/dashboard/glowing-text/glowing-text'
 
 export default function LogIn(props) {
   const [showpassword, setShowpassword] = useState(false)
@@ -31,24 +31,31 @@ export default function LogIn(props) {
     showLoader() // 開始載入時顯示
 
     try {
-      const response = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/login`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: formData.get('email'),
+            password: formData.get('password'),
+          }),
         },
-        body: JSON.stringify({
-          email: formData.get('email'),
-          password: formData.get('password'),
-        }),
-      })
+      )
       const result = await response.json()
-
+      console.log('後端回傳回應', result)
       if (result.status === 'success') {
         console.log('登入前端接上後端成功')
-        // await login(formData.get('email'), formData.get('password'))
+        // 調用 useAuth 的 login 函數來更新認證狀態
+        await login(formData.get('email'), formData.get('password'))
         console.log('登入成功，auth 狀態:', auth) // 加入 debug
-        router.push('/dashboard')
+        // 等待認證狀態更新後再跳轉
+        setTimeout(() => {
+          router.push('/dashboard')
+        }, 300)
       } else {
         setErrors({
           message: result.message,
@@ -76,10 +83,8 @@ export default function LogIn(props) {
       console.log('用戶已登入，跳轉到 dashboard')
       return
     }
-
-    console.log('Login 頁面載入，handleCheckAuth檢查認證狀態...')
     handleCheckAuth()
-  }, [auth?.isAuth, router])
+  }, [auth?.isAuth, router, handleCheckAuth])
   return (
     <>
       <Head>
@@ -90,27 +95,39 @@ export default function LogIn(props) {
         <Image
           src="/bgi/signup_bgi.png"
           alt="background"
-          layout="fill"
-          // objectFit="cover"
+          fill
+          style={{ objectFit: 'cover' }}
           quality={100}
         />
         <div className="container">
           <div
             className={`row ${styles['content-row']} d-flex justify-content-center align-items-center `}
           >
-            <div className={`${styles.left} col d-flex flex-column justify-content-start col-sm-12 col-md-11 col-lg-6  `}>
+            <div
+              className={`${styles.left} col d-flex flex-column justify-content-start col-sm-12 col-md-11 col-lg-6  `}
+            >
               {/* <h4 className={`text-white text-md-start`}>
                 {renderJumpingText('Welcome to', 'welcome-text')}
                 {renderJumpingText('Log in', 'welcome-text')}
               </h4> */}
-      
+
               {/* <h3 className={`text-white ${styles['guru-laptop']} text-start! text-md-start`}> */}
-                {/* {renderJumpingText('to LaptopGuru', 'company-name')} */}
+              {/* {renderJumpingText('to LaptopGuru', 'company-name')} */}
               {/* </h3> */}
               {/* <GlitchText>Log in</GlitchText> */}
-              <i><GlowingText text="Log in to"className={`text-white text-md-start text-lg-start`} /></i>
-              <i><GlowingText text="GuruLaptop" className={`text-white text-center text-lg-start text-md-start ${styles.glowingText}`}/></i>
-              </div>
+              <i>
+                <GlowingText
+                  text="Log in to"
+                  className={`text-white text-md-start text-lg-start`}
+                />
+              </i>
+              <i>
+                <GlowingText
+                  text="GuruLaptop"
+                  className={`text-white text-center text-lg-start text-md-start ${styles.glowingText}`}
+                />
+              </i>
+            </div>
             <div className={`${styles.right} col-sm-12 col-md-11 col-lg-5 `}>
               <div className={`${styles.tabs} d-flex justify-content-between`}>
                 <Link
@@ -179,7 +196,7 @@ export default function LogIn(props) {
                         className="btn btn-primary position-absolute end-0 top-50  border-0 ${styles[eye-icon]}"
                         onClick={() => setShowpassword(!showpassword)}
                         style={{
-                          background: 'none', 
+                          background: 'none',
                           // 使用 !important 強制覆蓋
                           transform: 'translateY(calc(50% - 20px))',
                           right: '10px',
@@ -224,7 +241,10 @@ export default function LogIn(props) {
 
                     <div className="center-of-bottom-group d-flex flex-wrap justify-content-around">
                       <div className="row">
-                        <Link className={`text-white text-decoration-none ${styles.hover}`} href="./forget-password">
+                        <Link
+                          className={`text-white text-decoration-none ${styles.hover}`}
+                          href="./forget-password"
+                        >
                           忘記密碼
                         </Link>
                       </div>

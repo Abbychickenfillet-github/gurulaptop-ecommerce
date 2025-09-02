@@ -30,15 +30,19 @@ if (process.env.NODE_ENV === 'production') {
   };
   console.log('🚀 使用生產環境配置')
 } else {
-  // 开发环境：使用本地数据库
+  // 开发环境：使用本地数据库，禁用 SSL
   connectionConfig = {
     host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 5432,
     database: process.env.DB_NAME || 'project_db',
     username: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD || 'your_password',
+    password: process.env.DB_PASSWORD || 'abc123',
     dialect: 'postgres',
-    protocol: 'postgres'
+    protocol: 'postgres',
+    dialectOptions: {
+      // ssl: false  
+      // 本地開發環境禁用 SSL
+    }
   };
   console.log('🛠️ 使用開發環境配置')
 }

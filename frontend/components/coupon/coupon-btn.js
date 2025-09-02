@@ -18,11 +18,8 @@ export default function CouponBtn({ price, setCouponValue }) {
   console.log('當前auth狀態:', auth)
   console.log('用戶ID:', userId)
 
-  const {
-    setAppliedCoupon,
-    calculateFinalPrice,
-    calculateDiscountAmount,
-  } = useDiscount(price)
+  const { setAppliedCoupon, calculateFinalPrice, calculateDiscountAmount } =
+    useDiscount(price)
 
   const [couponDataList, setCouponDataList] = useState([])
   const [loading, setLoading] = useState(true)
@@ -39,7 +36,9 @@ export default function CouponBtn({ price, setCouponValue }) {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`)
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
+      )
 
       // if (!res.ok) {
       //   throw new Error('請求失敗')
@@ -73,8 +72,6 @@ export default function CouponBtn({ price, setCouponValue }) {
       setLoading(false)
     }
   }
-
- 
 
   // 處理優惠券選擇
   const handleCouponSelect = async (coupon) => {
@@ -239,19 +236,26 @@ export default function CouponBtn({ price, setCouponValue }) {
                     </div>
                   ) : (
                     filteredCoupons.map((coupon) => (
-                      <div
-                        className="col-12 col-md-8 coupon-item"
+                      <button
+                        className="col-12 col-md-8 coupon-item border-0 bg-transparent"
                         key={coupon.id}
                         onClick={() =>
                           usedCouponId !== coupon.coupon_id &&
                           handleCouponSelect(coupon)
                         }
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            usedCouponId !== coupon.coupon_id &&
+                              handleCouponSelect(coupon)
+                          }
+                        }}
                         style={{
                           cursor:
                             usedCouponId === coupon.coupon_id
                               ? 'default'
                               : 'pointer',
                         }}
+                        disabled={usedCouponId === coupon.coupon_id}
                       >
                         <div className="d-flex justify-content-center">
                           {usedCouponId === coupon.coupon_id ? (
@@ -277,7 +281,7 @@ export default function CouponBtn({ price, setCouponValue }) {
                             />
                           )}
                         </div>
-                      </div>
+                      </button>
                     ))
                   )}
                 </div>

@@ -86,5 +86,25 @@ export const toKebabCase = (str) => {
 
 // 載入.env檔用
 export const loadEnv = (fileExt = '') => {
-  dotenv.config({ path: `${fileExt ? '.env' : '.env' + fileExt}` })
+  // 如果沒有指定 fileExt，根據 NODE_ENV 自動選擇
+  if (!fileExt) {
+    const env = process.env.NODE_ENV || 'development'
+    fileExt = env === 'production' ? '.production' : '.development'
+  }
+  
+  // 構建完整路徑
+  const envPath = `.env${fileExt}`
+  console.log(`🔧 載入環境變數文件: ${envPath}`)
+  
+  // 載入環境變數
+  const result = dotenv.config({ path: envPath })
+  
+  if (result.error) {
+    console.warn(`⚠️ 無法載入環境變數文件 ${envPath}:`, result.error.message)
+    // 嘗試載入默認的 .env 文件
+    console.log('🔄 嘗試載入默認 .env 文件...')
+    dotenv.config()
+  } else {
+    console.log(`✅ 成功載入環境變數文件: ${envPath}`)
+  }
 }

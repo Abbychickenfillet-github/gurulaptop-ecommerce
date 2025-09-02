@@ -69,7 +69,7 @@ const GroupJoin = ({ onClose, groupData }) => {
             gameId: formData.gameId,
             description: formData.description,
           }),
-        }
+        },
       )
 
       const data = await response.json()

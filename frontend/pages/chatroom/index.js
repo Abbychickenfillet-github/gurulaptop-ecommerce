@@ -8,7 +8,6 @@ import EventButton from '@/components/event/EventButton'
 import websocketService from '@/services/websocketService'
 import styles from '@/styles/Chat.module.css'
 import { Send, Menu } from 'lucide-react'
-import Swal from 'sweetalert2'
 import Head from 'next/head'
 
 export default function Chat() {
@@ -28,9 +27,12 @@ export default function Chat() {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/auth/check', {
-        credentials: 'include',
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/check`,
+        {
+          credentials: 'include',
+        },
+      )
 
       if (!response.ok) {
         router.push('/login')
@@ -55,10 +57,10 @@ export default function Chat() {
   const fetchInitialData = async (userId) => {
     try {
       const [groupsResponse, usersResponse] = await Promise.all([
-        fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/user/groups', {
+        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/user/groups`, {
           credentials: 'include',
         }),
-        fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/users', {
+        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/users`, {
           credentials: 'include',
         }),
       ])

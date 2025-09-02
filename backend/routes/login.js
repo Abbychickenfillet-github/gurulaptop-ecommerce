@@ -1,31 +1,46 @@
 import express from 'express'
-// 引入 Express.js 框架，用於建立伺服器和路由
 import authenticate from '#middlewares/authenticate.js'
-// 引入自定義的認證中間件
-// import db from '##/configs/mysql.js'
 import pool from '##/configs/pgClient.js'
-
 import multer from 'multer'
-// 引入 Multer 中間件，用於處理 multipart/form-data 格式的請求 (例如表單)
 import jsonwebtoken from 'jsonwebtoken'
-// 引入 jsonwebtoken，用於生成和驗證 JWT
 import { compareHash } from '#db-helpers/password-hash.js'
-// 引入密碼比對函式
+import {passwordMatch} from './auth.js'
+// ========================================
+// 🔐 統一的認證邏輯 - login.js
+// ========================================
+// 這個文件負責所有的認證相關邏輯：
+// - 登入 (POST /)
+// - 登出 (POST /logout)
+// - JWT token 生成和驗證
+// 
+// 其他文件中的重複邏輯已被註解掉：
+// - auth.js 中的登入/登出邏輯
+// - authenticate.js 中的重複驗證邏輯
+// ========================================
+
 const upload = multer()
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 const router = express.Router()
 console.log(`process.env.NEXT_PUBLIC_API_BASE_URL`, process.env.NEXT_PUBLIC_API_BASE_URL)
+
+
 /* GET home page. */
 router.post('/', upload.none(), async (req, res, next) => {
+  console.log('🔐 登入請求開始')
+  console.log('📧 接收到的 email:', email)
+  console.log('🔑 接收到的 password:', password ? '[已隱藏]' : '未提供')
+  
   try {
     const { email, password } = req.body
 
     // 從資料庫查詢使用者，並確保帳號是有效的
+    console.log('🔍 查詢資料庫中的使用者...')
     const { rows: users } = await pool.query(
       'SELECT * FROM users WHERE email = $1 AND valid = TRUE',
       [email]
     )
     const user = users[0]
+    console.log('👤 資料庫查詢結果:', user ? `找到使用者 ID: ${user.user_id}` : '未找到使用者')
 
     // 檢查是否有找到使用者。如果找不到，表示帳號不存在或已被停用。
     if (!user) {
@@ -35,11 +50,14 @@ router.post('/', upload.none(), async (req, res, next) => {
       })
     }
 
-    // 密碼比對，使用 compareHash 函數
-    const passwordMatch = await compareHash(password, user.password)
-    
+
     // 如果密碼不匹配，返回錯誤訊息
-    if (!passwordMatch) {
+    console.log('🔐 驗證密碼...')
+    const isPasswordValid = passwordMatch(password, user.password)
+    console.log('🔐 密碼驗證結果:', isPasswordValid ? '正確' : '錯誤')
+    
+    if (!isPasswordValid) {
+      console.log('❌ 密碼驗證失敗')
       return res.json({
         status: 'error',
         message: '帳號或密碼錯誤',
@@ -47,6 +65,7 @@ router.post('/', upload.none(), async (req, res, next) => {
     }
 
     // 如果帳號密碼都正確，生成 JWT Token
+    console.log('🎫 生成 JWT Token...')
     const token = jsonwebtoken.sign(
       {
         user_id: user.user_id,
@@ -61,8 +80,10 @@ router.post('/', upload.none(), async (req, res, next) => {
       accessTokenSecret,
       { expiresIn: '2d' }
     )
+    console.log('🎫 JWT Token 生成成功，使用者 ID:', user.user_id)
 
     // 设置 JWT token 到 cookie
+    console.log('🍪 設置 JWT Token 到 Cookie...')
     res.cookie('accessToken', token, {
       httpOnly: false, // 改为 false，让前端可以读取
       secure: false, // 开发环境设为 false
@@ -70,8 +91,10 @@ router.post('/', upload.none(), async (req, res, next) => {
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2天
       path: '/'
     })
+    console.log('🍪 Cookie 設置完成')
 
     // 登入成功，這裡是負責看JWT有沒有問題。如果有問題可能是這裡。返回 JWT Token 和用户数据
+    console.log('✅ 登入成功，準備返回用戶資料')
     return res.json({
       status: 'success',
       token,
@@ -116,54 +139,45 @@ router.post('/logout', authenticate, (req, res) => {
   res.json({ status: 'success', data: null })
 })
 
-router.post('/status', checkToken, (req, res) => {
-  const user = req.decoded
-  // console.log('user', user)
-  if (user) {
-    const token = jsonwebtoken.sign(
-      {
-        account: user.account,
-        name: user.name,
-        mail: user.mail,
-        head: user.head,
-      },
-      accessTokenSecret,
-      { expiresIn: '30m' }
-    )
-    res.json({
-      status: 'token ok',
-      token,
-    })
-  } else {
-    res.status(401).json({
-      status: 'error',
-      message: '請登入',
-    })
-  }
-})
+// 註解：使用統一的 authenticate 中間件
+// router.post('/status', authenticate, (req, res) => {
+//   const user = req.user
+//   if (user) {
+//     res.json({
+//       status: 'token ok',
+//       user,
+//     })
+//   } else {
+//     res.status(401).json({
+//       status: 'error',
+//       message: '請登入',
+//     })
+//   }
+// })
 
 export default router
 
-function checkToken(req, res, next) {
-  const token = req.get('Authorization')
+// 註解：重複的 checkToken 函數已移除，統一使用 authenticate 中間件
+// function checkToken(req, res, next) {
+//   const token = req.get('Authorization')
 
-  if (token) {
-    jsonwebtoken.verify(token, accessTokenSecret, (err, decoded) => {
-      if (err) {
-        return res
-          .status(401)
-          .json({ status: 'error', message: '登入驗證失效，請重新登入。' })
-      } else {
-        req.decoded = decoded
-        next()
-      }
-    })
-  } else {
-    return res
-      .status(401)
-      .json({ status: 'error', message: '無登入驗證資料，請重新登入。' })
-  }
-}
+//   if (token) {
+//     jsonwebtoken.verify(token, accessTokenSecret, (err, decoded) => {
+//       if (err) {
+//         return res
+//           .status(401)
+//           .json({ status: 'error', message: '登入驗證失效，請重新登入。' })
+//       } else {
+//         req.decoded = decoded
+//         next()
+//       }
+//     })
+//   } else {
+//     return res
+//       .status(401)
+//       .json({ status: 'error', message: '無登入驗證資料，請重新登入。' })
+//   }
+// }
 
 // 用 POST 來處理 logout 行為是因為 RESTful API 的設計原則建議將「變更狀態」或「造成副作用」的操作用 POST、PUT、DELETE 等方法，而 GET 是用來取得資源、不應該改變伺服器的狀態。
 

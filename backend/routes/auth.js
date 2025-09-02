@@ -1,14 +1,20 @@
 import express from 'express'
 import multer from 'multer'
 import pool from '##/configs/pgClient.js'
-import jsonwebtoken from 'jsonwebtoken'
+import jwt from 'jsonwebtoken' 
+// // 註解：JWT 邏輯已移至 login.js
 import authenticate from '../middlewares/authenticate.js'
 import 'dotenv/config.js'
 import { compareHash, generateHash } from '../db-helpers/password-hash.js'
 
 const router = express.Router()
 const upload = multer()
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET 
+// // 註解：JWT 邏輯已移至 login.js
+
+export const passwordMatch = (password, userPassword) => {
+  return compareHash(password, userPassword)
+}
 
 // 檢查登入狀態
 router.get('/check', authenticate, async (req, res) => {
@@ -108,7 +114,6 @@ router.post('/', upload.none(), async (req, res) => {
   }
 })
 
-// 登入
 router.post('/login', upload.none(), async (req, res) => {
   const { email, password } = req.body
 
@@ -132,9 +137,9 @@ router.post('/login', upload.none(), async (req, res) => {
       })
     }
 
-    const passwordMatch = await compareHash(password, user.password)
+ 
 
-    if (!passwordMatch) {
+    if (!passwordMatch(password, user.password)) {
       return res.status(401).json({
         status: 'error',
         message: '帳號或密碼錯誤'
@@ -147,7 +152,7 @@ router.post('/login', upload.none(), async (req, res) => {
       city: user.city
     }
 
-    const accessToken = jsonwebtoken.sign(tokenData, accessTokenSecret, {
+    const accessToken = jwt.sign(tokenData, accessTokenSecret, {
       expiresIn: '3d'
     })
 
@@ -172,7 +177,6 @@ router.post('/login', upload.none(), async (req, res) => {
   }
 })
 
-// 登出
 router.post('/logout', authenticate, (req, res) => {
   res.clearCookie('accessToken', {
     httpOnly: true,
@@ -186,9 +190,9 @@ router.post('/logout', authenticate, (req, res) => {
   })
 })
 
-// 身份驗證中間件
 export const checkAuth = (req, res, next) => {
   try {
+    // 從前端的cookie取得
     const token = req.cookies.accessToken || req.headers.authorization?.split(' ')[1]
 
     if (!token) {
@@ -198,7 +202,7 @@ export const checkAuth = (req, res, next) => {
       })
     }
 
-    const decoded = jsonwebtoken.verify(token, accessTokenSecret)
+    const decoded = jwt.verify(token, accessTokenSecret)
     req.user = decoded
     next()
   } catch (error) {

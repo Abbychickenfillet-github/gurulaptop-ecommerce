@@ -24,9 +24,9 @@ export default function Coupon({
 
   return (
     <div className="coupon-wrapper">
-      <Image 
-        className="coupon-bg" 
-        src="/coupon_2.svg" 
+      <Image
+        className="coupon-bg"
+        src="/coupon_2.svg"
         alt="coupon background"
         width={300}
         height={150}

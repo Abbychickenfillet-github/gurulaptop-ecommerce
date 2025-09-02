@@ -1,3 +1,4 @@
+import Image from 'next/image'
 export default function Sidebar() {
   return (
     <>
@@ -100,7 +101,7 @@ export default function Sidebar() {
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <img
+              <Image
                 src="https://github.com/mdo.png"
                 alt=""
                 width="32"

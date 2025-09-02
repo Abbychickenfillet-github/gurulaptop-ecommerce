@@ -8,7 +8,7 @@ import MyFooter from '@/components/layout/default-layout/my-footer'
 import NextBreadCrumb from '@/components/common/next-breadcrumb'
 import Head from 'next/head'
 import { Search } from 'lucide-react'
-
+import Image from 'next/image'
 export default function BlogSearchPage() {
   const [blogs, setBlogs] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -42,7 +42,7 @@ export default function BlogSearchPage() {
         })
 
         const res = await fetch(
-          `process.env.NEXT_PUBLIC_API_BASE_URL/api/blog/search?${queryParams}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/search?${queryParams}`,
         )
         const data = await res.json()
 
@@ -184,7 +184,7 @@ export default function BlogSearchPage() {
                       &nbsp;&nbsp;{brand}
                     </label>
                   </div>
-                )
+                ),
               )}
             </div>
           </form>
@@ -223,11 +223,11 @@ export default function BlogSearchPage() {
                 <div className="col-md-12 col-lg-6 mb-5" key={blog.blog_id}>
                   <Link href={`/blog/blog-detail/${blog.blog_id}`} passHref>
                     <div className="card d-flex flex-row BlogCard shadow w-100">
-                      <img
+                      <Image
                         src={
                           blog.blog_image
-                            ? `process.env.NEXT_PUBLIC_API_BASE_URL${blog.blog_image}`
-                            : 'process.env.NEXT_PUBLIC_API_BASE_URL/blog-images/nolaptopupload.jpeg'
+                            ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${blog.blog_image}`
+                            : `${process.env.NEXT_PUBLIC_API_BASE_URL}/blog-images/nolaptopupload.jpeg`
                         }
                         className="card-img-top w-50 h-100 BlogCardImg"
                         alt={blog.blog_title}
@@ -250,7 +250,7 @@ export default function BlogSearchPage() {
                             <p>{blog.blog_type}</p>
                             <p>
                               {new Date(
-                                blog.blog_created_date
+                                blog.blog_created_date,
                               ).toLocaleDateString()}
                             </p>
                           </div>

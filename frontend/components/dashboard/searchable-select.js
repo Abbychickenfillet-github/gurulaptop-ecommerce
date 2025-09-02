@@ -26,16 +26,17 @@ const SearchableSelect = ({
   const filterOptions = (options) => {
     if (!searchTerm) return options
     return options.filter((option) =>
-      option.label.toLowerCase().includes(searchTerm.toLowerCase())
+      option.label.toLowerCase().includes(searchTerm.toLowerCase()),
     )
   }
 
   const renderOptions = () => {
     if (groupedOptions) {
       return Object.entries(groupedOptions).map(([group, items]) => {
-        const filteredItems = items.filter((item) =>
-          item.CityName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.CityEngName.toLowerCase().includes(searchTerm.toLowerCase())
+        const filteredItems = items.filter(
+          (item) =>
+            item.CityName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.CityEngName.toLowerCase().includes(searchTerm.toLowerCase()),
         )
 
         if (filteredItems.length === 0) return null

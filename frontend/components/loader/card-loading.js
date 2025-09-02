@@ -38,7 +38,7 @@ export default function CardLoading({ loading = true }) {
             ) : (
               <p className="card-text">
                 Some quick example text to build on the card title and make up
-                the bulk of the card's content.
+                the bulk of the card&apos;s content.
               </p>
             )}
 
@@ -48,7 +48,7 @@ export default function CardLoading({ loading = true }) {
                 className="btn btn-primary disabled placeholder col-6"
                 aria-disabled="true"
               >
-                {' '}
+                &nbsp;
               </a>
             ) : (
               <a href="#" className="btn btn-primary">

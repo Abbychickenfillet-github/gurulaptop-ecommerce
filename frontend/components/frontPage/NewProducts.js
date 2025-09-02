@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/navigation'
-
+import Image from 'next/image'
 const NewProducts = () => {
   const products = [
     {
@@ -11,14 +11,13 @@ const NewProducts = () => {
       title: 'ASUS ExpertBook B9 OLED',
       description:
         '極輕．疾快\n採用頂級鎂鋰合金，突破輕量極限，實現極致的可攜性和耐用性',
-      link: 'http://localhost:3000/product/71',
+      link: '/product/71',
     },
     {
       id: 2,
       image: '/images/index/banner_03.jpg',
       title: 'GIGABYTE AORUS 5',
-      description:
-        '強大效能使遊戲操作不再受限，將全面解放玩家鬼神技術',
+      description: '強大效能使遊戲操作不再受限，將全面解放玩家鬼神技術',
       link: 'http://localhost:3000/product/230',
     },
     {
@@ -27,7 +26,7 @@ const NewProducts = () => {
       title: 'Razer Blade 18',
       description:
         '世上第一款搭載 18 吋 4K 200 Hz 顯示器1 與 Thunderbolt™ 52 的筆記型電腦',
-      link: 'http://localhost:3000/product/247',
+      link: '/product/247',
     },
     {
       id: 4,
@@ -95,11 +94,12 @@ const NewProducts = () => {
                     {product.description}
                   </p>
                 </div>
-                <div
-                  className="slide-background"
-                  style={{
-                    backgroundImage: `url(${product.image})`,
-                  }}
+                <Image
+                  src={product.image}
+                  alt={product.title}
+                  width={300} // 請根據你的設計調整寬度
+                  height={200} // 請根據你的設計調整高度
+                  className="slide-background" // 可以保留原本的 CSS 樣式
                 />
               </a>
             </SwiperSlide>

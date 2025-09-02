@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styles from './GroupRequestList.module.css'
 import { useGroupAuth } from '@/context/GroupAuthContext'
 import websocketService from '../../services/websocketService'
-
+import Image from 'next/image'
 const GroupRequestList = ({ groupId }) => {
   const { user } = useGroupAuth()
   const [requests, setRequests] = useState([])
@@ -10,42 +10,42 @@ const GroupRequestList = ({ groupId }) => {
   const [error, setError] = useState('')
 
   useEffect(() => {
+    const loadRequests = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/requests/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          },
+        )
+
+        if (!response.ok) {
+          throw new Error('載入申請列表失敗')
+        }
+
+        const data = await response.json()
+        setRequests(data.data)
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    const setupWebSocket = () => {
+      // 監聽新的群組申請
+      websocketService.on('groupRequestReceived', (data) => {
+        if (data.groupId === groupId) {
+          setRequests((prev) => [data, ...prev])
+        }
+      })
+    }
+
     loadRequests()
     setupWebSocket()
-  }, [groupId, loadRequests, setupWebSocket])
-
-  const loadRequests = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/requests/${groupId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      )
-
-      if (!response.ok) {
-        throw new Error('載入申請列表失敗')
-      }
-
-      const data = await response.json()
-      setRequests(data.data)
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const setupWebSocket = () => {
-    // 監聽新的群組申請
-    websocketService.on('groupRequestReceived', (data) => {
-      if (data.groupId === groupId) {
-        setRequests((prev) => [data, ...prev])
-      }
-    })
-  }
+  }, [groupId])
 
   const handleRequest = async (requestId, status) => {
     try {
@@ -58,7 +58,7 @@ const GroupRequestList = ({ groupId }) => {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
           body: JSON.stringify({ status }),
-        }
+        },
       )
 
       if (!response.ok) {
@@ -75,7 +75,7 @@ const GroupRequestList = ({ groupId }) => {
 
       // 更新本地狀態
       setRequests((prev) =>
-        prev.map((req) => (req.id === requestId ? { ...req, status } : req))
+        prev.map((req) => (req.id === requestId ? { ...req, status } : req)),
       )
     } catch (err) {
       console.error('Error:', err)
@@ -95,10 +95,12 @@ const GroupRequestList = ({ groupId }) => {
         requests.map((request) => (
           <div key={request.id} className={styles.requestItem}>
             <div className={styles.userInfo}>
-              <img
+              <Image
                 src={request.sender_image || '/default-avatar.png'}
                 alt={request.sender_name}
                 className={styles.avatar}
+                width={50}
+                height={50}
               />
               <div className={styles.details}>
                 <h4>{request.sender_name}</h4>

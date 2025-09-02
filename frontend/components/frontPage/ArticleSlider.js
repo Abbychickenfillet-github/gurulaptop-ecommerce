@@ -109,8 +109,8 @@ const ArticleSection = () => {
                   {article.imageLeft ? (
                     <>
                       <div className="home-article-img">
-                        <Image 
-                          src={article.image} 
+                        <Image
+                          src={article.image}
                           alt={`Article ${index + 1}`}
                           width={400}
                           height={300}
@@ -132,8 +132,8 @@ const ArticleSection = () => {
                         <p className="home-article-text">{article.text}</p>
                       </div>
                       <div className="home-article-img">
-                        <Image 
-                          src={article.image} 
+                        <Image
+                          src={article.image}
                           alt={`Article ${index + 1}`}
                           width={400}
                           height={300}
@@ -147,8 +147,8 @@ const ArticleSection = () => {
           ))}
         </div>
         <button className="home-article-btn" onClick={handleNext}>
-          <Image 
-            src="/images/index/arrow.svg" 
+          <Image
+            src="/images/index/arrow.svg"
             alt="Next"
             width={24}
             height={24}

@@ -17,8 +17,6 @@ const BackToTop2 = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-
-
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,

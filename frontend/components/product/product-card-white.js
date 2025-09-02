@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import styles from '@/styles/product-card-white.module.scss'
+import styles from '@/styles/product-card.module.scss'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
+import { useRouter } from 'next/router'
 
 export default function ProductCardWhite({ onSendMessage, product_id }) {
   // 產品卡片的 key 值，用於比較功能的 checkbox
@@ -12,29 +13,27 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
   const { auth } = useAuth() // 獲取 auth 對象
   const { isAuth } = auth // 獲取 isAuth
   const { userData } = auth // 獲取 userdata
+  const router = useRouter()
 
   const [isChecked, setIsChecked] = useState(false) // 用來控制 checkbox 狀態
-  const [isCompared, setIsCompared] = useState(false) // 比較按鈕的狀態
 
-  // 初始化
   useEffect(() => {
-    const init = async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData?.user_id}/${product_id}`
-      )
-      const result = await response.json()
-      if (result.status === 'success') {
-        setIsChecked(true)
-      }
-      if (
-        localStorage.getItem('compareProduct')?.split(',')?.[0] == product_id ||
-        localStorage.getItem('compareProduct')?.split(',')?.[1] == product_id
-      ) {
-        setIsCompared(true)
-      }
-    }
-
     if (userData?.user_id) {
+      const init = async () => {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData?.user_id}/${product_id}`,
+        )
+        const result = await response.json()
+        if (result.status === 'success') {
+          setIsChecked(true)
+        }
+        if (
+          localStorage.getItem('compareProduct')?.split(',')?.[0] == product_id ||
+          localStorage.getItem('compareProduct')?.split(',')?.[1] == product_id
+        ) {
+          setIsCompared(true)
+        }
+      }
       init()
     }
   }, [userData?.user_id, product_id])
@@ -44,7 +43,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
       if (product_id) {
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/card/${product_id}`
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/card/${product_id}`,
           )
           const result = await response.json()
           setData(result?.data?.product)
@@ -57,6 +56,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
   }, [product_id]) // 加入依賴陣列，確保在 product_id 改變時重新執行
 
   //比較按鈕的狀態
+  const [isCompared, setIsCompared] = useState(false)
   const toggleCompare = () => {
     const productID = String(product_id) // 確保 product_id 是字串格式
 
@@ -100,7 +100,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
               headers: {
                 'Content-Type': 'application/json',
               },
-            }
+            },
           )
 
           if (response.ok) {
@@ -123,7 +123,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
               headers: {
                 'Content-Type': 'application/json',
               },
-            }
+            },
           )
 
           if (response.ok) {
@@ -138,7 +138,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
         }
       }
     } else {
-      window.location.href = '/member/login'
+      router.push('/member/login')
     }
   }
 
@@ -147,17 +147,20 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
     if (isAuth) {
       // 加入購物車資料庫
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`, {
-          method: 'PUT',
-          body: JSON.stringify({
-            user_id: userData.user_id,
-            product_id: product_id,
-            quantity: 1,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`,
+          {
+            method: 'PUT',
+            body: JSON.stringify({
+              user_id: userData.user_id,
+              product_id: product_id,
+              quantity: 1,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        })
+        )
         const result = await response.json()
         if (result.status == 'success') {
           onSendMessage('加入購物車成功！', 'success')
@@ -168,7 +171,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
         onSendMessage('加入購物車失敗，請洽管理員！', 'error')
       }
     } else {
-      window.location.href = '/member/login'
+      router.push('/member/login')
     }
   }
 
@@ -193,7 +196,7 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
           src={
             data
               ? `/product/${data.product_img_path}`
-              : '/images/product/placeholder.avif'
+              : '/product/placeholder.avif'
           }
           alt="Product"
           width={200}
@@ -251,12 +254,10 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
             : '$0'}
         </span>
         <span
-          onClick={() =>
-            (window.location.href = `/product/${product_id}`)
-          }
+          onClick={() => router.push(`/product/${product_id}`)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
-              window.location.href = `/product/${product_id}`
+              router.push(`/product/${product_id}`)
             }
           }}
           role="button"

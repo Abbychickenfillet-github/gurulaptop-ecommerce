@@ -25,6 +25,13 @@ const PrivacyPolicy = () => {
         <div
           className="modal d-block"
           onClick={(e) => e.target === e.currentTarget && setShow(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              setShow(false)
+            }
+          }}
+          role="button"
+          tabIndex={0}
           style={{
             backgroundColor: 'rgba(56, 29, 89, 0.5)',
             backdropFilter: 'blur(8px)',

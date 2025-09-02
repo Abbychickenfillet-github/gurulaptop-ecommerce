@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Virtual, Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import Image from 'next/image'
@@ -23,7 +23,7 @@ const HotProducts = () => {
       id: 3,
       image: '/images/index/banner_07.png',
       title: 'ASUS ExpertBook B5 OLED',
-      link: 'http://localhost:3000/product/60',
+      link: '/product/60',
     },
   ]
 
@@ -80,8 +80,8 @@ const HotProducts = () => {
                   className="product-link"
                 >
                   <div className="home-laptop-item">
-                    <Image 
-                      src={product.image} 
+                    <Image
+                      src={product.image}
                       alt={product.title}
                       width={300}
                       height={200}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Nav, Tab } from 'react-bootstrap'
 import { FaPenFancy } from 'react-icons/fa'
 import { useAuth } from '@/hooks/use-auth'
@@ -17,9 +17,9 @@ import Head from 'next/head'
 import { LoadingSpinner } from '@/components/dashboard/loading-spinner'
 import LoadingAnimation from '@/components/LoadingAnimation/LoadingAnimation'
 // import MarioGame from '@/components/dashboard/MarioGame'
-
+import Image from 'next/image'
 export default function DashboardIndex() {
-  const { auth } = useAuth()
+  const { auth, handleCheckAuth } = useAuth()
   const [activeKey, setActiveKey] = useState('home')
   const [couponActiveKey, setCouponActiveKey] = useState('available')
   // 需要加入這個state
@@ -85,15 +85,22 @@ export default function DashboardIndex() {
         return <UserProfile />
     }
   }
-    // 如果還在載入中，顯示載入動畫
-  if (auth.isLoading) {
-    return <LoadingAnimation />
-  }
+  // 如果還在載入中，顯示載入動畫
+  // if (auth.isLoading) {
+  //   console.log('Dashboard: 正在載入中...', auth)
+  //   return <LoadingAnimation />
+  // }
 
-  // 如果未登入，返回 null（Router Guard 會處理跳轉）
-  if (!auth.isAuth) {
-    return null
-  }
+  // 如果未登入，顯示調試信息並返回載入動畫
+  // if (!auth.isAuth) {
+  //   console.log('Dashboard: 用戶未登入show auth', auth)
+  //   // 只在瀏覽器端執行 window 相關操作
+  //   if (typeof window !== 'undefined') {
+  //     console.log('Dashboard: 當前路徑:', window.location.pathname)
+  //     console.log('Dashboard: Cookies:', document.cookie)
+  //   }
+  //   return <LoadingAnimation />
+  // }
   return (
     <>
       {/* <LoadingSpinner loading={isLoading} /> */}
@@ -114,20 +121,20 @@ export default function DashboardIndex() {
             {/* Left Sidebar */}
             <div className="col-md-2">
               <div className="text-center">
-                <img
+                <Image
                   src={
                     auth?.userData?.image_path ||
                     (auth?.userData?.gender === 'male'
                       ? '/signup_login/undraw_profile_2.svg'
                       : auth?.userData?.gender === 'female'
-                      ? '/signup_login/undraw_profile_1.svg'
-                      : '/Vector.svg')
+                        ? '/signup_login/undraw_profile_1.svg'
+                        : '/Vector.svg')
                   }
                   alt="Profile"
                   className="rounded-circle img-fluid mb-3"
+                  width={70}
+                  height={70}
                   style={{
-                    width: '70px',
-                    height: '70px',
                     objectFit: 'cover',
                   }}
                   onError={(e) => {

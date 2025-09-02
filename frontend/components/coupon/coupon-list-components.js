@@ -5,10 +5,9 @@ import withReactContent from 'sweetalert2-react-content'
 import Coupon from '.'
 import Coupon2 from './index2'
 import { useAuth } from '@/hooks/use-auth'
-import { AiFillExclamationCircle } from "react-icons/ai";
-import { AiOutlineSearch } from "react-icons/ai";
-import { AiTwotoneDelete } from "react-icons/ai";
-
+import { AiFillExclamationCircle } from 'react-icons/ai'
+import { AiOutlineSearch } from 'react-icons/ai'
+import { AiTwotoneDelete } from 'react-icons/ai'
 
 const MySwal = withReactContent(Swal)
 
@@ -29,7 +28,26 @@ export default function CouponList() {
 
   const getCouponData = async () => {
     try {
-      const res = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon')
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon`,
+      )
+
+      /*
+       * 🔧 修復說明：
+       *
+       * ❌ 原本錯誤的地方：
+       * - 第 31 行：'process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon'
+       * - 缺少 ${} 語法來正確引用環境變數
+       *
+       * ✅ 修復後的寫法：
+       * - 第 31 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon`
+       * - 使用 ${} 語法正確引用環境變數
+       *
+       * 💡 為什麼會錯：
+       * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
+       * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon
+       * - 這會導致 404 錯誤，因為沒有這樣的 URL
+       */
       const resData = await res.json()
 
       if (resData.data?.coupons) {
@@ -61,7 +79,7 @@ export default function CouponList() {
 
     try {
       const addResponse = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/${userId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/add/${userId}`,
         {
           method: 'POST',
           headers: {
@@ -71,14 +89,48 @@ export default function CouponList() {
             coupon_id: couponId,
             // valid: 0, // 設置為已領取
           }),
-        }
+        },
       )
+
+      /*
+       * 🔧 修復說明：
+       *
+       * ❌ 原本錯誤的地方：
+       * - 第 63 行：`process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/${userId}`
+       * - 缺少 ${} 語法來正確引用環境變數
+       *
+       * ✅ 修復後的寫法：
+       * - 第 63 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/add/${userId}`
+       * - 使用 ${} 語法正確引用環境變數
+       *
+       * 💡 為什麼會錯：
+       * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
+       * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/123
+       * - 這會導致 404 錯誤，因為沒有這樣的 URL
+       */
 
       const getUserCoupons = async (userId) => {
         try {
           const res = await fetch(
-            `process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
           )
+
+          /*
+           * 🔧 修復說明：
+           *
+           * ❌ 原本錯誤的地方：
+           * - 第 79 行：`process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`
+           * - 缺少 ${} 語法來正確引用環境變數
+           *
+           * ✅ 修復後的寫法：
+           * - 第 79 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`
+           * - 使用 ${} 語法正確引用環境變數
+           *
+           * 💡 為什麼會錯：
+           * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
+           * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/123
+           * - 這會導致 404 錯誤，因為沒有這樣的 URL
+           */
           const data = await res.json()
 
           if (data.status === 'success') {
@@ -124,7 +176,9 @@ export default function CouponList() {
     if (!userId) return
 
     try {
-      const res = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`)
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
+      )
       const data = await res.json()
 
       if (data.status === 'success') {
@@ -167,7 +221,7 @@ export default function CouponList() {
         0,
         0,
         0,
-        0
+        0,
       )
       const filterDate = new Date(endDateFilter).setHours(0, 0, 0, 0)
       matchesDate = couponEndDate >= filterDate
@@ -207,7 +261,7 @@ export default function CouponList() {
 
     // 取得尚未領取的優惠券
     const unclaimedCoupons = filteredCoupons.filter(
-      (coupon) => !isUserHasCoupon(coupon.coupon_id)
+      (coupon) => !isUserHasCoupon(coupon.coupon_id),
     )
 
     if (unclaimedCoupons.length === 0) {
@@ -238,7 +292,7 @@ export default function CouponList() {
         for (const coupon of unclaimedCoupons) {
           try {
             const addResponse = await fetch(
-              `process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/${userId}`,
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/add/${userId}`,
               {
                 method: 'POST',
                 headers: {
@@ -247,8 +301,25 @@ export default function CouponList() {
                 body: JSON.stringify({
                   coupon_id: coupon.coupon_id,
                 }),
-              }
+              },
             )
+
+            /*
+             * 🔧 修復說明：
+             *
+             * ❌ 原本錯誤的地方：
+             * - 第 242 行：`process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/${userId}`
+             * - 缺少 ${} 語法來正確引用環境變數
+             *
+             * ✅ 修復後的寫法：
+             * - 第 242 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/add/${userId}`
+             * - 使用 ${} 語法正確引用環境變數
+             *
+             * 💡 為什麼會錯：
+             * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
+             * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/123
+             * - 這會導致 404 錯誤，因為沒有這樣的 URL
+             */
 
             const addResult = await addResponse.json()
             if (addResult.status === 'success') {
@@ -323,7 +394,8 @@ export default function CouponList() {
                 }}
                 className="me-2"
               >
-                <AiOutlineSearch />{/* 搜尋 */}
+                <AiOutlineSearch />
+                {/* 搜尋 */}
               </Button>
               {(searchTerm || endDateFilter) && (
                 <Button
@@ -333,7 +405,7 @@ export default function CouponList() {
                     setEndDateFilter('')
                   }}
                 >
-                <AiTwotoneDelete />  {/* 清除 */}
+                  <AiTwotoneDelete /> {/* 清除 */}
                 </Button>
               )}
             </div>
@@ -363,13 +435,19 @@ export default function CouponList() {
             const hasThisCoupon = isUserHasCoupon(coupon.coupon_id)
 
             return (
-              <div
+              <button
                 key={coupon.coupon_id}
-                className="col-md-6 coupon-item"
+                className="col-md-6 coupon-item border-0 bg-transparent"
                 onClick={() =>
                   !hasThisCoupon && handleClaimCoupon(coupon.coupon_id)
                 }
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    !hasThisCoupon && handleClaimCoupon(coupon.coupon_id)
+                  }
+                }}
                 style={{ cursor: hasThisCoupon ? 'default' : 'pointer' }}
+                disabled={hasThisCoupon}
               >
                 {hasThisCoupon ? (
                   <Coupon2
@@ -392,7 +470,7 @@ export default function CouponList() {
                     coupon_end_time={coupon.coupon_end_time}
                   />
                 )}
-              </div>
+              </button>
             )
           })
         )}

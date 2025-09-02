@@ -3,6 +3,7 @@ import styles from './GroupManagement.module.css'
 import EditGroupModal from './EditGroupModal'
 import Swal from 'sweetalert2'
 import { useAuth } from '@/hooks/use-auth'
+import Image from 'next/image'
 const GroupManagement = () => {
   const { auth } = useAuth()
   const [groups, setGroups] = useState([])
@@ -11,68 +12,68 @@ const GroupManagement = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [selectedGroup, setSelectedGroup] = useState(null)
 
-  const fetchUserGroups = async () => {
-    if (!auth?.isAuth) return
-    try {
-      const [memberResponse, creatorResponse] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/user`, {
-          credentials: 'include',
-        }),
-        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/creator`, {
-          credentials: 'include',
-        }),
-      ])
-
-      const [memberData, creatorData] = await Promise.all([
-        memberResponse.json(),
-        creatorResponse.json(),
-      ])
-
-      if (memberData.status === 'success' && creatorData.status === 'success') {
-        const combinedGroups = [
-          ...memberData.data.groups.map((group) => ({
-            ...group,
-            role: 'member',
-          })),
-          ...creatorData.data.groups.map((group) => ({
-            ...group,
-            role: 'creator',
-          })),
-        ]
-
-        const uniqueGroups = combinedGroups.reduce((acc, current) => {
-          const x = acc.find((item) => item.group_id === current.group_id)
-          if (!x) return acc.concat([current])
-          if (current.role === 'creator') {
-            return acc.map((item) =>
-              item.group_id === current.group_id ? current : item
-            )
-          }
-          return acc
-        }, [])
-
-        setGroups(uniqueGroups)
-      } else {
-        throw new Error(memberData.message || creatorData.message)
-      }
-    } catch (error) {
-      console.error('獲取群組失敗:', error)
-      setError('獲取群組資料失敗')
-      await Swal.fire({
-        icon: 'error',
-        title: '錯誤',
-        text: '獲取群組資料失敗',
-        timer: 1500,
-        showConfirmButton: false,
-      })
-    } finally {
-      setLoading(false)
-    }
-  }
-
   useEffect(() => {
+    const fetchUserGroups = async () => {
+      if (!auth?.isAuth) return
+      try {
+        const [memberResponse, creatorResponse] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/user`, {
+            credentials: 'include',
+          }),
+          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/creator`, {
+            credentials: 'include',
+          }),
+        ])
+
+        const [memberData, creatorData] = await Promise.all([
+          memberResponse.json(),
+          creatorResponse.json(),
+        ])
+
+        if (memberData.status === 'success' && creatorData.status === 'success') {
+          const combinedGroups = [
+            ...memberData.data.groups.map((group) => ({
+              ...group,
+              role: 'member',
+            })),
+            ...creatorData.data.groups.map((group) => ({
+              ...group,
+              role: 'creator',
+            })),
+          ]
+
+          const uniqueGroups = combinedGroups.reduce((acc, current) => {
+            const x = acc.find((item) => item.group_id === current.group_id)
+            if (!x) return acc.concat([current])
+            if (current.role === 'creator') {
+              return acc.map((item) =>
+                item.group_id === current.group_id ? current : item,
+              )
+            }
+            return acc
+          }, [])
+
+          setGroups(uniqueGroups)
+        } else {
+          throw new Error(memberData.message || creatorData.message)
+        }
+      } catch (error) {
+        console.error('獲取群組失敗:', error)
+        setError('獲取群組資料失敗')
+        await Swal.fire({
+          icon: 'error',
+          title: '錯誤',
+          text: '獲取群組資料失敗',
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      } finally {
+        setLoading(false)
+      }
+    }
+
     fetchUserGroups()
-  }, [fetchUserGroups])
+  }, [auth?.isAuth])
 
   const handleDeleteGroup = async (groupId) => {
     const result = await Swal.fire({
@@ -92,7 +93,7 @@ const GroupManagement = () => {
         {
           method: 'DELETE',
           credentials: 'include',
-        }
+        },
       )
 
       const data = await response.json()
@@ -104,7 +105,8 @@ const GroupManagement = () => {
           timer: 1500,
           showConfirmButton: false,
         })
-        fetchUserGroups()
+        // 重新載入群組列表
+        window.location.reload()
       } else {
         throw new Error(data.message)
       }
@@ -128,7 +130,7 @@ const GroupManagement = () => {
   const handleEditSave = async (updatedData) => {
     try {
       const response = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/group/${selectedGroup.group_id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/${selectedGroup.group_id}`,
         {
           method: 'PUT',
           credentials: 'include',
@@ -141,7 +143,7 @@ const GroupManagement = () => {
             max_members: updatedData.maxMembers,
             group_time: updatedData.group_time,
           }),
-        }
+        },
       )
 
       const result = await response.json()
@@ -151,8 +153,8 @@ const GroupManagement = () => {
           prevGroups.map((group) =>
             group.group_id === selectedGroup.group_id
               ? { ...group, ...result.data.group }
-              : group
-          )
+              : group,
+          ),
         )
         await Swal.fire({
           icon: 'success',
@@ -223,13 +225,14 @@ const GroupManagement = () => {
           <div key={group.group_id} className={styles.listRow}>
             <div className="row align-items-center d-none d-md-flex">
               <div className="col-2">
-                <img
+                <Image
                   src={getImageUrl(group.group_img)}
                   alt="揪團圖片"
                   className={styles.groupImg}
+                  width={80}
+                  height={60}
                   onError={(e) => {
-                    e.target.src =
-                      `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
+                    e.target.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
                   }}
                 />
               </div>
@@ -267,13 +270,14 @@ const GroupManagement = () => {
 
             <div className={`${styles.mobileLayout} d-block d-md-none`}>
               <div className={styles.mobileImgWrapper}>
-                <img
+                <Image
                   src={getImageUrl(group.group_img)}
                   alt="揪團圖片"
                   className={styles.groupImg}
+                  width={80}
+                  height={60}
                   onError={(e) => {
-                    e.target.src =
-                      `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
+                    e.target.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
                   }}
                 />
               </div>

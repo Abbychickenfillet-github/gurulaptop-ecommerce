@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import styles from '@/styles/product-card.module.scss'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
 
 export default function ProductCard({ onSendMessage, product_id }) {
+  const router = useRouter()
   // 產品卡片的 key 值，用於比較功能的 checkbox
   const key = Math.random()
   // 從後端撈取資料
@@ -18,7 +20,7 @@ export default function ProductCard({ onSendMessage, product_id }) {
   // 初始化
   const init = async () => {
     const response = await fetch(
-      `process.env.NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData?.user_id}/${product_id}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData?.user_id}/${product_id}`,
     )
     const result = await response.json()
     if (result.status === 'success') {
@@ -40,7 +42,7 @@ export default function ProductCard({ onSendMessage, product_id }) {
       if (product_id) {
         try {
           const response = await fetch(
-            `process.env.NEXT_PUBLIC_API_BASE_URL/api/products/card/${product_id}`
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/card/${product_id}`,
           )
           const result = await response.json()
           setData(result?.data?.product)
@@ -91,13 +93,13 @@ export default function ProductCard({ onSendMessage, product_id }) {
         //刪除favorite_management資料庫
         try {
           const response = await fetch(
-            `process.env.NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData.user_id}/${product_id}`,
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData.user_id}/${product_id}`,
             {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json',
               },
-            }
+            },
           )
 
           if (response.ok) {
@@ -114,13 +116,13 @@ export default function ProductCard({ onSendMessage, product_id }) {
         //寫入favorite management資料庫
         try {
           const response = await fetch(
-            `process.env.NEXT_PUBLIC_API_BASE_URL/api/favorites/${userData.user_id}/${product_id}`,
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData.user_id}/${product_id}`,
             {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
               },
-            }
+            },
           )
 
           if (response.ok) {
@@ -135,7 +137,7 @@ export default function ProductCard({ onSendMessage, product_id }) {
         }
       }
     } else {
-      window.location.href = 'http://localhost:3000/member/login'
+      router.push('/member/login')
     }
   }
 
@@ -144,17 +146,20 @@ export default function ProductCard({ onSendMessage, product_id }) {
     if (isAuth) {
       // 加入購物車資料庫
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`, {
-          method: 'PUT',
-          body: JSON.stringify({
-            user_id: userData.user_id,
-            product_id: product_id,
-            quantity: 1,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`,
+          {
+            method: 'PUT',
+            body: JSON.stringify({
+              user_id: userData.user_id,
+              product_id: product_id,
+              quantity: 1,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        })
+        )
         const result = await response.json()
         if (result.status == 'success') {
           onSendMessage('加入購物車成功！', `success`)
@@ -165,7 +170,7 @@ export default function ProductCard({ onSendMessage, product_id }) {
         onSendMessage('加入購物車失敗，請洽管理員！', `error`)
       }
     } else {
-      window.location.href = '/member/login'
+      router.push('/member/login')
     }
   }
 
@@ -190,7 +195,7 @@ export default function ProductCard({ onSendMessage, product_id }) {
           src={
             data
               ? `/product/${data?.product_img_path}`
-              : '/images/product/placeholder.avif'
+              : '/product/placeholder.avif'
           }
           alt="Product"
           width={200}
@@ -249,12 +254,10 @@ export default function ProductCard({ onSendMessage, product_id }) {
             : '$0'}
         </span>
         <span
-          onClick={() =>
-            (window.location.href = `http://localhost:3000/product/${product_id}`)
-          }
+          onClick={() => router.push(`/product/${product_id}`)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
-              window.location.href = `http://localhost:3000/product/${product_id}`
+              router.push(`/product/${product_id}`)
             }
           }}
           role="button"

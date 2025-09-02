@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from './GroupDetailModal.module.css'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
-
+import Image from 'next/image'
 const DEFAULT_AVATAR = '/images/group/default-avatar.png'
 
 const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
@@ -9,28 +9,29 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
   const [members, setMembers] = useState([])
 
   useEffect(() => {
-    fetchGroupMembers()
-  }, [groupData.id, fetchGroupMembers])
-
-  const fetchGroupMembers = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/${groupData.id}`,
-        {
-          credentials: 'include',
+    const fetchGroupMembers = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/${groupData.id}`,
+          {
+            credentials: 'include',
+          },
+        )
+        const data = await response.json()
+  
+        if (data.status === 'success') {
+          setMembers(data.data.group.members || [])
         }
-      )
-      const data = await response.json()
-
-      if (data.status === 'success') {
-        setMembers(data.data.group.members || [])
+      } catch (error) {
+        console.error('獲取群組成員失敗:', error)
+      } finally {
+        setLoading(false)
       }
-    } catch (error) {
-      console.error('獲取群組成員失敗:', error)
-    } finally {
-      setLoading(false)
     }
-  }
+    fetchGroupMembers()
+  }, [groupData.id])
+
+  
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) return DEFAULT_AVATAR
@@ -122,10 +123,12 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
                     key={member.user_id}
                     className={styles.userAvatarWrapper}
                   >
-                    <img
+                    <Image
                       src={getImageUrl(member.image_path)}
                       alt={member.name}
                       className={styles.userAvatar}
+                      width={50}
+                      height={50}
                       onError={handleImageError}
                     />
                     <div className={styles.userNameTooltip}>

@@ -5,7 +5,7 @@ import EventButton from '@/components/event/EventButton'
 import Swal from 'sweetalert2'
 import NextBreadCrumb from '@/components/common/next-breadcrumb'
 import Head from 'next/head'
-
+import Image from 'next/image'
 export default function GroupCreat() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -30,9 +30,29 @@ export default function GroupCreat() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/auth/check', {
-          credentials: 'include',
-        })
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/check`,
+          {
+            credentials: 'include',
+          },
+        )
+
+        /*
+         * 🔧 修復說明：
+         * 
+         * ❌ 原本錯誤的地方：
+         * - 第 32 行：'process.env.NEXT_PUBLIC_API_BASE_URL/api/auth/check'
+         * - 缺少 ${} 語法來正確引用環境變數
+         * 
+         * ✅ 修復後的寫法：
+         * - 第 32 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/check`
+         * - 使用 ${} 語法正確引用環境變數
+         * 
+         * 💡 為什麼會錯：
+         * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
+         * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/auth/check
+         * - 這會導致 404 錯誤，因為沒有這樣的 URL
+         */
 
         if (!response.ok) {
           await Swal.fire({
@@ -235,11 +255,31 @@ export default function GroupCreat() {
       }
 
       // 發送請求
-      const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/group', {
-        method: 'POST',
-        credentials: 'include',
-        body: submitFormData,
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          body: submitFormData,
+        },
+      )
+
+      /*
+       * 🔧 修復說明：
+       * 
+       * ❌ 原本錯誤的地方：
+       * - 第 237 行：'process.env.NEXT_PUBLIC_API_BASE_URL/api/group'
+       * - 缺少 ${} 語法來正確引用環境變數
+       * 
+       * ✅ 修復後的寫法：
+       * - 第 237 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group`
+       * - 使用 ${} 語法正確引用環境變數
+       * 
+       * 💡 為什麼會錯：
+       * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
+       * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/group
+       * - 這會導致 404 錯誤，因為沒有這樣的 URL
+       */
 
       const result = await response.json()
 
@@ -417,7 +457,7 @@ export default function GroupCreat() {
                     </label>
                     <div className="group-creat-image-preview">
                       {imagePreview ? (
-                        <img
+                        <Image
                           src={imagePreview}
                           alt="Preview"
                           style={{

@@ -24,7 +24,7 @@ export const checkAuth = async () => {
  * Google Login(Firebase)登入用，providerData為登入後得到的資料
  */
 export const googleLogin = async (providerData = {}) => {
-  return await axiosInstance.post('process.env.NEXT_PUBLIC_API_BASE_URL/api/google-login', providerData)
+  return await axiosInstance.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/google-login`, providerData)
 }
 
 /**
@@ -144,8 +144,8 @@ export const useUser = (id) => {
 }
 
 // 解析accessToken用的函式
-export const parseJwt = (token) => {
-  const base64Payload = token.split('.')[1]
-  const payload = Buffer.from(base64Payload, 'base64')
-  return JSON.parse(payload.toString())
-}
+// export const parseJwt = (token) => {
+//   const base64Payload = token.split('.')[1]
+//   const payload = Buffer.from(base64Payload, 'base64')
+//   return JSON.parse(payload.toString())
+// }

@@ -4,7 +4,7 @@ import EventButton from '@/components/event/EventButton'
 import axios from 'axios'
 import NextBreadCrumb from '@/components/common/next-breadcrumb'
 import Head from 'next/head'
-
+import Image from 'next/image'
 const EventDetail = () => {
   const router = useRouter()
   const { id } = router.query
@@ -38,8 +38,8 @@ const EventDetail = () => {
       try {
         setLoading(true)
         const response = await axios.get(
-          `process.env.NEXT_PUBLIC_API_BASE_URL/api/events/${id}`,
-          { withCredentials: true }
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events/${id}`,
+          { withCredentials: true },
         )
 
         if (response.data.code === 200) {
@@ -208,13 +208,11 @@ const EventDetail = () => {
 
               {/* 右側內容 */}
               <div className="col-12 col-md-8 order-md-2 order-1">
-                <img
-                  src={event.picture}
-                  alt="活動圖片"
-                  className="eventDetail-image mb-4"
-                  onError={(e) => {
-                    e.target.src = '/images/event-default.png'
-                  }}
+                Image src={event.picture}
+                alt="活動圖片" className="eventDetail-image mb-4" onError=
+                {(e) => {
+                  e.target.src = '/images/event-default.png'
+                }}
                 />
                 <div className="eventDetail-infoBox">
                   <h2 className="h5 mb-3">活動介紹</h2>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-
+import Image from 'next/image'
 export default function ArticleDetailSection() {
   const router = useRouter()
   const { ArticleId } = router.query // 從路由中獲取 ArticleId
@@ -32,14 +32,14 @@ export default function ArticleDetailSection() {
           <p className="ArticleDetailText">{article.ArticleContent}</p>
           <div className="d-flex align-items-center justify-content-center gap-5 mb-5">
             <div className="col-6">
-              <img
+              <Image
                 className="w-100 h-100 ratio"
                 src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
                 alt=""
               />
             </div>
             <div className="col-6">
-              <img
+              <Image
                 className="w-100 h-100 ratio"
                 src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
                 alt=""
@@ -50,14 +50,14 @@ export default function ArticleDetailSection() {
           <div className="d-flex align-items-center justify-content-center col-12 mb-5 gap-5">
             <div className="row">
               <div className="col-6">
-                <img
+                <Image
                   className="w-100 h-100 ratio"
                   src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
                   alt=""
                 />
               </div>
               <div className="col-6">
-                <img
+                <Image
                   className="w-100 h-100 ratio"
                   src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
                   alt=""
@@ -66,7 +66,7 @@ export default function ArticleDetailSection() {
             </div>
           </div>
           <div className="container d-flex align-items-center justify-content-center col-12">
-            <img
+            <Image
               className="w-50 h-50 ratio"
               src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
               alt=""

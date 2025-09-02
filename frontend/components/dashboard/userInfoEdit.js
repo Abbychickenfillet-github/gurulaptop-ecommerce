@@ -5,10 +5,10 @@ import axios from 'axios'
 import { taiwanData } from '@/data/address/data.js'
 import styles from '@/styles/dashboard.module.scss'
 import EnhancedSelect from './Enhanced-select'
-
+import Image from 'next/image'
 //如果Google登入的user_id沒有清空的話這邊就還會有
 export default function UserProfile() {
-  const { auth } = useAuth()
+  const { auth, setAuth } = useAuth()
   const user_id = auth?.userData?.user_id
 
   const [editableUser, setEditableUser] = useState({
@@ -33,8 +33,8 @@ export default function UserProfile() {
       (editableUser.gender === 'male'
         ? '/signup_login/undraw_profile_2.svg'
         : editableUser.gender === 'female'
-        ? '/signup_login/undraw_profile_1.svg'
-        : '/Vector.svg')
+          ? '/signup_login/undraw_profile_1.svg'
+          : '/Vector.svg'),
   )
   const [uploadStatus, setUploadStatus] = useState('')
   // 沒有寫就是false
@@ -107,7 +107,7 @@ export default function UserProfile() {
     if (value === '台灣') {
       // 如果選擇的是台灣，"啟用"縣市選擇
       setIsDistrictDisabled(false)
-    //這邊的else為了當選擇其他國家時，禁用縣市、區域和路名選擇 
+      // 這邊的else為了當選擇其他國家時，禁用縣市、區域和路名選擇
     } else {
       // 禁用行政區
       setIsDistrictDisabled(true)
@@ -151,11 +151,11 @@ export default function UserProfile() {
     }))
 
     const selectedCity = taiwanData.find(
-      (city) => city.CityName === editableUser.city
+      (city) => city.CityName === editableUser.city,
     )
     if (selectedCity) {
       const selectedArea = selectedCity.AreaList.find(
-        (area) => area.AreaName === value
+        (area) => area.AreaName === value,
       )
       if (selectedArea && selectedArea.RoadList) {
         setRoads(selectedArea.RoadList)
@@ -181,8 +181,8 @@ export default function UserProfile() {
         (editableUser.gender === 'male'
           ? '/signup_login/undraw_profile_2.svg'
           : editableUser.gender === 'female'
-          ? '/signup_login/undraw_profile_1.svg'
-          : '/Vector.svg')
+            ? '/signup_login/undraw_profile_1.svg'
+            : '/Vector.svg'),
     )
   }, [editableUser.gender, editableUser.image_path]) // 加入相依性
 
@@ -190,7 +190,13 @@ export default function UserProfile() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${user_id}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
+          {
+            withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
         )
         if (response.data.status === 'success') {
           const userData = response.data.data
@@ -205,7 +211,7 @@ export default function UserProfile() {
         Swal.fire(
           '錯誤',
           `獲取用戶資料失敗: ${error.response?.data?.message || error.message}`,
-          'error'
+          'error',
         )
       }
     }
@@ -244,13 +250,14 @@ export default function UserProfile() {
     }
     // 當性別欄位改變時，同時更新 auth 中的 userData
     if (name === 'gender') {
-      // setAuth((prev) => ({ // This line was removed as per the edit hint
-      //   ...prev,
-      //   userData: {
-      //     ...prev.userData,
-      //     gender: value,
-      //   },
-      // }))
+      setAuth((prev) => ({ 
+        // This line was removed as per the edit hint
+        ...prev,
+        userData: {
+          ...prev.userData,
+          gender: value,
+        },
+      }))
     }
   }
 
@@ -296,26 +303,28 @@ export default function UserProfile() {
         // email: auth?.userData?.email || editableUser.email,
         // 確保有 email, email已經改成純顯示了所以之前的editableUser裡面的email應該要刪掉
       }
-      // delete dataToSubmit.password // 移除 password 欄位
-      // delete dataToSubmit.currentPassword // 移除 currentPassword 欄位
-      // delete dataToSubmit.newPassword // 移除 newPassword 欄位
 
       const response = await axios.put(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
         // editableUser
-        dataToSubmit
+        dataToSubmit,
+        {
+          withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
       )
-
       if (response.data.status === 'success') {
         Swal.fire('成功', '用戶資料更新成功', 'success')
-        // setAuth((prev) => ({ // This line was removed as per the edit hint
-        //   ...prev,
-        //   userData: {
-        //     ...prev.userData,
-        //     ...dataToSubmit,
-        //     user_id,
-        //   },
-        // }))
+        setAuth((prev) => ({
+          ...prev,
+          userData: {
+            ...prev.userData,
+            ...dataToSubmit,
+            user_id,
+          },
+        }))
 
         // 替換以上這段
 
@@ -326,7 +335,7 @@ export default function UserProfile() {
       Swal.fire(
         '錯誤',
         error.response?.data?.message || '更新失敗，請稍後再試',
-        'error'
+        'error',
       )
     }
   }
@@ -350,11 +359,17 @@ export default function UserProfile() {
         return
       }
       //s停用button跟更新button用的是同一個路由所以停用
-      const response = await axios.put(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
+             const response = await axios.put(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
+         {
+           ...editableUser,
+           valid: 0,
+         },
         {
-          ...editableUser,
-          valid: 0,
+          withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
       )
 
@@ -393,11 +408,17 @@ export default function UserProfile() {
     }
 
     try {
-      const response = await axios.put(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/dashboard/${user_id}`,
+             const response = await axios.put(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
+         {
+           ...editableUser,
+           image_path: selectedImg,
+         },
         {
-          ...editableUser,
-          image_path: selectedImg,
+          withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
       )
 
@@ -412,9 +433,15 @@ export default function UserProfile() {
         //   },
         // }))
         const headerResponse = await axios.post(
-          'process.env.NEXT_PUBLIC_API_BASE_URL/api/header',
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header`,
           {
             user_id: user_id,
+          },
+          {
+            withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
+            headers: {
+              'Content-Type': 'application/json',
+            },
           }
         )
         Swal.fire('成功', '頭像更新成功', 'success')
@@ -424,7 +451,7 @@ export default function UserProfile() {
       Swal.fire(
         '錯誤',
         error.response?.data?.message || '上傳失敗，請稍後再試',
-        'error'
+        'error',
       )
     }
   }
@@ -516,26 +543,7 @@ export default function UserProfile() {
                           />
                         </div>
                       </div>
-                      test
-                      <div className="mb-3 row">
-                        <label
-                          htmlFor="test"
-                          className="col-sm-3 col-form-label"
-                        >
-                          test
-                        </label>
-                        <div className="col-sm-9">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="test"
-                            name="test"
-                            value={editableUser.test}
-                            onChange={handleInputChange}
-                            disabled={false}
-                          />
-                        </div>
-                      </div>
+
                       <div className="mb-3 row">
                         <label
                           htmlFor="phone"
@@ -611,7 +619,7 @@ export default function UserProfile() {
                                       </option>
                                     ))}
                                   </optgroup>
-                                )
+                                ),
                               )}
                             </EnhancedSelect>
                           </div>
@@ -761,15 +769,14 @@ export default function UserProfile() {
                   <div className="col-md-4">
                     <form onSubmit={handleProfilePicSubmit}>
                       <div className="text-center">
-                        <img
+                        <Image
                           src={profilePic}
                           alt="Profile"
                           className="rounded-circle img-fluid mb-3"
+                          width={220}
+                          height={220}
                           style={{
-                            width: '220px',
-                            height: '220px',
-                            // margin:'0 auto',
-                            //  position:'relative',
+                            objectFit: 'cover',
                           }}
                         />
                         <div className="mb-3">

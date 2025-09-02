@@ -2,42 +2,21 @@ import express from 'express'
 import multer from 'multer'
 import pool from '../configs/pgClient.js'
 import { generateHash, compareHash } from '../db-helpers/password-hash.js'
+import authenticate from '../middlewares/authenticate.js'
 
 const router = express.Router()
 const upload = multer()
 
-// 取得所有使用者資料
-router.get('/all', async function (req, res) {
-  try {
-    const { rows: users } = await pool.query('SELECT * FROM users;')
-    
-    if (users.length === 0) {
-      return res.status(404).json({
-        status: 'error',
-        message: '找不到任何用戶'
-      })
-    }
-
-    res.json({
-      status: 'success',
-      data: { users }
-    })
-  } catch (error) {
-    console.error('無法取得資料:', error)
-    res.status(500).json({
-      status: 'error',
-      message: '伺服器錯誤'
-    })
-  }
-})
+// 移除 /all 路由 - 這會暴露所有用戶資料，有安全風險
+// 如果需要管理員功能，應該建立專門的管理員路由
 
 // 取得特定使用者資料
-router.get('/:user_id', async function (req, res) {
+router.get('/:user_id', authenticate, async function (req, res) {
   try {
-    const { user_id } = req.params
+    const { user_id, email, password } = req.params
     const { rows: users } = await pool.query(
-      'SELECT * FROM users WHERE user_id = $1;',
-      [user_id]
+      'SELECT * FROM users WHERE user_id = $1 AND email = $2 AND password = $3;',
+      [user_id, email, password]
     )
     
     if (users.length === 0) {
@@ -49,7 +28,7 @@ router.get('/:user_id', async function (req, res) {
 
     res.json({
       status: 'success',
-      data: { user: users[0] }
+      data: users[0]
     })
   } catch (error) {
     console.error('無法取得資料:', error)
@@ -61,7 +40,7 @@ router.get('/:user_id', async function (req, res) {
 })
 
 // 更新使用者資料
-router.put('/:user_id', async (req, res) => {
+router.put('/:user_id', authenticate, async (req, res) => {
   try {
     const { user_id } = req.params
     const { 
@@ -109,7 +88,7 @@ router.put('/:user_id', async (req, res) => {
 })
 
 // 密碼驗證
-router.put('/pwdCheck/:user_id', async (req, res) => {
+router.put('/pwdCheck/:user_id', authenticate, async (req, res) => {
   const { user_id } = req.params
   const { currentPassword } = req.body
 
@@ -149,7 +128,7 @@ router.put('/pwdCheck/:user_id', async (req, res) => {
 })
 
 // 密碼重設
-router.put('/:user_id/pwdReset', async (req, res) => {
+router.put('/:user_id/pwdReset', authenticate, async (req, res) => {
   const { user_id } = req.params
   const { newPassword1, newPassword2 } = req.body
 

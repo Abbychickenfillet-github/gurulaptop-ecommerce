@@ -1,27 +1,42 @@
 import React, { useState, useEffect } from 'react'
+import styles from '@/styles/signUpForm.module.scss'
+import Swal from 'sweetalert2'
 import Image from 'next/image'
-import axios from 'axios'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useAuth } from '@/hooks/use-auth'
+import { MdOutlineEmail } from 'react-icons/md'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
-import styles from '@/styles/signUpForm.module.scss'
-import { useRouter } from 'next/router'
-import Swal from 'sweetalert2'
-import { useJumpingLetters } from '@/hooks/jumping-letters-hook'
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import Head from 'next/head'
-import 'animate.css';
-import GlowingText from '@/components/dashboard/glowing-text/glowing-text';
-import {useAuth} from '@/hooks/use-auth'
-export default function Signup() {
-  // 處理失焦
-  // const { renderJumpingText } = useJumpingLetters()
-  const { auth, handleCheckAuth } = useAuth() // 添加 handleCheckAuth
+import GlowingText from '@/components/dashboard/glowing-text/glowing-text'
+import axios from 'axios'
 
-  // 页面加载时检查认证状态
-  useEffect(() => {
-    console.log('Signup 頁面載入，檢查認證狀態...')
-    handleCheckAuth()
-  }, []) // 只在页面加载时执行一次
+export default function Signup() {
+  const [showpassword, setShowpassword] = useState(false)
+  const [showConfirmpassword, setShowConfirmpassword] = useState(false)
+  const router = useRouter()
+  const { auth, handleCheckAuth } = useAuth()
+  const [user, setUser] = useState({
+    email: '',
+    password: '',
+    confirmpassword: '',
+    phone: '',
+    birthdate: '',
+    gender: '',
+    agree: false,
+  })
+
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+    confirmpassword: '',
+    gender: '',
+    agree: '',
+  })
+
+  const [submitError, setSubmitError] = useState('')
 
   const validatePassword = (password) => {
     //函式內宣告2個變數
@@ -49,29 +64,6 @@ export default function Signup() {
     )
     // 用 rule 當作 key 去 messages 物件找對應的訊息
   }
-
-  const router = useRouter()
-  const [user, setUser] = useState({
-    email: '',
-    password: '',
-    confirmpassword: '',
-    phone: '',
-    birthdate: '',
-    gender: '',
-    agree: false,
-  })
-
-  const [errors, setErrors] = useState({
-    email: '',
-    password: '',
-    confirmpassword: '',
-    gender: '',
-    agree: '',
-  })
-
-  const [showpassword, setShowpassword] = useState(false)
-  const [showConfirmpassword, setShowConfirmpassword] = useState(false)
-  const [submitError, setSubmitError] = useState('')
 
   const handleFieldChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -134,11 +126,10 @@ export default function Signup() {
         }))
         return
       }
-      
 
       const response = await axios.post(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/signup`,
-        user
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/signup`,
+        user,
       )
 
       if (response.data.status === 'success') {
@@ -193,7 +184,7 @@ export default function Signup() {
     if (auth?.isAuth) {
       router.replace('/dashboard')
     }
-  }, [auth?.isAuth])
+  }, [auth?.isAuth, router])
   return (
     <>
       <Head>
@@ -201,122 +192,168 @@ export default function Signup() {
       </Head>
 
       <Header />
-      <div className={styles['gradient-bg']}>
+
+      <div
+        className={`${styles['gradient-bg']} ${styles['signup-bg']} min-vh-100`}
+      >
         <Image
           src="/bgi/signup_bgi.png"
           alt="background"
-          layout="fill"
-          // style={{objectFit:'cover'}}
-          // objectFit="cover"
+          fill
+          style={{ objectFit: 'cover' }}
           quality={100}
         />
-        <div className="container">
-          <div className="row align-items-center">
-            <div className={`${styles.left} col-sm-12  col-md-6 col-lg-6 col d-flex flex-column justify-content-start`}>
-              {/* <i>
-              <h4 className={`text-white  animate__animated animate__zoomIn animate__infinite animate__rubberBand animate__slower	3s ${styles.signup}`}>Sign Up</h4> */}
-                {/* </i> */}
-              {/* <h3 className={`text-white ${styles['guru-laptop']}`}>
-                GURU Laptop </h3>  */}
-              {/* </h3> */}
-              {/* <h4 className={`text-white text-start`}>
-                {/* {renderJumpingText('Welcome to', 'welcome-text')} */}
-                {/* {renderJumpingText('Sign Up to', 'welcome-text')} */}
-              {/* </h4>  */}
-            
-              {/* <h3 className={`text-white ${styles['guru-laptop']}`}> */}
-                {/* {renderJumpingText('LaptopGuru', 'company-name')} */}
-              {/* </h3> */}
-              <i><GlowingText text="Sign Up to"className={`text-white text-md-start`} /></i>
-              <i><GlowingText text="LaptopGuru" className={`text-white text-md-start`}/></i>
-            </div>
-            <div
-              className={`${styles.right} align-item-center col ${styles['signup-right']} text-white col-sm-12  col-md-11 col-lg-5`}
-            >
-              <div className={`${styles.tabs} d-flex justify-content-between`}>
-                <Link
-                  className={`${styles.hover} text-decoration-none text-white`}
-                  href="/member/login"
-                >
-                  登入
-                </Link>
-                <span className="text-white">| </span>
-                <Link
-                  className={`${styles.hover} text-decoration-none text-white`}
-                  href="/member/signup"
-                >
-                  註冊
-                </Link>
-              </div>
-              {submitError && (
-                <div className="alert alert-danger" role="alert">
-                  {submitError}
-                </div>
-              )}
 
-              <form onSubmit={handleSubmit} className="mt-3">
-                <div className={styles['inputs-group']}>
+        <div className="container position-relative h-100">
+          <div className="row h-100 align-items-center justify-content-center">
+            {/* 左側歡迎區域 */}
+            <div className="col-lg-6 col-md-12 mb-5 mb-lg-0">
+              <div className="text-center text-lg-start">
+                <div className="mb-4">
+                  <GlowingText
+                    text="Sign Up to"
+                    className="text-white display-4 fw-bold mb-3"
+                  />
+                </div>
+                <div className="mb-4">
+                  <GlowingText
+                    text="LaptopGuru"
+                    className="text-white display-3 fw-bold"
+                  />
+                </div>
+                <p className="text-white-50 fs-5">
+                  加入我們，開啟你的筆電探索之旅
+                </p>
+              </div>
+            </div>
+
+            {/* 右側註冊表單 */}
+            <div className="col-lg-5 col-md-8 col-sm-12">
+              <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25">
+                {/* 頁籤切換 */}
+                <div className="d-flex justify-content-center mb-4">
+                  <div className="btn-group" role="group">
+                    <Link
+                      href="/member/login"
+                      className="btn btn-outline-light px-4 py-2"
+                    >
+                      登入
+                    </Link>
+                    <Link
+                      href="/member/signup"
+                      className="btn btn-outline-light active px-4 py-2"
+                    >
+                      註冊
+                    </Link>
+                  </div>
+                </div>
+
+                {/* 錯誤訊息 */}
+                {submitError && (
+                  <div className="alert alert-danger py-2 mb-4" role="alert">
+                    <i className="bi bi-exclamation-triangle me-2"></i>
+                    {submitError}
+                  </div>
+                )}
+
+                {/* 註冊表單 */}
+                <form
+                  onSubmit={handleSubmit}
+                  className="needs-validation"
+                  noValidate
+                >
                   <div className="mb-3">
-                    <label htmlFor="email" className={styles.white}>
+                    <label htmlFor="email" className="text-white fw-semibold">
                       帳號(信箱)
                     </label>
                     <input
                       type="email"
                       id="email"
                       name="email"
-                      className={`form-control ${styles.inputs}`}
+                      className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
                       value={user.email}
                       onChange={handleFieldChange}
+                      placeholder="請輸入您的信箱"
+                      required
+                      style={{
+                        backdropFilter: 'blur(10px)',
+                        color: 'white',
+                      }}
                     />
                     {errors.email && (
-                      <div className="error">{errors.email}</div>
+                      <div
+                        className="alert alert-danger py-2 mt-2"
+                        role="alert"
+                      >
+                        {errors.email}
+                      </div>
                     )}
                   </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="password" className={styles.white}>
+                  {/* 密碼輸入 */}
+                  <div className="mb-4">
+                    <label
+                      htmlFor="password"
+                      className="form-label text-white fw-semibold"
+                    >
                       密碼
                     </label>
-                    <input
-                      type={showpassword ? 'text' : 'password'}
-                      id="password"
-                      name="password"
-                      className={`form-control ${styles.inputs}`}
-                      value={user.password}
-                      onChange={handleFieldChange}
-                      maxLength={62}
-                    />
-                    <div className="form-check">
+                    <div className="position-relative">
                       <input
-                        type="checkbox"
-                        id="showpassword"
-                        checked={showpassword}
-                        onChange={() => setShowpassword(!showpassword)}
-                        className="form-check-input"
+                        type={showpassword ? 'text' : 'password'}
+                        id="password"
+                        name="password"
+                        value={user.password}
+                        onChange={handleFieldChange}
+                        className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                        placeholder="請輸入您的密碼"
+                        required
+                        maxLength={62}
+                        style={{
+                          backdropFilter: 'blur(10px)',
+                          color: 'white',
+                        }}
                       />
-                      <label
-                        htmlFor="showpassword"
-                        className="text-white form-check-label"
+                      <button
+                        type="button"
+                        className="btn position-absolute top-50 end-0 translate-middle-y me-3 p-0"
+                        onClick={() => setShowpassword(!showpassword)}
+                        style={{ background: 'none', border: 'none' }}
                       >
-                        顯示密碼
-                      </label>
+                        {showpassword ? (
+                          <AiOutlineEyeInvisible size={20} color="#E0B0FF" />
+                        ) : (
+                          <AiOutlineEye size={20} color="#E0B0FF" />
+                        )}
+                      </button>
                     </div>
                     {errors.password && (
-                      <div className="error">{errors.password}</div>
+                      <div
+                        className="alert alert-danger py-2 mt-2"
+                        role="alert"
+                      >
+                        {errors.password}
+                      </div>
                     )}
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="confirmpassword" className={styles.white}>
+                    <label htmlFor="confirmpassword" className="text-white">
                       確認密碼
                     </label>
                     <input
                       type={showConfirmpassword ? 'text' : 'password'}
                       id="confirmpassword"
                       name="confirmpassword"
-                      className={`form-control ${styles.inputs}`}
+                      className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
                       value={user.confirmpassword}
                       onChange={handleFieldChange}
+                      placeholder="請再次輸入您的密碼"
+                      required
+                      style={{
+                        backdropFilter: 'blur(10px)',
+                        color: 'white',
+                      }}
                     />
                     <div className="form-check">
                       <input
@@ -336,26 +373,39 @@ export default function Signup() {
                       </label>
                     </div>
                     {errors.confirmpassword && (
-                      <div className="error">{errors.confirmpassword}</div>
+                      <div
+                        className="alert alert-danger py-2 mt-2"
+                        role="alert"
+                      >
+                        {errors.confirmpassword}
+                      </div>
                     )}
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="phone" className={styles.white}>
+                    <label htmlFor="phone" className="text-white fw-semibold">
                       手機
                     </label>
                     <input
                       type="tel"
                       id="phone"
                       name="phone"
-                      className={`form-control ${styles.inputs}`}
+                      className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
                       value={user.phone}
                       onChange={handleFieldChange}
+                      placeholder="請輸入您的手機號碼"
+                      style={{
+                        backdropFilter: 'blur(10px)',
+                        color: 'white',
+                      }}
                     />
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="birthdate" className={styles.white}>
+                    <label
+                      htmlFor="birthdate"
+                      className="text-white fw-semibold"
+                    >
                       生日
                     </label>
                     <div className="">
@@ -363,23 +413,31 @@ export default function Signup() {
                         type="date"
                         id="birthdate"
                         name="birthdate"
-                        className={`form-control ${styles.inputs}`}
+                        className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
                         value={user.birthdate}
                         onChange={handleFieldChange}
+                        style={{
+                          backdropFilter: 'blur(10px)',
+                          color: 'white',
+                        }}
                       />
                     </div>
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="gender" className={styles.white}>
+                    <label htmlFor="gender" className="text-white fw-semibold">
                       性別
                     </label>
                     <select
                       id="gender"
                       name="gender"
-                      className={`form-select ${styles.inputs}`}
+                      className="form-select form-select-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
                       value={user.gender}
                       onChange={handleFieldChange}
+                      style={{
+                        backdropFilter: 'blur(10px)',
+                        color: 'white',
+                      }}
                     >
                       <option value="">請選擇</option>
                       <option value="female">女</option>
@@ -406,32 +464,85 @@ export default function Signup() {
                       </label>
                     </div>
                     {errors.agree && (
-                      <div className="error">{errors.agree}</div>
+                      <div
+                        className="alert alert-danger py-2 mt-2"
+                        role="alert"
+                      >
+                        {errors.agree}
+                      </div>
                     )}
                   </div>
 
-                  <button
-                    type="submit"
-                    className="btn btn-primary w-100 text-white"
-                  >
-                    送出
-                  </button>
-                </div>
-              </form>
+                  {/* 送出按鈕 */}
+                  <div className="d-grid mb-4">
+                    <button
+                      type="submit"
+                      className="btn btn-primary btn-lg fw-semibold py-3"
+                      style={{
+                        background: 'linear-gradient(45deg, #805AF5, #E0B0FF)',
+                        border: 'none',
+                        borderRadius: '12px',
+                      }}
+                    >
+                      註冊
+                    </button>
+                  </div>
+
+                  {/* 登入提示 */}
+                  <div className="text-center">
+                    <span className="text-white-50">已經有帳號？</span>
+                    <Link
+                      href="/member/login"
+                      className="text-white text-decoration-none ms-1 fw-semibold"
+                    >
+                      立即登入
+                    </Link>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
       <MyFooter />
 
       <style jsx>{`
-        .error {
-          color: red;
-          font-size: 16px;
-          margin-top: 0.25rem;
+        .hover-text-white:hover {
+          color: white !important;
+        }
+
+        .form-control:focus {
+          background-color: rgba(255, 255, 255, 0.15) !important;
+          border-color: #e0b0ff !important;
+          box-shadow: 0 0 0 0.2rem rgba(224, 176, 255, 0.25) !important;
+        }
+
+        .form-control::placeholder {
+          color: rgba(255, 255, 255, 0.6) !important;
+        }
+
+        .btn-outline-light.active {
+          background-color: rgba(255, 255, 255, 0.2) !important;
+          border-color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .btn-outline-light:hover {
+          background-color: rgba(255, 255, 255, 0.1) !important;
+          border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        @media (max-width: 768px) {
+          .display-4 {
+            font-size: 2rem !important;
+          }
+          .display-3 {
+            font-size: 2.5rem !important;
+          }
         }
       `}</style>
     </>
   )
 }
+
 Signup.getLayout = (page) => page

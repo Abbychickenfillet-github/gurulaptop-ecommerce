@@ -1,5 +1,4 @@
----
-## PostgreSQL 轉換
+---## PostgreSQL 轉換
 
 -- 建立自定義的 ENUM 類型
 CREATE TYPE request_status AS ENUM ('pending', 'accepted', 'rejected');

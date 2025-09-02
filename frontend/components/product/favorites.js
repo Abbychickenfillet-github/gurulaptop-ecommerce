@@ -4,18 +4,15 @@ import ProductCardWhite from '@/components/product/product-card-white'
 import styles from '@/styles/favorities.module.scss'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+
 const MySwal = withReactContent(Swal)
 
 // 撈取所有收藏清單
 export default function Favorites() {
   const { auth } = useAuth() // 獲取 auth 對象
-
-  const { userData } = auth // 獲取 userdata
-
   const [data, setData] = useState([]) // 存儲收藏的產品數據
   const [loading, setLoading] = useState(true) // 設置加載狀態
 
-  
   useEffect(() => {
     // 只有當 userData 存在時才進行數據請求
     if (auth.isAuth && auth.userData?.user_id) {
@@ -23,7 +20,7 @@ export default function Favorites() {
       const fetchFavorites = async () => {
         try {
           const response = await fetch(
-            `process.env.NEXT_PUBLIC_API_BASE_URL/api/favorites/${user_id}`
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${user_id}`,
           )
           const result = await response.json()
           if (result.status === 'success') {

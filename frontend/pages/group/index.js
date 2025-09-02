@@ -40,9 +40,12 @@ const Group = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/group/events', {
-        credentials: 'include',
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/events`,
+        {
+          credentials: 'include',
+        },
+      )
       const data = await response.json()
       if (data.status === 'success') {
         setEvents(data.data.events || [])
@@ -54,9 +57,12 @@ const Group = () => {
 
   const fetchGroups = async () => {
     try {
-      const response = await fetch('process.env.NEXT_PUBLIC_API_BASE_URL/api/group/all', {
-        credentials: 'include',
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/all`,
+        {
+          credentials: 'include',
+        },
+      )
       const data = await response.json()
 
       if (data.status === 'success') {
@@ -83,13 +89,13 @@ const Group = () => {
       result = result.filter(
         (group) =>
           group.group_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          group.description.toLowerCase().includes(searchTerm.toLowerCase())
+          group.description.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     }
 
     if (filterEvent && filterEvent !== 'all') {
       result = result.filter(
-        (group) => group.event_id === parseInt(filterEvent)
+        (group) => group.event_id === parseInt(filterEvent),
       )
     }
 

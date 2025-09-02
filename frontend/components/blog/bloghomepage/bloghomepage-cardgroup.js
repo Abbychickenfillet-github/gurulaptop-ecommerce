@@ -17,7 +17,7 @@ export default function BloghomepageCardgroup() {
     const fetchBlogs = async () => {
       try {
         const res = await fetch(
-          `${process.env.process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blogcardgroup`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blogcardgroup`,
         )
         const data = await res.json()
 

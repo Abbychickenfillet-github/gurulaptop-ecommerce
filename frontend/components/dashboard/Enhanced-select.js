@@ -32,7 +32,7 @@ export default function EnhancedSelect({
       .map((child) => {
         if (child.type === 'optgroup') {
           const filteredChildren = React.Children.toArray(
-            child.props.children
+            child.props.children,
           ).filter((option) => {
             const optionText = option.props.children.toString().toLowerCase()
             return optionText.includes(searchTerm.toLowerCase())
@@ -131,7 +131,7 @@ export default function EnhancedSelect({
                         onClick={() =>
                           handleSelect(
                             option.props.value,
-                            option.props.children
+                            option.props.children,
                           )
                         }
                         style={{

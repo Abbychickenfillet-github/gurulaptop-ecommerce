@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-
+import Image from 'next/image'
 // 定義組件 ArticleDetail
 export default function ArticleDetail(props) {
   // 使用 Router()
@@ -13,7 +13,7 @@ export default function ArticleDetail(props) {
   const [loading, setLoading] = useState(true) // 加載狀態
 
   const getArticle = async (article_id) => {
-    const url = `process.env.NEXT_PUBLIC_API_BASE_URL/api/article/article_detail/${article_id}`
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/article/article_detail/${article_id}`
 
     try {
       const res = await fetch(url)
@@ -50,8 +50,6 @@ export default function ArticleDetail(props) {
 
   return (
     <>
-      <ArticleDetailMainArea />
-
       {article ? (
         <section className="ArticleDetailSectionContentArea">
           <p className="fs-5 fw-bold ArticleDetailSectionContentAreaTitle">
@@ -60,17 +58,21 @@ export default function ArticleDetail(props) {
           <p className="ArticleDetailText">{article.article_content}</p>
           <div className="d-flex align-items-center justify-content-center gap-5 mb-5">
             <div className="col-6">
-              <img
+              <Image
                 className="w-100 h-100 ratio"
                 src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
-                alt=""
+                alt="Article image 1"
+                width={400}
+                height={300}
               />
             </div>
             <div className="col-6">
-              <img
+              <Image
                 className="w-100 h-100 ratio"
                 src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
-                alt=""
+                alt="Article image 2"
+                width={400}
+                height={300}
               />
             </div>
           </div>
@@ -78,26 +80,32 @@ export default function ArticleDetail(props) {
           <div className="d-flex align-items-center justify-content-center col-12 mb-5 gap-5">
             <div className="row">
               <div className="col-6">
-                <img
+                <Image
                   className="w-100 h-100 ratio"
                   src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
-                  alt=""
+                  alt="Article image 3"
+                  width={400}
+                  height={300}
                 />
               </div>
               <div className="col-6">
-                <img
+                <Image
                   className="w-100 h-100 ratio"
                   src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
-                  alt=""
+                  alt="Article image 4"
+                  width={400}
+                  height={300}
                 />
               </div>
             </div>
           </div>
           <div className="container d-flex align-items-center justify-content-center col-12">
-            <img
+            <Image
               className="w-50 h-50 ratio"
               src="https://th.bing.com/th/id/OIP.V5ThX7OGGxexxzFbYvHtBwHaFJ?rs=1&pid=ImgDetMain"
-              alt=""
+              alt="Article image 5"
+              width={400}
+              height={300}
             />
           </div>
         </section>

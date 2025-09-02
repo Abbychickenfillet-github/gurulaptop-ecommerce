@@ -12,7 +12,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
 import Head from 'next/head'
-
+import Image from 'next/image'
 export default function Blogcreated(props) {
   const router = useRouter() // 加入 router
 
@@ -70,11 +70,11 @@ export default function Blogcreated(props) {
 
     try {
       const response = await fetch(
-        'process.env.NEXT_PUBLIC_API_BASE_URL/api/blog/blog-created',
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-created`,
         {
           method: 'POST',
           body: formData,
-        }
+        },
       )
       console.log('成功連結')
 
@@ -143,12 +143,18 @@ export default function Blogcreated(props) {
           </div>
         </div>
 
-        <div
+        <button
+          type="button"
           className="BlogImgUploadDiv d-flex align-items-center justify-content-center"
           onClick={() => document.getElementById('imageInput').click()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              document.getElementById('imageInput').click()
+            }
+          }}
         >
           {blog_image ? (
-            <img
+            <Image
               src={URL.createObjectURL(blog_image)}
               alt="預覽圖片"
               className="object-fit-cover w-100 h-100"
@@ -166,7 +172,7 @@ export default function Blogcreated(props) {
             style={{ display: 'none' }}
             id="imageInput"
           />
-        </div>
+        </button>
 
         <form onSubmit={handleSubmit}>
           {/* 標題區塊 */}
@@ -232,17 +238,23 @@ export default function Blogcreated(props) {
                   className="d-flex flex-column gap-xxl-5  gap-xl-5 gap-lg-4 gap-md-3 gap-sm-2 gap-xs-2 gap-1"
                 >
                   {column.map((brand) => (
-                    <div
+                    <button
                       key={brand}
+                      type="button"
                       className={`BlogEditBrandSelected shadow d-flex justify-content-center align-items-center ${
                         brand === blog_brand
                           ? 'BlogEditBrandSelectedActive'
                           : ''
                       }`}
                       onClick={() => setBrand(brand)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          setBrand(brand)
+                        }
+                      }}
                     >
                       <p className="m-0">{brand}</p>
-                    </div>
+                    </button>
                   ))}
                 </div>
               ))}
@@ -282,15 +294,21 @@ export default function Blogcreated(props) {
 
             <div className="d-flex flex-column  gap-xxl-4 gap-xl-4 gap-lg-3 gap-md-2 gap-sm-1 gap-xs-1 gap-1 col-4 w-50 ms-5">
               {['購買心得', '開箱文', '疑難雜症', '活動心得'].map((v) => (
-                <div
+                <button
                   key={v}
+                  type="button"
                   className={`BlogEditBrandSelected shadow d-flex justify-content-center align-items-center ${
                     v === blog_type ? 'BlogEditBrandSelectedActive' : ''
                   }`}
                   onClick={() => setType(v)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      setType(v)
+                    }
+                  }}
                 >
                   <p>{v}</p>
-                </div>
+                </button>
               ))}
             </div>
           </div>

@@ -48,49 +48,52 @@ export default function List() {
     price,
     search,
   }) => {
-  try{
-    let where = ''
+    try {
+      let where = ''
 
-    if (page) {
-      where += `page=${page}`
-    }
-    if (category) {
-      where += `&category=${category}`
-    }
-    if (categoryValue) {
-      where += `&category_value=${categoryValue}`
-    }
-    if (price) {
-      where += `&price=${price}`
-    }
-    if (search) {
-      where += `&search=${search}`
-    }
-    console.log('請求 URL:', `process.env.NEXT_PUBLIC_API_BASE_URL/api/products/list?${where}`)
-
-    const response = await fetch(
-      `process.env.NEXT_PUBLIC_API_BASE_URL/api/products/list?${where}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      if (page) {
+        where += `page=${page}`
       }
-    )
-    if(!response.ok){
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const result = await response.json()
+      if (category) {
+        where += `&category=${category}`
+      }
+      if (categoryValue) {
+        where += `&category_value=${categoryValue}`
+      }
+      if (price) {
+        where += `&price=${price}`
+      }
+      if (search) {
+        where += `&search=${search}`
+      }
+      console.log(
+        '請求 URL:',
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/list?${where}`,
+      )
 
-    if (result.status === 'success') {
-      setProducts(result.data.products)
-      setTotalPages(result.data.totalPages)
-    } else {
-      console.error('API 返回錯誤:', result.message)
-      setProducts([])
-      setTotalPages(1)
-    }
-  } catch (error) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/list?${where}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const result = await response.json()
+
+      if (result.status === 'success') {
+        setProducts(result.data.products)
+        setTotalPages(result.data.totalPages)
+      } else {
+        console.error('API 返回錯誤:', result.message)
+        setProducts([])
+        setTotalPages(1)
+      }
+    } catch (error) {
       console.error('fetchProducts 錯誤:', error)
       setProducts([])
       setTotalPages(0)
@@ -232,7 +235,7 @@ export default function List() {
                 value={tmpSearch}
               />
               <Image
-                src="/images/product/search.svg"
+                src="/product/search.svg"
                 className={`${styles.product_search_icon}`}
                 alt="search"
                 width={20}
@@ -280,7 +283,7 @@ export default function List() {
                       priceMin,
                       0,
                       200000,
-                      150
+                      150,
                     )}px`,
                   }}
                   className={`${styles.price_tip}`}
@@ -328,7 +331,7 @@ export default function List() {
                       priceMax,
                       0,
                       200000,
-                      150
+                      150,
                     )}px`,
                   }}
                   className={`${styles.price_tip}`}

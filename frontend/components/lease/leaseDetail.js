@@ -1,42 +1,60 @@
-import React, { useState, useEffect } from 'react';
-import styles from '@/styles/lease.module.css';
+import React from 'react'
+import styles from '@/styles/lease.module.css'
 import BackToTop from '../BackToTop/BackToTop'
+import Image from 'next/image'
 
-
-export default function LeaseDetail(props) {
+export default function LeaseDetail() {
   return (
     <div className={styles.customContainer}>
       <section className={styles.col1}>
         <div className={styles.menu}>
           <div className={styles.square}>
-            <img
+            <Image
               src="/images/lease/15-fd1149TU.png"
               alt="Alienware"
+              width={400}
+              height={300}
             />
             <div className={`${styles.carouselBtn} ${styles.leftBtn}`}>
-              <img src="/images/lease/array_left.svg" alt="Previous" />
+              <Image
+                src="/images/lease/array_left.svg"
+                alt="Previous"
+                width={24}
+                height={24}
+              />
             </div>
             <div className={`${styles.carouselBtn} ${styles.rightBtn}`}>
-              <img src="/images/lease/array_right.svg" alt="Next" />
+              <Image
+                src="/images/lease/array_right.svg"
+                alt="Next"
+                width={24}
+                height={24}
+              />
             </div>
           </div>
           <div className={styles.menu2}>
             <div className={styles.list}>
-              <img
+              <Image
                 src="/images/lease/Alienware m16 R2.png"
                 alt="AORUS 16"
+                width={150}
+                height={100}
               />
             </div>
             <div className={styles.list}>
-              <img
+              <Image
                 src="/images/lease/AORUS 5 (Intel 12th Gen).png"
                 alt="ASUS Vivobook"
+                width={150}
+                height={100}
               />
             </div>
             <div className={styles.list}>
-              <img
+              <Image
                 src="/images/lease/AORUS 5 (Intel 12th Gen).png"
                 alt="G634JZ Model"
+                width={150}
+                height={100}
               />
             </div>
           </div>
@@ -47,11 +65,19 @@ export default function LeaseDetail(props) {
             <div className={styles.brand}>
               <span>ASUS</span>
               <div className={styles.icon}>
-                <img className={styles.cart} src="/images/lease/cart.svg" alt="Cart" />
-                <img
+                <Image
+                  className={styles.cart}
+                  src="/images/lease/cart.svg"
+                  alt="Cart"
+                  width={24}
+                  height={24}
+                />
+                <Image
                   className={styles.heart}
                   src="/images/lease/heart.svg"
                   alt="Favorite"
+                  width={24}
+                  height={24}
                 />
               </div>
             </div>
@@ -109,8 +135,8 @@ export default function LeaseDetail(props) {
 
             <div className={styles.description}>
               <p>
-                16" Mini LED WQXGA(2560x1600),16:10,240Hz,3ms,DCI-P3
-                100%；副螢幕：14" IPS ScreenPad Plus (3840x1100)4K
+                16&quot; Mini LED WQXGA(2560x1600),16:10,240Hz,3ms,DCI-P3
+                100%；副螢幕：14&quot; IPS ScreenPad Plus (3840x1100)4K
               </p>
               <p>AMD Ryzen 9 7945HX (2.5GHz up to 5.4GHz,64MB)16 Cores</p>
               <p>64GB(32GB*2) DDR5-4800 SO-DIMM (2Slot,Max.64GB)</p>
@@ -126,16 +152,14 @@ export default function LeaseDetail(props) {
           <div className={styles.title2}>產品規格</div>
           <ul>
             <li>
-              16" Mini LED WQXGA (2560x1600), 16:10, 240Hz, 3ms, DCI-P3
-              100%；副螢幕：14" IPS ScreenPad Plus (3840x1100) 4K
+              16&quot; Mini LED WQXGA (2560x1600), 16:10, 240Hz, 3ms, DCI-P3
+              100%；副螢幕：14&quot; IPS ScreenPad Plus (3840x1100) 4K
             </li>
             <li>AMD Ryzen 9 7945HX (2.5GHz up to 5.4GHz, 64MB) 16 Cores</li>
             <li>64GB (32GB*2) DDR5-4800 SO-DIMM (2Slot, Max.64GB)</li>
             <li>硬碟: 2TB+2TB PCIe 4.0 NVMe M.2 SSD (RAID 0)</li>
             <li>作業系統: Windows 11 Home</li>
-            <li>
-              獨顯: NVIDIA GeForce RTX 4090 16GB GDDR6 (具備MUX獨顯直連)
-            </li>
+            <li>獨顯: NVIDIA GeForce RTX 4090 16GB GDDR6 (具備MUX獨顯直連)</li>
             <li>
               無線網路: Wi-Fi 6E(802.11ax) (Triple band) 2*2 + Bluetooth 5.2
             </li>
@@ -168,5 +192,5 @@ export default function LeaseDetail(props) {
       </section>
       <BackToTop />
     </div>
-  );
+  )
 }

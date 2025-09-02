@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import axios from 'axios'
 import styles from './Carousel.module.css'
-
+import Image from 'next/image'
 const Carousel = () => {
   const [activeIndex, setActiveIndex] = useState(0)
   const [upcomingEvents, setUpcomingEvents] = useState([])
@@ -18,7 +18,7 @@ const Carousel = () => {
               status: '即將開始報名',
               sort: 'nearest',
             },
-          }
+          },
         )
 
         if (response.data.code === 200) {
@@ -39,7 +39,8 @@ const Carousel = () => {
 
   const prevSlide = () => {
     setActiveIndex(
-      (current) => (current - 1 + upcomingEvents.length) % upcomingEvents.length
+      (current) =>
+        (current - 1 + upcomingEvents.length) % upcomingEvents.length,
     )
   }
 
@@ -51,9 +52,13 @@ const Carousel = () => {
   useEffect(() => {
     if (upcomingEvents.length <= 1) return // 只有一張或沒有時不輪播
 
-    const timer = setInterval(nextSlide, 5000) // 每5秒切換一次
+    const timer = setInterval(() => {
+      setActiveIndex((prevIndex) =>
+        prevIndex === upcomingEvents.length - 1 ? 0 : prevIndex + 1,
+      )
+    }, 5000) // 每5秒切換一次
     return () => clearInterval(timer)
-  }, [upcomingEvents.length, nextSlide])
+  }, [upcomingEvents.length])
 
   // 格式化時間顯示
   const formatDateTime = (dateString) => {
@@ -124,7 +129,7 @@ const Carousel = () => {
                 role="button"
                 tabIndex={0}
               >
-                <img
+                <Image
                   src={event.picture || '/images/event/default-event.jpg'}
                   alt={event.name}
                   onError={(e) => {

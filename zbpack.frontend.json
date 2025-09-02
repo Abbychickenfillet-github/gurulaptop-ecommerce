@@ -1,0 +1,6 @@
+{
+    "app_dir": "frontend",
+    "build_command": "npm run build",
+    "start_command": "npm start",
+    "output_dir": "out"
+  }

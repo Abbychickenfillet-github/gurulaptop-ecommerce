@@ -47,11 +47,11 @@ export default function CouponUser() {
       console.log('正在請求優惠券資料，用戶ID:', userId)
       console.log(
         '請求URL:',
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
       )
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
       )
 
       console.log('API 回應狀態:', res.status, res.statusText)
@@ -121,7 +121,7 @@ export default function CouponUser() {
       console.log('userId 或 auth.userData 不存在，設置 loading 為 false')
       setLoading(false)
     }
-  }, [userId, auth, getUserCoupons]) 
+  }, [userId, auth, getUserCoupons])
   // 加入 auth 作為依賴項
   //缺少getUserCoupons作為依賴項Terminal會出現  react-hooks/exhaustive-deps
 
@@ -151,7 +151,7 @@ export default function CouponUser() {
         String(coupon.coupon_discount).includes(searchContent)
       )
     }),
-    sortOrder
+    sortOrder,
   )
 
   // 載入中顯示

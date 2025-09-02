@@ -4,7 +4,7 @@ import styles from './EventManagement.module.css'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import Router from 'next/router'
-
+import Image from 'next/image'
 const EventManagement = () => {
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
@@ -13,14 +13,14 @@ const EventManagement = () => {
   const fetchUserEvents = async () => {
     try {
       const response = await axios.get(
-        'process.env.NEXT_PUBLIC_API_BASE_URL/api/events/user/registered',
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events/user/registered`,
         {
           withCredentials: true,
           headers: {
             'Cache-Control': 'no-cache',
             Pragma: 'no-cache',
           },
-        }
+        },
       )
 
       if (response.data.code === 200) {
@@ -69,8 +69,8 @@ const EventManagement = () => {
 
     try {
       const response = await axios.delete(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/events/${eventId}/registration`,
-        { withCredentials: true }
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events/${eventId}/registration`,
+        { withCredentials: true },
       )
 
       if (response.data.code === 200) {
@@ -102,7 +102,7 @@ const EventManagement = () => {
     if (imagePath.startsWith('http')) {
       return imagePath
     }
-    return `process.env.NEXT_PUBLIC_API_BASE_URL${imagePath}`
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}${imagePath}`
   }
 
   // 格式化時間
@@ -171,7 +171,7 @@ const EventManagement = () => {
             <div className="row align-items-center d-none d-md-flex">
               <div className="col-2">
                 <Link href={`/event/eventDetail/${event.id}`}>
-                  <img
+                  <Image
                     src={getImageUrl(event.picture)}
                     alt={event.name}
                     className={styles.groupImg}
@@ -211,7 +211,7 @@ const EventManagement = () => {
             <div className={`${styles.mobileLayout} d-block d-md-none`}>
               <div className={styles.mobileImgWrapper}>
                 <Link href={`/event/eventDetail/${event.id}`}>
-                  <img
+                  <Image
                     src={getImageUrl(event.picture)}
                     alt={event.name}
                     className={styles.groupImg}

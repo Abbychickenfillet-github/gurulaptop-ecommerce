@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styles from '@/styles/MarioGame.module.scss'
- // Separate CSS file to keep styling modular
+// Separate CSS file to keep styling modular
 
 const MarioGame = () => {
   const [score, setScore] = useState(0)

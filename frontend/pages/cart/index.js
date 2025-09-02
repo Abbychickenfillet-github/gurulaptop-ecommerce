@@ -11,7 +11,7 @@ import CouponBtn from '@/components/coupon/coupon-btn'
 import axiosInstance from '@/services/axios-instance'
 import Head from 'next/head'
 import NextBreadCrumb from '@/components/common/next-breadcrumb'
-
+import Image from 'next/image'
 export default function CartIndex() {
   const router = useRouter()
   const { auth } = useAuth()
@@ -91,8 +91,8 @@ export default function CartIndex() {
 
   // 處理7-11選擇
   const { store711, openWindow } = useShip711StoreOpener(
-    'process.env.NEXT_PUBLIC_API_BASE_URL/api/shipment/711',
-    { autoCloseMins: 3 } // x分鐘沒完成選擇會自動關閉，預設5分鐘。
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/shipment/711`,
+    { autoCloseMins: 3 }, // x分鐘沒完成選擇會自動關閉，預設5分鐘。
   )
 
   //產生訂單
@@ -157,33 +157,36 @@ export default function CartIndex() {
       return
     }
 
-    const result = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/cart/order`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const result = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/order`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: user_id,
+          receiver: receiver,
+          phone: phone,
+          amount: Number(couponDetails.finalPrice) + Number(shipPrice),
+          payment_method: payment_method,
+          coupon_id: couponDetails.coupon_id,
+          detail: cartdata,
+          address: address,
+        }),
       },
-      body: JSON.stringify({
-        user_id: user_id,
-        receiver: receiver,
-        phone: phone,
-        amount: Number(couponDetails.finalPrice) + Number(shipPrice),
-        payment_method: payment_method,
-        coupon_id: couponDetails.coupon_id,
-        detail: cartdata,
-        address: address,
-      }),
-    })
+    )
 
     if (couponDetails.coupon_id !== '') {
       const couponResult = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/update/${user_id}/${couponDetails.coupon_id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/update/${user_id}/${couponDetails.coupon_id}`,
         {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ status: '已使用' }),
-        }
+        },
       )
     }
 
@@ -195,7 +198,7 @@ export default function CartIndex() {
       setCartdata([])
       setAddress('')
       localStorage.removeItem('store711')
-      window.location.href = `process.env.NEXT_PUBLIC_API_BASE_URL/api/ecpay-test-only/?orderId=${order_id}&amount=${couponDetails.finalPrice}`
+      window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/ecpay-test-only/?orderId=${order_id}&amount=${couponDetails.finalPrice}`
     }
   }
 
@@ -212,7 +215,7 @@ export default function CartIndex() {
       setAddress('')
       localStorage.removeItem('store711')
       if (result.isConfirmed) {
-        window.location.href = `process.env.NEXT_PUBLIC_API_BASE_URL/api/line-pay/reserve?orderId=${lineOrder.orderId}`
+        window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/line-pay/reserve?orderId=${lineOrder.orderId}`
       }
     })
   }
@@ -278,33 +281,36 @@ export default function CartIndex() {
       return
     }
 
-    const result = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/cart/order`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const result = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/order`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: user_id,
+          receiver: receiver,
+          phone: phone,
+          amount: Number(couponDetails.finalPrice) + Number(shipPrice),
+          payment_method: payment_method,
+          coupon_id: couponDetails.coupon_id,
+          detail: cartdata,
+          address: address,
+        }),
       },
-      body: JSON.stringify({
-        user_id: user_id,
-        receiver: receiver,
-        phone: phone,
-        amount: Number(couponDetails.finalPrice) + Number(shipPrice),
-        payment_method: payment_method,
-        coupon_id: couponDetails.coupon_id,
-        detail: cartdata,
-        address: address,
-      }),
-    })
+    )
 
     if (couponDetails.coupon_id !== '') {
       const couponResult = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/update/${user_id}/${couponDetails.coupon_id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/update/${user_id}/${couponDetails.coupon_id}`,
         {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ status: '已使用' }),
-        }
+        },
       )
     }
 
@@ -351,7 +357,7 @@ export default function CartIndex() {
   // 確認交易，處理伺服器通知line pay已確認付款，為必要流程
   const handleConfirm = async (transactionId) => {
     const res = await axiosInstance.get(
-      `/line-pay/confirm?transactionId=${transactionId}`
+      `/line-pay/confirm?transactionId=${transactionId}`,
     )
 
     // console.log(res.data)
@@ -407,13 +413,16 @@ export default function CartIndex() {
 
   useEffect(() => {
     async function fetchData() {
-      const result = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/cart/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const result = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ user_id: user_id }),
         },
-        body: JSON.stringify({ user_id: user_id }),
-      })
+      )
 
       const data = await result.json()
       const arrData = data.data
@@ -456,7 +465,7 @@ export default function CartIndex() {
         <NextBreadCrumb isHomeIcon isChevron bgClass="bg-transparent" />
         <div className="tilte d-flex mb-3">
           <div className="logo border-end me-3">
-            <img src="/logo-black.svg" />
+            <Image src="/logo-black.svg" alt="Logo" width={84} height={39} />
           </div>
           <div className="h2 align-items-center">
             <h2>購物車</h2>
@@ -475,7 +484,9 @@ export default function CartIndex() {
                     handle(item.product_id, newQuantity)
                     if (newQuantity === 0) {
                       setCartdata(
-                        cartdata.filter((v) => v.product_id !== item.product_id)
+                        cartdata.filter(
+                          (v) => v.product_id !== item.product_id,
+                        ),
                       )
                     }
                   }}
@@ -489,7 +500,12 @@ export default function CartIndex() {
             <div className="card p-3 border-primary">
               <div className="row border-bottom border-primary mb-2 pb-2">
                 <div className="col-6 text-primary">
-                  <img src="/diamond.svg" />
+                  <Image
+                    src="/diamond.svg"
+                    alt="Diamond"
+                    width={20}
+                    height={20}
+                  />
                   清單資訊
                 </div>
               </div>

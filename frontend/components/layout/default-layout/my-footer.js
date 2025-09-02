@@ -1,11 +1,10 @@
 import Link from 'next/link'
-
+import Image from 'next/image'
 export default function MyFooter() {
   return (
     <footer>
       <div className="container footer-side">
         <div className="row m-3 border-bottom border-secondary footer-row">
-
           <div className="footer-link col-2">
             <Link
               className="text-secondary mb-3 d-block text-decoration-none"
@@ -62,7 +61,7 @@ export default function MyFooter() {
           </div>
           <div className="col-3 d-flex justify-content-end footer-logo-container">
             <div className="footer-logo">
-              <img src="/logo2.svg" alt="網站 Logo" />
+              <Image src="/logo2.svg" alt="網站 Logo" width={84} height={39} />
             </div>
           </div>
           <div className="mb-4" />
@@ -70,10 +69,21 @@ export default function MyFooter() {
         <div className="p-3 footer-row">
           <div className="col mb-3">
             <Link className="text-secondary mb-2 text-decoration-none" href="">
-              <img src="/Icon-fb2.svg" alt="Facebook 圖標" className="me-3" />
+              <Image
+                src="/Icon-fb2.svg"
+                alt="Facebook 圖標"
+                className="me-3"
+                width={24}
+                height={24}
+              />
             </Link>
             <Link className="text-secondary mb-2 text-decoration-none" href="">
-              <img src="/Icon-ig2.svg" alt="Instagram 圖標" />
+              <Image
+                src="/Icon-ig2.svg"
+                alt="Instagram 圖標"
+                width={24}
+                height={24}
+              />
             </Link>
           </div>
           <div className="col text-secondary text-end">© 2024 Hello, Inc.</div>

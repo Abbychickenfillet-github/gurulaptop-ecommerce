@@ -7,7 +7,7 @@ import Paginationcomponent from '@/components/paginationcomponent/paginationcomp
 import Link from 'next/link'
 import { FaPenFancy } from 'react-icons/fa'
 import { useRouter } from 'next/router'
-
+import Image from 'next/image'
 export default function CouponPage() {
   const router = useRouter()
   const { id } = router.query
@@ -17,11 +17,12 @@ export default function CouponPage() {
       <div className="row d-flex justify-content-center">
         <div className="card col-2 border-0">
           <div className=" text-center ">
-            <img
+            <Image
               src="https://via.placeholder.com/70x70"
               alt="Profile"
               className="rounded-circle img-fluid mb-3"
-              style={{ width: '70px', height: '70px' }}
+              width={70}
+              height={70}
             />
             <h5 className="mb-2">萊歐斯·托登</h5>
             <button
@@ -92,7 +93,6 @@ export default function CouponPage() {
               <Tab.Pane eventKey="shopping">
                 <div>
                   <h4>購買清單</h4>
-                  <CardExample />
                 </div>
               </Tab.Pane>
 
