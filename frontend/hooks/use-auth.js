@@ -172,6 +172,20 @@ export const AuthProvider = ({ children }) => {
   // 功能：處理用戶登出
   const logout = async () => {
     try {
+      console.log('🚪 開始登出流程...')
+      
+      // 先清除本地認證狀態
+      clearAuthState()
+      
+      // 強制清除瀏覽器中的 accessToken cookie（多種方式確保清除）
+      console.log('🧹 清除瀏覽器 cookie...')
+      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost;'
+      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+      document.cookie = 'accessToken=; max-age=0; path=/; domain=localhost;'
+      document.cookie = 'accessToken=; max-age=0; path=/;'
+      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost; secure;'
+      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure;'
+      
       // 向後端發送登出請求
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/logout`, {
         method: 'POST',
@@ -181,30 +195,22 @@ export const AuthProvider = ({ children }) => {
         },
       })
 
-      if (!response.ok) {
-        throw new Error('登出失敗')
-      }
+      console.log('📡 後端登出回應:', response.status)
       
-      const result = await response.json()
-      
-      if (result.status === 'success') {
-        // 登出成功，執行清理操作
-        await Promise.all([
-          // 清除本地認證狀態
-          new Promise((resolve) => {
-            clearAuthState()
-            resolve()
-          }),
-          // 立即導航到首頁
-          router.replace('/'),
-        ])
-        
-        // 清除瀏覽器中的 accessToken cookie
-        document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost;'
+      // 如果後端成功，顯示成功訊息
+      if (response.ok) {
+        const result = await response.json()
+        if (result.status === 'success') {
+          console.log('✅ 登出成功')
+        }
       }
 
     } catch (error) {
       console.error('登出錯誤:', error)
+    } finally {
+      // 無論如何都跳轉到登入頁面（只跳轉一次）
+      console.log('🔄 跳轉到登入頁面...')
+      router.replace('/member/login')
     }
   }
 
@@ -249,6 +255,11 @@ export const AuthProvider = ({ children }) => {
   // 
   const handleCheckAuth = async () => {
     try {
+      // 避免重複調用
+      if (auth.isLoading === false) {
+        return
+      }
+      
       console.log('🔍 開始檢查認證狀態...')
       console.log('📍 當前路徑:', router.pathname)
       console.log('🍪 Cookie:', document.cookie)
@@ -289,9 +300,11 @@ export const AuthProvider = ({ children }) => {
   // ========================================
   // 🔄 狀態變化監聽器
   // ========================================
-  // 監聽 auth 狀態的變化，用於調試
+  // 監聽 auth 狀態的變化，用於調試（僅在開發環境）
   useEffect(() => {
-    console.log('Auth 狀態變化:', auth)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Auth 狀態變化:', auth)
+    }
   }, [auth])
 
   // ========================================

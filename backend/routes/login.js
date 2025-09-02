@@ -89,7 +89,8 @@ router.post('/', upload.none(), async (req, res, next) => {
       secure: process.env.NODE_ENV === 'production', // 動態判斷環境
       sameSite: 'lax', // 改为 lax，避免跨域问题
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2天
-      path: '/'
+      path: '/',
+      domain: 'localhost' // 添加 domain 參數，與清除時保持一致
     })
     console.log('🍪 Cookie 設置完成')
 
@@ -133,9 +134,14 @@ router.post('/', upload.none(), async (req, res, next) => {
 
 
 router.post('/logout', authenticate, (req, res) => {
-  // 清除cookie
-  res.clearCookie('accessToken', { httpOnly: true })
-  // httpOnly真正含義是：這個 Cookie 只能透過 HTTP(S) 請求 來傳輸和存取，而不能被 JavaScript(document.cookie) 存取。
+  // 清除cookie，確保參數與設置時一致
+  res.clearCookie('accessToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    domain: 'localhost' // 添加 domain 參數
+  })
   res.json({ status: 'success', data: null })
 })
 

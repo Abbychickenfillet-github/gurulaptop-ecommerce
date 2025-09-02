@@ -160,7 +160,9 @@ router.post('/login', upload.none(), async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
+      maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+      path: '/',
+      domain: 'localhost' // 添加 domain 參數，與清除時保持一致
     })
 
     return res.json({
@@ -178,12 +180,37 @@ router.post('/login', upload.none(), async (req, res) => {
 })
 
 router.post('/logout', authenticate, (req, res) => {
+  console.log('🚪 後端收到登出請求')
+  
+  // 強制清除 cookie，使用多種參數組合確保清除
   res.clearCookie('accessToken', {
     httpOnly: true,
-    // secure: process.env.NODE_ENV === 'production',
-    // sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    domain: 'localhost'
+  })
+  
+  // 再次清除，不帶 domain
+  res.clearCookie('accessToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
     path: '/'
   })
+  
+  // 設置過期的 cookie 來覆蓋
+  res.cookie('accessToken', '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    domain: 'localhost',
+    maxAge: 0,
+    expires: new Date(0)
+  })
+  
+  console.log('✅ 後端登出完成')
   return res.json({
     status: 'success',
     message: '登出成功'

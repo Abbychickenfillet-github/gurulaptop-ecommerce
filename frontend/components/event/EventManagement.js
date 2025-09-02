@@ -26,7 +26,8 @@ const EventManagement = () => {
       if (response.data.code === 200) {
         const events = response?.data?.data?.events || []
         setEvents(events)
-        Router.push('/dashboard')
+        // 移除自動跳轉，讓用戶自己決定是否要跳轉
+        // Router.push('/dashboard')
       } else {
         throw new Error(response?.data?.message || '獲取活動列表失敗')
       }

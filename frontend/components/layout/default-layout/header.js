@@ -45,22 +45,24 @@ export default function Header() {
       })
 
       if (!result.isConfirmed) return
+      
+      // 先處理 Firebase 登出
       if (auth?.userData?.google_uid) {
         await logoutFirebase()
       }
+      
+      // 執行登出（logout 函數會處理所有清理和跳轉）
       await logout()
-      router.replace('/member/login')
-      await Swal.fire({
+      
+      // 登出成功後顯示訊息（不等待，讓登出流程繼續）
+      Swal.fire({
         title: '登出成功',
         text: '您已成功登出',
         timer: 1000,
         icon: 'success',
         confirmButtonColor: '#805AF5',
       })
-
-      setTimeout(() => {
-        router.replace('/member/login')
-      }, 1000)
+      
     } catch (error) {
       console.error('登出失敗:', error)
       Swal.fire({
@@ -102,6 +104,9 @@ export default function Header() {
           // 使用相同的 getDefaultImage 函數
           setImagePath(data?.image_path || getDefaultImage(data?.gender))
         })
+        .catch((error) => {
+          console.error('Header API 請求失敗:', error)
+        })
     }
 
     document.body.style.paddingTop = '75px'
@@ -120,7 +125,7 @@ export default function Header() {
     return () => {
       document.body.style.paddingTop = '0px'
     }
-  }, [userData, isMobile])
+  }, [userData?.user_id, isMobile]) // 只依賴 userData.user_id，而不是整個 userData
 
   const navItems = [
     { name: '首頁', path: '/' },

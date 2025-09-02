@@ -63,8 +63,9 @@ export default function LogIn(props) {
       console.log('用戶已登入，跳轉到 dashboard')
       return
     }
+    // 只在組件掛載時檢查一次認證狀態
     handleCheckAuth()
-  }, [auth?.isAuth, router, handleCheckAuth])
+  }, [auth?.isAuth, router]) // 移除 handleCheckAuth 依賴
   return (
     <>
       <Head>
