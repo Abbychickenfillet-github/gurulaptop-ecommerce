@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { checkAuth, getFavs } from '@/services/user'
+import { getFavs } from '@/services/user'
 
 // ========================================
 // 🔐 認證上下文 (Authentication Context)
@@ -200,7 +200,7 @@ export const AuthProvider = ({ children }) => {
         ])
         
         // 清除瀏覽器中的 accessToken cookie
-        document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+        document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost;'
       }
 
     } catch (error) {
@@ -268,39 +268,21 @@ export const AuthProvider = ({ children }) => {
         return
       }
     
-      // 向後端驗證token是否有效
-      console.log('🔐 向後端驗證 token...')
-      const res = await checkAuth()
-      console.log('✅ 伺服器驗證結果:', res)
+      // 有 accessToken，設置為已登入狀態（不向後端驗證）
+      console.log('✅ 發現 accessToken，設置為已登入狀態')
+      setAuth(prev => ({ 
+        ...prev, 
+        isAuth: true,
+        isLoading: false
+      }))
       
-      if (res.data.status === 'success') {
-        // token有效，更新用戶數據
-        const dbUser = res.data.data.user
-        const userData = { ...initUserData }
-        
-        // 將後端返回的用戶數據合併到本地狀態
-        for (const key in userData) {
-          if (Object.hasOwn(dbUser, key)) {
-            userData[key] = dbUser[key] || ''
-          }
-        }
-        
-        // 設置為已登入狀態
-        setAuth({ 
-          isAuth: true, 
-          userData,
-          isLoading: false
-        })
-      } else {
-        // token無效，設置為未登入狀態
-        setAuth(prev => ({ 
-          ...prev, 
-          isAuth: false,
-          isLoading: false
-        }))
-      }
     } catch (error) {
       console.error('檢查認證失敗:', error)
+      setAuth(prev => ({ 
+        ...prev, 
+        isAuth: false,
+        isLoading: false
+      }))
     }
   }
 

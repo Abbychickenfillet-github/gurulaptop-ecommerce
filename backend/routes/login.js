@@ -26,13 +26,14 @@ console.log(`process.env.NEXT_PUBLIC_API_BASE_URL`, process.env.NEXT_PUBLIC_API_
 
 /* GET home page. */
 router.post('/', upload.none(), async (req, res, next) => {
-  console.log('🔐 登入請求開始')
-  console.log('📧 接收到的 email:', email)
-  console.log('🔑 接收到的 password:', password ? '[已隱藏]' : '未提供')
-  
+  const { email, password } = req.body
+
   try {
     const { email, password } = req.body
-
+    console.log('🔐 登入請求開始')
+    console.log('📧 接收到的 email:', email)
+    console.log('🔑 接收到的 password:', password ? '[已隱藏]' : '未提供')
+    
     // 從資料庫查詢使用者，並確保帳號是有效的
     console.log('🔍 查詢資料庫中的使用者...')
     const { rows: users } = await pool.query(
@@ -49,8 +50,7 @@ router.post('/', upload.none(), async (req, res, next) => {
         message: '帳號或密碼錯誤。或已停用本帳號，請聯繫客服',
       })
     }
-
-
+    
     // 如果密碼不匹配，返回錯誤訊息
     console.log('🔐 驗證密碼...')
     const isPasswordValid = passwordMatch(password, user.password)
@@ -85,8 +85,8 @@ router.post('/', upload.none(), async (req, res, next) => {
     // 设置 JWT token 到 cookie
     console.log('🍪 設置 JWT Token 到 Cookie...')
     res.cookie('accessToken', token, {
-      httpOnly: false, // 改为 false，让前端可以读取
-      secure: false, // 开发环境设为 false
+      httpOnly: true, // 改為 true，與 auth.js 保持一致
+      secure: process.env.NODE_ENV === 'production', // 動態判斷環境
       sameSite: 'lax', // 改为 lax，避免跨域问题
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2天
       path: '/'

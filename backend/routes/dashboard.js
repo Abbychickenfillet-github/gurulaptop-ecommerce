@@ -11,7 +11,7 @@ const upload = multer()
 // 如果需要管理員功能，應該建立專門的管理員路由
 
 // 取得特定使用者資料
-router.get('/:user_id', authenticate, async function (req, res) {
+router.get('/all', authenticate, async function (req, res) {
   try {
     const { user_id, email, password } = req.params
     const { rows: users } = await pool.query(

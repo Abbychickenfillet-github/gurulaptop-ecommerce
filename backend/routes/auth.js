@@ -180,8 +180,8 @@ router.post('/login', upload.none(), async (req, res) => {
 router.post('/logout', authenticate, (req, res) => {
   res.clearCookie('accessToken', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    // secure: process.env.NODE_ENV === 'production',
+    // sameSite: 'lax',
     path: '/'
   })
   return res.json({

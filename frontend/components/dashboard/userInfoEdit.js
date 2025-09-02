@@ -12,19 +12,19 @@ export default function UserProfile() {
   const user_id = auth?.userData?.user_id
 
   const [editableUser, setEditableUser] = useState({
-    name: '',
-    gender: '',
+    name: auth?.userData?.name || '',
+    gender: auth?.userData?.gender || '',
     password: '',
-    birthdate: '',
-    phone: '',
-    country: '',
-    city: '',
-    district: '',
-    road_name: '',
-    detailed_address: '',
-    user_id: 0,
-    image_path: '',
-    remarks: '',
+    birthdate: auth?.userData?.birthdate || '',
+    phone: auth?.userData?.phone || '',
+    country: auth?.userData?.country || '',
+    city: auth?.userData?.city || '',
+    district: auth?.userData?.district || '',
+    road_name: auth?.userData?.road_name || '',
+    detailed_address: auth?.userData?.detailed_address || '',
+    user_id: auth?.userData?.user_id || 0,
+    image_path: auth?.userData?.image_path || '',
+    remarks: auth?.userData?.remarks || '',
     valid: 1,
   })
 
@@ -342,7 +342,7 @@ export default function UserProfile() {
   // 在 userInfoEdit.js 中
 
   const handleDeactivate = async () => {
-    // const {logout} = useAuth()
+    const {logout} = useAuth()
     try {
       const isConfirmed = await Swal.fire({
         title: '確定要停用帳號嗎？',

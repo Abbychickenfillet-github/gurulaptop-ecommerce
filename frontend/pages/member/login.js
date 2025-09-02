@@ -31,38 +31,18 @@ export default function LogIn(props) {
     showLoader() // 開始載入時顯示
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: formData.get('email'),
-            password: formData.get('password'),
-          }),
-        },
-      )
-      const result = await response.json()
-      console.log('後端回傳回應', result)
-      if (result.status === 'success') {
-        console.log('登入前端接上後端成功')
-        // 調用 useAuth 的 login 函數來更新認證狀態
-        await login(formData.get('email'), formData.get('password'))
-        console.log('登入成功，auth 狀態:', auth) // 加入 debug
-        // 等待認證狀態更新後再跳轉
-        setTimeout(() => {
-          router.push('/dashboard')
-        }, 300)
-      } else {
-        setErrors({
-          message: result.message,
-        })
-      }
+      // 直接調用 useAuth 的 login 函數，它會處理所有的登入邏輯
+      await login(formData.get('email'), formData.get('password'))
+      console.log('登入成功，auth 狀態:', auth) // 加入 debug
+      // 等待認證狀態更新後再跳轉
+      setTimeout(() => {
+        router.push('/dashboard')
+      }, 300)
     } catch (error) {
-      console.error('無法取得資料:', error)
+      console.error('登入失敗:', error)
+      setErrors({
+        message: '登入失敗，請檢查帳號密碼',
+      })
       Swal.fire({
         title: '登入失敗',
         text: '連接伺服器有問題',

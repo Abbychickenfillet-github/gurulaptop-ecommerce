@@ -92,45 +92,13 @@ export default function CouponList() {
         },
       )
 
-      /*
-       * 🔧 修復說明：
-       *
-       * ❌ 原本錯誤的地方：
-       * - 第 63 行：`process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/${userId}`
-       * - 缺少 ${} 語法來正確引用環境變數
-       *
-       * ✅ 修復後的寫法：
-       * - 第 63 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/add/${userId}`
-       * - 使用 ${} 語法正確引用環境變數
-       *
-       * 💡 為什麼會錯：
-       * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
-       * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/add/123
-       * - 這會導致 404 錯誤，因為沒有這樣的 URL
-       */
+     
 
       const getUserCoupons = async (userId) => {
         try {
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
           )
-
-          /*
-           * 🔧 修復說明：
-           *
-           * ❌ 原本錯誤的地方：
-           * - 第 79 行：`process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/${userId}`
-           * - 缺少 ${} 語法來正確引用環境變數
-           *
-           * ✅ 修復後的寫法：
-           * - 第 79 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`
-           * - 使用 ${} 語法正確引用環境變數
-           *
-           * 💡 為什麼會錯：
-           * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
-           * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/coupon-user/123
-           * - 這會導致 404 錯誤，因為沒有這樣的 URL
-           */
           const data = await res.json()
 
           if (data.status === 'success') {

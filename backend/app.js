@@ -13,7 +13,6 @@ import express from 'express'
 // import db from '##/configs/mysql.js'
 import pool from '##/configs/pgClient.js'
 
-
 // 調試：確認環境變數是否被載入
 console.log('🔍 環境變數載入檢查:')
 console.log('NODE_ENV:', process.env.NODE_ENV)

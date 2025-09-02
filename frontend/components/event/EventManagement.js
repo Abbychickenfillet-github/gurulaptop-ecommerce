@@ -52,6 +52,7 @@ const EventManagement = () => {
   }
 
   useEffect(() => {
+ 
     fetchUserEvents()
   }, [])
 
@@ -81,6 +82,7 @@ const EventManagement = () => {
           timer: 1500,
           showConfirmButton: false,
         })
+        // 重新獲取活動列表以更新 UI
         fetchUserEvents()
       }
     } catch (error) {
