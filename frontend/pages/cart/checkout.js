@@ -27,15 +27,18 @@ export default function Checkout(props) {
   }, [])
 
   const handleUpdate = async (order_id) => {
-    const result = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/order`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
+    const result = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/order`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          order_id: order_id,
+        }),
       },
-      body: JSON.stringify({
-        order_id: order_id,
-      }),
-    })
+    )
 
     const data = await result.json()
     if (data.status === 'success') {

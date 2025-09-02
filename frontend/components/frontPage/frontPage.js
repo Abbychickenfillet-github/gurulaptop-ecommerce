@@ -23,7 +23,6 @@ export default function FrontPage() {
       </div>
 
       <div className="main-body ">
-
         <HomeSection />
 
         <div className="home-section2">
@@ -33,56 +32,96 @@ export default function FrontPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Acer.png" alt="Acer" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Acer.png"
+                alt="Acer"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="https://www.asus.com/tw/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Asus-w.png" alt="Asus" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Asus-w.png"
+                alt="Asus"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=DELL&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Dell.png" alt="Dell" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Dell.png"
+                alt="Dell"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=%E6%8A%80%E5%98%89&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/gigabyte_白.png" alt="Gigabyte" width={50} height={50} />
+              <Image
+                src="/images/index/icon/gigabyte_白.png"
+                alt="Gigabyte"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=HP&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/HP.png" alt="HP" width={50} height={50} />
+              <Image
+                src="/images/index/icon/HP.png"
+                alt="HP"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=MSI&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/msi_w.png" alt="MSI" width={50} height={50} />
+              <Image
+                src="/images/index/icon/msi_w.png"
+                alt="MSI"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=RAZER&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Razer.png" alt="Razer" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Razer.png"
+                alt="Razer"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ROG&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/rog.png" alt="ROG" width={50} height={50} />
+              <Image
+                src="/images/index/icon/rog.png"
+                alt="ROG"
+                width={50}
+                height={50}
+              />
             </Link>
           </div>
 
@@ -92,56 +131,96 @@ export default function FrontPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Acer.png" alt="Acer" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Acer.png"
+                alt="Acer"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ASUS&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Asus-w.png" alt="Asus" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Asus-w.png"
+                alt="Asus"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=DELL&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Dell.png" alt="Dell" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Dell.png"
+                alt="Dell"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=%E6%8A%80%E5%98%89&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/gigabyte_白.png" alt="Gigabyte" width={50} height={50} />
+              <Image
+                src="/images/index/icon/gigabyte_白.png"
+                alt="Gigabyte"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=HP&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/HP.png" alt="HP" width={50} height={50} />
+              <Image
+                src="/images/index/icon/HP.png"
+                alt="HP"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=MSI&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/msi_w.png" alt="MSI" width={50} height={50} />
+              <Image
+                src="/images/index/icon/msi_w.png"
+                alt="MSI"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=RAZER&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Razer.png" alt="Razer" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Razer.png"
+                alt="Razer"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ROG&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/rog.png" alt="ROG" width={50} height={50} />
+              <Image
+                src="/images/index/icon/rog.png"
+                alt="ROG"
+                width={50}
+                height={50}
+              />
             </Link>
           </div>
 
@@ -151,56 +230,96 @@ export default function FrontPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Acer.png" alt="Acer" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Acer.png"
+                alt="Acer"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ASUS&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Asus-w.png" alt="Asus" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Asus-w.png"
+                alt="Asus"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=DELL&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Dell.png" alt="Dell" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Dell.png"
+                alt="Dell"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=%E6%8A%80%E5%98%89&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/gigabyte_白.png" alt="Gigabyte" width={50} height={50} />
+              <Image
+                src="/images/index/icon/gigabyte_白.png"
+                alt="Gigabyte"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=HP&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/HP.png" alt="HP" width={50} height={50} />
+              <Image
+                src="/images/index/icon/HP.png"
+                alt="HP"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=MSI&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/msi_w.png" alt="MSI" width={50} height={50} />
+              <Image
+                src="/images/index/icon/msi_w.png"
+                alt="MSI"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=RAZER&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Razer.png" alt="Razer" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Razer.png"
+                alt="Razer"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ROG&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/rog.png" alt="ROG" width={50} height={50} />
+              <Image
+                src="/images/index/icon/rog.png"
+                alt="ROG"
+                width={50}
+                height={50}
+              />
             </Link>
           </div>
 
@@ -210,56 +329,96 @@ export default function FrontPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Acer.png" alt="Acer" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Acer.png"
+                alt="Acer"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ASUS&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Asus-w.png" alt="Asus" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Asus-w.png"
+                alt="Asus"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=DELL&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Dell.png" alt="Dell" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Dell.png"
+                alt="Dell"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=%E6%8A%80%E5%98%89&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/gigabyte_白.png" alt="Gigabyte" width={50} height={50} />
+              <Image
+                src="/images/index/icon/gigabyte_白.png"
+                alt="Gigabyte"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=HP&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/HP.png" alt="HP" width={50} height={50} />
+              <Image
+                src="/images/index/icon/HP.png"
+                alt="HP"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=MSI&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/msi_w.png" alt="MSI" width={50} height={50} />
+              <Image
+                src="/images/index/icon/msi_w.png"
+                alt="MSI"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=RAZER&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/Razer.png" alt="Razer" width={50} height={50} />
+              <Image
+                src="/images/index/icon/Razer.png"
+                alt="Razer"
+                width={50}
+                height={50}
+              />
             </Link>
             <Link
               href="/product/list?page=1&category=product_brand&category_value=ROG&search=&price="
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image src="/images/index/icon/rog.png" alt="ROG" width={50} height={50} />
+              <Image
+                src="/images/index/icon/rog.png"
+                alt="ROG"
+                width={50}
+                height={50}
+              />
             </Link>
           </div>
         </div>
@@ -340,7 +499,6 @@ export default function FrontPage() {
           </section> */}
           <HotProducts />
 
-
           <ArticleSlider />
         </div>
 
@@ -353,64 +511,101 @@ export default function FrontPage() {
             <div className="home-activity-container">
               <div className="home-activity-card-1">
                 <div className="home-activity-frame home-activity-frame-left">
-                  <h2 className="home-activity-card-title">APEX - INTOVOID娛樂賽</h2>
+                  <h2 className="home-activity-card-title">
+                    APEX - INTOVOID娛樂賽
+                  </h2>
                   <div className="home-activity-card-content1">
-                    <p>INTOVOID娛樂賽 SDLP Community主辦的第四届娛樂賽,開放給各位玩家報名</p>
+                    <p>
+                      INTOVOID娛樂賽 SDLP
+                      Community主辦的第四届娛樂賽,開放給各位玩家報名
+                    </p>
                   </div>
                   <div className="home-activity-card-footer1">
-                    <a
+                    <Link
                       href="/event/eventDetail/1"
                       className="home-activity-btn"
                     >
-                      <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
-                    </a>
+                      <Image
+                        src="/images/index/arrow.svg"
+                        alt="arrow"
+                        width={20}
+                        height={20}
+                      />
+                    </Link>
                   </div>
                 </div>
               </div>
               <div className="home-activity-card-2">
                 <div className="home-activity-frame home-activity-frame-right">
-                  <h2 className="home-activity-card-title">The Updraft W3 Powered by PLANET9</h2>
+                  <h2 className="home-activity-card-title">
+                    The Updraft W3 Powered by PLANET9
+                  </h2>
                   <div className="home-activity-card-content1">
                     <p>輔仁大學與DINOGAMEHOUSE合辦的特戰英豪比賽</p>
                   </div>
                   <div className="home-activity-card-footer1">
-                    <a
+                    <Link
                       href="/event/eventDetail/9"
                       className="home-activity-btn"
                     >
-                      <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
-                    </a>
+                      <Image
+                        src="/images/index/arrow.svg"
+                        alt="arrow"
+                        width={20}
+                        height={20}
+                      />
+                    </Link>
                   </div>
                 </div>
               </div>
 
               <div className="home-activity-card-3">
                 <div className="home-activity-frame home-activity-frame-top">
-                  <h2 className="home-activity-card-title">爬瓦盃 POWER CHAMPION CUP</h2>
+                  <h2 className="home-activity-card-title">
+                    爬瓦盃 POWER CHAMPION CUP
+                  </h2>
                   <div className="home-activity-card-content1">
-                    <p>爬瓦盃是由輔仁大學資管系與DINOGAMEHOUSE一起合辦的特戰英豪比賽 滿15歲以上便可報名</p>
+                    <p>
+                      爬瓦盃是由輔仁大學資管系與DINOGAMEHOUSE一起合辦的特戰英豪比賽
+                      滿15歲以上便可報名
+                    </p>
                   </div>
                   <div className="home-activity-card-footer2">
-                    <a
+                    <Link
                       href="/event/eventDetail/11"
                       className="home-activity-btn"
                     >
-                      <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
-                    </a>
+                      <Image
+                        src="/images/index/arrow.svg"
+                        alt="arrow"
+                        width={20}
+                        height={20}
+                      />
+                    </Link>
                   </div>
                 </div>
                 <div className="home-activity-frame home-activity-frame-bottom">
-                  <h2 className="home-activity-card-title">AfreecaTV TFT The Chosen One TW&HK (S11) 海選賽</h2>
+                  <h2 className="home-activity-card-title">
+                    AfreecaTV TFT The Chosen One TW&HK (S11) 海選賽
+                  </h2>
                   <div className="home-activity-card-content1">
-                    <p>這次比賽為《AfreecaTV TFT The Chosen One TW&HK》的海選賽 (第一階段及第二階段)</p>
+                    <p>
+                      這次比賽為《AfreecaTV TFT The Chosen One TW&HK》的海選賽
+                      (第一階段及第二階段)
+                    </p>
                   </div>
                   <div className="home-activity-card-footer2">
-                    <a
+                    <Link
                       href="/event/eventDetail/13"
                       className="home-activity-btn"
                     >
-                      <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
-                    </a>
+                      <Image
+                        src="/images/index/arrow.svg"
+                        alt="arrow"
+                        width={20}
+                        height={20}
+                      />
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -418,31 +613,44 @@ export default function FrontPage() {
 
             <div className="home-activity-container2">
               <div className="home-activity-card3 home-activity-card3-left">
-                <h2 className="home-activity-card-title">2023長佳電競盃-板橋區域賽</h2>
+                <h2 className="home-activity-card-title">
+                  2023長佳電競盃-板橋區域賽
+                </h2>
                 <div className="home-activity-card-content2">
-                  <p>化身可可愛愛的蛋仔，奔跑、跳躍、翻滾、碰撞～ 在歡樂的派對中，你能不能脫穎而出成為奪冠者？</p>
+                  <p>
+                    化身可可愛愛的蛋仔，奔跑、跳躍、翻滾、碰撞～
+                    在歡樂的派對中，你能不能脫穎而出成為奪冠者？
+                  </p>
                 </div>
                 <div className="home-activity-card-footer3">
-                  <a
-                    href="/event/eventDetail/37"
-                    className="home-activity-btn"
-                  >
-                    <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
-                  </a>
+                  <Link href="/event/eventDetail/37" className="home-activity-btn">
+                    <Image
+                      src="/images/index/arrow.svg"
+                      alt="arrow"
+                      width={20}
+                      height={20}
+                    />
+                  </Link>
                 </div>
               </div>
               <div className="home-activity-card3 home-activity-card3-right">
-                <h2 className="home-activity-card-title">AOPEN x Fire Legend Championships</h2>
+                <h2 className="home-activity-card-title">
+                  AOPEN x Fire Legend Championships
+                </h2>
                 <div className="home-activity-card-content2">
-                  <p>促進台灣APEX社群ARENA高端對局的交流，並同時讓玩家們來一場刺激的競賽。</p>
+                  <p>
+                    促進台灣APEX社群ARENA高端對局的交流，並同時讓玩家們來一場刺激的競賽。
+                  </p>
                 </div>
                 <div className="home-activity-card-footer3">
-                  <a
-                    href="/event/eventDetail/10"
-                    className="home-activity-btn"
-                  >
-                    <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
-                  </a>
+                  <Link href="/event/eventDetail/10" className="home-activity-btn">
+                    <Image
+                      src="/images/index/arrow.svg"
+                      alt="arrow"
+                      width={20}
+                      height={20}
+                    />
+                  </Link>
                 </div>
               </div>
               <div className="home-activity-card4">
@@ -451,12 +659,14 @@ export default function FrontPage() {
                   <p />
                 </div>
                 <div className="home-activity-card-footer3">
-                  <a
-                    href="/event"
-                    className="home-activity-btn"
-                  >
-                    <Image src="/images/index/arrow.svg" alt="arrow" width={20} height={20} />
-                  </a>
+                  <Link href="/event" className="home-activity-btn">
+                    <Image
+                      src="/images/index/arrow.svg"
+                      alt="arrow"
+                      width={20}
+                      height={20}
+                    />
+                  </Link>
                 </div>
               </div>
             </div>

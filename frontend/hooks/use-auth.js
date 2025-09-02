@@ -137,13 +137,13 @@ export const AuthProvider = ({ children }) => {
         })
         
         // 等待狀態更新完成後再跳轉
-        // 延遲200ms確保狀態更新完成
+        // 延遲300ms確保狀態更新完成
         setTimeout(() => {
           console.log('🔄 延遲後的 auth 狀態:', auth)
           console.log('🍪 延遲後的 cookies:', document.cookie)
           console.log('🔄 導向 dashboard 頁面...')
           router.replace('/dashboard')  // 跳轉到儀表板
-        }, 200)
+        }, 300)
         
       } else {
         console.error('登入失敗:', result.message || result)
@@ -301,12 +301,6 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('檢查認證失敗:', error)
-      // 出錯時設置為未登入狀態
-      setAuth(prev => ({ 
-        ...prev, 
-        isAuth: false,
-        isLoading: false
-      }))
     }
   }
 

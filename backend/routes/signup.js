@@ -60,6 +60,8 @@ router.post('/', upload.none(), async (req, res) => {
         NULL, NULL, NULL, NULL, NULL, NULL
       ) RETURNING user_id
     `
+    // 如果是沒有需要更新的欄位fields
+    // 就算不打上去也不會出錯
 
     const params = [
       email,
@@ -68,7 +70,12 @@ router.post('/', upload.none(), async (req, res) => {
       userBirthdate,
       userGender,
     ]
-
+    // 這邊的插入第一筆資料就會存成rows物件ㄉ格式
+    // const rows = [
+    //   { id: 1, name: '張小華' },
+    //   { id: 2, name: '林小君' },
+    //   { id: 3, name: '陳大明' }
+    // ];
     const { rows } = await pool.query(sql, params)
     console.log('插入結果:', rows[0])
 

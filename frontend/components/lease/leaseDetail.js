@@ -159,9 +159,7 @@ export default function LeaseDetail() {
             <li>64GB (32GB*2) DDR5-4800 SO-DIMM (2Slot, Max.64GB)</li>
             <li>硬碟: 2TB+2TB PCIe 4.0 NVMe M.2 SSD (RAID 0)</li>
             <li>作業系統: Windows 11 Home</li>
-            <li>
-              獨顯: NVIDIA GeForce RTX 4090 16GB GDDR6 (具備MUX獨顯直連)
-            </li>
+            <li>獨顯: NVIDIA GeForce RTX 4090 16GB GDDR6 (具備MUX獨顯直連)</li>
             <li>
               無線網路: Wi-Fi 6E(802.11ax) (Triple band) 2*2 + Bluetooth 5.2
             </li>

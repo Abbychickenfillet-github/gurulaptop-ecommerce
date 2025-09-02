@@ -1,5 +1,10 @@
 // 載入環境變數 - 必須在最前面！
-import 'dotenv/config.js'
+import { loadEnv } from '#utils/tool.js'
+
+// 根據 NODE_ENV 自動載入對應的環境變數文件
+// 如果 NODE_ENV=production，會載入 .env.production
+// 如果 NODE_ENV=development 或未設置，會載入 .env.development
+loadEnv()
 import * as fs from 'fs'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'

@@ -65,8 +65,6 @@ export default function Signup() {
     // 用 rule 當作 key 去 messages 物件找對應的訊息
   }
 
-
-
   const handleFieldChange = (e) => {
     const { name, value, type, checked } = e.target
     setUser((prev) => ({
@@ -128,11 +126,10 @@ export default function Signup() {
         }))
         return
       }
-      
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/signup`,
-        user
+        user,
       )
 
       if (response.data.status === 'success') {
@@ -195,30 +192,32 @@ export default function Signup() {
       </Head>
 
       <Header />
-      
-      <div className={`${styles['gradient-bg']} ${styles['signup-bg']} min-vh-100`}>
+
+      <div
+        className={`${styles['gradient-bg']} ${styles['signup-bg']} min-vh-100`}
+      >
         <Image
           src="/bgi/signup_bgi.png"
           alt="background"
           fill
-          style={{objectFit:'cover'}}
+          style={{ objectFit: 'cover' }}
           quality={100}
         />
-        
+
         <div className="container position-relative h-100">
           <div className="row h-100 align-items-center justify-content-center">
             {/* 左側歡迎區域 */}
             <div className="col-lg-6 col-md-12 mb-5 mb-lg-0">
               <div className="text-center text-lg-start">
                 <div className="mb-4">
-                  <GlowingText 
-                    text="Sign Up to" 
+                  <GlowingText
+                    text="Sign Up to"
                     className="text-white display-4 fw-bold mb-3"
                   />
                 </div>
                 <div className="mb-4">
-                  <GlowingText 
-                    text="LaptopGuru" 
+                  <GlowingText
+                    text="LaptopGuru"
                     className="text-white display-3 fw-bold"
                   />
                 </div>
@@ -258,7 +257,11 @@ export default function Signup() {
                 )}
 
                 {/* 註冊表單 */}
-                <form onSubmit={handleSubmit} className="needs-validation" noValidate>
+                <form
+                  onSubmit={handleSubmit}
+                  className="needs-validation"
+                  noValidate
+                >
                   <div className="mb-3">
                     <label htmlFor="email" className="text-white fw-semibold">
                       帳號(信箱)
@@ -274,11 +277,14 @@ export default function Signup() {
                       required
                       style={{
                         backdropFilter: 'blur(10px)',
-                        color: 'white'
+                        color: 'white',
                       }}
                     />
                     {errors.email && (
-                      <div className="alert alert-danger py-2 mt-2" role="alert">
+                      <div
+                        className="alert alert-danger py-2 mt-2"
+                        role="alert"
+                      >
                         {errors.email}
                       </div>
                     )}
@@ -286,7 +292,10 @@ export default function Signup() {
 
                   {/* 密碼輸入 */}
                   <div className="mb-4">
-                    <label htmlFor="password" className="form-label text-white fw-semibold">
+                    <label
+                      htmlFor="password"
+                      className="form-label text-white fw-semibold"
+                    >
                       密碼
                     </label>
                     <div className="position-relative">
@@ -302,7 +311,7 @@ export default function Signup() {
                         maxLength={62}
                         style={{
                           backdropFilter: 'blur(10px)',
-                          color: 'white'
+                          color: 'white',
                         }}
                       />
                       <button
@@ -319,7 +328,10 @@ export default function Signup() {
                       </button>
                     </div>
                     {errors.password && (
-                      <div className="alert alert-danger py-2 mt-2" role="alert">
+                      <div
+                        className="alert alert-danger py-2 mt-2"
+                        role="alert"
+                      >
                         {errors.password}
                       </div>
                     )}
@@ -340,7 +352,7 @@ export default function Signup() {
                       required
                       style={{
                         backdropFilter: 'blur(10px)',
-                        color: 'white'
+                        color: 'white',
                       }}
                     />
                     <div className="form-check">
@@ -361,7 +373,10 @@ export default function Signup() {
                       </label>
                     </div>
                     {errors.confirmpassword && (
-                      <div className="alert alert-danger py-2 mt-2" role="alert">
+                      <div
+                        className="alert alert-danger py-2 mt-2"
+                        role="alert"
+                      >
                         {errors.confirmpassword}
                       </div>
                     )}
@@ -381,13 +396,16 @@ export default function Signup() {
                       placeholder="請輸入您的手機號碼"
                       style={{
                         backdropFilter: 'blur(10px)',
-                        color: 'white'
+                        color: 'white',
                       }}
                     />
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="birthdate" className="text-white fw-semibold">
+                    <label
+                      htmlFor="birthdate"
+                      className="text-white fw-semibold"
+                    >
                       生日
                     </label>
                     <div className="">
@@ -400,7 +418,7 @@ export default function Signup() {
                         onChange={handleFieldChange}
                         style={{
                           backdropFilter: 'blur(10px)',
-                          color: 'white'
+                          color: 'white',
                         }}
                       />
                     </div>
@@ -418,7 +436,7 @@ export default function Signup() {
                       onChange={handleFieldChange}
                       style={{
                         backdropFilter: 'blur(10px)',
-                        color: 'white'
+                        color: 'white',
                       }}
                     >
                       <option value="">請選擇</option>
@@ -445,11 +463,14 @@ export default function Signup() {
                         我同意網站會員註冊條款
                       </label>
                     </div>
-                                            {errors.agree && (
-                          <div className="alert alert-danger py-2 mt-2" role="alert">
-                            {errors.agree}
-                          </div>
-                        )}
+                    {errors.agree && (
+                      <div
+                        className="alert alert-danger py-2 mt-2"
+                        role="alert"
+                      >
+                        {errors.agree}
+                      </div>
+                    )}
                   </div>
 
                   {/* 送出按鈕 */}
@@ -460,7 +481,7 @@ export default function Signup() {
                       style={{
                         background: 'linear-gradient(45deg, #805AF5, #E0B0FF)',
                         border: 'none',
-                        borderRadius: '12px'
+                        borderRadius: '12px',
                       }}
                     >
                       註冊
@@ -470,8 +491,8 @@ export default function Signup() {
                   {/* 登入提示 */}
                   <div className="text-center">
                     <span className="text-white-50">已經有帳號？</span>
-                    <Link 
-                      href="/member/login" 
+                    <Link
+                      href="/member/login"
                       className="text-white text-decoration-none ms-1 fw-semibold"
                     >
                       立即登入
@@ -490,27 +511,27 @@ export default function Signup() {
         .hover-text-white:hover {
           color: white !important;
         }
-        
+
         .form-control:focus {
           background-color: rgba(255, 255, 255, 0.15) !important;
-          border-color: #E0B0FF !important;
+          border-color: #e0b0ff !important;
           box-shadow: 0 0 0 0.2rem rgba(224, 176, 255, 0.25) !important;
         }
-        
+
         .form-control::placeholder {
           color: rgba(255, 255, 255, 0.6) !important;
         }
-        
+
         .btn-outline-light.active {
           background-color: rgba(255, 255, 255, 0.2) !important;
           border-color: rgba(255, 255, 255, 0.5) !important;
         }
-        
+
         .btn-outline-light:hover {
           background-color: rgba(255, 255, 255, 0.1) !important;
           border-color: rgba(255, 255, 255, 0.3) !important;
         }
-        
+
         @media (max-width: 768px) {
           .display-4 {
             font-size: 2rem !important;

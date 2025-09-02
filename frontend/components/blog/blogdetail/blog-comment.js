@@ -129,6 +129,8 @@ export default function BlogComment() {
                       : 'https://th.bing.com/th/id/R.88c444f63f40cfa9b49801f826befa80?rik=QAme0H3xbxieEQ&pid=ImgRaw&r=0',
                   }
                   alt={comment.name || '匿名用戶'}
+                  width={50}
+                  height={50}
                 />
               </div>
               <p>於 {comment.blog_created_date} 留言</p>

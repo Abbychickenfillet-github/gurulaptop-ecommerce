@@ -30,7 +30,7 @@ export default function MembershipLevels() {
     const fetchMembershipData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/membership/${auth?.userData?.user_id}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/membership/${auth?.userData?.user_id}`,
         )
         setMembershipData((prev) => ({
           ...response.data,
@@ -177,9 +177,7 @@ export default function MembershipLevels() {
       <div className="row">
         <div className="col">
           <h3 className="text-white d-flex justify-content-center">
-            累計消費: $
-            {Number(membershipData.totalSpent || 0).toLocaleString()}
-
+            累計消費: ${Number(membershipData.totalSpent || 0).toLocaleString()}
           </h3>
           <p className="text-white">
             距離下一等級還需消費: $

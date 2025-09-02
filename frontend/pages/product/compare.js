@@ -33,18 +33,18 @@ export default function Compare() {
       else if (compareProduct.length === 1) {
         {
           const responseFirst = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/${compareProduct[0]}`
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/${compareProduct[0]}`,
           )
           setProductDataFirst((await responseFirst.json()).data.product)
         }
       } else if (compareProduct.length === 2) {
         {
           const responseFirst = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/${compareProduct[0]}`
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/${compareProduct[0]}`,
           )
           setProductDataFirst((await responseFirst.json()).data.product)
           const responseSecond = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/${compareProduct[1]}`
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/${compareProduct[1]}`,
           )
           setProductDataSecond((await responseSecond.json()).data.product)
         }
@@ -103,7 +103,7 @@ export default function Compare() {
               <p>
                 價格：{' '}
                 {`NT ${new Intl.NumberFormat('zh-TW').format(
-                  productDataFirst.list_price
+                  productDataFirst.list_price,
                 )}元`}
               </p>
               <p>用途： {productDataFirst.affordance}</p>
@@ -182,7 +182,7 @@ export default function Compare() {
               <p>
                 價格：{' '}
                 {`NT ${new Intl.NumberFormat('zh-TW').format(
-                  productDataSecond.list_price
+                  productDataSecond.list_price,
                 )}元`}
               </p>
               <p>用途： {productDataSecond.affordance}</p>

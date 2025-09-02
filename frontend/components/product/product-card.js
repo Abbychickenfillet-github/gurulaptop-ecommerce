@@ -271,4 +271,3 @@ export default function ProductCard({ onSendMessage, product_id }) {
     </div>
   )
 }
-

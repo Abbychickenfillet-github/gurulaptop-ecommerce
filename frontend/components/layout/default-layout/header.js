@@ -25,7 +25,7 @@ export default function Header() {
   }
 
   const [imagePath, setImagePath] = useState(
-    auth?.userData?.image_path || getDefaultImage(auth?.userData?.gender)
+    auth?.userData?.image_path || getDefaultImage(auth?.userData?.gender),
   )
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -137,7 +137,13 @@ export default function Header() {
         <>
           <div className="mobile-header">
             <Link href="/" className="logo-link">
-              <Image src="/logo.svg" alt="Logo" className="logo" width={84} height={39} />
+              <Image
+                src="/logo.svg"
+                alt="Logo"
+                className="logo"
+                width={84}
+                height={39}
+              />
             </Link>
 
             <div className="mobile-controls">
@@ -200,7 +206,13 @@ export default function Header() {
         <div className="nav-container">
           <div className="nav-left">
             <Link href="/" className="logo-link">
-              <Image src="/logo.svg" alt="Logo" className="logo" width={84} height={39} />
+              <Image
+                src="/logo.svg"
+                alt="Logo"
+                className="logo"
+                width={84}
+                height={39}
+              />
             </Link>
           </div>
 
@@ -227,12 +239,7 @@ export default function Header() {
               <div className="auth-section">
                 <Link href="/dashboard">
                   <div className="user-avatar">
-                    <Image
-                      src={imagePath}
-                      alt="User"
-                      width={40}
-                      height={40}
-                    />
+                    <Image src={imagePath} alt="User" width={40} height={40} />
                   </div>
                 </Link>
                 <Link href="/chatroom" className="icon-wrapper">
@@ -349,7 +356,8 @@ export default function Header() {
           );
           background-size: 200% auto;
           animation: gradient 3s linear infinite;
-          box-shadow: 0 0 10px rgba(128, 90, 245, 0.5),
+          box-shadow:
+            0 0 10px rgba(128, 90, 245, 0.5),
             0 0 20px rgba(128, 90, 245, 0.3);
         }
 

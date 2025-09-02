@@ -47,8 +47,7 @@ export default function GroupBanner({ groupData, onOpenDetail, onOpenJoin }) {
             width={300}
             height={200}
             onError={(e) => {
-              e.target.src =
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
+              e.target.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
             }}
           />
           <div className={styles.text}>

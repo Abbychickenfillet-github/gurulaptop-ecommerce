@@ -152,7 +152,7 @@ const IndividualRegistration = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       )
 
       if (response.data.code === 200) {

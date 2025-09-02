@@ -8,7 +8,6 @@ import EventButton from '@/components/event/EventButton'
 import websocketService from '@/services/websocketService'
 import styles from '@/styles/Chat.module.css'
 import { Send, Menu } from 'lucide-react'
-import Swal from 'sweetalert2'
 import Head from 'next/head'
 
 export default function Chat() {
@@ -28,9 +27,12 @@ export default function Chat() {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/check`, {
-        credentials: 'include',
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/check`,
+        {
+          credentials: 'include',
+        },
+      )
 
       if (!response.ok) {
         router.push('/login')

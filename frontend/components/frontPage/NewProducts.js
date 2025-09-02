@@ -17,8 +17,7 @@ const NewProducts = () => {
       id: 2,
       image: '/images/index/banner_03.jpg',
       title: 'GIGABYTE AORUS 5',
-      description:
-        '強大效能使遊戲操作不再受限，將全面解放玩家鬼神技術',
+      description: '強大效能使遊戲操作不再受限，將全面解放玩家鬼神技術',
       link: 'http://localhost:3000/product/230',
     },
     {

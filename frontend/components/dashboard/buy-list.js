@@ -26,7 +26,7 @@ export default function BuyList(order) {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     )
     const data = await res.json()
     setOrderDetail(data.data)
@@ -42,7 +42,7 @@ export default function BuyList(order) {
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       )
       const data = await res.json()
       setCouponCode(data.data.coupon.coupon_code)

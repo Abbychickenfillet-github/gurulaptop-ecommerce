@@ -27,7 +27,9 @@ export default function BlogUserOverview() {
     const user_id = pathParts[pathParts.length - 1]
 
     if (user_id) {
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog_user_overview/${user_id}`)
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog_user_overview/${user_id}`,
+      )
         .then((response) => response.json())
         .then((data) => {
           console.log('API回傳的資料:', data)

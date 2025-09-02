@@ -36,12 +36,15 @@ export default function BlogUserEdit() {
       }
 
       // 獲取文章數據並驗證
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-edit/${blog_id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-edit/${blog_id}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      })
+      )
         .then((r) => r.json())
         .then((data) => {
           console.log('從後端收到的資料:', data)
@@ -89,12 +92,15 @@ export default function BlogUserEdit() {
 
   useEffect(() => {
     if (blog_id) {
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-edit/${blog_id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-edit/${blog_id}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      })
+      )
         .then((r) => r.json())
         .then((data) => {
           console.log('從後端收到的資料:', data)
@@ -140,7 +146,7 @@ export default function BlogUserEdit() {
         {
           method: 'PUT',
           body: formDataToSend,
-        }
+        },
       )
 
       if (response.ok) {
@@ -187,9 +193,15 @@ export default function BlogUserEdit() {
           </div>
         </div>
 
-        <div
+        <button
+          type="button"
           className="BlogImgUploadDiv d-flex align-items-center justify-content-center"
           onClick={() => document.getElementById('imageInput').click()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              document.getElementById('imageInput').click()
+            }
+          }}
         >
           {formData.blog_image || formData.originalImage ? (
             <Image
@@ -215,7 +227,7 @@ export default function BlogUserEdit() {
             style={{ display: 'none' }}
             id="imageInput"
           />
-        </div>
+        </button>
 
         <form onSubmit={handleSubmit}>
           <div className="container-fluid d-flex flex-lg-row flex-column align-items-start justify-content-start">
@@ -276,17 +288,23 @@ export default function BlogUserEdit() {
                   className="d-flex flex-column gap-xxl-5  gap-xl-5 gap-lg-4 gap-md-3 gap-sm-2 gap-xs-2 gap-1"
                 >
                   {column.map((brand) => (
-                    <div
+                    <button
                       key={brand}
+                      type="button"
                       className={`BlogEditBrandSelected shadow d-flex justify-content-center align-items-center ${
                         brand === formData.blog_brand
                           ? 'BlogEditBrandSelectedActive'
                           : ''
                       }`}
                       onClick={() => handleChange('blog_brand', brand)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          handleChange('blog_brand', brand)
+                        }
+                      }}
                     >
                       <p className="m-0">{brand}</p>
-                    </div>
+                    </button>
                   ))}
                 </div>
               ))}
@@ -327,17 +345,23 @@ export default function BlogUserEdit() {
 
             <div className="d-flex flex-column  gap-xxl-4 gap-xl-4 gap-lg-3 gap-md-2 gap-sm-1 gap-xs-1 gap-1 col-4 w-50 ms-5">
               {['購買心得', '開箱文', '疑難雜症', '活動心得'].map((v) => (
-                <div
+                <button
                   key={v}
+                  type="button"
                   className={`BlogEditBrandSelected shadow d-flex justify-content-center align-items-center ${
                     v === formData.blog_type
                       ? 'BlogEditBrandSelectedActive'
                       : ''
                   }`}
                   onClick={() => handleChange('blog_type', v)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      handleChange('blog_type', v)
+                    }
+                  }}
                 >
                   <p>{v}</p>
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -389,7 +413,7 @@ export default function BlogUserEdit() {
                       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-delete/${blog_id}`,
                       {
                         method: 'PUT',
-                      }
+                      },
                     )
 
                     if (res.ok) {

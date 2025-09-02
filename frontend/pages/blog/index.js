@@ -42,7 +42,7 @@ export default function BlogSearchPage() {
         })
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/search?${queryParams}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/search?${queryParams}`,
         )
         const data = await res.json()
 
@@ -184,7 +184,7 @@ export default function BlogSearchPage() {
                       &nbsp;&nbsp;{brand}
                     </label>
                   </div>
-                )
+                ),
               )}
             </div>
           </form>
@@ -250,7 +250,7 @@ export default function BlogSearchPage() {
                             <p>{blog.blog_type}</p>
                             <p>
                               {new Date(
-                                blog.blog_created_date
+                                blog.blog_created_date,
                               ).toLocaleDateString()}
                             </p>
                           </div>

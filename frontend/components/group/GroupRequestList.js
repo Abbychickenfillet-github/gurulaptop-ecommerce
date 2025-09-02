@@ -22,7 +22,7 @@ const GroupRequestList = ({ groupId }) => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
-        }
+        },
       )
 
       if (!response.ok) {
@@ -58,7 +58,7 @@ const GroupRequestList = ({ groupId }) => {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
           body: JSON.stringify({ status }),
-        }
+        },
       )
 
       if (!response.ok) {
@@ -75,7 +75,7 @@ const GroupRequestList = ({ groupId }) => {
 
       // 更新本地狀態
       setRequests((prev) =>
-        prev.map((req) => (req.id === requestId ? { ...req, status } : req))
+        prev.map((req) => (req.id === requestId ? { ...req, status } : req)),
       )
     } catch (err) {
       console.error('Error:', err)

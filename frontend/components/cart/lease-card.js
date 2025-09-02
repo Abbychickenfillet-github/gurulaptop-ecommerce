@@ -16,7 +16,12 @@ export default function LeaseCard() {
         <div className="row align-items-center border-bottom border-primary mb-2">
           <div className="col-3">
             <div className="cart-photo">
-              <Image src="/images/lease/15-fd1149TU.png" alt="" width={100} height={100} />
+              <Image
+                src="/images/lease/15-fd1149TU.png"
+                alt=""
+                width={100}
+                height={100}
+              />
             </div>
           </div>
           <div className="col-5">15-fd1149TU</div>

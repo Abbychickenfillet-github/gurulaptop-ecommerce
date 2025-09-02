@@ -33,8 +33,8 @@ export default function UserProfile() {
       (editableUser.gender === 'male'
         ? '/signup_login/undraw_profile_2.svg'
         : editableUser.gender === 'female'
-        ? '/signup_login/undraw_profile_1.svg'
-        : '/Vector.svg'),
+          ? '/signup_login/undraw_profile_1.svg'
+          : '/Vector.svg'),
   )
   const [uploadStatus, setUploadStatus] = useState('')
   // 沒有寫就是false
@@ -107,7 +107,7 @@ export default function UserProfile() {
     if (value === '台灣') {
       // 如果選擇的是台灣，"啟用"縣市選擇
       setIsDistrictDisabled(false)
-      // 這邊的else為了當選擇其他國家時，禁用縣市、區域和路名選擇 
+      // 這邊的else為了當選擇其他國家時，禁用縣市、區域和路名選擇
     } else {
       // 禁用行政區
       setIsDistrictDisabled(true)
@@ -181,8 +181,8 @@ export default function UserProfile() {
         (editableUser.gender === 'male'
           ? '/signup_login/undraw_profile_2.svg'
           : editableUser.gender === 'female'
-          ? '/signup_login/undraw_profile_1.svg'
-          : '/Vector.svg'),
+            ? '/signup_login/undraw_profile_1.svg'
+            : '/Vector.svg'),
     )
   }, [editableUser.gender, editableUser.image_path]) // 加入相依性
 
@@ -190,7 +190,13 @@ export default function UserProfile() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${user_id}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
+          {
+            withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
         )
         if (response.data.status === 'success') {
           const userData = response.data.data
@@ -205,7 +211,7 @@ export default function UserProfile() {
         Swal.fire(
           '錯誤',
           `獲取用戶資料失敗: ${error.response?.data?.message || error.message}`,
-          'error'
+          'error',
         )
       }
     }
@@ -244,13 +250,14 @@ export default function UserProfile() {
     }
     // 當性別欄位改變時，同時更新 auth 中的 userData
     if (name === 'gender') {
-      // setAuth((prev) => ({ // This line was removed as per the edit hint
-      //   ...prev,
-      //   userData: {
-      //     ...prev.userData,
-      //     gender: value,
-      //   },
-      // }))
+      setAuth((prev) => ({ 
+        // This line was removed as per the edit hint
+        ...prev,
+        userData: {
+          ...prev.userData,
+          gender: value,
+        },
+      }))
     }
   }
 
@@ -296,25 +303,30 @@ export default function UserProfile() {
         // email: auth?.userData?.email || editableUser.email,
         // 確保有 email, email已經改成純顯示了所以之前的editableUser裡面的email應該要刪掉
       }
-      // delete dataToSubmit.password // 移除 password 欄位
-      // delete dataToSubmit.currentPassword // 移除 currentPassword 欄位
-      // delete dataToSubmit.newPassword // 移除 newPassword 欄位
 
-             const response = await axios.put(
-         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${user_id}`,
+
+        const response = await axios.put(
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
          // editableUser
-         dataToSubmit
-       )
+         dataToSubmit,
+        {
+          withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
       if (response.data.status === 'success') {
         Swal.fire('成功', '用戶資料更新成功', 'success')
-        // setAuth((prev) => ({ // This line was removed as per the edit hint
-        //   ...prev,
-        //   userData: {
-        //     ...prev.userData,
-        //     ...dataToSubmit,
-        //     user_id,
-        //   },
-        // }))
+        setAuth((prev) => ({ 
+        // This line was removed as per the edit hint
+          ...prev,
+          userData: {
+            ...prev.userData,
+            ...dataToSubmit,
+            user_id,
+          },
+        }))
 
         // 替換以上這段
 
@@ -350,12 +362,18 @@ export default function UserProfile() {
       }
       //s停用button跟更新button用的是同一個路由所以停用
              const response = await axios.put(
-         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${user_id}`,
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
          {
            ...editableUser,
            valid: 0,
-         }
-       )
+         },
+        {
+          withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
 
       if (response.data.status === 'success') {
         Swal.fire({
@@ -393,12 +411,18 @@ export default function UserProfile() {
 
     try {
              const response = await axios.put(
-         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${user_id}`,
+         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
          {
            ...editableUser,
            image_path: selectedImg,
-         }
-       )
+         },
+        {
+          withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
 
       if (response.data.status === 'success') {
         setUploadStatus('頭像更新成功！') //有文字算true,沒有算none?
@@ -410,12 +434,18 @@ export default function UserProfile() {
         //     image_path: selectedImg,
         //   },
         // }))
-                 const headerResponse = await axios.post(
-           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header`,
-           {
-             user_id: user_id,
-           }
-         )
+        const headerResponse = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header`,
+          {
+            user_id: user_id,
+          },
+          {
+            withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
         Swal.fire('成功', '頭像更新成功', 'success')
       }
     } catch (error) {
@@ -515,7 +545,7 @@ export default function UserProfile() {
                           />
                         </div>
                       </div>
-                      
+
                       <div className="mb-3 row">
                         <label
                           htmlFor="phone"
@@ -591,7 +621,7 @@ export default function UserProfile() {
                                       </option>
                                     ))}
                                   </optgroup>
-                                )
+                                ),
                               )}
                             </EnhancedSelect>
                           </div>

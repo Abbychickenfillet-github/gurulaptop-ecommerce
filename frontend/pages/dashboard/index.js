@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Nav, Tab } from 'react-bootstrap'
 import { FaPenFancy } from 'react-icons/fa'
 import { useAuth } from '@/hooks/use-auth'
@@ -85,7 +85,7 @@ export default function DashboardIndex() {
         return <UserProfile />
     }
   }
-    // 如果還在載入中，顯示載入動畫
+  // 如果還在載入中，顯示載入動畫
   // if (auth.isLoading) {
   //   console.log('Dashboard: 正在載入中...', auth)
   //   return <LoadingAnimation />
@@ -127,8 +127,8 @@ export default function DashboardIndex() {
                     (auth?.userData?.gender === 'male'
                       ? '/signup_login/undraw_profile_2.svg'
                       : auth?.userData?.gender === 'female'
-                      ? '/signup_login/undraw_profile_1.svg'
-                      : '/Vector.svg')
+                        ? '/signup_login/undraw_profile_1.svg'
+                        : '/Vector.svg')
                   }
                   alt="Profile"
                   className="rounded-circle img-fluid mb-3"

@@ -18,7 +18,7 @@ const Carousel = () => {
               status: '即將開始報名',
               sort: 'nearest',
             },
-          }
+          },
         )
 
         if (response.data.code === 200) {
@@ -39,7 +39,8 @@ const Carousel = () => {
 
   const prevSlide = () => {
     setActiveIndex(
-      (current) => (current - 1 + upcomingEvents.length) % upcomingEvents.length,
+      (current) =>
+        (current - 1 + upcomingEvents.length) % upcomingEvents.length,
     )
   }
 

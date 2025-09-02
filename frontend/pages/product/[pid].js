@@ -32,7 +32,7 @@ export default function Detail() {
       // 確保只在瀏覽器端執行 localStorage 的操作
       if (typeof window !== 'undefined') {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData.user_id}/${pid}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData.user_id}/${pid}`,
         )
         const result = await response.json()
 
@@ -83,14 +83,14 @@ export default function Detail() {
       //抓取商品資料
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/${pid}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/${pid}`,
         )
         const result = await response.json()
         setData(result?.data?.product)
         setIsLoding(false)
       } catch (error) {
         //如果發生錯誤，重新導向商品列表
-        
+
         router.push('/product/list')
       }
     }
@@ -145,7 +145,7 @@ export default function Detail() {
     async function fetchRelatedProducts() {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/related/${pid}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/related/${pid}`,
         )
         const result = await response.json()
         setRelatedProducts(result.data.randomRelatedProducts)
@@ -165,15 +165,15 @@ export default function Detail() {
       if (isChecked) {
         //刪除favorite_management資料庫
         try {
-                  const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData.user_id}/${pid}`,
-          {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData.user_id}/${pid}`,
+            {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              },
             },
-          }
-        )
+          )
 
           if (response.ok) {
             // 收藏成功
@@ -188,15 +188,15 @@ export default function Detail() {
       } else {
         //寫入favorite management資料庫
         try {
-                  const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData.user_id}/${pid}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/favorites/${userData.user_id}/${pid}`,
+            {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
             },
-          }
-        )
+          )
 
           if (response.ok) {
             // 收藏成功
@@ -219,17 +219,20 @@ export default function Detail() {
     if (isAuth) {
       // 加入購物車資料庫
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`, {
-          method: 'PUT',
-          body: JSON.stringify({
-            user_id: userData.user_id,
-            product_id: pid,
-            quantity: quantity,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`,
+          {
+            method: 'PUT',
+            body: JSON.stringify({
+              user_id: userData.user_id,
+              product_id: pid,
+              quantity: quantity,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        })
+        )
         const result = await response.json()
         if (result.status == 'success') {
           handleShowMessage('加入購物車成功！', 'success')
@@ -290,8 +293,8 @@ export default function Detail() {
                     isLoading
                       ? '' // 加載中，不顯示圖片
                       : imgData?.[0] // 若無圖片路徑，顯示第一張
-                      ? `/product/${imgData[0].product_img_path}`
-                      : `/product/${data?.product_img[0].product_img_path}`
+                        ? `/product/${imgData[0].product_img_path}`
+                        : `/product/${data?.product_img[0].product_img_path}`
                   }
                   height={400}
                   width={500}
@@ -407,7 +410,7 @@ export default function Detail() {
                       {isLoading
                         ? 'Loading...'
                         : `NT ${new Intl.NumberFormat('zh-TW').format(
-                            data.list_price
+                            data.list_price,
                           )}元`}
                     </span>
                   </div>

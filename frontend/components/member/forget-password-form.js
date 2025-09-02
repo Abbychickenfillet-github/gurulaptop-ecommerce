@@ -24,8 +24,8 @@ export default function ForgetPasswordForm() {
       email: !e.target.value
         ? '請輸入電子郵件地址'
         : !validateEmail(e.target.value)
-        ? '請輸入有效的電子郵件地址'
-        : '',
+          ? '請輸入有效的電子郵件地址'
+          : '',
     }))
   }
 

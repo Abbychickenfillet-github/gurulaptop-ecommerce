@@ -27,7 +27,7 @@ export default function BuyCard({ item, onDataChange }) {
           product_id: item.product_id,
           quantity: item.quantity,
         }),
-      }
+      },
     )
 
     const data = await response.json()
@@ -54,7 +54,7 @@ export default function BuyCard({ item, onDataChange }) {
           user_id: item.user_id,
           product_id: item.product_id,
         }),
-      }
+      },
     )
 
     const data = await response.json()

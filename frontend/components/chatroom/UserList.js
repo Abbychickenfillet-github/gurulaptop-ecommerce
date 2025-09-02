@@ -18,6 +18,7 @@ export default function UserList({
   const [myPrivateChats, setMyPrivateChats] = useState([])
   const [myGroups, setMyGroups] = useState([])
   const [requests, setRequests] = useState([])
+  const [requestHistory, setRequestHistory] = useState([])
 
   useEffect(() => {
     if (currentUser) {
@@ -123,8 +124,8 @@ export default function UserList({
       console.log('收到申請結果:', data)
       setRequests((prev) =>
         prev.map((req) =>
-          req.id === data.requestId ? { ...req, status: data.status } : req
-        )
+          req.id === data.requestId ? { ...req, status: data.status } : req,
+        ),
       )
       fetchInitialData()
     })
@@ -152,34 +153,34 @@ export default function UserList({
     }
 
     try {
-              const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/${requestId}`,
-          {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({ status }),
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/${requestId}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        )
+          credentials: 'include',
+          body: JSON.stringify({ status }),
+        },
+      )
 
-        /*
-         * 🔧 修復說明：
-         * 
-         * ❌ 原本錯誤的地方：
-         * - 第 155 行：`process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/requests/${requestId}`
-         * - 缺少 ${} 語法來正確引用環境變數
-         * 
-         * ✅ 修復後的寫法：
-         * - 第 155 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/${requestId}`
-         * - 使用 ${} 語法正確引用環境變數
-         * 
-         * 💡 為什麼會錯：
-         * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
-         * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/requests/123
-         * - 這會導致 404 錯誤，因為沒有這樣的 URL
-         */
+      /*
+       * 🔧 修復說明：
+       *
+       * ❌ 原本錯誤的地方：
+       * - 第 155 行：`process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/requests/${requestId}`
+       * - 缺少 ${} 語法來正確引用環境變數
+       *
+       * ✅ 修復後的寫法：
+       * - 第 155 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/${requestId}`
+       * - 使用 ${} 語法正確引用環境變數
+       *
+       * 💡 為什麼會錯：
+       * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
+       * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/requests/123
+       * - 這會導致 404 錯誤，因為沒有這樣的 URL
+       */
 
       if (!response.ok) {
         const errorData = await response.json()
@@ -193,8 +194,8 @@ export default function UserList({
           prev.map((req) =>
             req.id === requestId
               ? { ...req, status, updated_at: new Date() }
-              : req
-          )
+              : req,
+          ),
         )
 
         websocketService.send({
@@ -334,28 +335,27 @@ export default function UserList({
                             width={24}
                             height={24}
                             className={styles.userImage}
-                                                         onError={(e) => {
-                               e.target.onerror = null
-                               e.target.src =
-                                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/default-avatar.png`
-                             }}
+                            onError={(e) => {
+                              e.target.onerror = null
+                              e.target.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/default-avatar.png`
+                            }}
 
-                             /*
-                              * 🔧 修復說明：
-                              * 
-                              * ❌ 原本錯誤的地方：
-                              * - 第 322 行：'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/default-avatar.png'
-                              * - 缺少 ${} 語法來正確引用環境變數
-                              * 
-                              * ✅ 修復後的寫法：
-                              * - 第 322 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/default-avatar.png`
-                              * - 使用 ${} 語法正確引用環境變數
-                              * 
-                              * 💡 為什麼會錯：
-                              * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
-                              * - 最終圖片 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/uploads/default-avatar.png
-                              * - 這會導致圖片載入失敗，顯示破圖
-                              */
+                            /*
+                             * 🔧 修復說明：
+                             *
+                             * ❌ 原本錯誤的地方：
+                             * - 第 322 行：'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/default-avatar.png'
+                             * - 缺少 ${} 語法來正確引用環境變數
+                             *
+                             * ✅ 修復後的寫法：
+                             * - 第 322 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/default-avatar.png`
+                             * - 使用 ${} 語法正確引用環境變數
+                             *
+                             * 💡 為什麼會錯：
+                             * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
+                             * - 最終圖片 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/uploads/default-avatar.png
+                             * - 這會導致圖片載入失敗，顯示破圖
+                             */
                           />
                         ) : (
                           <div className={styles.avatarPlaceholder}>
@@ -398,28 +398,27 @@ export default function UserList({
                           width={24}
                           height={24}
                           className={styles.roomImage}
-                                                     onError={(e) => {
-                             e.target.onerror = null
-                             e.target.src =
-                               `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
-                           }}
+                          onError={(e) => {
+                            e.target.onerror = null
+                            e.target.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
+                          }}
 
-                           /*
-                            * 🔧 修復說明：
-                            * 
-                            * ❌ 原本錯誤的地方：
-                            * - 第 369 行：'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png'
-                            * - 缺少 ${} 語法來正確引用環境變數
-                            * 
-                            * ✅ 修復後的寫法：
-                            * - 第 369 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
-                            * - 使用 ${} 語法正確引用環境變數
-                            * 
-                            * 💡 為什麼會錯：
-                            * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
-                            * - 最終圖片 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png
-                            * - 這會導致圖片載入失敗，顯示破圖
-                            */
+                          /*
+                           * 🔧 修復說明：
+                           *
+                           * ❌ 原本錯誤的地方：
+                           * - 第 369 行：'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png'
+                           * - 缺少 ${} 語法來正確引用環境變數
+                           *
+                           * ✅ 修復後的寫法：
+                           * - 第 369 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
+                           * - 使用 ${} 語法正確引用環境變數
+                           *
+                           * 💡 為什麼會錯：
+                           * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
+                           * - 最終圖片 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png
+                           * - 這會導致圖片載入失敗，顯示破圖
+                           */
                         />
                       ) : (
                         <div className={styles.avatarPlaceholder}>

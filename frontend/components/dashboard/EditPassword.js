@@ -26,7 +26,7 @@ export default function EditPassword() {
   // State 的順序很重要，因為 React 是依靠 hooks 調用的順序來維護狀態的。這樣修改後，錯誤應該就會解決了。
   // 另外，建議在開發過程中使用 React DevTools 來幫助調試狀態的變化。
   const user_id = auth?.userData?.user_id
-  
+
   useEffect(() => {
     // 檢查 user_id 是否存在
     if (!auth?.userData?.user_id) {
@@ -62,7 +62,7 @@ export default function EditPassword() {
           body: JSON.stringify({
             currentPassword: editableUser.currentPassword,
           }),
-        }
+        },
       )
 
       // 嘗試把輸入的值丟回去後做處理
@@ -83,7 +83,7 @@ export default function EditPassword() {
       Swal.fire('錯誤', '密碼輸入錯誤或伺服器回應錯誤', 'error')
     }
   }
-  
+
   const validatePassword = (password) => {
     const minLength = 8
     const hasUpperCase = /[A-Z]/.test(password)
@@ -117,7 +117,7 @@ export default function EditPassword() {
         Swal.fire('錯誤', '密碼與確認密碼不相符', 'error')
         return
       }
-      
+
       // 驗證密碼格式
       const validationError = validatePassword(editableUser.newPassword1)
       if (validationError) {
@@ -131,7 +131,7 @@ export default function EditPassword() {
         {
           newPassword1: editableUser.newPassword1,
           newPassword2: editableUser.newPassword2,
-        }
+        },
       )
 
       if (response.data.status === 'resetPwd success') {
@@ -150,11 +150,11 @@ export default function EditPassword() {
       Swal.fire(
         '錯誤',
         error.response?.data?.message || '密碼更新失敗',
-        'error'
+        'error',
       )
     }
   }
-  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target
     console.log('輸入值型別:', typeof value) // 檢查型別
@@ -164,7 +164,7 @@ export default function EditPassword() {
       [name]: value,
     }))
   }
-  
+
   return (
     <>
       <div className="mt-5 row">

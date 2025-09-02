@@ -85,8 +85,8 @@ router.post('/', upload.none(), async (req, res, next) => {
     // 设置 JWT token 到 cookie
     console.log('🍪 設置 JWT Token 到 Cookie...')
     res.cookie('accessToken', token, {
-      httpOnly: true, // 改回 true，提高安全性
-      secure: process.env.NODE_ENV === 'production', // 生產環境使用 HTTPS
+      httpOnly: false, // 改为 false，让前端可以读取
+      secure: false, // 开发环境设为 false
       sameSite: 'lax', // 改为 lax，避免跨域问题
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2天
       path: '/'

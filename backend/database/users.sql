@@ -28,5 +28,8 @@ CREATE TABLE IF NOT EXISTS users (
 -- INSERT INTO users (
 --   level, password, name, phone, email, valid, created_at, gender, country, city, district, road_name, detailed_address, image_path, remarks, birthdate, google_uid, iat, exp
 -- ) VALUES (
---   0, '$2a$10$kuGvOL4FF1YWE3Y.r53uWeyHEPou8URsAd.BIkgNqrXmGhHWDuvi.', 'John Doe', '+886987654321', 'john@example.com', TRUE, CURRENT_TIMESTAMP, 'Male', 'Taiwan', 'Taipei', 'Daan', 'Xiaonan', 'No.123', '/signup_login/avatar.svg', 'Test user', '1990-01-01', 12345, '1731661684', '1731661684'
+--   0, '$2a$10$kuGvOL4FF1YWE3Y.r53uWeyHEPou8URsAd.BIkgNqrXmGhHWDuvi.', 'John Doe', '+886987654321', 'john@example.com', TRUE, CURRENT_TIMESTAMP, 'Male', '台灣', '台北市', '大安區', '', 'No.123', '/signup_login/Vector.svg', 'Test user', '1990-01-01', 12345, '1731661684', '1731661684'
 -- );
+-- 密碼必須要bcrypt hash過 所以資料表不能存明文 2025-08-31 14:52:14
+
+

@@ -40,7 +40,7 @@ const EventRegistration = () => {
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events/${eventId}`,
-          { withCredentials: true }
+          { withCredentials: true },
         )
         const eventData = response.data.data
         setEventInfo(eventData)
@@ -311,7 +311,7 @@ const EventRegistration = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       )
 
       if (response.data.code === 200) {

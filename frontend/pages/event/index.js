@@ -108,41 +108,50 @@ export default function Event() {
   }
 
   // 獲取活動資料 - 使用 useCallback 避免無限迴圈
-  const fetchEvents = useCallback(async (
-    page = currentPage,
-    status = activeTab,
-    showLoading = true
-  ) => {
-    try {
-      if (showLoading) setLoading(true)
-      setError(null)
+  const fetchEvents = useCallback(
+    async (page = currentPage, status = activeTab, showLoading = true) => {
+      try {
+        if (showLoading) setLoading(true)
+        setError(null)
 
-      // 修復：使用正確的環境變數語法
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events`, {
-        params: {
-          page,
-          pageSize: 12,
-          status: status === '所有活動' ? '' : status,
-          type: filters.type,
-          platform: filters.platform,
-          teamType: filters.teamType,
-          keyword: filters.search,
-        },
-      })
+        // 修復：使用正確的環境變數語法
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events`,
+          {
+            params: {
+              page,
+              pageSize: 12,
+              status: status === '所有活動' ? '' : status,
+              type: filters.type,
+              platform: filters.platform,
+              teamType: filters.teamType,
+              keyword: filters.search,
+            },
+          },
+        )
 
-      if (response.data.code === 200) {
-        setEvents(response.data.data.events)
-        setTotalPages(Math.ceil(response.data.data.total / 12))
-      } else {
-        setError('獲取資料失敗')
+        if (response.data.code === 200) {
+          setEvents(response.data.data.events)
+          setTotalPages(Math.ceil(response.data.data.total / 12))
+        } else {
+          setError('獲取資料失敗')
+        }
+      } catch (err) {
+        setError('獲取資料失敗，請稍後再試')
+        console.error('Error fetching events:', err)
+      } finally {
+        if (showLoading) setLoading(false)
       }
-    } catch (err) {
-      setError('獲取資料失敗，請稍後再試')
-      console.error('Error fetching events:', err)
-    } finally {
-      if (showLoading) setLoading(false)
-    }
-  }, [currentPage, activeTab, filters.type, filters.platform, filters.teamType, filters.search])
+    },
+    [
+      currentPage,
+      activeTab,
+      filters.type,
+      filters.platform,
+      filters.teamType,
+      filters.search,
+    ],
+  )
 
   // 初始載入 - 只在組件掛載時執行一次
   useEffect(() => {
@@ -162,7 +171,14 @@ export default function Event() {
     if (filters.type !== undefined) {
       fetchEvents(1, activeTab)
     }
-  }, [filters.type, filters.platform, filters.teamType, filters.search, activeTab, fetchEvents])
+  }, [
+    filters.type,
+    filters.platform,
+    filters.teamType,
+    filters.search,
+    activeTab,
+    fetchEvents,
+  ])
 
   // 處理分頁變更
   const handlePageChange = (page) => {

@@ -19,7 +19,9 @@ export default function BlogId() {
 
   useEffect(() => {
     if (blog_id) {
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-detail/${blog_id}`) // 這裡替換為你實際的 API 路徑
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-detail/${blog_id}`,
+      ) // 這裡替換為你實際的 API 路徑
         .then((response) => response.json())
         .then((data) => {
           setBlogData(data.data) // 設定資料

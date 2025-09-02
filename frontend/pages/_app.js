@@ -34,7 +34,7 @@ import { LoaderProvider } from '@/hooks/use-loader'
 
 import DefaultLayout from '@/components/layout/default-layout'
 // 自訂用載入動畫元件
-import { CatLoader, NoLoader } from '@/hooks/use-loader/components'
+// import { CatLoader, NoLoader } from '@/hooks/use-loader/components'
 import { LoadingSpinner } from '@/components/dashboard/loading-spinner'
 // event的scss
 import '../styles/event.scss'
@@ -106,9 +106,9 @@ export default function MyApp({ Component, pageProps }) {
   const getLayout =
     Component.getLayout || ((page) => <DefaultLayout>{page}</DefaultLayout>)
 
-// 認證狀態建立：應用程式啟動時，<AuthProvider> 會被初始化，並建立一個可共享的認證狀態（auth）。
-// 路由保護啟動：<RouterGuard> 作為 <AuthProvider> 的子元件，可以透過 useAuth() 這個 hook 存取到由 <AuthProvider> 提供的 auth 狀態。
-// 在你的 _app.js 檔案中，有多個 Provider 元件，它們的巢狀順序是基於它們所提供的功能以及這些功能之間的依賴關係。
+  // 認證狀態建立：應用程式啟動時，<AuthProvider> 會被初始化，並建立一個可共享的認證狀態（auth）。
+  // 路由保護啟動：<RouterGuard> 作為 <AuthProvider> 的子元件，可以透過 useAuth() 這個 hook 存取到由 <AuthProvider> 提供的 auth 狀態。
+  // 在你的 _app.js 檔案中，有多個 Provider 元件，它們的巢狀順序是基於它們所提供的功能以及這些功能之間的依賴關係。
   return (
     <AuthProvider>
       {/* <RouterGuard> */}

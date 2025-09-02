@@ -2,23 +2,23 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 // 將 laptopData 移到組件外部
-// const laptopData = [
-//   {
-//     id: 1,
-//     image: "/images/index/banner_05.jpg",
-//   },
-//   {
-//     id: 2,
-//     image: "/images/index/banner_06.jpg",
-//   },
-//   {
-//     id: 3,
-//     image: "/images/index/banner_07.jpg",
-//   }
-// ];
+const laptopData = [
+  {
+    id: 1,
+    image: "/images/index/banner_05.jpg",
+  },
+  {
+    id: 2,
+    image: "/images/index/banner_06.jpg",
+  },
+  {
+    id: 3,
+    image: "/images/index/banner_07.jpg",
+  }
+];
 
 export default function Section4() {
-  const [rotation, setRotation] = useState(0);
+  const [rotation, setRotation] = useState(0)
 
   const handleNext = () => {
     setRotation((prev) => prev - 120) // 順時針旋轉 120 度
@@ -37,26 +37,32 @@ export default function Section4() {
             <div className="home-slider-container">
               <div className="home-slider-content">
                 <div className="carousel-container">
-                  <div 
-                    className="carousel-rotate" 
+                  <div
+                    className="carousel-rotate"
                     style={{ transform: `rotate(${rotation}deg)` }}
                   >
                     {/* 確保 laptopData 存在且是陣列 */}
-                    {Array.isArray(laptopData) && laptopData.map((image, index) => (
-                      <div 
-                        key={image.id}
-                        className="carousel-item"
-                        style={{ 
-                          transform: `
+                    {Array.isArray(laptopData) &&
+                      laptopData.map((image, index) => (
+                        <div
+                          key={image.id}
+                          className="carousel-item"
+                          style={{
+                            transform: `
                             rotate(${index * 120}deg) 
                             translateX(250px) 
                             rotate(-${index * 120}deg)
-                          `
-                        }}
-                      >
-                        <Image src={image.image} alt={`Laptop ${index + 1}`} width={300} height={200} />
-                      </div>
-                    ))}
+                          `,
+                          }}
+                        >
+                          <Image
+                            src={image.image}
+                            alt={`Laptop ${index + 1}`}
+                            width={300}
+                            height={200}
+                          />
+                        </div>
+                      ))}
                   </div>
                 </div>
                 <div className="home-nav-arrows">
@@ -70,11 +76,9 @@ export default function Section4() {
               </div>
             </div>
           </div>
-          <p className="home-font">
-            Find your style in a unique collection
-          </p>
+          <p className="home-font">Find your style in a unique collection</p>
         </div>
       </div>
     </section>
-  );
+  )
 }

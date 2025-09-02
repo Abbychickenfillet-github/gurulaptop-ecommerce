@@ -25,7 +25,7 @@ export default function BuyItemCard(item) {
         <div className="row align-items-center mb-2">
           <div className="col-2 d-none d-md-block">
             <Link className="cart-photo" href={`/product/${product_id}`}>
-              <Image src={`/product/${product_img}`} width={500} height={500} />
+              <Image src={`/product/${product_img}`} alt={product_name} width={500} height={500} />
             </Link>
           </div>
           <Link

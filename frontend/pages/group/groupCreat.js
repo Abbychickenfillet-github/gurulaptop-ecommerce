@@ -457,7 +457,7 @@ export default function GroupCreat() {
                     </label>
                     <div className="group-creat-image-preview">
                       {imagePreview ? (
-                        Image
+                        <Image
                           src={imagePreview}
                           alt="Preview"
                           style={{

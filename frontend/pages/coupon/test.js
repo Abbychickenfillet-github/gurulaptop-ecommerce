@@ -18,11 +18,11 @@ export default function Checkout() {
     // 修改
     product_id: 1,
     list_price: 0,
-    product_name: ''
+    product_name: '',
   })
-  
+
   const [coupon, setCoupon] = useState(null)
-  
+
   // 當元件載入時取得商品資料
   useEffect(() => {
     fetchProductData()
@@ -30,27 +30,27 @@ export default function Checkout() {
 
   // 取得商品資料的函式
   const fetchProductData = async () => {
-
     // if(!product_id) return
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/1`)
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/1`,
+      )
       // const response = await fetch(`process.env.NEXT_PUBLIC_API_BASE_URL/api/products/${product_id}`)
 
-
       const result = await response.json()
-      
-      if(result.status === 'success') {
+
+      if (result.status === 'success') {
         setSelectedProduct({
           product_id: result.data.product.product_id,
           list_price: result.data.product.list_price,
-          product_name: result.data.product.product_name
+          product_name: result.data.product.product_name,
         })
       } else {
         MySwal.fire({
           icon: 'error',
           title: '載入失敗',
-          text: result.message
+          text: result.message,
         })
       }
     } catch (error) {
@@ -58,7 +58,7 @@ export default function Checkout() {
       MySwal.fire({
         icon: 'error',
         title: '載入失敗',
-        text: '無法連接伺服器'
+        text: '無法連接伺服器',
       })
     }
   }
@@ -66,7 +66,7 @@ export default function Checkout() {
   return (
     <div className="container my-4">
       <h1>結帳</h1>
-      
+
       <div className="card mb-3">
         <div className="card-body">
           <h5>商品名稱: {selectedProduct.product_name}</h5>
@@ -81,7 +81,7 @@ export default function Checkout() {
           )}
         </div>
       </div>
-      <CouponBtn 
+      <CouponBtn
         price={selectedProduct.list_price}
         setCouponValue={setCoupon}
       />

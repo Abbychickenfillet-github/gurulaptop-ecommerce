@@ -46,7 +46,7 @@ const GroupManagement = () => {
           if (!x) return acc.concat([current])
           if (current.role === 'creator') {
             return acc.map((item) =>
-              item.group_id === current.group_id ? current : item
+              item.group_id === current.group_id ? current : item,
             )
           }
           return acc
@@ -93,7 +93,7 @@ const GroupManagement = () => {
         {
           method: 'DELETE',
           credentials: 'include',
-        }
+        },
       )
 
       const data = await response.json()
@@ -142,7 +142,7 @@ const GroupManagement = () => {
             max_members: updatedData.maxMembers,
             group_time: updatedData.group_time,
           }),
-        }
+        },
       )
 
       const result = await response.json()
@@ -231,8 +231,7 @@ const GroupManagement = () => {
                   width={80}
                   height={60}
                   onError={(e) => {
-                    e.target.src =
-                      `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
+                    e.target.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
                   }}
                 />
               </div>
@@ -277,8 +276,7 @@ const GroupManagement = () => {
                   width={80}
                   height={60}
                   onError={(e) => {
-                    e.target.src =
-                      `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
+                    e.target.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
                   }}
                 />
               </div>
