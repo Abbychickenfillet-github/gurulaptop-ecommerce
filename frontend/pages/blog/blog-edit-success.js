@@ -21,7 +21,7 @@ export default function Blogdeletesuccess() {
       clearInterval(timer)
       clearTimeout(redirect)
     }
-  }, [])
+  }, [router])
 
   return (
     <>

@@ -22,37 +22,37 @@ export default function Chat() {
   const router = useRouter()
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/check`,
+          {
+            credentials: 'include',
+          },
+        )
+
+        if (!response.ok) {
+          router.push('/login')
+          return
+        }
+
+        const userData = await response.json()
+        if (userData.status === 'success' && userData.data.user) {
+          const userId = userData.data.user.user_id
+          setCurrentUser(userId)
+          websocketService.connect(userId)
+          await fetchInitialData(userId)
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error)
+        router.push('/login')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
     checkAuth()
   }, [])
-
-  const checkAuth = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/check`,
-        {
-          credentials: 'include',
-        },
-      )
-
-      if (!response.ok) {
-        router.push('/login')
-        return
-      }
-
-      const userData = await response.json()
-      if (userData.status === 'success' && userData.data.user) {
-        const userId = userData.data.user.user_id
-        setCurrentUser(userId)
-        websocketService.connect(userId)
-        await fetchInitialData(userId)
-      }
-    } catch (error) {
-      console.error('Auth check failed:', error)
-      router.push('/login')
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   const fetchInitialData = async (userId) => {
     try {
@@ -109,8 +109,8 @@ export default function Chat() {
     setMessage('')
   }
 
-  const handlePrivateChat = (userId) => {
-    console.log('Private chat with user:', userId)
+  const handlePrivateChat = () => {
+    console.log('Private chat with user')
     setIsSidebarOpen(false)
   }
 

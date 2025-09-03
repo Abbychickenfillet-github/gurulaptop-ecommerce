@@ -44,7 +44,7 @@ export default function ArticleDetail() {
 
       getArticle(router.query.article_id)
     }
-  }, [router.isReady, router.query.article_id, getArticle])
+  }, [router.isReady, getArticle])
 
   // 如果正在加載，顯示加載狀態
   if (loading) {

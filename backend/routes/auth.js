@@ -16,6 +16,36 @@ export const passwordMatch = (password, userPassword) => {
   return compareHash(password, userPassword)
 }
 
+// 驗證 token 有效性
+router.get('/verify', authenticate, async (req, res) => {
+  try {
+    const { rows: [user] } = await pool.query(
+      'SELECT * FROM users WHERE user_id = $1 AND valid = TRUE;',
+      [req.user.user_id]
+    )
+
+    if (!user) {
+      return res.status(404).json({
+        status: 'error',
+        message: '找不到使用者或使用者已被停用'
+      })
+    }
+
+    // 移除敏感資料
+    const { password, ...userWithoutPassword } = user
+    return res.json({
+      status: 'success',
+      data: userWithoutPassword
+    })
+  } catch (error) {
+    console.error('Token 驗證失敗:', error)
+    return res.status(500).json({
+      status: 'error',
+      message: 'Token 驗證失敗'
+    })
+  }
+})
+
 // 檢查登入狀態
 router.get('/check', authenticate, async (req, res) => {
   try {

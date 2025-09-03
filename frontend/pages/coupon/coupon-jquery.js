@@ -1,21 +1,13 @@
 import React from 'react'
-// import 'bootstrap/dist/css/bootstrap.min.css'
 import Link from 'next/link'
 import { FaPenFancy } from 'react-icons/fa'
 import { Nav, Tab } from 'react-bootstrap'
-import Coupon from '@/components/coupon'
 import UserProfile from '@/components/dashboard/userInfoEdit'
-import Paginationcomponent from '@/components/paginationcomponent/paginationcomponent'
 import CouponList from '@/components/coupon/coupon-list-components'
 import { useRouter } from 'next/router'
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
 import Image from 'next/image'
-const MySwal = withReactContent(Swal)
 
 export default function CouponPageJquery() {
-  const router = useRouter()
-  const { id } = router.query
 
   return (
     <div className="container">

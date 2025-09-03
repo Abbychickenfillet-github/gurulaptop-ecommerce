@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Nav, Tab } from 'react-bootstrap'
 import { useAuth } from '@/hooks/use-auth'
 import UserProfile from '@/components/dashboard/userInfoEdit'
@@ -16,7 +16,7 @@ import Head from 'next/head'
 // import MarioGame from '@/components/dashboard/MarioGame'
 import Image from 'next/image'
 export default function DashboardIndex() {
-  const { auth  } = useAuth()
+  const { auth } = useAuth() // 移除 refreshAuth
   const [activeKey, setActiveKey] = useState('home')
   const [couponActiveKey, setCouponActiveKey] = useState('available')
   // 需要加入這個state

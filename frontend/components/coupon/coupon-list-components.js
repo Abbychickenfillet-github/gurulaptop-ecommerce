@@ -16,10 +16,6 @@ export default function CouponList() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [mounted, setMounted] = useState(false)
-  const { auth } = useAuth()
-  const userId = auth?.userData?.user_id
-  const [claimedCoupons, setClaimedCoupons] = useState(new Set())
   const [userCoupons, setUserCoupons] = useState([])
   const [endDateFilter, setEndDateFilter] = useState('')
 
@@ -50,14 +46,9 @@ export default function CouponList() {
        */
       const resData = await res.json()
 
-      if (resData.data?.coupons) {
-        setCouponDataList(resData.data.coupons)
-        // 初始化 claimedCoupons 集合
-        const claimedIds = resData.data.coupons
-          .filter((coupon) => coupon.valid === 0)
-          .map((coupon) => coupon.coupon_id)
-        setClaimedCoupons(new Set(claimedIds))
-      }
+             if (resData.data?.coupons) {
+         setCouponDataList(resData.data.coupons)
+       }
     } catch (err) {
       setError('獲取優惠券資料失敗')
       console.error(err)
@@ -114,16 +105,14 @@ export default function CouponList() {
 
       const addResult = await addResponse.json()
 
-      if (addResult.status === 'success') {
-        setClaimedCoupons((prev) => new Set([...prev, couponId]))
-
-        MySwal.fire({
-          icon: 'success',
-          title: '領取成功！',
-          text: '優惠券已加入您的帳戶',
-        })
-        getCouponData()
-      } else {
+             if (addResult.status === 'success') {
+         MySwal.fire({
+           icon: 'success',
+           title: '領取成功！',
+           text: '優惠券已加入您的帳戶',
+         })
+         getCouponData()
+       } else {
         MySwal.fire({
           icon: 'error',
           title: '領取失敗',
@@ -163,7 +152,6 @@ export default function CouponList() {
   }
 
   useEffect(() => {
-    setMounted(true)
     getCouponData()
     if (userId) {
       getUserCoupons()

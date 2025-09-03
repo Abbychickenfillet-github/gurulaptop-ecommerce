@@ -164,7 +164,7 @@ export default function Event() {
 
     const interval = setInterval(throttledFetch, 30000)
     return () => clearInterval(interval)
-  }, [fetchEvents]) // 添加 fetchEvents 依賴項
+  }, [activeTab, currentPage, fetchEvents])
 
   // 當篩選器改變時重新獲取數據 - 修復：使用具體的依賴項
   useEffect(() => {

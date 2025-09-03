@@ -37,22 +37,7 @@ export default function GroupCreat() {
           },
         )
 
-        /*
-         * 🔧 修復說明：
-         * 
-         * ❌ 原本錯誤的地方：
-         * - 第 32 行：'process.env.NEXT_PUBLIC_API_BASE_URL/api/auth/check'
-         * - 缺少 ${} 語法來正確引用環境變數
-         * 
-         * ✅ 修復後的寫法：
-         * - 第 32 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/check`
-         * - 使用 ${} 語法正確引用環境變數
-         * 
-         * 💡 為什麼會錯：
-         * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
-         * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/auth/check
-         * - 這會導致 404 錯誤，因為沒有這樣的 URL
-         */
+        
 
         if (!response.ok) {
           await Swal.fire({
@@ -78,7 +63,7 @@ export default function GroupCreat() {
     }
 
     checkAuth()
-  }, [])
+  }, [router])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target

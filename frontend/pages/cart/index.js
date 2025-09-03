@@ -36,12 +36,12 @@ export default function CartIndex() {
   const [shipPrice, setShipPrice] = useState(0)
   // confirm回來用的，在記錄確認之後，line-pay回傳訊息與代碼，例如
   // {returnCode: '1172', returnMessage: 'Existing same orderId.'}
-  const [result, setResult] = useState({
-    returnCode: '',
-    returnMessage: '',
-  })
+  // const [result, setResult] = useState({
+  //   returnCode: '',
+  //   returnMessage: '',
+  // })
   // 載入狀態(控制是否顯示載入中的訊息，和伺服器回傳時間點未完成不同步的呈現問題)
-  const [isLoading, setIsLoading] = useState(true)
+  // const [isLoading, setIsLoading] = useState(true)
 
   const handlePaymentMethod = (e) => {
     setPayment_method(+e.target.value)
@@ -178,7 +178,7 @@ export default function CartIndex() {
     )
 
     if (couponDetails.coupon_id !== '') {
-      const couponResult = await fetch(
+      await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/update/${user_id}/${couponDetails.coupon_id}`,
         {
           method: 'PUT',
@@ -302,7 +302,7 @@ export default function CartIndex() {
     )
 
     if (couponDetails.coupon_id !== '') {
-      const couponResult = await fetch(
+      await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/update/${user_id}/${couponDetails.coupon_id}`,
         {
           method: 'PUT',
@@ -379,7 +379,7 @@ export default function CartIndex() {
     }
 
     if (res.data.data) {
-      setResult(res.data.data)
+      // setResult(res.data.data)
     }
 
     // 處理完畢，關閉載入狀態
@@ -399,7 +399,7 @@ export default function CartIndex() {
       // 如果沒有帶transactionId或orderId時，導向至首頁(或其它頁)
       if (!transactionId || !orderId) {
         // 關閉載入狀態
-        setIsLoading(false)
+        // setIsLoading(false)
         // 不繼續處理
         return
       }

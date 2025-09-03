@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import LeaseDetail from '@/components/lease/leaseDetail'
 
-export default function Detail(props) {
+export default function Detail() {
   return (
     <>
       <LeaseDetail />

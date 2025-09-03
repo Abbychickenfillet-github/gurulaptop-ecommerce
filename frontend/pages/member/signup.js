@@ -17,7 +17,7 @@ export default function Signup() {
   const [showpassword, setShowpassword] = useState(false)
   const [showConfirmpassword, setShowConfirmpassword] = useState(false)
   const router = useRouter()
-  const { auth, handleCheckAuth } = useAuth()
+  const { auth } = useAuth()
   const [user, setUser] = useState({
     email: '',
     password: '',

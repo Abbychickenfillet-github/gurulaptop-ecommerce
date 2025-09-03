@@ -84,7 +84,7 @@ export default function NextBreadCrumbLight({
     })
 
     return pathsDisplay
-  }, [isReady, asPath, pathname])
+  }, [isReady, pathname])
 
   useEffect(() => {
     if (isReady) {

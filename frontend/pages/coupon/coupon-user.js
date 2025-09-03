@@ -2,15 +2,10 @@ import React from 'react'
 import { Nav, Tab } from 'react-bootstrap'
 import CouponUser from '@/components/coupon/coupon-user-components'
 import UserProfile from '@/components/dashboard/userInfoEdit'
-
-// import 'bootstrap/dist/css/bootstrap.min.css'
 import Link from 'next/link'
 import { FaPenFancy } from 'react-icons/fa'
-import { useRouter } from 'next/router'
 import Image from 'next/image'
 export default function CouponPage() {
-  const router = useRouter()
-  // const { id } = router.query
 
   return (
     <div className="container">

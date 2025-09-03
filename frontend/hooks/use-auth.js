@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { getFavs } from '@/services/user'
 
@@ -49,8 +49,8 @@ export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
     isAuth: false,       // 是否已認證（登入）
     userData: initUserData, // 用戶數據
-    isLoading: true      
-    // 是否正在加載（檢查認證狀態）
+    isLoading: true,     // 是否正在加載（檢查認證狀態）
+    hasChecked: false    // 新增：標記是否已經檢查過認證
   })
 
   // ========================================
@@ -63,6 +63,9 @@ export const AuthProvider = ({ children }) => {
   
   // 受保護的路由（需要登入才能訪問）
   const protectedRoutes = ['/dashboard', '/coupon/coupon-user']
+  
+  // 已登入用戶不能訪問的路由（需要先登出）
+  const loggedInBlockedRoutes = ['/member/login', '/member/signup']
 
   // ========================================
   // 🔑 登入函數
@@ -129,7 +132,9 @@ export const AuthProvider = ({ children }) => {
               photo_url: result.data.photo_url || '',
               iat: result.data.iat || '',
               exp: result.data.exp || '',
-            }
+            },
+            isLoading: false,
+            hasChecked: true
           }
           
           console.log('更新後的狀態:', newState)
@@ -162,7 +167,8 @@ export const AuthProvider = ({ children }) => {
     setAuth({
       isAuth: false,        // 設置為未登入
       userData: initUserData, // 重置用戶數據為初始值
-      isLoading: false      // 設置加載狀態為false
+      isLoading: false,     // 設置加載狀態為false
+      hasChecked: true      // 標記已檢查
     })
   }
 
@@ -218,7 +224,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   // ========================================
-  // 🔍 檢查認證狀態函數
+  // 🔍 檢查認證狀態函數 (使用 useCallback 避免無限循環)
   // ========================================
   // 功能：檢查用戶是否仍然保持登入狀態
   // 每次重新訪問網站或刷新頁面時都會執行
@@ -256,49 +262,94 @@ export const AuthProvider = ({ children }) => {
   //    - 大部分組件不需要直接調用此函數
   //    - 組件只需要使用 useAuth() 獲取當前狀態即可
   // 
-  const handleCheckAuth = async () => {
+  const handleCheckAuth = useCallback(async () => {
+    // 如果已經檢查過且不在載入中，直接返回
+    if (auth.hasChecked && !auth.isLoading) {
+      return
+    }
+
     try {
-      // 避免重複調用
-      if (auth.isLoading === false) {
-        return
-      }
-      
       console.log('🔍 開始檢查認證狀態...')
       console.log('📍 當前路徑:', router.pathname)
       console.log('🍪 Cookie:', document.cookie)
       console.log('🔐 當前 isAuth:', auth.isAuth)
+      console.log('⏳ 當前 isLoading:', auth.isLoading)
+      console.log('✅ 當前 hasChecked:', auth.hasChecked)
       
       // 檢查是否在受保護路由且沒有token
       if (protectedRoutes.includes(router.pathname) && !document.cookie.includes('accessToken')) {
         console.log('⚠️ 沒有 token 且在受保護路由，跳轉登入')
+        setAuth(prev => ({ ...prev, isLoading: false, hasChecked: true }))
         router.push(loginRoute)
+        return
+      }
+      
+      // 檢查是否已登入但嘗試訪問登入/註冊頁面
+      if (document.cookie.includes('accessToken') && loggedInBlockedRoutes.includes(router.pathname)) {
+        console.log('⚠️ 已登入用戶嘗試訪問登入頁面，跳轉到 dashboard')
+        setAuth(prev => ({ ...prev, isLoading: false, hasChecked: true }))
+        router.push('/dashboard')
         return
       }
       
       // 如果沒有 accessToken，直接返回
       if (!document.cookie.includes('accessToken')) {
         console.log('❌ 沒有 accessToken')
-        setAuth(prev => ({ ...prev, isLoading: false }))
+        setAuth(prev => ({ ...prev, isLoading: false, hasChecked: true }))
         return
       }
     
-      // 有 accessToken，設置為已登入狀態（不向後端驗證）
-      console.log('✅ 發現 accessToken，設置為已登入狀態')
-      setAuth(prev => ({ 
-        ...prev, 
-        isAuth: true,
-        isLoading: false
-      }))
+      // 向後端驗證 token 有效性
+      console.log('🔍 向後端驗證 token...')
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/verify`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      
+      if (response.ok) {
+        const result = await response.json()
+        if (result.status === 'success') {
+          console.log('✅ Token 有效，設置為已登入狀態')
+          setAuth(prev => ({ 
+            ...prev, 
+            isAuth: true,
+            userData: result.data || prev.userData,
+            isLoading: false,
+            hasChecked: true
+          }))
+          
+          // 如果已登入但當前在登入/註冊頁面，跳轉到 dashboard
+          if (loggedInBlockedRoutes.includes(router.pathname)) {
+            console.log('🔄 已登入用戶在登入頁面，跳轉到 dashboard')
+            router.push('/dashboard')
+          }
+        } else {
+          throw new Error(result.message || 'Token 驗證失敗')
+        }
+      } else {
+        throw new Error(`Token 驗證失敗: ${response.status}`)
+      }
       
     } catch (error) {
       console.error('檢查認證失敗:', error)
+      // 清除無效的 cookie
+      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
       setAuth(prev => ({ 
         ...prev, 
         isAuth: false,
-        isLoading: false
+        isLoading: false,
+        hasChecked: true
       }))
+      
+      // 如果在受保護路由，跳轉到登入頁面
+      if (protectedRoutes.includes(router.pathname)) {
+        router.push(loginRoute)
+      }
     }
-  }
+  }, [auth.hasChecked, auth.isLoading, router.pathname])
 
   // ========================================
   // 🔄 狀態變化監聽器
@@ -309,6 +360,27 @@ export const AuthProvider = ({ children }) => {
       console.log('Auth 狀態變化:', auth)
     }
   }, [auth])
+
+  // ========================================
+  // 🔄 路由變化監聽器
+  // ========================================
+  useEffect(() => {
+    // 當路由變化時，如果還沒有檢查過認證，則檢查
+    if (!auth.hasChecked) {
+      handleCheckAuth()
+    }
+  }, [router.pathname, auth.hasChecked, handleCheckAuth])
+
+  // ========================================
+  // 🔍 初始化認證檢查
+  // ========================================
+  // 在組件掛載時檢查認證狀態
+  useEffect(() => {
+    // 只在組件首次掛載時檢查認證狀態
+    if (!auth.hasChecked) {
+      handleCheckAuth()
+    }
+  }, [auth.hasChecked, handleCheckAuth])
 
   // ========================================
   // 📤 返回 Context Provider

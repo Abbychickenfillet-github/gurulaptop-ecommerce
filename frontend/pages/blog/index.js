@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
 import BlogDetailMainArea from '@/components/blog/bloghomepage/articlehomepage-mainarea'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
@@ -231,6 +230,8 @@ export default function BlogSearchPage() {
                         }
                         className="card-img-top w-50 h-100 BlogCardImg"
                         alt={blog.blog_title}
+                        width={400}
+                        height={300}
                       />
                       <div className="card-body w-50 h-100">
                         <div className="BlogCardBodyContent">

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import styles from './EventManagement.module.css'
-import axios from 'axios'
 import Swal from 'sweetalert2'
-import Router from 'next/router'
 import Image from 'next/image'
 const EventManagement = () => {
   const [events, setEvents] = useState([])
@@ -12,10 +10,11 @@ const EventManagement = () => {
 
   const fetchUserEvents = async () => {
     try {
-      const response = await axios.get(
+      const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events/user/registered`,
         {
-          withCredentials: true,
+          method: 'GET',
+          credentials: 'include',
           headers: {
             'Cache-Control': 'no-cache',
             Pragma: 'no-cache',
@@ -23,20 +22,26 @@ const EventManagement = () => {
         },
       )
 
-      if (response.data.code === 200) {
-        const events = response?.data?.data?.events || []
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const result = await response.json()
+
+      if (result.code === 200) {
+        const events = result?.data?.events || []
         setEvents(events)
         // 移除自動跳轉，讓用戶自己決定是否要跳轉
         // Router.push('/dashboard')
       } else {
-        throw new Error(response?.data?.message || '獲取活動列表失敗')
+        throw new Error(result?.message || '獲取活動列表失敗')
       }
     } catch (error) {
       console.error('獲取活動失敗:', error)
       let errorMessage = '獲取活動列表失敗'
-      if (error.response) {
-        errorMessage = error.response.data.message || errorMessage
-      } else if (error.request) {
+      if (error.message) {
+        errorMessage = error.message
+      } else {
         errorMessage = '網路連線異常，請檢查網路狀態'
       }
       setError(errorMessage)
@@ -70,12 +75,21 @@ const EventManagement = () => {
     if (!result.isConfirmed) return
 
     try {
-      const response = await axios.delete(
+      const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events/${eventId}/registration`,
-        { withCredentials: true },
+        { 
+          method: 'DELETE',
+          credentials: 'include',
+        }
       )
 
-      if (response.data.code === 200) {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const result = await response.json()
+
+      if (result.code === 200) {
         await Swal.fire({
           icon: 'success',
           title: '取消成功',
@@ -91,7 +105,7 @@ const EventManagement = () => {
       await Swal.fire({
         icon: 'error',
         title: '錯誤',
-        text: error.response?.data?.message || '取消報名失敗',
+        text: error.message || '取消報名失敗',
         timer: 1500,
         showConfirmButton: false,
       })

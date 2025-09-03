@@ -18,123 +18,118 @@ export default function UserList({
   const [myPrivateChats, setMyPrivateChats] = useState([])
   const [myGroups, setMyGroups] = useState([])
   const [requests, setRequests] = useState([])
-  const [requestHistory, setRequestHistory] = useState([])
 
   useEffect(() => {
     if (currentUser) {
+      const fetchInitialData = async () => {
+        try {
+          const [pendingResponse, historyResponse, chatsResponse, groupsResponse] =
+            await Promise.all([
+              fetch(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/pending`,
+                {
+                  credentials: 'include',
+                },
+              ),
+              fetch(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/history`,
+                {
+                  credentials: 'include',
+                },
+              ),
+              fetch(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/messages/private`,
+                {
+                  credentials: 'include',
+                },
+              ),
+              fetch(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/user/groups`,
+                {
+                  credentials: 'include',
+                },
+              ),
+            ])
+
+          const [pendingData, historyData, chatsData, groupsData] =
+            await Promise.all([
+              pendingResponse.json(),
+              historyResponse.json(),
+              chatsResponse.json(),
+              groupsResponse.json(),
+            ])
+
+          if (pendingData.status === 'success') {
+            setRequests(pendingData.data)
+          }
+
+          if (chatsData.status === 'success') {
+            const chatUsers = new Set()
+            chatsData.data.forEach((msg) => {
+              if (msg.sender_id === currentUser) {
+                chatUsers.add(msg.recipient_id)
+              } else if (msg.recipient_id === currentUser) {
+                chatUsers.add(msg.sender_id)
+              }
+            })
+
+            const activeUsers = users.filter((user) => chatUsers.has(user.user_id))
+            setMyPrivateChats(activeUsers)
+          }
+
+          if (groupsData.status === 'success') {
+            setMyGroups(groupsData.data)
+          }
+        } catch (error) {
+          console.error('獲取資料失敗:', error)
+          await Swal.fire({
+            icon: 'error',
+            title: '載入失敗',
+            text: '無法取得聊天資料，請重新整理頁面',
+            showConfirmButton: false,
+            timer: 2000,
+          })
+        }
+      }
+
+      const setupWebSocket = () => {
+        websocketService.on('newGroupRequest', (data) => {
+          console.log('收到新群組申請:', data)
+          setRequests((prev) => [
+            ...prev,
+            {
+              id: data.requestId,
+              sender_id: data.fromUser,
+              sender_name: data.senderName,
+              game_id: data.gameId,
+              description: data.description,
+              group_name: data.groupName,
+              status: 'pending',
+              created_at: new Date().toISOString(),
+            },
+          ])
+        })
+
+        websocketService.on('groupRequestResult', (data) => {
+          console.log('收到申請結果:', data)
+          setRequests((prev) =>
+            prev.map((req) =>
+              req.id === data.requestId ? { ...req, status: data.status } : req,
+            ),
+          )
+          fetchInitialData()
+        })
+
+        websocketService.on('groupMemberUpdate', () => {
+          console.log('群組成員更新')
+          fetchInitialData()
+        })
+      }
+
       fetchInitialData()
       setupWebSocket()
     }
-  }, [currentUser, fetchInitialData, setupWebSocket])
-
-  const fetchInitialData = async () => {
-    try {
-      const [pendingResponse, historyResponse, chatsResponse, groupsResponse] =
-        await Promise.all([
-          fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/pending`,
-            {
-              credentials: 'include',
-            },
-          ),
-          fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/history`,
-            {
-              credentials: 'include',
-            },
-          ),
-          fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/messages/private`,
-            {
-              credentials: 'include',
-            },
-          ),
-          fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/user/groups`,
-            {
-              credentials: 'include',
-            },
-          ),
-        ])
-
-      const [pendingData, historyData, chatsData, groupsData] =
-        await Promise.all([
-          pendingResponse.json(),
-          historyResponse.json(),
-          chatsResponse.json(),
-          groupsResponse.json(),
-        ])
-
-      if (pendingData.status === 'success') {
-        setRequests(pendingData.data)
-      }
-
-      if (historyData.status === 'success') {
-        setRequestHistory(historyData.data)
-      }
-
-      if (chatsData.status === 'success') {
-        const chatUsers = new Set()
-        chatsData.data.forEach((msg) => {
-          if (msg.sender_id === currentUser) {
-            chatUsers.add(msg.recipient_id)
-          } else if (msg.recipient_id === currentUser) {
-            chatUsers.add(msg.sender_id)
-          }
-        })
-
-        const activeUsers = users.filter((user) => chatUsers.has(user.user_id))
-        setMyPrivateChats(activeUsers)
-      }
-
-      if (groupsData.status === 'success') {
-        setMyGroups(groupsData.data)
-      }
-    } catch (error) {
-      console.error('獲取資料失敗:', error)
-      await Swal.fire({
-        icon: 'error',
-        title: '載入失敗',
-        text: '無法取得聊天資料，請重新整理頁面',
-        showConfirmButton: false,
-        timer: 2000,
-      })
-    }
-  }
-
-  const setupWebSocket = () => {
-    websocketService.on('newGroupRequest', (data) => {
-      console.log('收到新群組申請:', data)
-      setRequests((prev) => [
-        ...prev,
-        {
-          id: data.requestId,
-          sender_id: data.fromUser,
-          sender_name: data.senderName,
-          game_id: data.gameId,
-          description: data.description,
-          group_name: data.groupName,
-          status: 'pending',
-          created_at: new Date().toISOString(),
-        },
-      ])
-    })
-
-    websocketService.on('groupRequestResult', (data) => {
-      console.log('收到申請結果:', data)
-      setRequests((prev) =>
-        prev.map((req) =>
-          req.id === data.requestId ? { ...req, status: data.status } : req,
-        ),
-      )
-      fetchInitialData()
-    })
-
-    websocketService.on('groupMemberUpdate', () => {
-      console.log('群組成員更新')
-      fetchInitialData()
-    })
-  }
+  }, [currentUser, users])
 
   const handleRequest = async (requestId, status) => {
     // 顯示確認對話框
@@ -164,23 +159,6 @@ export default function UserList({
           body: JSON.stringify({ status }),
         },
       )
-
-      /*
-       * 🔧 修復說明：
-       *
-       * ❌ 原本錯誤的地方：
-       * - 第 155 行：`process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/requests/${requestId}`
-       * - 缺少 ${} 語法來正確引用環境變數
-       *
-       * ✅ 修復後的寫法：
-       * - 第 155 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/${requestId}`
-       * - 使用 ${} 語法正確引用環境變數
-       *
-       * 💡 為什麼會錯：
-       * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
-       * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/chat/requests/123
-       * - 這會導致 404 錯誤，因為沒有這樣的 URL
-       */
 
       if (!response.ok) {
         const errorData = await response.json()
@@ -339,23 +317,6 @@ export default function UserList({
                               e.target.onerror = null
                               e.target.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/default-avatar.png`
                             }}
-
-                            /*
-                             * 🔧 修復說明：
-                             *
-                             * ❌ 原本錯誤的地方：
-                             * - 第 322 行：'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/default-avatar.png'
-                             * - 缺少 ${} 語法來正確引用環境變數
-                             *
-                             * ✅ 修復後的寫法：
-                             * - 第 322 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/default-avatar.png`
-                             * - 使用 ${} 語法正確引用環境變數
-                             *
-                             * 💡 為什麼會錯：
-                             * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
-                             * - 最終圖片 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/uploads/default-avatar.png
-                             * - 這會導致圖片載入失敗，顯示破圖
-                             */
                           />
                         ) : (
                           <div className={styles.avatarPlaceholder}>
@@ -402,23 +363,6 @@ export default function UserList({
                             e.target.onerror = null
                             e.target.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
                           }}
-
-                          /*
-                           * 🔧 修復說明：
-                           *
-                           * ❌ 原本錯誤的地方：
-                           * - 第 369 行：'process.env.NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png'
-                           * - 缺少 ${} 語法來正確引用環境變數
-                           *
-                           * ✅ 修復後的寫法：
-                           * - 第 369 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
-                           * - 使用 ${} 語法正確引用環境變數
-                           *
-                           * 💡 為什麼會錯：
-                           * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
-                           * - 最終圖片 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/uploads/groups/group-default.png
-                           * - 這會導致圖片載入失敗，顯示破圖
-                           */
                         />
                       ) : (
                         <div className={styles.avatarPlaceholder}>

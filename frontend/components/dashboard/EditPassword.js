@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
 import { useAuth } from '@/hooks/use-auth'
-import axios from 'axios'
 import Accordion from 'react-bootstrap/Accordion'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
@@ -126,15 +125,28 @@ export default function EditPassword() {
       }
 
       const user_id = auth?.userData?.user_id
-      const response = await axios.put(
+      const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${user_id}/pwdReset`,
         {
-          newPassword1: editableUser.newPassword1,
-          newPassword2: editableUser.newPassword2,
-        },
+          method: 'PUT',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            newPassword1: editableUser.newPassword1,
+            newPassword2: editableUser.newPassword2,
+          }),
+        }
       )
 
-      if (response.data.status === 'resetPwd success') {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const result = await response.json()
+
+      if (result.status === 'resetPwd success') {
         Swal.fire('成功', '密碼更新成功！記得記住新密碼', 'success')
         // 清空輸入框
         setEditableUser((prev) => ({
@@ -149,7 +161,7 @@ export default function EditPassword() {
       console.error('密碼更新失敗:', error)
       Swal.fire(
         '錯誤',
-        error.response?.data?.message || '密碼更新失敗',
+        error.message || '密碼更新失敗',
         'error',
       )
     }

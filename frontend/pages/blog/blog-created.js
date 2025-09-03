@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiamond } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router'
@@ -13,12 +13,13 @@ import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
 import Head from 'next/head'
 import Image from 'next/image'
-export default function Blogcreated(props) {
+
+export default function Blogcreated() {
   const router = useRouter() // 加入 router
 
   // -------------------使用者-------------------
   const { auth } = useAuth()
-  const { isAuth, userData } = auth // 一起解構
+  const { userData } = auth // 一起解構
   const user_id = userData.user_id
   console.log(user_id)
 
@@ -46,8 +47,6 @@ export default function Blogcreated(props) {
   const [blog_brand, setBrand] = useState('')
   const [blog_brand_model, setBrandModel] = useState('')
   const [blog_keyword, setKeyword] = useState('')
-  const [blog_valid_value, setValidvalue] = useState('1')
-  const [blog_created_date, setDate] = useState(getTimestamp())
   const [blog_image, setImage] = useState(null)
 
   // 處理表單提交，把原本的預設狀態弄掉

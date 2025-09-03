@@ -59,9 +59,10 @@ export default function Detail() {
   }
 
   // 初始化
-  useEffect(() => {
-    init()
-  }, [userData, pid]) // 確保在 userData 和 pid 改變時重新執行
+  // useEffect(() => {
+  //   init()
+    // 這個初始化函式是做什麼用的？是原生的嗎？
+  // }, [userData, pid, init]) // 確保在 userData 和 pid 改變時重新執行
 
   // 新增訊息到陣列
   const handleShowMessage = (message, type) => {
@@ -98,7 +99,7 @@ export default function Detail() {
     if (pid) {
       fetchProduct(pid)
     }
-  }, [pid])
+  }, [pid, router])
 
   // 切換圖片
 

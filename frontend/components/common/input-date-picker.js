@@ -62,7 +62,7 @@ export default function InputDatePicker({
         setDate(date)
       })
     }
-  }, [])
+  }, [setDate, setFormat, showFormat])
 
   // control datepicker block show/hide
   useEffect(() => {

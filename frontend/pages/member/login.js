@@ -5,21 +5,18 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/hooks/use-auth'
-import { MdOutlineEmail, MdArrowForward } from 'react-icons/md'
-import { useJumpingLetters } from '@/hooks/jumping-letters-hook'
+import { MdOutlineEmail } from 'react-icons/md'
 import Header from '@/components/layout/default-layout/header'
 import MyFooter from '@/components/layout/default-layout/my-footer'
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai' // 記得引入
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { useLoader } from '@/hooks/use-loader'
 import Head from 'next/head'
-import GlitchText from '@/components/dashboard/glitch-text/glitch-text'
 import GlowingText from '@/components/dashboard/glowing-text/glowing-text'
 
-export default function LogIn(props) {
+export default function LogIn() {
   const [showpassword, setShowpassword] = useState(false)
-  const { renderJumpingText } = useJumpingLetters(true, 2000)
   const router = useRouter()
-  const { login, auth, handleCheckAuth } = useAuth() // 添加 handleCheckAuth
+  const { login, auth } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({ error: ' ' })
@@ -63,9 +60,7 @@ export default function LogIn(props) {
       console.log('用戶已登入，跳轉到 dashboard')
       return
     }
-    // 只在組件掛載時檢查一次認證狀態
-    handleCheckAuth()
-  }, [auth?.isAuth, router]) // 移除 handleCheckAuth 依賴
+  }, [auth?.isAuth, router])
   return (
     <>
       <Head>

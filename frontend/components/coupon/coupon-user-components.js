@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { Form, Button } from 'react-bootstrap'
 import Coupon from './index'
@@ -35,7 +35,7 @@ export default function CouponUser() {
   console.log('用戶ID:', userId)
 
   // 獲取使用者優惠券資料
-  const getUserCoupons = async () => {
+  const getUserCoupons = useCallback(async () => {
     if (!userId) {
       console.log('userId 為空，無法獲取優惠券')
       setError('請先登入')
@@ -52,6 +52,13 @@ export default function CouponUser() {
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
+        {
+          method: 'GET',
+          credentials: 'include', // 🔑 重要：讓 fetch 發送 cookies
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
       )
 
       console.log('API 回應狀態:', res.status, res.statusText)
@@ -84,7 +91,7 @@ export default function CouponUser() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [userId])
 
   // 處理搜尋表單提交
   const handleSubmit = (e) => {
@@ -121,9 +128,7 @@ export default function CouponUser() {
       console.log('userId 或 auth.userData 不存在，設置 loading 為 false')
       setLoading(false)
     }
-  }, [userId, auth, getUserCoupons])
-  // 加入 auth 作為依賴項
-  //缺少getUserCoupons作為依賴項Terminal會出現  react-hooks/exhaustive-deps
+  }, [userId, auth?.userData, getUserCoupons]) // 修正依賴項
 
   // 未登入時的顯示
   if (!userId) {

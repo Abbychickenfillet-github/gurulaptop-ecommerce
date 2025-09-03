@@ -117,11 +117,56 @@ export default function CouponBtn({ price, setCouponValue }) {
 
   useEffect(() => {
     if (userId) {
+      const getCouponData = async () => {
+        if (!userId) {
+          setError('請先登入')
+          setLoading(false)
+          return
+        }
+
+        try {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
+          )
+
+          // if (!res.ok) {
+          //   throw new Error('請求失敗')
+          // }
+
+          const resData = await res.json()
+          console.log('優惠券資料:', resData)
+
+          if (resData.status === 'success') {
+            setCouponDataList(resData.data)
+
+            // if (resData.data.length === 0) {
+            //   MySwal.fire({
+            //     title: '提示',
+            //     text: '目前沒有可用的優惠券',
+            //     icon: 'info',
+            //   })
+            // }
+          } else {
+            throw new Error(resData.message || '獲取資料失敗')
+          }
+        } catch (err) {
+          console.error('Error:', err)
+          setError(err.message)
+          MySwal.fire({
+            title: '錯誤',
+            text: err.message,
+            icon: 'error',
+          })
+        } finally {
+          setLoading(false)
+        }
+      }
+
       getCouponData()
     } else {
       setLoading(false)
     }
-  }, [userId, getCouponData])
+  }, [userId])
 
   // 搜尋功能
   const filteredCoupons = couponDataList.filter((coupon) => {

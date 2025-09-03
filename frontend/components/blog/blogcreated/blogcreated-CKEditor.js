@@ -10,10 +10,10 @@ export default function BlogcreatedCKEditor() {
     setEditorData(data)
   }
 
-  const getFormattedTimestamp = () => {
-    const now = new Date()
-    return now.toISOString().slice(0, 19).replace('T', ' ')
-  }
+  // const getFormattedTimestamp = () => {
+  //   const now = new Date()
+  //   return now.toISOString().slice(0, 19).replace('T', ' ')
+  // }
 
   return (
     <>

@@ -10,12 +10,21 @@ const upload = multer()
 // 如果需要管理員功能，應該建立專門的管理員路由
 
 // 取得特定使用者資料
-router.get('/all', authenticate, async function (req, res) {
+router.get('/:user_id', authenticate, async function (req, res) {
   try {
-    const { user_id, email, password } = req.params
+    const { user_id } = req.params
+    
+    // 驗證請求的用戶ID與當前登入用戶是否一致
+    if (req.user.user_id != user_id) {
+      return res.status(403).json({
+        status: 'error',
+        message: '無權限訪問其他用戶資料'
+      })
+    }
+    
     const { rows: users } = await pool.query(
-      'SELECT * FROM users WHERE user_id = $1 AND email = $2 AND password = $3;',
-      [user_id, email, password]
+      'SELECT * FROM users WHERE user_id = $1 AND valid = TRUE;',
+      [user_id]
     )
     
     if (users.length === 0) {

@@ -30,85 +30,84 @@ const Group = () => {
   const [events, setEvents] = useState([])
 
   useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/events`,
+          {
+            credentials: 'include',
+          },
+        )
+        const data = await response.json()
+        if (data.status === 'success') {
+          setEvents(data.data.events || [])
+        }
+      } catch (error) {
+        console.error('獲取活動列表失敗:', error)
+      }
+    }
+
+    const fetchGroups = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/all`,
+          {
+            credentials: 'include',
+          },
+        )
+        const data = await response.json()
+
+        if (data.status === 'success') {
+          setGroups(data.data.groups || [])
+        } else {
+          console.error('獲取群組失敗:', data.message)
+          setGroups([])
+          setFilteredGroups([])
+        }
+      } catch (error) {
+        console.error('獲取群組失敗:', error)
+        setGroups([])
+        setFilteredGroups([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
     fetchGroups()
     fetchEvents()
   }, [currentPage])
 
   useEffect(() => {
+    const filterAndSortGroups = () => {
+      let result = [...groups]
+
+      if (searchTerm) {
+        result = result.filter(
+          (group) =>
+            group.group_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            group.description.toLowerCase().includes(searchTerm.toLowerCase()),
+        )
+      }
+
+      if (filterEvent && filterEvent !== 'all') {
+        result = result.filter(
+          (group) => group.event_id === parseInt(filterEvent),
+        )
+      }
+
+      result.sort((a, b) => {
+        const timeA = new Date(a.creat_time).getTime()
+        const timeB = new Date(b.creat_time).getTime()
+        return sortOrder === 'newest' ? timeB - timeA : timeA - timeB
+      })
+
+      setFilteredGroups(result)
+      setTotalPages(Math.ceil(result.length / 8))
+      setCurrentPage(1)
+    }
+
     filterAndSortGroups()
   }, [searchTerm, sortOrder, filterEvent, groups])
-
-  const fetchEvents = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/events`,
-        {
-          credentials: 'include',
-        },
-      )
-      const data = await response.json()
-      if (data.status === 'success') {
-        setEvents(data.data.events || [])
-      }
-    } catch (error) {
-      console.error('獲取活動列表失敗:', error)
-    }
-  }
-
-  const fetchGroups = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group/all`,
-        {
-          credentials: 'include',
-        },
-      )
-      const data = await response.json()
-
-      if (data.status === 'success') {
-        setGroups(data.data.groups || [])
-        filterAndSortGroups()
-      } else {
-        console.error('獲取群組失敗:', data.message)
-        setGroups([])
-        setFilteredGroups([])
-      }
-    } catch (error) {
-      console.error('獲取群組失敗:', error)
-      setGroups([])
-      setFilteredGroups([])
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const filterAndSortGroups = () => {
-    let result = [...groups]
-
-    if (searchTerm) {
-      result = result.filter(
-        (group) =>
-          group.group_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          group.description.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-    }
-
-    if (filterEvent && filterEvent !== 'all') {
-      result = result.filter(
-        (group) => group.event_id === parseInt(filterEvent),
-      )
-    }
-
-    result.sort((a, b) => {
-      const timeA = new Date(a.creat_time).getTime()
-      const timeB = new Date(b.creat_time).getTime()
-      return sortOrder === 'newest' ? timeB - timeA : timeA - timeB
-    })
-
-    setFilteredGroups(result)
-    setTotalPages(Math.ceil(result.length / 8))
-    setCurrentPage(1)
-  }
 
   const handleOpenModal = (groupData) => {
     setSelectedGroup({

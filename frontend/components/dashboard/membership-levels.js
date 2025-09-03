@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import ProgressBar from 'react-bootstrap/ProgressBar'
-import axios from 'axios'
 import Image from 'next/image'
 
 export default function MembershipLevels() {
@@ -29,13 +28,27 @@ export default function MembershipLevels() {
   useEffect(() => {
     const fetchMembershipData = async () => {
       try {
-        const response = await axios.get(
+        const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/membership/${auth?.userData?.user_id}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
         )
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        const result = await response.json()
+        
         setMembershipData(() => ({
-          ...response.data,
-          totalSpent: Number(response.data.totalSpent) || 0,
-          nextLevelRequired: Number(response.data.nextLevelRequired) || 0,
+          ...result,
+          totalSpent: Number(result.totalSpent) || 0,
+          nextLevelRequired: Number(result.nextLevelRequired) || 0,
         }))
       } catch (error) {
         console.error('Error fetching membership data:', error)

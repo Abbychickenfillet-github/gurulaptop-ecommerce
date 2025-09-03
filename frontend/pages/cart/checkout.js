@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
 import Head from 'next/head'
 
-export default function Checkout(props) {
+export default function Checkout() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
     const order_id = urlParams.get('ID')

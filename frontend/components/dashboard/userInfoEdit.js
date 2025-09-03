@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
 import { useAuth } from '@/hooks/use-auth'
-import axios from 'axios'
 import { taiwanData } from '@/data/address/data.js'
 import styles from '@/styles/dashboard.module.scss'
 import EnhancedSelect from './Enhanced-select'
@@ -185,32 +184,42 @@ export default function UserProfile() {
             : '/Vector.svg'),
     )
   }, [editableUser.gender, editableUser.image_path]) // 加入相依性
-
+// 這邊是先取使用者資料 也不用點擊任何按鈕
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
+        const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth?.userData?.user_id}`,
           {
-            withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
+            method: 'GET',
+            credentials: 'include', // 🔑 重要：讓 fetch 發送 cookies
             headers: {
               'Content-Type': 'application/json',
             },
           }
         )
-        if (response.data.status === 'success') {
-          const userData = response.data.data
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        const result = await response.json()
+        
+        if (result.status === 'success') {
+          const userData = result.data
           setEditableUser(userData)
           if (userData.image_path) {
             setProfilePic(userData.image_path)
           }
+        } else {
+          throw new Error(result.message || '獲取資料失敗')
         }
       } catch (error) {
         console.error('無法獲取資料:', error)
-        console.error('錯誤詳情:', error.response?.data || error.message)
+        console.error('錯誤詳情:', error.message)
         Swal.fire(
           '錯誤',
-          `獲取用戶資料失敗: ${error.response?.data?.message || error.message}`,
+          `獲取用戶資料失敗: ${error.message}`,
           'error',
         )
       }
@@ -304,18 +313,25 @@ export default function UserProfile() {
         // 確保有 email, email已經改成純顯示了所以之前的editableUser裡面的email應該要刪掉
       }
 
-      const response = await axios.put(
+      const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
-        // editableUser
-        dataToSubmit,
         {
-          withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
+          method: 'PUT',
+          credentials: 'include', // 🔑 重要：讓 fetch 發送 cookies
           headers: {
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify(dataToSubmit),
         },
       )
-      if (response.data.status === 'success') {
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const result = await response.json()
+      
+      if (result.status === 'success') {
         Swal.fire('成功', '用戶資料更新成功', 'success')
         setAuth((prev) => ({
           ...prev,
@@ -330,14 +346,14 @@ export default function UserProfile() {
 
         // 改變的結果是輸入的狀態的物件
       }
-    } catch (error) {
-      console.error('更新失敗:', error)
-      Swal.fire(
-        '錯誤',
-        error.response?.data?.message || '更新失敗，請稍後再試',
-        'error',
-      )
-    }
+          } catch (error) {
+        console.error('更新失敗:', error)
+        Swal.fire(
+          '錯誤',
+          error.message || '更新失敗，請稍後再試',
+          'error',
+        )
+      }
   }
   // 在 userInfoEdit.js 中
 
@@ -358,22 +374,29 @@ export default function UserProfile() {
       if (!isConfirmed.isConfirmed) {
         return
       }
-      //s停用button跟更新button用的是同一個路由所以停用
-             const response = await axios.put(
+      //停用button跟更新button用的是同一個路由所以停用
+             const response = await fetch(
          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
          {
-           ...editableUser,
-           valid: 0,
-         },
-        {
-          withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+           method: 'PUT',
+           credentials: 'include', // 🔑 重要：讓 fetch 發送 cookies
+           headers: {
+             'Content-Type': 'application/json',
+           },
+           body: JSON.stringify({
+             ...editableUser,
+             valid: 0,
+           }),
+         }
       )
 
-      if (response.data.status === 'success') {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const result = await response.json()
+
+      if (result.status === 'success') {
         Swal.fire({
           title: '帳號已停用',
           icon: 'success',
@@ -392,7 +415,7 @@ export default function UserProfile() {
       console.error('停用失敗:', error)
       Swal.fire({
         title: '停用失敗',
-        text: error.response?.data?.message || '請稍後再試',
+        text: error.message || '請稍後再試',
         icon: 'error',
         confirmButtonColor: '#805AF5',
       })
@@ -408,21 +431,28 @@ export default function UserProfile() {
     }
 
     try {
-             const response = await axios.put(
+             const response = await fetch(
          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
          {
-           ...editableUser,
-           image_path: selectedImg,
-         },
-        {
-          withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+           method: 'PUT',
+           credentials: 'include', // 🔑 重要：讓 fetch 發送 cookies
+           headers: {
+             'Content-Type': 'application/json',
+           },
+           body: JSON.stringify({
+             ...editableUser,
+             image_path: selectedImg,
+           }),
+         }
       )
 
-      if (response.data.status === 'success') {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const result = await response.json()
+
+      if (result.status === 'success') {
         setUploadStatus('頭像更新成功！') //有文字算true,沒有算none?
         //除非想防風報攻擊才需要寫得很認真@@
         // setAuth((prev) => ({ // This line was removed as per the edit hint
@@ -432,16 +462,17 @@ export default function UserProfile() {
         //     image_path: selectedImg,
         //   },
         // }))
-        const headerResponse = await axios.post(
+        const headerResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header`,
           {
-            user_id: user_id,
-          },
-          {
-            withCredentials: true, // 🔑 重要：讓 axios 發送 cookies
+            method: 'POST',
+            credentials: 'include', // 🔑 重要：讓 fetch 發送 cookies
             headers: {
               'Content-Type': 'application/json',
             },
+            body: JSON.stringify({
+              user_id: user_id,
+            }),
           }
         )
         Swal.fire('成功', '頭像更新成功', 'success')
@@ -450,7 +481,7 @@ export default function UserProfile() {
       console.error('上傳失敗:', error)
       Swal.fire(
         '錯誤',
-        error.response?.data?.message || '上傳失敗，請稍後再試',
+        error.message || '上傳失敗，請稍後再試',
         'error',
       )
     }
