@@ -33,6 +33,7 @@ import couponUserRouter from './routes/coupon-user.js'
 import chatRoutes from './routes/chat.js'
 import GroupRequests from './routes/group-request.js'
 import buyListRouter from './routes/buy-list.js'
+import headerRouter from './routes/header.js'
 // import googleLoginRouter from './routes/google-login.js'
 import forgotPasswordRouter from './routes/forgot-password.js'
 // 使用檔案的session store，存在sessions資料夾
@@ -120,6 +121,7 @@ app.use('/api/signup', signupRouter)
 app.use('/api/dashboard', dashboardRouter)
 app.use('/api/events', eventsRouter)
 app.use('/api/forgot-password', forgotPasswordRouter)
+app.use('/api/header', headerRouter)
 // 移除重复的 auth 路由
 // app.use('/api/auth', authRouter)
 
@@ -177,6 +179,7 @@ for (const filename of filenames) {
       filename === 'chat.js' || 
       filename === 'group-request.js' ||
       filename === 'line-login.js' ||
+      filename === 'header.js' ||
       filename === 'buy-list.js') {  // 排除 buy-list.js，我們會手動註冊
     continue
   }

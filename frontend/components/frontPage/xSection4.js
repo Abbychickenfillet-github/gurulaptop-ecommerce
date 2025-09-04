@@ -75,7 +75,6 @@ const Section4 = () => {
                         handlePrev()
                       }
                     }}
-                    role="button"
                     tabIndex={0}
                   >
                     <div className="home-triangle-left" />
@@ -88,7 +87,6 @@ const Section4 = () => {
                         handleNext()
                       }
                     }}
-                    role="button"
                     tabIndex={0}
                   >
                     <div className="home-triangle-right" />

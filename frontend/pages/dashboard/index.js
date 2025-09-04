@@ -11,12 +11,12 @@ import GroupManagement from '@/components/group/GroupManagement'
 import BuylistPage from '@/components/dashboard/buylist-page'
 import Favorites from '@/components/product/favorites'
 import BlogUserOverview from '@/components/blog/bloguseroverview'
+import LoadingAnimation from '@/components/LoadingAnimation/LoadingAnimation'
 import Head from 'next/head'
-
-// import MarioGame from '@/components/dashboard/MarioGame'
 import Image from 'next/image'
+
 export default function DashboardIndex() {
-  const { auth } = useAuth() // 移除 refreshAuth
+  const { auth } = useAuth()
   const [activeKey, setActiveKey] = useState('home')
   const [couponActiveKey, setCouponActiveKey] = useState('available')
   // 需要加入這個state
@@ -83,21 +83,21 @@ export default function DashboardIndex() {
     }
   }
   // 如果還在載入中，顯示載入動畫
-  // if (auth.isLoading) {
-  //   console.log('Dashboard: 正在載入中...', auth)
-  //   return <LoadingAnimation />
-  // }
+  if (auth.isLoading) {
+    console.log('Dashboard: 正在載入中...', auth)
+    return <LoadingAnimation />
+  }
 
   // 如果未登入，顯示調試信息並返回載入動畫
-  // if (!auth.isAuth) {
-  //   console.log('Dashboard: 用戶未登入show auth', auth)
-  //   // 只在瀏覽器端執行 window 相關操作
-  //   if (typeof window !== 'undefined') {
-  //     console.log('Dashboard: 當前路徑:', window.location.pathname)
-  //     console.log('Dashboard: Cookies:', document.cookie)
-  //   }
-  //   return <LoadingAnimation />
-  // }
+  if (!auth.isAuth) {
+    console.log('Dashboard: 用戶未登入show auth', auth)
+    // 只在瀏覽器端執行 window 相關操作
+    if (typeof window !== 'undefined') {
+      console.log('Dashboard: 當前路徑:', window.location.pathname)
+      console.log('Dashboard: Cookies:', document.cookie)
+    }
+    return <LoadingAnimation />
+  }
   return (
     <>
       {/* <LoadingSpinner loading={isLoading} /> */}

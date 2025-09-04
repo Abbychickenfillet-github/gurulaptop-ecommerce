@@ -41,7 +41,7 @@ export default function CartIndex() {
   //   returnMessage: '',
   // })
   // 載入狀態(控制是否顯示載入中的訊息，和伺服器回傳時間點未完成不同步的呈現問題)
-  // const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
 
   const handlePaymentMethod = (e) => {
     setPayment_method(+e.target.value)

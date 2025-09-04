@@ -184,8 +184,6 @@ export default function UserList({
           timestamp: new Date().toISOString(),
         })
 
-        fetchInitialData()
-
         // 顯示成功提示
         await Swal.fire({
           icon: 'success',

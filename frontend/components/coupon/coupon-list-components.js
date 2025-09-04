@@ -12,6 +12,8 @@ import { AiTwotoneDelete } from 'react-icons/ai'
 const MySwal = withReactContent(Swal)
 
 export default function CouponList() {
+  const { auth } = useAuth()
+  const userId = auth?.userData?.user_id
   const [couponDataList, setCouponDataList] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)

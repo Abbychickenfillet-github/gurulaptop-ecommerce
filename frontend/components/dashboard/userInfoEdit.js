@@ -358,7 +358,6 @@ export default function UserProfile() {
   // 在 userInfoEdit.js 中
 
   const handleDeactivate = async () => {
-    const {logout} = useAuth()
     try {
       const isConfirmed = await Swal.fire({
         title: '確定要停用帳號嗎？',

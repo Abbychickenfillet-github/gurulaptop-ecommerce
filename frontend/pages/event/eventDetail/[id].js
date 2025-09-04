@@ -4,6 +4,7 @@ import EventButton from '@/components/event/EventButton'
 import axios from 'axios'
 import NextBreadCrumb from '@/components/common/next-breadcrumb'
 import Head from 'next/head'
+import Image from 'next/image'
 const EventDetail = () => {
   const router = useRouter()
   const { id } = router.query
