@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Nav, Tab } from 'react-bootstrap'
 import { useAuth } from '@/hooks/use-auth'
 import UserProfile from '@/components/dashboard/userInfoEdit'

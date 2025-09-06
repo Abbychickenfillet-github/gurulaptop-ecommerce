@@ -11,9 +11,6 @@ import '@/styles/footer.scss'
 
 // 首頁
 import '@/styles/frontPage.scss'
-//會員註冊
-// import '@/styles/transitions_Abby.scss'
-// import RouterGuard from '@/hooks/router-guard'
 
 // 文章/部落格用 css
 import '@/styles/ArticleDetail.scss'
@@ -21,9 +18,8 @@ import '@/styles/ArticleHomePage.scss'
 import '@/styles/BlogCreated.scss'
 import '@/styles/BlogDetail.scss'
 import '@/styles/BlogEdit.scss'
-import '@/styles/BlogHomePage.scss'
+// import '@/styles/BlogHomePage.scss'
 import '@/styles/BlogUserOverview.scss'
-import 'animate.css'
 
 // 載入購物車context
 import { CartProvider } from '@/hooks/use-cart-state'
