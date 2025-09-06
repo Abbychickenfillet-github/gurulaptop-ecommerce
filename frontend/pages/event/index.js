@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import EventCard from '@/components/event/EventCard'
 import Carousel from '@/components/event/Carousel'
 import EventNavbar from '@/components/event/EventNavbar'
@@ -107,14 +107,13 @@ export default function Event() {
     }
   }
 
-  // 獲取活動資料 - 使用 useCallback 避免無限迴圈
+  // 獲取活動資料 - 使用 useCallback 避免無限迴圈，並優化依賴項
   const fetchEvents = useCallback(
     async (page = currentPage, status = activeTab, showLoading = true) => {
       try {
         if (showLoading) setLoading(true)
         setError(null)
 
-        // 修復：使用正確的環境變數語法
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events`,
           {
@@ -153,7 +152,7 @@ export default function Event() {
     ],
   )
 
-  // 初始載入 - 只在組件掛載時執行一次
+  // 初始載入 - 優化依賴項，避免不必要的重新執行
   useEffect(() => {
     fetchEvents()
 
@@ -164,40 +163,41 @@ export default function Event() {
 
     const interval = setInterval(throttledFetch, 30000)
     return () => clearInterval(interval)
-  }, [activeTab, currentPage, fetchEvents])
+  }, []) // 只在組件掛載時執行一次
 
-  // 當篩選器改變時重新獲取數據 - 修復：使用具體的依賴項
-  useEffect(() => {
-    if (filters.type !== undefined) {
-      fetchEvents(1, activeTab)
-    }
-  }, [
+  // 當篩選器改變時重新獲取數據 - 使用 useMemo 優化依賴項
+  const filterDependencies = useMemo(() => [
     filters.type,
     filters.platform,
     filters.teamType,
     filters.search,
     activeTab,
-    fetchEvents,
-  ])
+  ], [filters.type, filters.platform, filters.teamType, filters.search, activeTab])
 
-  // 處理分頁變更
-  const handlePageChange = (page) => {
+  useEffect(() => {
+    if (filters.type !== undefined) {
+      fetchEvents(1, activeTab)
+    }
+  }, filterDependencies)
+
+  // 處理分頁變更 - 使用 useCallback 優化
+  const handlePageChange = useCallback((page) => {
     setCurrentPage(page)
     fetchEvents(page, activeTab)
     // 滾動到頁面頂部，但保持在卡片區域
     document
       .querySelector('.event-container')
       ?.scrollIntoView({ behavior: 'smooth' })
-  }
+  }, [activeTab, fetchEvents])
 
-  // 處理分類變更
-  const handleTabChange = (tab) => {
+  // 處理分類變更 - 使用 useCallback 優化
+  const handleTabChange = useCallback((tab) => {
     setActiveTab(tab)
     setCurrentPage(1)
     fetchEvents(1, tab)
-  }
+  }, [fetchEvents])
 
-  // 處理篩選變更
+  // 處理篩選變更 - 使用 useCallback 優化
   const handleFilterChange = useCallback((newFilters) => {
     setFilters((prev) => ({
       ...prev,

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import BlogDetailMainArea from '@/components/blog/bloghomepage/articlehomepage-mainarea'
+import styles from '@/styles/BlogHomePage.module.scss'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
 import Header from '@/components/layout/default-layout/header'
@@ -103,19 +104,19 @@ export default function BlogSearchPage() {
       {/* <p>目前沒有部落格喔！來新增部落格吧！</p> */}
 
       {/* 搜尋列 */}
-      <div className="BlogMain container-fluid">
-        <div className="BlogSearchBox">
+      <div className={`${styles.BlogMain} container-fluid`}>
+        <div className={styles.BlogSearchBox}>
           <div className="d-flex justify-content-center">
             <input
               type="text"
               value={filters.searchText}
               onChange={handleSearch}
-              className="blog-form-control BlogSearchInputStyle"
+              className={`blog-form-control ${styles.BlogSearchInputStyle}`}
               placeholder="Search"
             />
             <button className="btn" onClick={(e) => e.preventDefault()}>
               <Search
-                className="SearchIcon"
+                className={styles.SearchIcon}
                 size={20}
                 onClick={(e) => e.preventDefault()}
               />
@@ -160,7 +161,7 @@ export default function BlogSearchPage() {
         {/* 紫線 */}
 
         {/* 品牌選擇 */}
-        <div className="ArticleBrandSearch bg-transparent mt-5 mb-3">
+        <div className={`${styles.ArticleBrandSearch} bg-transparent mt-5 mb-3`}>
           <form>
             <div className="row justify-content-between gap-3">
               {['Acer', 'Asus', 'Gigabyte', 'HP', 'MSI', 'Raser'].map(

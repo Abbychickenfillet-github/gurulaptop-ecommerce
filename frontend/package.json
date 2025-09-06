@@ -19,7 +19,7 @@
         "FormData": "^0.10.1",
         "animate.css": "^4.1.1",
         "axios": "^1.7.7",
-        "bootstrap": "^5.3.3",
+        "bootstrap": "^5.3.8",
         "bootstrap-icons": "^1.11.3",
         "ckeditor5": "^43.3.1",
         "date-fns": "^4.1.0",
@@ -47,6 +47,7 @@
         "react-spinners": "^0.14.1",
         "react-toastify": "^10.0.6",
         "react-top-loading-bar": "^2.3.1",
+        "sass-migrator": "^2.4.2",
         "socket.io-client": "^4.8.1",
         "sweetalert2": "^11.6.13",
         "sweetalert2-react-content": "^5.0.7",
@@ -70,6 +71,5 @@
         "eslint-plugin-react-hooks": "^4.0.0",
         "npm-run-all": "^2.1.0",
         "sass": "^1.89.2"
-    },
-    "packageManager": "pnpm@10.15.0+sha512.486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b"
+    }
 }
