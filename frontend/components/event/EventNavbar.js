@@ -16,8 +16,8 @@ const EventNavbar = ({ onFilterChange }) => {
   const [isInitialized, setIsInitialized] = useState(false)
   const [isLoadingFilters, setIsLoadingFilters] = useState(false)
 
-  // 從 URL 初始化篩選狀態 - 使用 useCallback 避免不必要的重新渲染
-  const initializeFromURL = useCallback(() => {
+  // 從 URL 初始化篩選狀態 - 簡化邏輯避免無限循環
+  useEffect(() => {
     if (!isInitialized && router.isReady) {
       const { type, platform, teamType, search } = router.query
 
@@ -30,14 +30,8 @@ const EventNavbar = ({ onFilterChange }) => {
     }
   }, [isInitialized, router.isReady, router.query])
 
-  useEffect(() => {
-    initializeFromURL()
-  }, [initializeFromURL])
-
-  // 獲取篩選選項 - 使用 useCallback 並添加錯誤處理
+  // 獲取篩選選項 - 修復無限循環問題
   const fetchFilters = useCallback(async () => {
-    if (isLoadingFilters) return // 防止重複請求
-    
     setIsLoadingFilters(true)
     try {
       const [typesResponse, platformsResponse] = await Promise.all([
@@ -63,20 +57,13 @@ const EventNavbar = ({ onFilterChange }) => {
     } finally {
       setIsLoadingFilters(false)
     }
-  }, [isLoadingFilters])
+  }, []) // 移除 isLoadingFilters 依賴，只在組件掛載時執行一次
 
   useEffect(() => {
     fetchFilters()
   }, [fetchFilters])
 
-  // 更新 URL 和觸發篩選 - 使用 useMemo 優化 filters 對象
-  const filters = useMemo(() => ({
-    type: selectedType === '全部遊戲' ? null : selectedType,
-    platform: selectedPlatform === '平台' ? null : selectedPlatform,
-    teamType: selectedTeamType === '個人/團隊' ? null : selectedTeamType,
-    search: searchTerm.trim() || null,
-  }), [selectedType, selectedPlatform, selectedTeamType, searchTerm])
-
+  // 更新 URL 和觸發篩選 - 簡化邏輯避免無限循環
   const updateFilters = useCallback(
     (searchValue) => {
       if (!isInitialized) return
@@ -135,20 +122,12 @@ const EventNavbar = ({ onFilterChange }) => {
     e.preventDefault()
   }, [])
 
-  // 監聽篩選條件變化 - 使用 useMemo 優化依賴項
-  const filterDependencies = useMemo(() => [
-    selectedType,
-    selectedPlatform,
-    selectedTeamType,
-    searchTerm,
-    isInitialized,
-  ], [selectedType, selectedPlatform, selectedTeamType, searchTerm, isInitialized])
-
+  // 監聽篩選條件變化 - 簡化邏輯避免無限循環
   useEffect(() => {
     if (isInitialized) {
       updateFilters(searchTerm)
     }
-  }, filterDependencies)
+  }, [selectedType, selectedPlatform, selectedTeamType, searchTerm, isInitialized])
 
   return (
     <nav className={`navbar ${styles.eventNavbar} navbar-dark`}>

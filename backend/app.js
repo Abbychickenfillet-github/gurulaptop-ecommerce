@@ -16,6 +16,7 @@ import pool from '##/configs/pgClient.js'
 // 調試：確認環境變數是否被載入
 console.log('🔍 環境變數載入檢查:')
 console.log('NODE_ENV:', process.env.NODE_ENV)
+console.log('ACCESS_TOKEN_SECRET:', process.env.ACCESS_TOKEN_SECRET ? '✅ 已設置' : '❌ 未設置')
 console.log('LINE_CHANNEL_ID:', process.env.LINE_CHANNEL_ID ? '✅ 已設置' : '❌ 未設置')
 console.log('LINE_CHANNEL_SECRET:', process.env.LINE_CHANNEL_SECRET ? '✅ 已設置' : '❌ 未設置')
 console.log('LINE_LOGIN_CALLBACK_URL:', process.env.LINE_LOGIN_CALLBACK_URL ? '✅ 已設置' : '❌ 未設置')

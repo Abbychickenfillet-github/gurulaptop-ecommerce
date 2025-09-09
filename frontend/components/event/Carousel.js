@@ -10,10 +10,8 @@ const Carousel = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // 獲取即將開始報名的活動 - 使用 useCallback 優化
+  // 獲取即將開始報名的活動 - 修復無限循環問題
   const fetchUpcomingEvents = useCallback(async () => {
-    if (isLoading) return // 防止重複請求
-    
     setIsLoading(true)
     setError(null)
     
@@ -43,7 +41,7 @@ const Carousel = () => {
     } finally {
       setIsLoading(false)
     }
-  }, [isLoading])
+  }, []) // 移除 isLoading 依賴，只在組件掛載時執行一次
 
   useEffect(() => {
     fetchUpcomingEvents()

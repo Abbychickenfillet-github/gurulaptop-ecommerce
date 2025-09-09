@@ -19,6 +19,7 @@ import {passwordMatch} from './auth.js'
 // ========================================
 
 const upload = multer()
+// 獲得加密用字串
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 const router = express.Router()
 console.log(`process.env.NEXT_PUBLIC_API_BASE_URL`, process.env.NEXT_PUBLIC_API_BASE_URL)
