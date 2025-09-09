@@ -142,13 +142,12 @@ export const AuthProvider = ({ children }) => {
         })
         
         // 等待狀態更新完成後再跳轉
-        // 延遲300ms確保狀態更新完成
+        // 延遲500ms確保狀態更新完成
         setTimeout(() => {
-          console.log('🔄 延遲後的 auth 狀態:', auth)
-          console.log('🍪 延遲後的 cookies:', document.cookie)
+          console.log('🔄 延遲後的 cookies:', document.cookie)
           console.log('🔄 導向 dashboard 頁面...')
           router.replace('/dashboard')  // 跳轉到儀表板
-        }, 300)
+        }, 500)
         
       } else {
         console.error('登入失敗:', result.message || result)
@@ -269,32 +268,45 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      console.log('🔍 開始檢查認證狀態...')
-      console.log('📍 當前路徑:', router.pathname)
-      console.log('🍪 Cookie:', document.cookie)
-      console.log('🔐 當前 isAuth:', auth.isAuth)
-      console.log('⏳ 當前 isLoading:', auth.isLoading)
+      console.log('🔍use-auth.js Line 272 開始檢查認證狀態...')
+      console.log('📍 use-auth.js Line 273 當前路徑:', router.pathname)
+      console.log('🍪 use-auth.js Line 274 Cookie:', document.cookie)
+      console.log('🔐 use-auth.js Line 275 當前 isAuth:', auth.isAuth)
+      console.log('⏳ use-auth.js Line 276 當前 isLoading:', auth.isLoading)
       console.log('✅ 當前 hasChecked:', auth.hasChecked)
+      console.log('🛡️ 受保護路由:', protectedRoutes)
+      console.log('🔍 是否在受保護路由:', protectedRoutes.includes(router.pathname))
+      console.log('🍪 是否有 accessToken:', document.cookie.includes('accessToken'))
       
       // 檢查是否在受保護路由且沒有token
+      console.log('🔍 檢查受保護路由條件...')
       if (protectedRoutes.includes(router.pathname) && !document.cookie.includes('accessToken')) {
         console.log('⚠️ 沒有 token 且在受保護路由，跳轉登入')
         setAuth(prev => ({ ...prev, isLoading: false, hasChecked: true }))
         router.push(loginRoute)
         return
       }
+      console.log('✅ 通過受保護路由檢查')
       
       // 檢查是否已登入但嘗試訪問登入/註冊頁面
+      console.log('🔍 檢查已登入用戶阻擋路由條件...')
       if (document.cookie.includes('accessToken') && loggedInBlockedRoutes.includes(router.pathname)) {
-        console.log('⚠️ 已登入用戶嘗試訪問登入頁面，跳轉到 dashboard')
-        setAuth(prev => ({ ...prev, isLoading: false, hasChecked: true }))
-        router.push('/dashboard')
-        return
+        console.log('⚠️ 已登入用戶嘗試訪問登入頁面，但先不跳轉，等待認證檢查完成')
+        console.log('🍪 use-auth.js Line 290 Cookie 內容:', document.cookie)
+        console.log('📍  use-auth.js Line 291 當前路徑:', router.pathname)
+        console.log('🚫  use-auth.js Line 292 被阻擋的路由:', loggedInBlockedRoutes)
+        // 不立即跳轉，讓認證檢查完成後再處理
+        // setAuth(prev => ({ ...prev, isLoading: false, hasChecked: true }))
+        // router.push('/dashboard')
+        // return
       }
+      console.log('✅ 通過已登入用戶阻擋路由檢查')
       
       // 如果沒有 accessToken，直接返回
       if (!document.cookie.includes('accessToken')) {
         console.log('❌ 沒有 accessToken')
+        console.log('🍪 完整 Cookie 內容:', document.cookie)
+        console.log('🔍 檢查 accessToken 是否存在:', document.cookie.includes('accessToken'))
         setAuth(prev => ({ ...prev, isLoading: false, hasChecked: true }))
         return
       }
@@ -321,10 +333,12 @@ export const AuthProvider = ({ children }) => {
             hasChecked: true
           }))
           
-          // 如果已登入但當前在登入/註冊頁面，跳轉到 dashboard
+          // 如果已登入但當前在登入/註冊頁面，延遲跳轉到 dashboard
           if (loggedInBlockedRoutes.includes(router.pathname)) {
-            console.log('🔄 已登入用戶在登入頁面，跳轉到 dashboard')
-            router.push('/dashboard')
+            console.log('🔄 已登入用戶在登入頁面，延遲跳轉到 dashboard')
+            setTimeout(() => {
+              router.push('/dashboard')
+            }, 100)
           }
         } else {
           throw new Error(result.message || 'Token 驗證失敗')

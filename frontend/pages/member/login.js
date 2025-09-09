@@ -53,6 +53,12 @@ export default function LogIn() {
   }
 
   useEffect(() => {
+    // 如果認證檢查還沒完成，不執行跳轉
+    if (!auth.hasChecked) {
+      console.log('Login 頁面: 認證檢查中...', auth)
+      return
+    }
+    
     // 如果用戶已登入，重定向到儀表板
     console.log('Login 頁面 auth 狀態:', auth) // 加入 debug
     if (auth?.isAuth) {
@@ -60,7 +66,7 @@ export default function LogIn() {
       console.log('用戶已登入，跳轉到 dashboard')
       return
     }
-  }, [auth?.isAuth, router])
+  }, [auth?.isAuth, auth?.hasChecked, router])
   return (
     <>
       <Head>

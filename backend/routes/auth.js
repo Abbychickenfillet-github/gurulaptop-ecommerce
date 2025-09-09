@@ -187,7 +187,7 @@ router.post('/login', upload.none(), async (req, res) => {
     })
 
     res.cookie('accessToken', accessToken, {
-      httpOnly: true,
+      httpOnly: false, // 改為 false，讓前端可以讀取
       secure:false,
       //  process.env.NODE_ENV === 'production',
       sameSite: 'lax',

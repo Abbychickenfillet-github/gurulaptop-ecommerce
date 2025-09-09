@@ -1,13 +1,26 @@
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 // only redirect to member/login
 export default function MemberIndex() {
   const router = useRouter()
-  // Make sure we're in the browser
-  if (typeof window !== 'undefined') {
-    router.push('/member/login')
-  }
-  return <></>
+  
+  useEffect(() => {
+    // 延遲重定向，避免與認證檢查衝突
+    const timer = setTimeout(() => {
+      router.push('/member/login')
+    }, 100)
+    
+    return () => clearTimeout(timer)
+  }, [router])
+  
+  return (
+    <div className="d-flex justify-content-center align-items-center" style={{ height: '50vh' }}>
+      <div className="spinner-border text-primary" role="status">
+        <span className="visually-hidden">載入中...</span>
+      </div>
+    </div>
+  )
 }
 // 段代碼的目的是在瀏覽器中自動將用戶重定向到 /member/login 頁面。
 

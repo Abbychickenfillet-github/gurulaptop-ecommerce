@@ -88,13 +88,20 @@ export default function DashboardIndex() {
     return <LoadingAnimation />
   }
 
-  // 如果未登入，顯示調試信息並返回載入動畫
+  // 如果認證檢查還沒完成，顯示載入中
+  if (!auth.hasChecked) {
+    console.log('Dashboard: 認證檢查中...', auth)
+    return <LoadingAnimation />
+  }
+
+  // 如果未登入，跳轉到登入頁面
   if (!auth.isAuth) {
-    console.log('Dashboard: 用戶未登入show auth', auth)
-    // 只在瀏覽器端執行 window 相關操作
+    console.log('Dashboard: 用戶未登入，跳轉到登入頁面', auth)
+    // 只在瀏覽器端執行跳轉
     if (typeof window !== 'undefined') {
       console.log('Dashboard: 當前路徑:', window.location.pathname)
       console.log('Dashboard: Cookies:', document.cookie)
+      window.location.href = '/member/login'
     }
     return <LoadingAnimation />
   }

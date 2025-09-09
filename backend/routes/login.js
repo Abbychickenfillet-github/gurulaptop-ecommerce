@@ -3,7 +3,6 @@ import authenticate from '#middlewares/authenticate.js'
 import pool from '##/configs/pgClient.js'
 import multer from 'multer'
 import jsonwebtoken from 'jsonwebtoken'
-import { compareHash } from '#db-helpers/password-hash.js'
 import {passwordMatch} from './auth.js'
 // ========================================
 // 🔐 統一的認證邏輯 - login.js
@@ -86,7 +85,7 @@ router.post('/', upload.none(), async (req, res, next) => {
     // 设置 JWT token 到 cookie
     console.log('🍪 設置 JWT Token 到 Cookie...')
     res.cookie('accessToken', token, {
-      httpOnly: true, // 改為 true，與 auth.js 保持一致
+      httpOnly: false, // 改為 false，讓前端可以讀取
       secure: false, // 明確設置為 false，與實際環境一致
       sameSite: 'lax', // 改为 lax，避免跨域问题
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2天
