@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import { getFavs } from '@/services/user'
 
@@ -62,17 +62,17 @@ export const AuthProvider = ({ children }) => {
   const loginRoute = '/member/login'
   
   // 受保護的路由（需要登入才能訪問）
-  const protectedRoutes = ['/dashboard', '/coupon/coupon-user']
+  const protectedRoutes = useMemo(() => ['/dashboard', '/coupon/coupon-user'], [])
   
   // 已登入用戶不能訪問的路由（需要先登出）
-  const loggedInBlockedRoutes = ['/member/login', '/member/signup']
+  const loggedInBlockedRoutes = useMemo(() => ['/member/login', '/member/signup'], [])
 
   // ========================================
   // 🔑 登入函數
   // ========================================
   // 功能：處理用戶登入
   // 參數：email（郵箱）、password（密碼）
-  const login = async (email, password) => {
+  const login = useCallback(async (email, password) => {
     try {
       console.log('🚀 前端開始登入請求...')
       console.log('📧 登入 email:', email)
@@ -142,12 +142,10 @@ export const AuthProvider = ({ children }) => {
         })
         
         // 等待狀態更新完成後再跳轉
-        // 延遲500ms確保狀態更新完成
-        setTimeout(() => {
-          console.log('🔄 延遲後的 cookies:', document.cookie)
-          console.log('🔄 導向 dashboard 頁面...')
-          router.replace('/dashboard')  // 跳轉到儀表板
-        }, 500)
+        console.log('🔄 等待認證狀態更新完成...')
+        await waitForAuthUpdate()
+        console.log('🔄 認證狀態更新完成，導向 dashboard 頁面...')
+        router.replace('/dashboard')  // 跳轉到儀表板
         
       } else {
         console.error('登入失敗:', result.message || result)
@@ -156,26 +154,26 @@ export const AuthProvider = ({ children }) => {
       console.error('登入錯誤：', error)
       console.error('錯誤詳情:', error.message)
     }
-  }
+  }, [router]) // 依賴 router
 
   // ========================================
   // 🧹 清除認證狀態函數
   // ========================================
   // 功能：將認證狀態重置為未登入狀態
-  const clearAuthState = () => {
+  const clearAuthState = useCallback(() => {
     setAuth({
       isAuth: false,        // 設置為未登入
       userData: initUserData, // 重置用戶數據為初始值
       isLoading: false,     // 設置加載狀態為false
       hasChecked: true      // 標記已檢查
     })
-  }
+  }, []) // 空依賴數組
 
   // ========================================
   // 🚪 登出函數
   // ========================================
   // 功能：處理用戶登出
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       console.log('🚪 開始登出流程...')
       
@@ -220,7 +218,24 @@ export const AuthProvider = ({ children }) => {
       console.log('🔄 跳轉到登入頁面...')
       router.replace('/member/login')
     }
-  }
+  }, [clearAuthState, router]) // 依賴 clearAuthState 和 router
+
+  // ========================================
+  // ⏳ 等待認證狀態更新函數
+  // ========================================
+  // 功能：等待認證狀態更新完成
+  const waitForAuthUpdate = useCallback(() => {
+    return new Promise((resolve) => {
+      const checkAuth = () => {
+        if (auth.hasChecked) {
+          resolve()
+        } else {
+          setTimeout(checkAuth, 50)
+        }
+      }
+      checkAuth()
+    })
+  }, [auth.hasChecked])
 
   // ========================================
   // 🔍 檢查認證狀態函數 (使用 useCallback 避免無限循環)
@@ -333,12 +348,10 @@ export const AuthProvider = ({ children }) => {
             hasChecked: true
           }))
           
-          // 如果已登入但當前在登入/註冊頁面，延遲跳轉到 dashboard
+          // 如果已登入但當前在登入/註冊頁面，跳轉到 dashboard
           if (loggedInBlockedRoutes.includes(router.pathname)) {
-            console.log('🔄 已登入用戶在登入頁面，延遲跳轉到 dashboard')
-            setTimeout(() => {
-              router.push('/dashboard')
-            }, 100)
+            console.log('🔄 已登入用戶在登入頁面，跳轉到 dashboard')
+            router.push('/dashboard')
           }
         } else {
           throw new Error(result.message || 'Token 驗證失敗')

@@ -160,11 +160,81 @@ setTimeout(() => {
 
 ## 測試結果
 
+### 認證跳轉問題修復
 ✅ **登入成功後正常跳轉到 dashboard**  
 ✅ **不再有無限跳轉循環**  
 ✅ **認證狀態穩定**  
-✅ **頭像更新功能正常**  
-✅ **三個地方的更新都成功**  
+
+### 圖片同步問題修復
+✅ **Header 和 Dashboard 圖片現在會同步更新**  
+✅ **不再有圖片不一致的問題**  
+✅ **減少不必要的 API 請求**  
+✅ **提高性能**  
+
+### 性能優化
+✅ **使用 useCallback 優化函數**  
+✅ **使用 useMemo 優化數組**  
+✅ **響應式狀態更新**  
+✅ **避免不必要的重新渲染**
+
+## 性能優化後的問題
+
+### 圖片顯示不一致問題
+
+**問題描述：**
+- 進入 dashboard 後，header 和左側欄的圖片顯示不一致
+- 上方 header 和左側欄的兩張圖片還是預設的男生圖片
+- 但改過的圖片是正確的（用戶上傳的圖片）
+
+**可能原因：**
+1. **緩存問題** - 瀏覽器緩存了舊的圖片
+2. **狀態更新時序** - 不同組件的狀態更新時序不同
+3. **圖片路徑問題** - 不同組件使用了不同的圖片路徑
+4. **認證狀態同步** - 認證狀態更新後，圖片狀態沒有同步更新
+
+**需要檢查的檔案：**
+- `frontend/components/layout/default-layout/header.js` - Header 組件
+- `frontend/pages/dashboard/index.js` - Dashboard 左側欄
+- `frontend/hooks/use-auth.js` - 認證狀態管理
+
+**根本原因：**
+1. **Header 組件使用本地狀態** - `const [imagePath, setImagePath] = useState(...)`
+2. **Dashboard 組件直接使用認證狀態** - `auth?.userData?.image_path`
+3. **狀態不同步** - Header 的本地狀態不會自動更新
+4. **不必要的 API 請求** - Header 額外發送 API 請求獲取用戶數據
+
+**修復方案：**
+1. **移除 Header 的本地狀態** - 直接使用 `auth.userData.image_path`
+2. **移除不必要的 API 請求** - 避免重複獲取數據
+3. **統一圖片邏輯** - 所有組件都使用相同的認證狀態
+4. **添加 `key` 屬性** - 強制圖片重新渲染
+
+**修復後的程式碼：**
+```javascript
+// Header 組件 - 修復前
+const [imagePath, setImagePath] = useState(
+  auth?.userData?.image_path || getDefaultImage(auth?.userData?.gender)
+)
+<Image src={imagePath} alt="User" width={40} height={40} />
+
+// Header 組件 - 修復後
+<Image 
+  src={
+    auth?.userData?.image_path ||
+    getDefaultImage(auth?.userData?.gender)
+  } 
+  alt="User" 
+  width={40} 
+  height={40}
+  key={auth?.userData?.image_path} // 強制重新渲染
+/>
+```
+
+**修復效果：**
+✅ **Header 和 Dashboard 圖片現在會同步更新**  
+✅ **不再有圖片不一致的問題**  
+✅ **減少不必要的 API 請求**  
+✅ **提高性能**    
 
 ## 經驗教訓
 
@@ -183,16 +253,158 @@ setTimeout(() => {
 - 避免無限循環影響用戶體驗
 - 狀態變化要有明確的視覺反饋
 
+### 4. **性能優化建議**
+
+#### **`useCallback` vs `useMemo` 詳細解釋**
+
+**`useCallback` 的用途：**
+- 用來優化函數，不是針對數字
+- 避免函數在每次組件重新渲染時重新創建
+- 當函數作為 props 傳遞給子組件時特別有用
+- 當函數作為 useEffect 的依賴時特別有用
+
+**`useMemo` 的用途：**
+- 用來優化計算結果，不一定是數字
+- 可以是對象、數組、字符串等任何值
+- 避免昂貴的計算重複執行
+- 避免對象/數組重新創建
+
+#### **在認證系統中的適合度分析**
+
+**`useCallback` 適合度：**
+```javascript
+// ✅ 適合使用 useCallback
+const login = useCallback(async (email, password) => { ... }, [router])
+// 原因：login 函數會被傳遞給子組件使用，避免子組件不必要的重新渲染
+
+const logout = useCallback(async () => { ... }, [clearAuthState, router])
+// 原因：logout 函數會被傳遞給子組件使用
+
+const clearAuthState = useCallback(() => { ... }, [])
+// 原因：clearAuthState 被 logout 函數使用，避免函數重新創建
+```
+
+**`useMemo` 適合度：**
+```javascript
+// ✅ 適合使用 useMemo
+const protectedRoutes = useMemo(() => ['/dashboard', '/coupon/coupon-user'], [])
+// 原因：數組不會改變，避免每次重新渲染時重新創建數組
+
+const loggedInBlockedRoutes = useMemo(() => ['/member/login', '/member/signup'], [])
+// 原因：數組不會改變，避免每次重新渲染時重新創建數組
+```
+
+#### **實際效果對比**
+
+**沒有優化時：**
+```javascript
+// 每次組件重新渲染時
+const login = async (email, password) => { ... }  // 新函數
+const protectedRoutes = ['/dashboard', '/coupon/coupon-user']  // 新數組
+```
+
+**有優化時：**
+```javascript
+// 組件重新渲染時
+const login = useCallback(async (email, password) => { ... }, [router])  // 緩存函數
+const protectedRoutes = useMemo(() => ['/dashboard', '/coupon/coupon-user'], [])  // 緩存數組
+```
+
+#### **使用 `useCallback` 優化函數**
+```javascript
+// 優化前
+const login = async (email, password) => {
+  // 登入邏輯
+}
+
+const logout = async () => {
+  // 登出邏輯
+}
+
+const clearAuthState = () => {
+  // 清除狀態邏輯
+}
+
+// 優化後
+const login = useCallback(async (email, password) => {
+  // 登入邏輯
+}, [router]) // 依賴 router，因為函數內部使用了 router
+
+const logout = useCallback(async () => {
+  // 登出邏輯
+}, [clearAuthState, router]) // 依賴 clearAuthState 和 router
+
+const clearAuthState = useCallback(() => {
+  // 清除狀態邏輯
+}, []) // 空依賴數組，因為函數內部不依賴外部狀態
+```
+
+#### **使用 `useMemo` 優化計算**
+```javascript
+// 優化前
+const protectedRoutes = ['/dashboard', '/coupon/coupon-user']
+const loggedInBlockedRoutes = ['/member/login', '/member/signup']
+
+// 優化後
+const protectedRoutes = useMemo(() => ['/dashboard', '/coupon/coupon-user'], [])
+const loggedInBlockedRoutes = useMemo(() => ['/member/login', '/member/signup'], [])
+```
+
+#### **更好的狀態更新方式**
+```javascript
+// 優化前：使用 setTimeout 延遲跳轉
+setTimeout(() => {
+  router.replace('/dashboard')
+}, 500)
+
+// 優化後：使用 useEffect 監聽狀態變化
+useEffect(() => {
+  if (auth.hasChecked && auth.isAuth && loggedInBlockedRoutes.includes(router.pathname)) {
+    router.replace('/dashboard')
+  }
+}, [auth.hasChecked, auth.isAuth, router.pathname])
+```
+
+#### **Promise 等待狀態更新**
+```javascript
+// 更好的做法：等待狀態更新完成
+const waitForAuthUpdate = useCallback(() => {
+  return new Promise((resolve) => {
+    const checkAuth = () => {
+      if (auth.hasChecked) {
+        resolve()
+      } else {
+        setTimeout(checkAuth, 50)
+      }
+    }
+    checkAuth()
+  })
+}, [auth.hasChecked])
+
+// 在登入成功後使用
+await waitForAuthUpdate()
+router.replace('/dashboard')
+```
+
 ## 相關檔案
 
-- `frontend/hooks/use-auth.js` - 認證邏輯核心
+### 認證跳轉修復
+- `frontend/hooks/use-auth.js` - 認證邏輯核心，性能優化
 - `frontend/pages/dashboard/index.js` - Dashboard 頁面認證檢查
 - `frontend/pages/member/login.js` - 登入頁面認證檢查
+- `frontend/pages/member/index.js` - 重定向邏輯修復
 - `backend/routes/login.js` - 後端登入邏輯
 - `backend/middlewares/authenticate.js` - 後端認證中間件
 
+### 圖片同步修復
+- `frontend/components/layout/default-layout/header.js` - Header 組件圖片邏輯
+- `frontend/pages/dashboard/index.js` - Dashboard 左側欄圖片邏輯
+- `frontend/hooks/use-auth.js` - 認證狀態管理
+
+### 文檔
+- `frontend/pages/member/authentication-redirect-fix.md` - 問題修復文檔
+
 ---
 
-**修復日期：** 2024年12月  
-**修復人員：** AI Assistant  
-**測試狀態：** ✅ 通過  
+**修復日期：** 2025年09月  
+

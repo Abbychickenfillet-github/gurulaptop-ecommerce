@@ -138,6 +138,7 @@ export default function DashboardIndex() {
                   className="rounded-circle img-fluid mb-3"
                   width={70}
                   height={70}
+                  key={auth?.userData?.image_path} // 添加 key 強制重新渲染
                   style={{
                     objectFit: 'cover',
                   }}

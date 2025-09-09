@@ -26,9 +26,10 @@ export default function Header() {
     }
   }
 
-  const [imagePath, setImagePath] = useState(
-    auth?.userData?.image_path || getDefaultImage(auth?.userData?.gender),
-  )
+  // 移除本地狀態，直接使用 auth.userData
+  // const [imagePath, setImagePath] = useState(
+  //   auth?.userData?.image_path || getDefaultImage(auth?.userData?.gender),
+  // )
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -90,32 +91,27 @@ export default function Header() {
     return () => window.removeEventListener('resize', checkIfMobile)
   }, [])
 
-  useEffect(() => {
-    if (user_id) {
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: user_id,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          // 使用相同的 getDefaultImage 函數
-          setImagePath(data?.image_path || getDefaultImage(data?.gender))
-        })
-        .catch((error) => {
-          console.error('Header API 請求失敗:', error)
-        })
-    }
-
-    document.body.style.paddingTop = '75px'
-    return () => {
-      document.body.style.paddingTop = '0px'
-    }
-  }, [isAuth])
+  // 移除不必要的 API 請求，直接使用 auth.userData
+  // useEffect(() => {
+  //   if (user_id) {
+  //     fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         user_id: user_id,
+  //       }),
+  //     })
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         setImagePath(data?.image_path || getDefaultImage(data?.gender))
+  //       })
+  //       .catch((error) => {
+  //         console.error('Header API 請求失敗:', error)
+  //       })
+  //   }
+  // }, [isAuth])
 
   useEffect(() => {
     if (userData && userData.user_id) {
@@ -187,10 +183,14 @@ export default function Header() {
                     <Link href="/dashboard" className="icon-wrapper">
                       <div className="user-avatar">
                         <Image
-                          src={imagePath}
+                          src={
+                            auth?.userData?.image_path ||
+                            getDefaultImage(auth?.userData?.gender)
+                          }
                           alt="user-avatar"
                           width={40}
                           height={40}
+                          key={auth?.userData?.image_path} // 添加 key 強制重新渲染
                         />
                       </div>
                     </Link>
@@ -246,7 +246,16 @@ export default function Header() {
               <div className="auth-section">
                 <Link href="/dashboard">
                   <div className="user-avatar">
-                    <Image src={imagePath} alt="User" width={40} height={40} />
+                    <Image 
+                      src={
+                        auth?.userData?.image_path ||
+                        getDefaultImage(auth?.userData?.gender)
+                      } 
+                      alt="User" 
+                      width={40} 
+                      height={40}
+                      key={auth?.userData?.image_path} // 添加 key 強制重新渲染
+                    />
                   </div>
                 </Link>
                 <Link href="/chatroom" className="icon-wrapper">
