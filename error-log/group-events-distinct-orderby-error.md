@@ -13,23 +13,23 @@
 SQL state: 42P10
 
     at async file:///D:/Users/User/Documents/coding/project_laptop/next-guru/backend/routes/group.js:101:30 {
-  length: 148,
-  severity: 'ERROR',
-  code: '42P10',
-  detail: undefined,
-  hint: undefined,
-  position: '234',
-  internalPosition: undefined,
-  internalQuery: undefined,
-  where: undefined,
-  schema: undefined,
-  table: undefined,
-  column: undefined,
-  dataType: undefined,
-  constraint: undefined,
-  file: 'parse_clause.c',
-  line: '3019',
-  routine: 'transformDistinctClause'
+  length: 148,                    // 錯誤訊息的總長度（字元數）
+  severity: 'ERROR',              // 錯誤嚴重程度：ERROR（錯誤）、WARNING（警告）、NOTICE（通知）
+  code: '42P10',                 // PostgreSQL 錯誤代碼：42P10 = "for SELECT DISTINCT, ORDER BY expressions must appear in select list"
+  detail: undefined,              // 詳細錯誤說明（此錯誤沒有額外詳細資訊）
+  hint: undefined,                // PostgreSQL 提供的修復建議（此錯誤沒有提示）
+  position: '234',                // 錯誤在 SQL 查詢中的字元位置（第 234 個字元）
+  internalPosition: undefined,     // PostgreSQL 內部解析位置（未提供）
+  internalQuery: undefined,        // PostgreSQL 內部查詢（未提供）
+  where: undefined,               // 錯誤發生的上下文位置（未提供）
+  schema: undefined,              // 相關的資料庫 schema（未提供）
+  table: undefined,               // 相關的資料表（未提供）
+  column: undefined,              // 相關的欄位（未提供）
+  dataType: undefined,            // 相關的資料類型（未提供）
+  constraint: undefined,          // 相關的約束條件（未提供）
+  file: 'parse_clause.c',         // PostgreSQL 原始碼檔案名稱
+  line: '3019',                   // PostgreSQL 原始碼行號
+  routine: 'transformDistinctClause' // PostgreSQL 內部函數名稱
 }
 ```
 

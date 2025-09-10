@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import ProductCard from '@/components/product/product-card'
 import { useAuth } from '@/hooks/use-auth'
-import { forEach } from 'lodash'
+// import { forEach } from 'lodash'
 import BackToTop2 from '@/components/BackToTop/BackToTop2'
 import Head from 'next/head'
 export default function Detail() {

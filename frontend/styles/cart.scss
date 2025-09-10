@@ -1,16 +1,13 @@
 /* cart */
-@import 'bootstrap/scss/functions';
-@import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/mixins';
 
 .w-lg-50 {
-  @include media-breakpoint-up(lg) {
+  @media (min-width: 992px) {
     width: 50%;
   }
 }
 
 .w-md-100 {
-  @include media-breakpoint-down(md) {
+  @media (max-width: 991.98px) {
     width: 100%;
   }
 }

@@ -1,6 +1,3 @@
-@import "bootstrap/scss/functions";
-@import "bootstrap/scss/variables";
-@import "bootstrap/scss/mixins";
 // 定義 mixin
 
 $prefix: "guru-style-";
@@ -9,9 +6,9 @@ $border: #3498db;
 .debug-test {
   // 直接測試 color-contrast 函數
   --test-bg: #{$background};
-  --test-contrast: #{color-contrast($background)};
-  --test-shade: #{shade-color($background, 20%)};
-  --test-shade-contrast: #{color-contrast(shade-color($background, 20%))};
+  --test-contrast: #{if(lightness($background) > 50%, #000, #fff)};
+  --test-shade: #{darken($background, 20%)};
+  --test-shade-contrast: #{if(lightness(darken($background, 20%)) > 50%, #000, #fff)};
   
   background: var(--test-bg);
   color: var(--test-contrast);
@@ -27,13 +24,13 @@ $border: #3498db;
 }
 
 @mixin button-variant($prefix, $background, $border) {
-  --#{$prefix}btn-color: color-contrast($background);
+  --#{$prefix}btn-color: #{if(lightness($background) > 50%, #000, #fff)};
   --#{$prefix}btn-bg: #{$background};
   --#{$prefix}btn-border-color: #{$border};
-  --#{$prefix}btn-hover-color: color-contrast(shade-color($background, 20%));
-  --#{$prefix}btn-hover-bg: shade-color($background, 20%);
-  --#{$prefix}btn-hover-border-color: shade-color($border, 20%);
-  --#{$prefix}btn-focus-shadow-rgb: #{to-rgb(mix(color-contrast($background), $border, 15%))};
+  --#{$prefix}btn-hover-color: #{if(lightness(darken($background, 20%)) > 50%, #000, #fff)};
+  --#{$prefix}btn-hover-bg: #{darken($background, 20%)};
+  --#{$prefix}btn-hover-border-color: #{darken($border, 20%)};
+  --#{$prefix}btn-focus-shadow-rgb: #{red(mix(if(lightness($background) > 50%, #000, #fff), $border, 15%))}, #{green(mix(if(lightness($background) > 50%, #000, #fff), $border, 15%))}, #{blue(mix(if(lightness($background) > 50%, #000, #fff), $border, 15%))};
 }
 
 // 使用 mixin
