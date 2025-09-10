@@ -1,3 +1,8 @@
+// 根據環境動態選擇基礎 URL
+const baseUrl = process.env.NODE_ENV === 'production' 
+  ? 'https://yunlavendar-guru-smart-laptop.zeabur.app'
+  : 'http://localhost:3000'
+
 let options = {
   amount: 1500,
   currency: 'TWD',
@@ -21,7 +26,7 @@ let options = {
     },
   ],
   redirectUrls: {
-    confirmUrl: 'http://localhost:3000/pay-confirm',
-    cancelUrl: 'http://localhost:3000/pay-cancel',
+    confirmUrl: `${baseUrl}/pay-confirm`,
+    cancelUrl: `${baseUrl}/pay-cancel`,
   },
 }

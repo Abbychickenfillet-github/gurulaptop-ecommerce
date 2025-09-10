@@ -3,6 +3,12 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import Image from 'next/image'
+
+// 根據環境動態選擇基礎 URL
+const baseUrl = process.env.NODE_ENV === 'production' 
+  ? 'https://yunlavendar-guru-smart-laptop.zeabur.app'
+  : 'http://localhost:3000'
+
 const NewProducts = () => {
   const products = [
     {
@@ -18,7 +24,7 @@ const NewProducts = () => {
       image: '/images/index/banner_03.jpg',
       title: 'GIGABYTE AORUS 5',
       description: '強大效能使遊戲操作不再受限，將全面解放玩家鬼神技術',
-      link: 'http://localhost:3000/product/230',
+      link: `${baseUrl}/product/230`,
     },
     {
       id: 3,

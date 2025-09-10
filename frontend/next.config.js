@@ -25,6 +25,15 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'guru-laptop-lavendarbug-vqq.zeabur.app',
       },
+      {
+        protocol: 'https',
+        hostname: 'yunlavendar-guru-smart-laptop.zeabur.app',
+      },
+      {
+        protocol: 'https',
+        hostname: 'localhost',
+        port: '8080',
+      },
     ],
     unoptimized: true,
   },

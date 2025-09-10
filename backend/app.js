@@ -66,15 +66,24 @@ const app = express()
 // 所有請求都會經過這些中間件：
 
 // cors設定，參數為必要，注意不要只寫`app.use(cors())`
-app.use(
-  cors({
-    origin: [
+// 根據環境動態設定 CORS origin
+const corsOrigins = process.env.NODE_ENV === 'production' 
+  ? [
+      'https://yunlavendar-guru-smart-laptop.zeabur.app',
+      'https://guru-laptop-lavendarbug-vqq.zeabur.app',
+      'https://localhost:8080'
+    ]
+  : [
       'http://localhost:3000', 
       'http://localhost:3001', 
-      'https://localhost:9000', 
+      'https://localhost:8080', 
       'http://localhost:3005',
       'https://guru-laptop-lavendarbug-vqq.zeabur.app'
-    ],
+    ]
+
+app.use(
+  cors({
+    origin: corsOrigins,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   })

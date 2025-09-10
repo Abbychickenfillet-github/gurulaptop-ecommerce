@@ -5,19 +5,24 @@ import Image from 'next/image'
 import 'swiper/css'
 import 'swiper/css/navigation'
 
+// 根據環境動態選擇基礎 URL
+const baseUrl = process.env.NODE_ENV === 'production' 
+  ? 'https://yunlavendar-guru-smart-laptop.zeabur.app'
+  : 'http://localhost:3000'
+
 const HotProducts = () => {
   const products = [
     {
       id: 1,
       image: '/images/index/banner_05.png',
       title: 'ROG Strix SCAR 17',
-      link: 'http://localhost:3000/product/194',
+      link: `${baseUrl}/product/194`,
     },
     {
       id: 2,
       image: '/images/index/banner_06.png',
       title: 'DELL XPS 16',
-      link: 'http://localhost:3000/product/272',
+      link: `${baseUrl}/product/272`,
     },
     {
       id: 3,

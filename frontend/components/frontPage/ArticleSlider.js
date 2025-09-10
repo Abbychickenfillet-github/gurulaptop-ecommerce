@@ -6,14 +6,19 @@ const ArticleSection = () => {
   const containerRef = useRef(null)
   const articlesPerView = 1
 
-  const articles = [
+  // 根據環境動態選擇基礎 URL
+const baseUrl = process.env.NODE_ENV === 'production' 
+  ? 'https://yunlavendar-guru-smart-laptop.zeabur.app'
+  : 'http://localhost:3000'
+
+const articles = [
     {
       id: 1,
       image: '/images/index/banner_20.jpg',
       title: '繪圖筆電使用心得',
       text: '選購了這台繪圖筆電，壓感精準，屏幕可360度翻轉，很適合設計工作。',
       imageLeft: true,
-      link: 'http://localhost:3000/blog/blog-detail/51',
+      link: `${baseUrl}/blog/blog-detail/51`,
     },
     {
       id: 2,
@@ -21,7 +26,7 @@ const ArticleSection = () => {
       title: 'AI筆電新品發表會',
       text: '參加了最新AI智能筆電發表會，整合多項AI功能，包括智能降噪和自動優化效能，令人期待。',
       imageLeft: false,
-      link: 'http://localhost:3000/blog/blog-detail/48',
+      link: `${baseUrl}/blog/blog-detail/48`,
     },
 
     {
@@ -30,7 +35,7 @@ const ArticleSection = () => {
       title: '設計師筆電開箱與專業測試分享',
       text: '身為設計師，螢幕色彩表現是最重要的考量。這台筆電擁有100% DCI-P3色域，4K解析度帶來極致細節，觸控筆更是得心應手，完美符合創作需求。',
       imageLeft: true,
-      link: 'http://localhost:3000/blog/blog-detail/5',
+      link: 'http://localhost:https://yunlavendar-guru-smart-laptop.zeabur.app//blog/blog-detail/5',
     },
     {
       id: 4,
@@ -38,7 +43,7 @@ const ArticleSection = () => {
       title: '直播主專用筆電分享',
       text: '適合直播的筆電，內建優質收音和高畫質鏡頭，效能也足夠應付串流需求。',
       imageLeft: false,
-      link: 'http://localhost:3000/blog/blog-detail/55',
+      link: `${baseUrl}/blog/blog-detail/55`,
     },
     {
       id: 5,
@@ -54,7 +59,7 @@ const ArticleSection = () => {
       title: '創作者筆電開箱與效能實測',
       text: '身為影片創作者，挑選一台高效能筆電至關重要。這台配備最新RTX顯卡，剪輯4K影片毫無壓力，32GB記憶體讓多工處理更加流暢，極度推薦！',
       imageLeft: false,
-      link: 'http://localhost:3000/blog/blog-detail/9',
+      link: `${baseUrl}/blog/blog-detail/9`,
     },
   ]
 
