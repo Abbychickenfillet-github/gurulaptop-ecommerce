@@ -34,6 +34,11 @@ const nextConfig = {
         hostname: 'localhost',
         port: '8080',
       },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '8080',
+      }
     ],
     unoptimized: true,
   },

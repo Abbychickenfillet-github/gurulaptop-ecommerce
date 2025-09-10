@@ -3,12 +3,16 @@
 $prefix: "guru-style-";
 $background: rgb(164, 114, 210);
 $border: #3498db;
+
+// 使用現代 Sass 函數替代棄用函數
+@use "sass:color";
+
 .debug-test {
-  // 使用標準 Sass 函數
+  // 使用現代 Sass 函數
   --test-bg: #{$background};
-  --test-contrast: #{if(lightness($background) > 0.5, #000, #fff)};
-  --test-shade: #{darken($background, 20%)};
-  --test-shade-contrast: #{if(lightness(darken($background, 20%)) > 0.5, #000, #fff)};
+  --test-contrast: #{if(color.lightness($background) > 0.5, #000, #fff)};
+  --test-shade: #{color.adjust($background, $lightness: -20%)};
+  --test-shade-contrast: #{if(color.lightness(color.adjust($background, $lightness: -20%)) > 0.5, #000, #fff)};
   
   background: var(--test-bg);
   color: var(--test-contrast);
@@ -24,13 +28,13 @@ $border: #3498db;
 }
 
 @mixin button-variant($prefix, $background, $border) {
-  --#{$prefix}btn-color: #{if(lightness($background) > 0.5, #000, #fff)};
+  --#{$prefix}btn-color: #{if(color.lightness($background) > 0.5, #000, #fff)};
   --#{$prefix}btn-bg: #{$background};
   --#{$prefix}btn-border-color: #{$border};
-  --#{$prefix}btn-hover-color: #{if(lightness(darken($background, 20%)) > 0.5, #000, #fff)};
-  --#{$prefix}btn-hover-bg: #{darken($background, 20%)};
-  --#{$prefix}btn-hover-border-color: #{darken($border, 20%)};
-  --#{$prefix}btn-focus-shadow-rgb: #{red(mix(if(lightness($background) > 0.5, #000, #fff), $border, 15%))}, #{green(mix(if(lightness($background) > 0.5, #000, #fff), $border, 15%))}, #{blue(mix(if(lightness($background) > 0.5, #000, #fff), $border, 15%))};
+  --#{$prefix}btn-hover-color: #{if(color.lightness(color.adjust($background, $lightness: -20%)) > 0.5, #000, #fff)};
+  --#{$prefix}btn-hover-bg: #{color.adjust($background, $lightness: -20%)};
+  --#{$prefix}btn-hover-border-color: #{color.adjust($border, $lightness: -20%)};
+  --#{$prefix}btn-focus-shadow-rgb: #{color.red(color.mix(if(color.lightness($background) > 0.5, #000, #fff), $border, 15%))}, #{color.green(color.mix(if(color.lightness($background) > 0.5, #000, #fff), $border, 15%))}, #{color.blue(color.mix(if(color.lightness($background) > 0.5, #000, #fff), $border, 15%))};
 }
 
 // 使用 mixin
