@@ -65,7 +65,7 @@ const GroupJoin = ({ onClose, groupData }) => {
           },
           credentials: 'include',
           body: JSON.stringify({
-            groupId: groupData.group_id,
+            groupId: groupData.id,
             gameId: formData.gameId,
             description: formData.description,
           }),

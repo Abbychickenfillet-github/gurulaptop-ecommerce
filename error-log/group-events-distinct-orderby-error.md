@@ -1,0 +1,86 @@
+# PostgreSQL SELECT DISTINCT ORDER BY 錯誤 (`for SELECT DISTINCT, ORDER BY expressions must appear in select list`)
+
+**發生時間**: 2025年9月10日  
+**問題回報**: 用戶詢問 "for SELECT DISTINCT, ORDER BY expressions must appear in select list" 錯誤
+
+## 問題描述
+在 `backend/routes/group.js` 的 `/api/group/events` 路由中，PostgreSQL 報告了 `for SELECT DISTINCT, ORDER BY expressions must appear in select list` 錯誤。
+
+## 錯誤現象
+```
+獲取活動揪團失敗: error: for SELECT DISTINCT, ORDER BY expressions must appear in select list
+    at async file:///D:/Users/User/Documents/coding/project_laptop/next-guru/backend/routes/group.js:101:30
+SQL state: 42P10
+
+    at async file:///D:/Users/User/Documents/coding/project_laptop/next-guru/backend/routes/group.js:101:30 {
+  length: 148,
+  severity: 'ERROR',
+  code: '42P10',
+  detail: undefined,
+  hint: undefined,
+  position: '234',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_clause.c',
+  line: '3019',
+  routine: 'transformDistinctClause'
+}
+```
+
+## 根本原因
+**PostgreSQL 的 `SELECT DISTINCT` 規則**：當使用 `SELECT DISTINCT` 時，`ORDER BY` 子句中的所有欄位都必須出現在 `SELECT` 列表中。
+
+**錯誤的 SQL 查詢:**
+```sql
+SELECT DISTINCT e.event_id, e.event_name 
+FROM "group" g 
+JOIN event_type e ON g.event_id = e.event_id
+WHERE g.event_id IS NOT NULL
+GROUP BY e.event_id
+HAVING COUNT(g.group_id) > 0
+ORDER BY e.event_start_time DESC  -- ❌ 錯誤：event_start_time 不在 SELECT 中
+```
+
+## 解決方案
+**將 `ORDER BY` 中使用的欄位加入 `SELECT` 列表:**
+
+```sql
+SELECT DISTINCT e.event_id, e.event_name, e.event_start_time
+FROM "group" g 
+JOIN event_type e ON g.event_id = e.event_id
+WHERE g.event_id IS NOT NULL
+GROUP BY e.event_id, e.event_name, e.event_start_time
+HAVING COUNT(g.group_id) > 0
+ORDER BY e.event_start_time DESC  -- ✅ 正確：event_start_time 在 SELECT 中
+```
+
+## PostgreSQL DISTINCT 規則
+1. **SELECT DISTINCT**: 確保結果集中沒有重複行
+2. **ORDER BY 限制**: 所有 `ORDER BY` 欄位必須在 `SELECT` 列表中
+3. **GROUP BY 一致性**: 如果使用 `GROUP BY`，所有非聚合欄位都必須在 `GROUP BY` 中
+
+## 影響範圍
+- `GET /api/group/events` 路由返回 500 錯誤
+- 活動揪團列表無法正常顯示
+- 前端群組頁面載入失敗
+
+## 預防措施
+1. **SQL 語法檢查**: 使用 PostgreSQL 語法檢查工具
+2. **測試查詢**: 在資料庫管理工具中先測試 SQL 查詢
+3. **理解規則**: 熟悉 PostgreSQL 的 `DISTINCT` 和 `ORDER BY` 規則
+
+## 相關檔案
+- `backend/routes/group.js` (第 101-109 行)
+- `frontend/pages/group/index.js` (使用此 API)
+
+## 測試方法
+1. 重新啟動後端服務
+2. 訪問群組頁面
+3. 檢查 `/api/group/events` 是否返回 200 狀態碼
+4. 確認活動揪團列表正常顯示

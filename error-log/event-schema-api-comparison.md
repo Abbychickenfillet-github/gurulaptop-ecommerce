@@ -1,5 +1,8 @@
 # Event Schema 與 API 比較分析
 
+**建立時間**: 2025年1月2日  
+**目的**: 記錄 `event_type.sql` 與 `events.js` API 的差異分析
+
 ## 檔案比較
 - **資料庫結構**: `backend/database/event_type.sql`
 - **API 路由**: `backend/routes/events.js`

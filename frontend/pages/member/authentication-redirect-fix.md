@@ -1,5 +1,8 @@
 # 認證跳轉循環問題修復文檔
 
+**發生時間**: 2025年1月2日  
+**問題回報**: 用戶登入後出現無限跳轉循環
+
 ## 問題描述
 
 用戶在登入後出現無限跳轉循環，在 `/member/login` 和 `/dashboard` 之間不斷跳轉，無法正常進入 dashboard 頁面。
@@ -234,7 +237,56 @@ const [imagePath, setImagePath] = useState(
 ✅ **Header 和 Dashboard 圖片現在會同步更新**  
 ✅ **不再有圖片不一致的問題**  
 ✅ **減少不必要的 API 請求**  
-✅ **提高性能**    
+✅ **提高性能**
+
+### 產品比較按鈕樣式修復
+
+**問題描述：**
+- 產品卡片上的「比較」按鈕鑽石圖標太小（15px）
+- 邊框顏色不明顯（#ddd）
+- 文字和圖標位置可能重疊
+- 缺少背景色，可見度低
+
+**修復方案：**
+1. **增大鑽石圖標** - 從 15px 增加到 20px
+2. **改善邊框顏色** - 改為主題色 `#805af5`
+3. **調整位置** - 更精確的定位，避免重疊
+4. **添加背景** - 半透明背景提高可見度
+5. **改善文字樣式** - 添加陰影和粗體
+
+**修復後的樣式：**
+```scss
+.product_compare_label {
+  position: absolute;
+  width: 20px;           // 增大尺寸
+  height: 20px;
+  border: 2px solid #805af5;  // 主題色邊框
+  transform: rotate(45deg);
+  right: 15px;           // 調整位置
+  top: 15px;
+  background-color: rgba(0, 0, 0, 0.3);  // 半透明背景
+  cursor: pointer;
+  z-index: 10;           // 確保在最上層
+}
+
+.product_compare_text {
+  position: absolute;
+  top: 15px;
+  right: 40px;           // 調整位置避免重疊
+  color: white;
+  font-size: 14px;
+  font-weight: bold;     // 粗體
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);  // 文字陰影
+  z-index: 10;
+}
+```
+
+**修復效果：**
+✅ **鑽石圖標更大更清楚**  
+✅ **邊框顏色與主題一致**  
+✅ **文字和圖標不會重疊**  
+✅ **選中狀態更明顯**  
+✅ **整體視覺效果更好**    
 
 ## 經驗教訓
 

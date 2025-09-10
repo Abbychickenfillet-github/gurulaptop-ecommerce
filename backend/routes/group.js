@@ -99,11 +99,11 @@ router.get('/events', async function (req, res) {
   try {
     client = await pool.connect()
     const { rows: events } = await client.query(`
-      SELECT DISTINCT e.event_id, e.event_name 
+      SELECT DISTINCT e.event_id, e.event_name, e.event_start_time
       FROM "group" g 
       JOIN event_type e ON g.event_id = e.event_id
       WHERE g.event_id IS NOT NULL
-      GROUP BY e.event_id
+      GROUP BY e.event_id, e.event_name, e.event_start_time
       HAVING COUNT(g.group_id) > 0
       ORDER BY e.event_start_time DESC
     `)
@@ -566,8 +566,8 @@ router.post('/requests', checkAuth, async (req, res) => {
 
     // 檢查是否已有待處理的申請
     const { rows: existingRequest } = await client.query(
-      'SELECT 1 FROM group_requests WHERE group_id = $1 AND sender_id = $2 AND status = "pending"',
-      [groupId, senderId]
+      'SELECT 1 FROM group_requests WHERE group_id = $1 AND sender_id = $2 AND status = $3',
+      [groupId, senderId, 'pending']
     )
 
     if (existingRequest.length) {

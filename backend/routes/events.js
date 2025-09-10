@@ -197,6 +197,70 @@ router.get('/filters/platforms', async (req, res) => {
   }
 })
 
+// 獲取單一活動詳情
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    
+    const { rows: events } = await pool.query(`
+      SELECT 
+        et.*,
+        (SELECT COUNT(*) 
+         FROM event_registration er 
+         WHERE er.event_id = et.event_id 
+         AND er.registration_status = 'active'
+        ) as current_participants,
+        CASE 
+          WHEN NOW() < et.apply_start_time THEN '即將開始報名'
+          WHEN NOW() BETWEEN et.apply_start_time AND et.apply_end_time THEN '報名中'
+          WHEN NOW() BETWEEN et.apply_end_time AND et.event_end_time THEN '進行中'
+          ELSE '已結束'
+        END as event_status
+      FROM event_type et
+      WHERE et.event_id = $1 AND et.valid = true
+    `, [id])
+
+    if (events.length === 0) {
+      return res.status(404).json({
+        code: 404,
+        message: '活動不存在',
+      })
+    }
+
+    const event = events[0]
+    
+    res.json({
+      code: 200,
+      message: 'success',
+      data: {
+        id: event.event_id,
+        name: event.event_name,
+        type: event.event_type,
+        platform: event.event_platform,
+        content: event.event_content,
+        rule: event.event_rule,
+        award: event.event_award,
+        teamType: event.individual_or_team,
+        picture: event.event_picture,
+        applyStartTime: event.apply_start_time,
+        applyEndTime: event.apply_end_time,
+        eventStartTime: event.event_start_time,
+        eventEndTime: event.event_end_time,
+        maxPeople: event.maximum_people,
+        currentParticipants: parseInt(event.current_participants) || 0,
+        status: event.event_status,
+      },
+    })
+  } catch (error) {
+    console.error('Error fetching event detail:', error)
+    res.status(500).json({
+      code: 500,
+      message: '獲取活動詳情失敗',
+      error: error.message,
+    })
+  }
+})
+
 // 獲取使用者報名的活動
 router.get('/user/registered', authenticate, async (req, res) => {
   

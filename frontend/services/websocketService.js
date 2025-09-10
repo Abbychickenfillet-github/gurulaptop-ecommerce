@@ -27,8 +27,15 @@ class WebSocketService {
 
     this.isConnecting = true
 
+    // 根據環境決定 WebSocket URL
+    const wsUrl = process.env.NODE_ENV === 'production' 
+      ? 'wss://guru-laptop-lavendarbug-vqq.zeabur.app'
+      : 'ws://localhost:3005'
+
+    console.log('🔌 WebSocket 連線到:', wsUrl)
+
     // 建立WebSocket連線
-          this.ws = new WebSocket('wss://guru-laptop-lavendarbug-vqq.zeabur.app')
+    this.ws = new WebSocket(wsUrl)
 
     // 連線成功時的處理
     this.ws.onopen = () => {

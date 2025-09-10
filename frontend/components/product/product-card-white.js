@@ -46,6 +46,8 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/card/${product_id}`,
           )
           const result = await response.json()
+          console.log('產品數據:', result?.data?.product)
+          console.log('圖片路徑:', result?.data?.product?.product_img_path)
           setData(result?.data?.product)
         } catch (error) {
           console.error('Error fetching data', error)
@@ -194,13 +196,17 @@ export default function ProductCardWhite({ onSendMessage, product_id }) {
         <span className={styles.product_compare_text}>比較</span>
         <Image
           src={
-            data
+            data && data.product_img_path
               ? `/product/${data.product_img_path}`
               : '/product/placeholder.avif'
           }
           alt="Product"
           width={200}
           height={200}
+          onError={(e) => {
+            console.log('圖片載入失敗:', e.target.src)
+            e.target.src = '/product/placeholder.avif'
+          }}
         />
       </div>
       <div className={styles.product_card_content}>

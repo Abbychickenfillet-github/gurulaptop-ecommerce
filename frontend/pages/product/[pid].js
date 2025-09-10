@@ -4,7 +4,7 @@ import Header from '@/components/layout/default-layout/header'
 import Footer from '@/components/layout/default-layout/my-footer'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import ProductCard from '@/components/product/product-card'
 import { useAuth } from '@/hooks/use-auth'
 import { forEach } from 'lodash'
@@ -101,45 +101,33 @@ export default function Detail() {
     }
   }, [pid, router])
 
-  // 切換圖片
+  // 圖片輪播狀態管理
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  const [imgData, setImgData] = useState()
+  // 使用 useMemo 優化圖片資料處理
+  const imgData = useMemo(() => {
+    if (!data?.product_detail_img?.length) return []
+    return data.product_detail_img
+  }, [data?.product_detail_img])
 
-  useEffect(() => {
-    if (data?.product_detail_img?.length > 0) {
-      setImgData(data.product_detail_img)
-    }
-  }, [data])
+  // 使用 useMemo 優化當前顯示的圖片
+  const currentImage = useMemo(() => {
+    if (!imgData.length) return null
+    return imgData[currentImageIndex]
+  }, [imgData, currentImageIndex])
 
-  // 上一張
-  const preImage = () => {
-    let temp = []
-    forEach(imgData, (value, key) => {
-      // 更新圖片次序
+  // 使用 useCallback 優化圖片切換函數
+  const preImage = useCallback(() => {
+    setCurrentImageIndex(prev => 
+      prev === 0 ? imgData.length - 1 : prev - 1
+    )
+  }, [imgData.length])
 
-      if (key === 0) {
-        temp.push(imgData[imgData.length - 1])
-      } else {
-        temp.push(imgData[key - 1])
-      }
-    })
-    setImgData(temp)
-  }
-
-  // 下一張
-  const nextImage = () => {
-    let temp = []
-    forEach(imgData, (value, key) => {
-      // 更新圖片次序
-
-      if (key === imgData.length - 1) {
-        temp.push(imgData[0])
-      } else {
-        temp.push(imgData[key + 1])
-      }
-    })
-    setImgData(temp)
-  }
+  const nextImage = useCallback(() => {
+    setCurrentImageIndex(prev => 
+      prev === imgData.length - 1 ? 0 : prev + 1
+    )
+  }, [imgData.length])
   // 取得相關商品
   const [relatedProducts, setRelatedProducts] = useState(null)
   useEffect(() => {
@@ -293,13 +281,19 @@ export default function Detail() {
                   src={
                     isLoading
                       ? '' // 加載中，不顯示圖片
-                      : imgData?.[0] // 若無圖片路徑，顯示第一張
-                        ? `/product/${imgData[0].product_img_path}`
-                        : `/product/${data?.product_img[0].product_img_path}`
+                      : currentImage?.product_img_path
+                        ? `/product/${currentImage.product_img_path}`
+                        : data?.product_img?.[0]?.product_img_path
+                          ? `/product/${data.product_img[0].product_img_path}`
+                          : '/product/placeholder.avif' // 使用預設圖片
                   }
                   height={400}
                   width={500}
                   alt="product"
+                  onError={(e) => {
+                    console.log('產品詳情圖片載入失敗:', e.target.src)
+                    e.target.src = '/product/placeholder.avif'
+                  }}
                 />
                 <div className={`${styles.carouselBtn} ${styles.leftBtn}`}>
                   <Image
@@ -332,6 +326,8 @@ export default function Detail() {
                       alt="product"
                       width={120}
                       height={120}
+                      onClick={() => setCurrentImageIndex(1)}
+                      style={{ cursor: 'pointer' }}
                     />
                   )}
                 </div>
@@ -342,6 +338,8 @@ export default function Detail() {
                       alt="product"
                       width={120}
                       height={120}
+                      onClick={() => setCurrentImageIndex(2)}
+                      style={{ cursor: 'pointer' }}
                     />
                   )}
                 </div>
@@ -352,6 +350,8 @@ export default function Detail() {
                       alt="product"
                       width={120}
                       height={120}
+                      onClick={() => setCurrentImageIndex(3)}
+                      style={{ cursor: 'pointer' }}
                     />
                   )}
                 </div>

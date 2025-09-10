@@ -1,5 +1,8 @@
 # 🔐 認證問題修復：credentials: 'include' 的重要性
 
+**發生時間**: 2025年1月2日  
+**問題回報**: 用戶詢問 "Authorization failed, no access token" 錯誤
+
 ## 問題描述
 
 在購物車頁面的優惠券功能中，出現「授權失敗，沒有存取令牌」錯誤，即使前端認證狀態顯示 `isAuth: true` 和 `user_id: 6`。

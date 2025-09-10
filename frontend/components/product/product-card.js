@@ -193,13 +193,17 @@ export default function ProductCard({ onSendMessage, product_id }) {
         <span className={styles.product_compare_text}>比較</span>
         <Image
           src={
-            data
-              ? `/product/${data?.product_img_path}`
+            data && data.product_img_path
+              ? `/product/${data.product_img_path}`
               : '/product/placeholder.avif'
           }
           alt="Product"
           width={200}
           height={200}
+          onError={(e) => {
+            console.log('圖片載入失敗:', e.target.src)
+            e.target.src = '/product/placeholder.avif'
+          }}
         />
       </div>
       <div className={styles.product_card_content}>
