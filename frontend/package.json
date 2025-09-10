@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "rimraf .next && next dev --turbo",
         "build": "next build --turbopack",
-        "start": "next start",
+        "start": "next start -p 8080",
         "lint": "next lint"
     },
     "dependencies": {
