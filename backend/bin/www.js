@@ -27,7 +27,7 @@ process.on('uncaughtException', function (err) {
 
 var port = normalizePort(process.env.PORT || '3005')
 app.set('port', port)
-
+// normalizePort的function介紹
 // 調試：檢查端口配置
 console.log('🔍 端口配置檢查:')
 console.log('process.env.PORT:', process.env.PORT)

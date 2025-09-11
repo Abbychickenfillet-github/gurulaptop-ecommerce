@@ -842,11 +842,7 @@
   transition: all 0.3s ease 0.2s;
 }
 
-/* Hover 效果 */
-.home-pic div:hover::before {
-  // opacity: 1;
-  // transform: translateY(0);
-}
+
 
 .home-pic div:hover .home-content {
   opacity: 1;
@@ -1724,7 +1720,6 @@
   .home-article-text {
     font-size: 14px;
     letter-spacing: 2px;
-    -webkit-line-clamp: 4;
   }
 }
 
@@ -1755,7 +1750,6 @@
   .home-article-text {
     font-size: 12px;
     letter-spacing: 1.5px;
-    -webkit-line-clamp: 3;
   }
 }
 /* 活動資訊 */

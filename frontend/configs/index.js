@@ -7,9 +7,10 @@ export const config = {
 }
 
 // 使用環境變數，如果沒有設置則使用默認值
-export const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3005'
-export const avatarBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3005'
-
+export const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
+export const avatarBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
+// 使用 8080 是因為生產環境前端運行在 8080，後端也配置為 8080，保持前後端端口一致避免 CORS 問題
+// 開發時前端用 3000，後端用 8080，生產時前後端都用 8080
 // breadcrumb面包屑使用
 // 用pathname英文對照中文的名稱(類似關聯陣列的物件)
 // 使用方式需用 ex. pathnameLocale['home']

@@ -257,15 +257,13 @@ export default function LogIn() {
 
       <MyFooter />
 
-      <style jsx>
-        {`
+      <style jsx>{`
           .error {
             color: red;
             font-size: 16px;
             margin-top: 0.25rem;
           }
-        `}
-      </style>
+        `}</style>
     </>
   )
 }

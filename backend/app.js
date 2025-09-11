@@ -77,6 +77,7 @@ const corsOrigins = process.env.NODE_ENV === 'production'
       'http://localhost:3000', 
       'http://localhost:3001', 
       'https://localhost:8080', 
+      'http://localhost:8080',
       'http://localhost:3005',
       'https://guru-laptop-lavendarbug-vqq.zeabur.app'
     ]
@@ -170,6 +171,43 @@ testConnection()
   // })
 // )
 // 以上那個session-cookie 應該不是我們的
+// 添加根路徑健康檢查端點 - 用於 Zeabur 容器啟動探測
+app.get('/', (req, res) => {
+  res.json({
+    status: 'success',
+    message: 'Server is running',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  })
+})
+
+// 添加 /health 端點 - 更詳細的健康檢查
+app.get('/health', async (req, res) => {
+  try {
+    // 檢查資料庫連線
+    const client = await pool.connect()
+    await client.query('SELECT 1 as test')
+    client.release()
+    
+    res.json({
+      status: 'healthy',
+      message: 'All services are running',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      database: 'connected'
+    })
+  } catch (error) {
+    res.status(503).json({
+      status: 'unhealthy',
+      message: 'Service unavailable',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      database: 'disconnected',
+      error: error.message
+    })
+  }
+})
+
 // 載入routes中的各路由檔案，並套用api路由 START
 const apiPath = '/api' // 預設路由
 const routePath = path.join(__dirname, 'routes')

@@ -136,8 +136,7 @@ export default function MembershipLevels() {
         background: 'linear-gradient(135deg, #6C4CCE 0%, #805AF5 100%)',
       }}
     >
-      <style jsx>
-        {`
+      <style jsx>{`
           .membership-card {
             background: linear-gradient(180deg, #6c4cce 0%, #000000 100%);
             border-radius: 10px;
@@ -172,8 +171,7 @@ export default function MembershipLevels() {
             display: inline-block;
             margin-right: 8px;
           }
-        `}
-      </style>
+        `}</style>
 
       <div className="row mb-4 ">
         <div className="col">

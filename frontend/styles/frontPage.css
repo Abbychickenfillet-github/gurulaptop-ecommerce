@@ -1389,7 +1389,6 @@
   letter-spacing: 3.2px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
   overflow: hidden;
   padding: 0 40px;
 }
@@ -1546,7 +1545,6 @@
   .home-article-text {
     font-size: 14px;
     letter-spacing: 2px;
-    -webkit-line-clamp: 4;
   }
 }
 @media screen and (max-width: 480px) {
@@ -1571,7 +1569,6 @@
   .home-article-text {
     font-size: 12px;
     letter-spacing: 1.5px;
-    -webkit-line-clamp: 3;
   }
 }
 /* 活動資訊 */
