@@ -12,6 +12,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import Head from 'next/head'
 import GlowingText from '@/components/dashboard/glowing-text/glowing-text'
 import axios from 'axios'
+import { apiBaseUrl } from '@/configs/index.js'
 
 export default function Signup() {
   const [showpassword, setShowpassword] = useState(false)
@@ -128,7 +129,7 @@ export default function Signup() {
       }
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/signup`,
+        `${apiBaseUrl}/api/signup`,
         user,
       )
 

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import { getFavs } from '@/services/user'
+import { apiBaseUrl } from '@/configs/index.js'
 
 // ========================================
 // 🔐 認證上下文 (Authentication Context)
@@ -79,7 +80,7 @@ export const AuthProvider = ({ children }) => {
       console.log('🔑 登入 password:', password ? '[已隱藏]' : '未提供')
       
       // 向後端發送登入請求
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`, {
+      const response = await fetch(`${apiBaseUrl}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -193,7 +194,7 @@ export const AuthProvider = ({ children }) => {
       document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; httpOnly;'
       
       // 向後端發送登出請求
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/logout`, {
+      const response = await fetch(`${apiBaseUrl}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -328,7 +329,7 @@ export const AuthProvider = ({ children }) => {
     
       // 向後端驗證 token 有效性
       console.log('🔍 向後端驗證 token...')
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/verify`, {
+      const response = await fetch(`${apiBaseUrl}/api/auth/verify`, {
         method: 'GET',
         credentials: 'include',
         headers: {
