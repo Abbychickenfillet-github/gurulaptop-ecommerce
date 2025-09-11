@@ -290,20 +290,7 @@ app.use('/api/', GroupRequests)
 //   })
 // }
 
-// 啟動伺服器
-// const startServer = async () => {
-//   try {
-//     const port = await findAvailablePort()
-    
-//     app.listen(port, () => {
-//       console.log(`✅ 伺服器成功啟動在 http://localhost:${port}`)
-//       console.log(`🚀 環境: ${process.env.NODE_ENV || 'development'}`)
-//     })
-//   } catch (error) {
-//     console.error('❌ 伺服器啟動失敗:', error)
-//     process.exit(1)
-//   }
-// }
+
 
 // 優雅關閉處理
 // process.on('SIGTERM', () => {
