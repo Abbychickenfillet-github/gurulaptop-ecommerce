@@ -49,8 +49,7 @@ const corsOrigins = process.env.NODE_ENV === 'production'
   ? [
       'https://yunlavendar-guru-smart-laptop.zeabur.app',
       'https://guru-laptop-lavendarbug-vqq.zeabur.app',
-      'https://localhost:8080',
-      'http://localhost:3000',
+      'https://localhost:8080'
     ]
   : [
       'http://localhost:3000', 
