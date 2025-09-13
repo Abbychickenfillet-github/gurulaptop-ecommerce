@@ -23,9 +23,22 @@ try {
   console.error('建立上傳目錄失敗:', error)
 }
 
-// 設定 CORS
+// 設定 CORS - 使用與主應用程式一致的設定
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: process.env.NODE_ENV === 'production' 
+    ? [
+        'https://yunlavendar-guru-smart-laptop.zeabur.app',
+        'https://guru-laptop-lavendarbug-vqq.zeabur.app',
+        'https://localhost:8080'
+      ]
+    : [
+        'http://localhost:3000', 
+        'http://localhost:3001', 
+        'https://localhost:8080', 
+        'http://localhost:8080',
+        'http://localhost:3005',
+        'https://guru-laptop-lavendarbug-vqq.zeabur.app'
+      ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }
