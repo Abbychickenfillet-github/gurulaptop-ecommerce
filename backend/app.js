@@ -7,7 +7,7 @@ import { loadEnv } from '#utils/tool.js'
 loadEnv()
 import * as fs from 'fs'
 import cookieParser from 'cookie-parser'
-// import cors from 'cors'
+import cors from 'cors'
 import createError from 'http-errors'
 import express from 'express'
 // import db from '##/configs/mysql.js'
@@ -67,29 +67,30 @@ const app = express()
 
 // cors設定，參數為必要，注意不要只寫`app.use(cors())`
 // 根據環境動態設定 CORS origin
-// const corsOrigins = process.env.NODE_ENV === 'production' 
-//   ? [
-//       'https://yunlavendar-guru-smart-laptop.zeabur.app',
-//       'https://guru-laptop-lavendarbug-vqq.zeabur.app',
-//       'https://localhost:8080'
-//     ]
-//   : [
-//       'http://localhost:3000', 
-//       'http://localhost:3001', 
-//       'https://localhost:8080', 
-//       'http://localhost:8080',
-//       'http://localhost:3005',
-//       'https://guru-laptop-lavendarbug-vqq.zeabur.app'
-//     ]
+const corsOrigins = process.env.NODE_ENV === 'production' 
+  ? [
+      'https://yunlavendar-guru-smart-laptop.zeabur.app',
+      'https://guru-laptop-lavendarbug-vqq.zeabur.app',
+      'https://localhost:8080',
+      'https://gurulaptop-backend.zeabur.app',
+    ]
+  : [
+      'http://localhost:3000', 
+      'http://localhost:3001', 
+      'https://localhost:8080', 
+      'http://localhost:8080',
+      'http://localhost:3005',
+      'https://guru-laptop-lavendarbug-vqq.zeabur.app'
+    ]
 
-// app.use(
-//   cors({
-//     origin: corsOrigins,
-//     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-//     credentials: true,
-//   })
-// )
-// 中間件1
+app.use(
+  cors({
+    origin: corsOrigins,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    credentials: true,
+  })
+)
+中間件1
 
 // ---
 app.use(express.json()) // 中間件2 
