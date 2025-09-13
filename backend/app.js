@@ -73,6 +73,10 @@ const corsOrigins = process.env.NODE_ENV === 'production'
       'https://guru-laptop-lavendarbug-vqq.zeabur.app',
       'https://localhost:8080',
       'https://gurulaptop-backend.zeabur.app',
+      'http://localhost:3000', 
+      'http://localhost:3001', 
+      'http://localhost:8080',
+      'http://localhost:3005',
     ]
   : [
       'http://localhost:3000', 
@@ -90,7 +94,7 @@ app.use(
     credentials: true,
   })
 )
-中間件1
+// 中間件1
 
 // ---
 app.use(express.json()) // 中間件2 

@@ -8,7 +8,7 @@
     "backup": "node ./cli/db-backup.js",
     "debug": "DEBUG=express:* node ./bin/www",
     "debug-win": "set DEBUG=express:* & node ./bin/www",
-    "start": "node ./bin/www"
+    "start": "set NODE_ENV=production && node ./bin/www"
   },
   "nodemonConfig": {
     "delay": "2000",
