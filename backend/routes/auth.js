@@ -188,12 +188,11 @@ router.post('/login', upload.none(), async (req, res) => {
 
     res.cookie('accessToken', accessToken, {
       httpOnly: false, // 改為 false，讓前端可以讀取
-      secure:false,
-      //  process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production', // 生產環境使用 HTTPS
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 生產環境使用 none
       maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
-      path: '/',
-      domain: 'localhost' // 添加 domain 參數，與清除時保持一致
+      path: '/'
+      // 移除 domain 設定，讓瀏覽器自動處理
     })
 
     return res.json({

@@ -92,6 +92,7 @@ export const loadEnv = (fileExt) => {
     console.log('process.env.NODE_ENVd', process.env.NODE_ENV)
     const env = process.env.NODE_ENV || 'development'
     fileExt = env.trim() === 'production' ? '.production' : '.development'
+    console.log('fileExt 0916', fileExt)
   }
   
   // 構建完整路徑

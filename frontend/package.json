@@ -4,8 +4,8 @@
     "private": true,
     "scripts": {
         "dev": "rimraf .next && next dev --turbo",
-        "build": "next build",
-        "start": "next start",
+        "build": "NODE_ENV=production next build",
+        "start": "NODE_ENV=production next start",
         "lint": "next lint"
     },
     "dependencies": {

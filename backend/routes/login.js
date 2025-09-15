@@ -86,11 +86,11 @@ router.post('/', upload.none(), async (req, res, next) => {
     console.log('🍪 設置 JWT Token 到 Cookie...')
     res.cookie('accessToken', token, {
       httpOnly: false, // 改為 false，讓前端可以讀取
-      secure: false, // 明確設置為 false，與實際環境一致
-      sameSite: 'lax', // 改为 lax，避免跨域问题
+      secure: process.env.NODE_ENV === 'production', // 生產環境使用 HTTPS
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 生產環境使用 none
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2天
-      path: '/',
-      domain: 'localhost' // 添加 domain 參數，與清除時保持一致
+      path: '/'
+      // 移除 domain 設定，讓瀏覽器自動處理
     })
     console.log('🍪 Cookie 設置完成')
 
