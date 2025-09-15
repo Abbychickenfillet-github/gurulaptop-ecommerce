@@ -85,11 +85,13 @@ export const toKebabCase = (str) => {
 }
 
 // 載入.env檔用
-export const loadEnv = (fileExt = '') => {
+export const loadEnv = (fileExt) => {
+  console.log(`ddd`)
   // 如果沒有指定 fileExt，根據 NODE_ENV 自動選擇
   if (!fileExt) {
+    console.log('process.env.NODE_ENVd', process.env.NODE_ENV)
     const env = process.env.NODE_ENV || 'development'
-    fileExt = env === 'production' ? '.production' : '.development'
+    fileExt = env.trim() === 'production' ? '.production' : '.development'
   }
   
   // 構建完整路徑
@@ -108,3 +110,4 @@ export const loadEnv = (fileExt = '') => {
     console.log(`✅ 成功載入環境變數文件: ${envPath}`)
   }
 }
+loadEnv()

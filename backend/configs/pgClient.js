@@ -1,7 +1,7 @@
 // backend/db/pgClient.js
 import { Pool } from 'pg'
-import dotenv from 'dotenv'
-dotenv.config()
+// import dotenv from 'dotenv'
+// dotenv.config()
 
 // 根據環境選擇資料庫連線配置
 let poolConfig
@@ -9,6 +9,7 @@ let poolConfig
 if (process.env.NODE_ENV === 'production') {
   // 生產環境：使用 zeabur 連線字串
   if (process.env.ZEABUR_CONNECTION_STRING) {
+    console.log('process.env.ZEABUR_CONNECTION_STRING', process.env.ZEABUR_CONNECTION_STRING)
     poolConfig = {
       connectionString: process.env.ZEABUR_CONNECTION_STRING,
      
