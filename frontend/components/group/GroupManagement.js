@@ -227,7 +227,7 @@ const GroupManagement = () => {
           </div>
         </div>
 
-        {groups.map((group) => (
+        {groups && groups.length > 0 ? groups.map((group) => (
           <div key={group.group_id} className={styles.listRow}>
             <div className="row align-items-center d-none d-md-flex">
               <div className="col-2">
@@ -324,7 +324,12 @@ const GroupManagement = () => {
               </div>
             </div>
           </div>
-        ))}
+        )) : (
+          <div className="alert alert-info m-3" role="alert">
+            <i className="bi bi-info-circle me-2"></i>
+            目前沒有參加的揪團
+          </div>
+        )}
       </div>
 
       {isEditModalOpen && (

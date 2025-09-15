@@ -148,7 +148,7 @@ export default function CouponUser() {
 
   // 搜尋過濾邏輯
   const filteredCoupons = sortCoupons(
-    couponDataList.filter((coupon) => {
+    (couponDataList || []).filter((coupon) => {
       const searchContent = searchTerm.toLowerCase()
       return (
         coupon.coupon_content.toLowerCase().includes(searchContent) ||

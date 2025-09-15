@@ -181,7 +181,7 @@ const EventManagement = () => {
           </div>
         </div>
 
-        {events.map((event) => (
+        {events && events.length > 0 ? events.map((event) => (
           <div key={event.id} className={styles.listRow}>
             {/* 桌面版視圖 */}
             <div className="row align-items-center d-none d-md-flex">
@@ -276,7 +276,12 @@ const EventManagement = () => {
               </div>
             </div>
           </div>
-        ))}
+        )) : (
+          <div className="alert alert-info m-3" role="alert">
+            <i className="bi bi-info-circle me-2"></i>
+            目前沒有報名的活動
+          </div>
+        )}
       </div>
     </div>
   )
