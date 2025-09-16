@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+ㄎimport React, { useState, useEffect, useCallback } from 'react'
 import Accordion from 'react-bootstrap/Accordion'
 import BuyItemCard from './buy-item-card'
 import Swal from 'sweetalert2'
@@ -18,7 +18,7 @@ export default function BuyList(order) {
   const address = order.order.address
   const payment_method = order.order.payment_method
 
-  const getOrderDetail = async () => {
+  const getOrderDetail = useCallback(async () => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/buy-list/detail/${order_id}`,
       {
@@ -30,9 +30,9 @@ export default function BuyList(order) {
     )
     const data = await res.json()
     setOrderDetail(data.data)
-  }
+  }, [order_id])
 
-  const getCouponData = async () => {
+  const getCouponData = useCallback(async () => {
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon/${coupon_id}`,
@@ -49,7 +49,7 @@ export default function BuyList(order) {
     } catch (err) {
       // console.log(err)
     }
-  }
+  }, [coupon_id])
 
   const goLinePay = () => {
     MySwal.fire({
