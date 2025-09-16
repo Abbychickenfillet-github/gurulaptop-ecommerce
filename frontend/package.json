@@ -4,8 +4,8 @@
     "private": true,
     "scripts": {
         "dev": "rimraf .next && next dev --turbo",
-        "build": "NODE_ENV=production next build",
-        "start": "NODE_ENV=production next start",
+        "build": "next build",
+        "start": "next start",
         "lint": "next lint"
     },
     "dependencies": {
@@ -61,6 +61,7 @@
         "@types/node": "^20",
         "@types/react": "^18",
         "@types/react-dom": "^18",
+        "cross-env": "^10.0.0",
         "eslint": "^8.0.0",
         "eslint-config-next": "^15.0.0",
         "eslint-config-prettier": "^10.1.8",

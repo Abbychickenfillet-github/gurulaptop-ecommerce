@@ -31,10 +31,20 @@ export default function LogIn() {
       // 直接調用 useAuth 的 login 函數，它會處理所有的登入邏輯
       await login(formData.get('email'), formData.get('password'))
       console.log('登入成功，auth 狀態:', auth) // 加入 debug
-      // 等待認證狀態更新後再跳轉
+      
+      // 等待認證狀態更新後再跳轉，增加延遲時間確保狀態更新
       setTimeout(() => {
-        router.push('/dashboard')
-      }, 300)
+        // 檢查認證狀態是否已更新
+        if (auth.isAuth) {
+          router.replace('/dashboard') // 使用 replace 避免歷史記錄問題
+        } else {
+          console.warn('登入成功但認證狀態未更新，等待更長時間...')
+          // 如果狀態還沒更新，再等待一下
+          setTimeout(() => {
+            router.replace('/dashboard')
+          }, 500)
+        }
+      }, 500) // 增加延遲時間
     } catch (error) {
       console.error('登入失敗:', error)
       setErrors({
@@ -62,6 +72,7 @@ export default function LogIn() {
     // 如果用戶已登入，重定向到儀表板
     console.log('Login 頁面 auth 狀態:', auth) // 加入 debug
     if (auth?.isAuth) {
+      // 使用 replace 而不是 push，避免歷史記錄問題
       router.replace('/dashboard')
       console.log('用戶已登入，跳轉到 dashboard')
       return

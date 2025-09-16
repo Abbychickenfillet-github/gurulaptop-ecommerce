@@ -13,6 +13,11 @@ class WebSocketService {
     this.maxReconnectAttempts = 5 // 最大重新連線次數
     this.listeners = new Map() // 事件監聽器
     this.isConnecting = false // 是否正在連線中
+    
+    // 🔧 修復：新增 currentUserId 屬性
+    // 原因：重連時需要知道要註冊哪個用戶
+    // 好處：避免重連時無法正確註冊用戶，防止無限重連循環
+    this.currentUserId = null // 儲存當前用戶ID，用於重連
   }
 
   // 建立WebSocket連線
@@ -25,6 +30,10 @@ class WebSocketService {
       return
     }
 
+    // 🔧 修復：儲存用戶ID用於重連
+    // 原因：重連時需要知道要註冊哪個用戶，避免重連失敗
+    // 好處：確保重連後能正確註冊用戶，維持功能正常運作
+    this.currentUserId = userId
     this.isConnecting = true
 
     // 根據環境決定 WebSocket URL
@@ -83,10 +92,12 @@ class WebSocketService {
       console.log(
         `嘗試重新連線... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`
       )
-      // 等待3秒後重新連線
+      // 🔧 修復：等待3秒後重新連線，使用儲存的用戶ID
+      // 原因：重連時必須傳遞 userId 參數，否則無法正確註冊用戶
+      // 好處：避免重連失敗導致的無限循環，確保功能正常運作
       setTimeout(() => {
-        if (this.ws?.readyState === WebSocketState.CLOSED) {
-          this.connect()
+        if (this.ws?.readyState === WebSocketState.CLOSED && this.currentUserId) {
+          this.connect(this.currentUserId) // ✅ 使用儲存的用戶ID重連
         }
       }, 3000)
     } else {
@@ -133,6 +144,11 @@ class WebSocketService {
       this.listeners.clear()
       this.reconnectAttempts = 0
       this.isConnecting = false
+      
+      // 🔧 修復：清除用戶ID
+      // 原因：斷線時應該清除所有狀態，包括用戶ID
+      // 好處：確保下次連接時使用新的用戶ID，避免狀態混亂
+      this.currentUserId = null // 清除用戶ID
     }
   }
 

@@ -1,4 +1,5 @@
 export const PORT = 3000
+// 這個PORT 3000是指前端嗎
 export const DEV = true
 
 // 配置文件

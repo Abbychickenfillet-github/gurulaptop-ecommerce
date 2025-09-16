@@ -221,6 +221,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJlbWFpbCI6ImFpbnRsdW1pbmF
 2. **重新構建前端**：`cd frontend && npm run build`
 3. **啟動前端**：`npm start`
 
+
 ### **驗證方法**：
 1. **檢查 Cookie**：瀏覽器 DevTools → Application → Cookies，確認 `accessToken` 存在且設定正確
 2. **檢查 Network**：API 請求包含 Cookie 且不再返回 401 錯誤
