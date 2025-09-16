@@ -3,6 +3,30 @@
 **發生時間**: 2025年9月16日  
 **問題回報**: 用戶在 ZEABUR 部署時雖然成功登入 dashboard，但出現無限迴圈的 network 請求
 
+## 📋 目錄
+
+- [ ] [問題描述](#問題描述)
+- [ ] [根本原因分析](#根本原因分析)
+  - [ ] [buy-list/detail API 無限請求](#1-buy-listdetail-api-無限請求-主要問題)
+  - [ ] [WebSocket 重連邏輯缺陷](#2-websocket-重連邏輯缺陷)
+  - [ ] [認證狀態更新時序問題](#3-認證狀態更新時序問題)
+  - [ ] [生產環境配置問題](#4-生產環境配置問題)
+- [ ] [修復方案](#修復方案)
+  - [ ] [修復 buy-list/detail 無限請求](#1-修復-buy-listdetail-無限請求-主要修復)
+  - [ ] [修復 WebSocket 重連邏輯](#2-修復-websocket-重連邏輯)
+  - [ ] [優化認證狀態更新時序](#3-優化認證狀態更新時序)
+  - [ ] [環境配置驗證](#4-環境配置驗證)
+- [ ] [修復效果](#修復效果)
+- [ ] [測試建議](#測試建議)
+- [ ] [預防措施](#預防措施)
+- [ ] [後續問題與解答](#後續問題與解答)
+  - [ ] [replace vs push 差異](#問題-1replace-跟-push-差在哪為什麼用-replace-可以避免歷史問題)
+  - [ ] [NODE_ENV Windows 問題](#問題-2node_envproduction-在-windows-上的問題)
+  - [ ] [WebSocket 條件判斷](#問題-3websocket-重連邏輯的條件判斷)
+- [ ] [技術補充](#技術補充)
+- [ ] [相關檔案](#相關檔案)
+- [ ] [總結](#總結)
+
 ## 問題描述
 
 在 ZEABUR 生產環境中，用戶登入後能夠成功進入 dashboard，但會出現無限迴圈的 network 請求，導致：
@@ -12,7 +36,31 @@
 
 ## 根本原因分析
 
-### 1. **WebSocket 重連邏輯缺陷** ⚠️
+### 1. **buy-list/detail API 無限請求** ⚠️ **主要問題**
+
+**問題位置**: `frontend/components/dashboard/buy-list.js` 第 95 行
+
+**問題代碼**:
+```javascript
+useEffect(() => {
+  if (order_id) {
+    getOrderDetail()
+  }
+}, [order_id, getOrderDetail]) // ❌ getOrderDetail 沒有使用 useCallback
+```
+
+**問題分析**:
+- `getOrderDetail` 函數沒有使用 `useCallback` 包裝
+- 每次組件重新渲染都會創建新的函數引用
+- `useEffect` 依賴數組中的 `getOrderDetail` 每次都是新的引用
+- 導致 `useEffect` 無限觸發，造成 API 無限請求
+
+**實際影響**:
+- 對 `/api/buy-list/detail/${order_id}` 發送無限請求
+- 雖然返回 200 狀態碼，但造成網路資源浪費
+- 影響應用性能和用戶體驗
+
+### 2. **WebSocket 重連邏輯缺陷** ⚠️
 
 **問題位置**: `frontend/services/websocketService.js` 第 89 行
 
@@ -30,7 +78,7 @@ setTimeout(() => {
 - 導致重連後無法正確註冊用戶
 - WebSocket 連接失敗，觸發無限重連循環
 
-### 2. **認證狀態更新時序問題** 🔄
+### 3. **認證狀態更新時序問題** 🔄
 
 **問題位置**: `frontend/pages/member/login.js` 登入成功後的跳轉邏輯
 
@@ -39,7 +87,7 @@ setTimeout(() => {
 - 跳轉邏輯在狀態未完全更新時就執行
 - 可能造成頁面間的不斷跳轉
 
-### 3. **生產環境配置問題** 🌐
+### 4. **生產環境配置問題** 🌐
 
 **問題分析**:
 - ZEABUR 環境中的 WebSocket 和 API 配置可能不正確
@@ -47,7 +95,40 @@ setTimeout(() => {
 
 ## 修復方案
 
-### 1. **修復 WebSocket 重連邏輯**
+### 1. **修復 buy-list/detail 無限請求** ⭐ **主要修復**
+
+**修改內容**:
+```javascript
+// 修復前（有問題）
+const getOrderDetail = async () => {
+  // ... API 請求邏輯
+}
+
+useEffect(() => {
+  if (order_id) {
+    getOrderDetail()
+  }
+}, [order_id, getOrderDetail]) // ❌ 無限觸發
+
+// 修復後（正確）
+const getOrderDetail = useCallback(async () => {
+  // ... API 請求邏輯
+}, [order_id]) // ✅ 使用 useCallback 包裝
+
+useEffect(() => {
+  if (order_id) {
+    getOrderDetail()
+  }
+}, [order_id, getOrderDetail]) // ✅ 穩定引用
+```
+
+**修復效果**:
+- ✅ 停止無限 API 請求
+- ✅ 只在 `order_id` 變化時才重新請求
+- ✅ 大幅減少網路流量
+- ✅ 提升應用性能
+
+### 2. **修復 WebSocket 重連邏輯**
 
 **修改內容**:
 ```javascript
@@ -81,7 +162,7 @@ class WebSocketService {
 }
 ```
 
-### 2. **優化認證狀態更新時序**
+### 3. **優化認證狀態更新時序**
 
 **修改內容**:
 ```javascript
@@ -119,7 +200,7 @@ useEffect(() => {
 }, [auth?.isAuth, auth?.hasChecked, router])
 ```
 
-### 3. **環境配置驗證**
+### 4. **環境配置驗證**
 
 **當前配置狀況**:
 - ✅ 生產環境 API URL: `https://guru-laptop-lavendarbug-vqq.zeabur.app`
@@ -295,7 +376,78 @@ useEffect(() => {
 
 ---
 
-### 問題 2：WebSocket 重連邏輯的條件判斷
+### 問題 2：NODE_ENV=production 在 Windows 上的問題
+
+**用戶問題**：為什麼 `NODE_ENV=production next build` 在 Windows 上不能執行？
+
+**解答**：
+
+#### 問題原因
+
+```json
+// package.json 中的問題代碼
+"build": "NODE_ENV=production next build"
+```
+
+**問題分析**：
+- `NODE_ENV=production` 是 Unix/Linux 的環境變數設置語法
+- Windows 命令提示符不支援這種環境變數設置方式
+- Windows 需要使用不同的語法或工具
+
+#### 解決方案
+
+**方案 1：使用 cross-env（推薦）**
+
+```bash
+# 安裝 cross-env
+npm install --save-dev cross-env
+
+# 修改 package.json
+"scripts": {
+  "build": "cross-env NODE_ENV=production next build",
+  "start": "cross-env NODE_ENV=production next start"
+}
+```
+
+**方案 2：Windows 原生語法**
+
+```json
+"scripts": {
+  "build": "set NODE_ENV=production && next build",
+  "start": "set NODE_ENV=production && next start"
+}
+```
+
+**方案 3：移除環境變數設置**
+
+```json
+"scripts": {
+  "build": "next build",
+  "start": "next start"
+}
+```
+
+#### 為什麼移除後還能正常運行？
+
+1. **Next.js 自動判斷**：`next build` 命令會自動將環境視為 `production`
+2. **部署平台設置**：ZEABUR 等平台會在部署時自動注入 `NODE_ENV=production`
+3. **其他配置**：`next.config.js` 或其他文件可能處理環境變數
+
+#### 端口配置確認
+
+**用戶配置**：
+- 前端：3000 (開發) / 8080 (生產)
+- 後端：8080
+
+**這是正確的配置**：
+- ✅ 前後端使用不同端口避免衝突
+- ✅ 開發環境前端用 3000，後端用 8080
+- ✅ 生產環境前後端都用 8080
+- ✅ 符合常見的部署架構
+
+---
+
+### 問題 3：WebSocket 重連邏輯的條件判斷
 
 **用戶問題**：`if (this.ws?.readyState === WebSocketState.CLOSED && this.currentUserId)` 這個是兩個條件都要符合才會執行嗎？
 

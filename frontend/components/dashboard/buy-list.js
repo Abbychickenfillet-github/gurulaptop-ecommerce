@@ -1,4 +1,4 @@
-ㄎimport React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Accordion from 'react-bootstrap/Accordion'
 import BuyItemCard from './buy-item-card'
 import Swal from 'sweetalert2'
