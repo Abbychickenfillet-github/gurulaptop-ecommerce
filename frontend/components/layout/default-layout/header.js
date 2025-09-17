@@ -31,7 +31,9 @@ export default function Header() {
   //   auth?.userData?.image_path || getDefaultImage(auth?.userData?.gender),
   // )
 
+  // 控制手機版漢堡菜單的開關狀態，用於顯示/隱藏導航選項
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  // 檢測當前視窗是否為手機版（寬度 <= 768px），用於響應式佈局切換
   const [isMobile, setIsMobile] = useState(false)
 
   const handleLogout = async () => {
@@ -112,7 +114,11 @@ export default function Header() {
   //       })
   //   }
   // }, [isAuth])
-
+  // 為什麼需要檢查 userData 和 userData.user_id
+  // 為什麼這麼嚴格？
+  // userData 可能為 null/undefined：用戶未登入時
+  // userData.user_id 可能為 0 或空：登入失敗或數據不完整時
+  // 確保狀態一致性：避免顯示錯誤的用戶信息
   useEffect(() => {
     if (userData && userData.user_id) {
       setUserId(userData.user_id)
@@ -123,7 +129,7 @@ export default function Header() {
     return () => {
       document.body.style.paddingTop = '0px'
     }
-  }, [userData?.user_id, isMobile]) // 只依賴 userData.user_id，而不是整個 userData
+  }, [userData?.user_id, isMobile]) // 只依賴 userData.user_id，而不是整個 userData，只關注user_id是否有變化再重新渲染
 
   const navItems = [
     { name: '首頁', path: '/' },
@@ -177,7 +183,8 @@ export default function Header() {
                   <span>{item.name}</span>
                 </Link>
               ))}
-              {isAuth && (
+              {/* 用戶認證相關功能 */}
+              {isAuth ? (
                 <>
                   <div className="mobile-icons">
                     <Link href="/dashboard" className="icon-wrapper">
@@ -205,6 +212,19 @@ export default function Header() {
                     登出
                   </button>
                 </>
+              ) : (
+                <div className="mobile-auth-buttons">
+                  <Link href="/member/login">
+                    <button className="mobile-auth-btn login" onClick={() => setIsMenuOpen(false)}>
+                      登入
+                    </button>
+                  </Link>
+                  <Link href="/member/signup">
+                    <button className="mobile-auth-btn signup" onClick={() => setIsMenuOpen(false)}>
+                      註冊
+                    </button>
+                  </Link>
+                </div>
               )}
             </nav>
           </div>
@@ -223,66 +243,71 @@ export default function Header() {
             </Link>
           </div>
 
-          <div className="nav-center">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                href={item.path}
-                className={`nav-item ${
-                  router.pathname === item.path ? 'active' : ''
-                }`}
-                style={{ textDecoration: 'none' }}
-              >
-                <span>{item.name}</span>
-                {router.pathname === item.path && (
-                  <div className="active-indicator" />
-                )}
-              </Link>
-            ))}
-          </div>
+          <div className="nav-center-right">
+            {/* 導航選項 */}
+            <div className="nav-center">
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  className={`nav-item ${
+                    router.pathname === item.path ? 'active' : ''
+                  }`}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <span>{item.name}</span>
+                  {router.pathname === item.path && (
+                    <div className="active-indicator" />
+                  )}
+                </Link>
+              ))}
+            </div>
 
-          <div className="nav-right">
-            {isAuth ? (
-              <div className="auth-section">
-                <Link href="/dashboard">
-                  <div className="user-avatar">
-                    <Image 
-                      src={
-                        auth?.userData?.image_path ||
-                        getDefaultImage(auth?.userData?.gender)
-                      } 
-                      alt="User" 
-                      width={40} 
-                      height={40}
-                      key={auth?.userData?.image_path} // 添加 key 強制重新渲染
-                    />
-                  </div>
-                </Link>
-                <Link href="/chatroom" className="icon-wrapper">
-                  <MessageCircle className="icon" size={24} />
-                </Link>
-                <Link href="/cart" className="icon-wrapper">
-                  <ShoppingCart className="icon" size={24} />
-                </Link>
-                <button className="logout-btn" onClick={handleLogout}>
-                  登出
-                </button>
-              </div>
-            ) : (
-              <div className="auth-buttons">
-                <Link href="/member/login">
-                  <button className="auth-btn login">登入</button>
-                </Link>
-                <Link href="/member/signup">
-                  <button className="auth-btn signup">註冊</button>
-                </Link>
-              </div>
-            )}
+            {/* 用戶認證相關功能 */}
+            <div className="nav-right">
+              {isAuth ? (
+                <div className="auth-section">
+                  <Link href="/dashboard">
+                    <div className="user-avatar">
+                      <Image 
+                        src={
+                          auth?.userData?.image_path ||
+                          getDefaultImage(auth?.userData?.gender)
+                        } 
+                        alt="User" 
+                        width={40} 
+                        height={40}
+                        key={auth?.userData?.image_path} // 添加 key 強制重新渲染
+                      />
+                    </div>
+                  </Link>
+                  <Link href="/chatroom" className="icon-wrapper">
+                    <MessageCircle className="icon" size={24} />
+                  </Link>
+                  <Link href="/cart" className="icon-wrapper">
+                    <ShoppingCart className="icon" size={24} />
+                  </Link>
+                  <button className="logout-btn" onClick={handleLogout}>
+                    登出
+                  </button>
+                </div>
+              ) : (
+                <div className="auth-buttons">
+                  <Link href="/member/login">
+                    <button className="auth-btn login">登入</button>
+                  </Link>
+                  <Link href="/member/signup">
+                    <button className="auth-btn signup">註冊</button>
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
 
       <style jsx>{`
+       
         .tech-nav {
           background: linear-gradient(
             90deg,

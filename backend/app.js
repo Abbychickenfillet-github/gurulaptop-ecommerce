@@ -34,7 +34,7 @@ import couponUserRouter from './routes/coupon-user.js'
 import chatRoutes from './routes/chat.js'
 import GroupRequests from './routes/group-request.js'
 import buyListRouter from './routes/buy-list.js'
-import headerRouter from './routes/header.js'
+// import headerRouter from './routes/header.js'
 // import googleLoginRouter from './routes/google-login.js'
 import forgotPasswordRouter from './routes/forgot-password.js'
 // 使用檔案的session store，存在sessions資料夾
@@ -97,8 +97,6 @@ app.use(
 // 中間件1
 
 // ---
-app.use(express.json()) // 中間件2 
-//
 // 視圖引擎設定
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
@@ -108,7 +106,6 @@ app.use(logger('dev')) // 中間件3
 // 設定日誌格式，使用 morgan 套件
 // 這裡使用 'dev' 模式，會顯示簡潔的日誌格式
 // 其他可選模式有 'combined', 'common', 'short', 'tiny'
-
 
 // 剖析 POST 與 PUT 要求的JSON格式資料
 app.use(express.json({ 
@@ -137,9 +134,7 @@ app.use('/api/signup', signupRouter)
 app.use('/api/dashboard', dashboardRouter)
 app.use('/api/events', eventsRouter)
 app.use('/api/forgot-password', forgotPasswordRouter)
-app.use('/api/header', headerRouter)
-// 移除重复的 auth 路由
-// app.use('/api/auth', authRouter)
+
 
 
 //優惠卷路由
@@ -232,7 +227,6 @@ for (const filename of filenames) {
       filename === 'chat.js' || 
       filename === 'group-request.js' ||
       filename === 'line-login.js' ||
-      filename === 'header.js' ||
       filename === 'buy-list.js') {  // 排除 buy-list.js，我們會手動註冊
     continue
   }

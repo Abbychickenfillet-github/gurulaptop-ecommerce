@@ -15,7 +15,11 @@ export default function FrontPage() {
       <div className="position-relative" style={{ zIndex: 1 }}>
         <Header />
       </div>
-
+      {/* 旋轉的 blob(有機形狀動畫 / 流動動畫) 動畫背景層
+          - position: fixed 覆蓋整個視窗
+          - z-index: 0 在最底層
+          - 可以調整主頁漸層的底色 (background 屬性)
+          - 提供動態的彩色漸層背景效果 */}
       <div className="blob-outer-container">
         <div className="blob-inner-container">
           <div className="blob"></div>
