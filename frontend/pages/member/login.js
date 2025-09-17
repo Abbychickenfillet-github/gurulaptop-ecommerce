@@ -145,6 +145,10 @@ export default function LogIn() {
                         htmlFor="email"
                         className={`form-label text-white ${styles.hover}`}
                       >
+                        <svg className={styles['label-icon']} viewBox="0 0 24 24" fill="none">
+                          <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M22 6L12 13L2 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
                         帳號(信箱)
                       </label>
                       <input
@@ -169,6 +173,11 @@ export default function LogIn() {
                         htmlFor="password"
                         className={`form-label text-white ${styles.hover}`}
                       >
+                        <svg className={styles['label-icon']} viewBox="0 0 24 24" fill="none">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <circle cx="12" cy="16" r="1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7V11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
                         密碼
                       </label>
                       <input
@@ -232,29 +241,35 @@ export default function LogIn() {
                       )}
                     </div>
 
-                    <div className="center-of-bottom-group d-flex flex-wrap justify-content-around">
-                      <div className="row">
-                        <Link
-                          className={`text-white text-decoration-none ${styles.hover}`}
-                          href="./forget-password"
-                        >
-                          忘記密碼
-                        </Link>
-                      </div>
+                    <div className="center-of-bottom-group d-flex flex-wrap justify-content-between align-items-center mt-4">
+                      <Link
+                        className={`text-white text-decoration-none ${styles['forgot-password-link']}`}
+                        href="./forget-password"
+                      >
+                        <svg className={styles['link-icon']} viewBox="0 0 24 24" fill="none">
+                          <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        <span>忘記密碼？</span>
+                        <svg className={styles['arrow-icon']} viewBox="0 0 24 24" fill="none">
+                          <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </Link>
 
                       <button
-                        onClick={() => {
-                          login
-                        }}
-                        className={` border-0 mt-3 ${styles.hover} ${styles['debug-test']} `}
+                        className={`btn btn-primary btn-lg fw-semibold py-3 ${styles['submit-button']}`}
                         type="submit"
+                        style={{
+                          background: 'linear-gradient(45deg, #805AF5, #E0B0FF)',
+                          border: 'none',
+                          borderRadius: '12px',
+                          boxShadow: '0 4px 15px rgba(128, 90, 245, 0.3)',
+                          transition: 'all 0.3s ease'
+                        }}
                       >
-                        送出
-                        {/* <MdArrowForward
-                          size={20}
-                          className={styles['button-icon']}
-                          style={{ marginLeft: '8px' }}
-                        /> */}
+                        <span>登入</span>
+                        <svg className={styles['button-icon']} viewBox="0 0 24 24" fill="none">
+                          <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
                       </button>
                     </div>
                   </div>
