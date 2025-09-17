@@ -97,6 +97,14 @@ app.use(
 // 中間件1
 
 // ---
+// 剖析 POST 與 PUT 要求的JSON格式資料
+app.use(express.json({ 
+  limit: '20mb' , // 限制請求體的大小為20MB
+  strict: true,         // 只接受 array 和 object
+  type: 'application/json'  // 只處理這種 Content-Type
+}))
+// 沒有 express.json()，你的 req.body 會是 undefined！
+
 // 視圖引擎設定
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
@@ -106,14 +114,6 @@ app.use(logger('dev')) // 中間件3
 // 設定日誌格式，使用 morgan 套件
 // 這裡使用 'dev' 模式，會顯示簡潔的日誌格式
 // 其他可選模式有 'combined', 'common', 'short', 'tiny'
-
-// 剖析 POST 與 PUT 要求的JSON格式資料
-app.use(express.json({ 
-  limit: '20mb' , // 限制請求體的大小為20MB
-  strict: true,         // 只接受 array 和 object
-  type: 'application/json'  // 只處理這種 Content-Type
-}))
-// 沒有 express.json()，你的 req.body 會是 undefined！
 
 // 這個limit:'20mb'是傳入參數
 app.use(express.urlencoded({ extended: false, limit: '20mb' }))// 中間件4
