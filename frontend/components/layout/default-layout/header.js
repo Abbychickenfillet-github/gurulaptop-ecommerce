@@ -566,6 +566,18 @@ export default function Header() {
         .mobile-icons .user-avatar {
           width: 32px;
           height: 32px;
+          border-radius: 50%;
+          overflow: hidden;
+          border: 2px solid rgba(128, 90, 245, 0.5);
+          transition: all 0.3s ease;
+          filter: drop-shadow(0 0 8px rgba(128, 90, 245, 0.3));
+        }
+
+        .mobile-icons .user-avatar img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
         }
 
         .mobile-icons .icon {
