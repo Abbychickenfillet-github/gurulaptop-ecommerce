@@ -8,7 +8,7 @@
 
 ### 前端 (Frontend)
 - **開發環境**: `npm run dev` → Next.js 預設 port 3000
-- **生產環境**: `npm start` → port 8080 (在 package.json 中設定)
+- **生產環境**: `npm start` → port 8080 (在 package.json 中設定。8080是zeabur內網連線預設值 )
 
 ### 後端 (Backend)
 - **開發環境**: `npm run dev` → port 3005 (從 .env.development 讀取)
