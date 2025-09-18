@@ -272,6 +272,7 @@ export default function MembershipLevels() {
       </div>
 
       <style jsx>{`
+      // 基礎的會員卡片樣式，不確定會不會覆蓋到底下的。這邊的設置意義是什麼？
         .membership-card {
           // background: rgba(148, 54, 54, 0.1);
           // backdrop-filter: blur(10px);
@@ -281,31 +282,33 @@ export default function MembershipLevels() {
           position: relative;
           height: 100%;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          // box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
+          // 銅等級的會員卡片樣式 - 加強銅色效果
         .membership-card.bronze {
-          background: linear-gradient(135deg, rgba(205, 127, 50, 0.3), rgba(184, 134, 11, 0.3)) !important;
+          background: linear-gradient(135deg, rgba(205, 127, 50, 0.7), rgba(184, 134, 11, 0.9)) !important;
           backdrop-filter: blur(15px) !important;
-          border: 1px solid rgba(255, 215, 0, 0.4) !important;
-          box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2) !important;
+          border: 2px solid rgba(255, 215, 0, 0.8) !important;
+          box-shadow: 0 4px 25px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
         }
         .membership-card.silver {
-          background: linear-gradient(135deg, rgba(192, 192, 192, 0.3), rgba(128, 128, 128, 0.3)) !important;
+          background: linear-gradient(135deg, rgba(192, 192, 192, 0.6), rgba(128, 128, 128, 0.6)) !important;
           backdrop-filter: blur(15px) !important;
-          border: 1px solid rgba(230, 230, 250, 0.4) !important;
-          box-shadow: 0 4px 20px rgba(230, 230, 250, 0.2) !important;
+          border: 2px solid rgba(230, 230, 250, 0.8) !important;
+          box-shadow: 0 4px 25px rgba(230, 230, 250, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
         }
         .membership-card.gold {
-          background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 165, 0, 0.3)) !important;
+          background: linear-gradient(135deg, rgba(255, 215, 0, 0.6), rgba(255, 165, 0, 0.6)) !important;
           backdrop-filter: blur(15px) !important;
-          border: 1px solid rgba(255, 255, 0, 0.4) !important;
-          box-shadow: 0 4px 20px rgba(255, 255, 0, 0.2) !important;
+          border: 2px solid rgba(255, 255, 0, 0.8) !important;
+          box-shadow: 0 4px 25px rgba(255, 255, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
         }
+          // 鑽石等級的會員卡片樣式
         .membership-card.diamond {
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(200, 200, 255, 0.3)) !important;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(200, 200, 255, 0.6)) !important;
           backdrop-filter: blur(15px) !important;
-          border: 1px solid rgba(255, 255, 255, 0.4) !important;
-          box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3) !important;
+          border: 2px solid rgba(255, 255, 255, 0.8) !important;
+          box-shadow: 0 4px 25px rgba(255, 255, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
         }
         .membership-card::before {
           content: '';
