@@ -271,15 +271,11 @@ export default function Signup() {
                       type="email"
                       id="email"
                       name="email"
-                      className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                      className="form-control form-control-lg"
                       value={user.email}
                       onChange={handleFieldChange}
                       placeholder="請輸入您的信箱"
                       required
-                      style={{
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                      }}
                     />
                     {errors.email && (
                       <div
@@ -306,7 +302,7 @@ export default function Signup() {
                         name="password"
                         value={user.password}
                         onChange={handleFieldChange}
-                        className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                        className="form-control form-control-lg"
                         placeholder="請輸入您的密碼"
                         required
                         maxLength={62}
@@ -346,15 +342,11 @@ export default function Signup() {
                       type={showConfirmpassword ? 'text' : 'password'}
                       id="confirmpassword"
                       name="confirmpassword"
-                      className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                      className="form-control form-control-lg"
                       value={user.confirmpassword}
                       onChange={handleFieldChange}
                       placeholder="請再次輸入您的密碼"
                       required
-                      style={{
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                      }}
                     />
                     <div className="form-check">
                       <input
@@ -391,14 +383,10 @@ export default function Signup() {
                       type="tel"
                       id="phone"
                       name="phone"
-                      className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                      className="form-control form-control-lg"
                       value={user.phone}
                       onChange={handleFieldChange}
                       placeholder="請輸入您的手機號碼"
-                      style={{
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                      }}
                     />
                   </div>
 
@@ -414,7 +402,7 @@ export default function Signup() {
                         type="date"
                         id="birthdate"
                         name="birthdate"
-                        className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                        className="form-control form-control-lg"
                         value={user.birthdate}
                         onChange={handleFieldChange}
                         style={{
@@ -432,18 +420,14 @@ export default function Signup() {
                     <select
                       id="gender"
                       name="gender"
-                      className="form-select form-select-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                      className="form-select form-select-lg"
                       value={user.gender}
                       onChange={handleFieldChange}
-                      style={{
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                      }}
                     >
-                      <option value="">請選擇</option>
-                      <option value="female">女</option>
-                      <option value="male">男</option>
-                      <option value="undisclosed">不透漏</option>
+                      <option value="" style={{ color: '#333', backgroundColor: 'white' }}>請選擇</option>
+                      <option value="female" style={{ color: '#333', backgroundColor: 'white' }}>女</option>
+                      <option value="male" style={{ color: '#333', backgroundColor: 'white' }}>男</option>
+                      <option value="undisclosed" style={{ color: '#333', backgroundColor: 'white' }}>不透漏</option>
                     </select>
                   </div>
 
@@ -521,6 +505,32 @@ export default function Signup() {
 
         .form-control::placeholder {
           color: rgba(255, 255, 255, 0.6) !important;
+        }
+
+        /* 統一所有輸入框樣式 */
+        .form-control, .form-select {
+          background-color: rgba(255, 255, 255, 0.1) !important;
+          border: 1px solid rgba(255, 255, 255, 0.25) !important;
+          color: white !important;
+          backdrop-filter: blur(10px);
+        }
+
+        .form-control:focus, .form-select:focus {
+          background-color: rgba(255, 255, 255, 0.15) !important;
+          border-color: #e0b0ff !important;
+          box-shadow: 0 0 0 0.2rem rgba(224, 176, 255, 0.25) !important;
+          color: white !important;
+        }
+
+        /* Select 下拉選單樣式 */
+        .form-select option {
+          background-color: white !important;
+          color: #333 !important;
+        }
+
+        /* 確保所有輸入框文字都是白色 */
+        .form-control, .form-select {
+          color: white !important;
         }
 
         .btn-outline-light.active {
