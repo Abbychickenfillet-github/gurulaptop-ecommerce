@@ -121,30 +121,36 @@ export default function LogIn() {
                 />
               </i>
             </div>
-            <div className={`${styles.right} col-sm-12 col-md-11 col-lg-5 `}>
-              <div className={`${styles.tabs} d-flex justify-content-between`}>
-                <Link
-                  className={` ${styles.hover} text-decoration-none text-white`}
-                  href="/member/login"
-                >
-                  登入
-                </Link>
-                <span className="text-white">| </span>
-                <Link
-                  className={`${styles.hover} text-decoration-none text-white`}
-                  href="/member/signup"
-                >
-                  註冊
-                </Link>
-              </div>
+            {/* 右側登入表單 */}
+            <div className={`col-lg-5 col-md-8 col-sm-12 bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25 m-3 `}>
+              {/* 覺得沒有這一塊透明的東西好像比較好看 */}
+                {/* <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25"> */}
+                  {/* 頁籤切換 */}
+                  <div className="d-flex justify-content-center mb-4">
+                   
+                  <div className="btn-group" role="group">
+                    <Link
+                      href="/member/login"
+                      className="btn btn-outline-light active px-4 py-2"
+                    >
+                      登入
+                    </Link>
+                    <Link
+                      href="/member/signup"
+                      className="btn btn-outline-light px-4 py-2"
+                    >
+                      註冊
+                    </Link>
+                  </div>
+                  </div>
               <form className="position-relative" onSubmit={handleSubmit}>
-                <div className={styles['inputs-group']}>
+                <div className="inputs-group">
                   <div className="inputs position-relative">
                     <div className="position-relative mt-5">
                       <label
                         htmlFor="email"
-                        className={`form-label text-white ${styles.hover}`}
-                      >
+                        className={`form-label text-white ${styles.hover} fw-semibold`}
+                        >
                         <svg className={styles['label-icon']} viewBox="0 0 24 24" fill="none">
                           <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                           <path d="M22 6L12 13L2 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -157,22 +163,22 @@ export default function LogIn() {
                         onChange={(e) => {
                           setEmail(e.target.value)
                         }}
-                        className={`form-control ${styles.inputs}`}
+                        className={`form-control form-control-lg ${styles.inputs}`}
                         name="email"
                         required // 添加必填
-                      />
+                        />
                       <MdOutlineEmail
                         className={`${styles['input-icon']}`}
                         size={22}
                         style={{ color: '#E0B0FF' }} // 使用淺粉紫色
-                      />
+                        />
                     </div>
 
                     <div className="position-relative mt-5">
                       <label
                         htmlFor="password"
-                        className={`form-label text-white ${styles.hover}`}
-                      >
+                        className={`form-label text-white fw-semibold ${styles.hover}`}
+                        >
                         <svg className={styles['label-icon']} viewBox="0 0 24 24" fill="none">
                           <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                           <circle cx="12" cy="16" r="1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -189,9 +195,9 @@ export default function LogIn() {
                         }}
                         id="password"
                         name="password" // 添加 name
-                        className={`form-control ${styles.inputs}`}
+                        className={`form-control form-control-lg ${styles.inputs}`}
                         required // 添加必填
-                      />
+                        />
                       {/* 這個button是 眼睛*/}
                       <button
                         type="button"
@@ -203,7 +209,7 @@ export default function LogIn() {
                           transform: 'translateY(calc(50% - 20px))',
                           right: '10px',
                         }}
-                      >
+                        >
                         {showpassword ? (
                           <AiOutlineEyeInvisible size={20} color="#E0B0FF" />
                         ) : (
@@ -215,27 +221,14 @@ export default function LogIn() {
                       className={`${styles['input-icon']}`}
                       size={22}
                       style={{ color: '#E0B0FF', cursor: 'pointer' }}
-                    /> */}
+                      /> */}
                     </div>
-                    {/* <div className="form-text">
-                    <input
-                      type="checkbox"
-                      name=""
-                      id=""
-                      onClick={() => {
-                        setShowpassword((prev) => {
-                          console.log('changing showpassword to:', !prev) // 檢查狀態更新
-                          return !prev
-                        })
-                      }}
-                    />
-                    <span className="text-white">顯示密碼</span>
-                  </div> */}
+
 
                     <div
                       id="Error_message"
                       className={`form-text text-white p-5`}
-                    >
+                      >
                       {errors.message && (
                         <div className="error">{errors.message}</div>
                       )}
@@ -245,7 +238,7 @@ export default function LogIn() {
                       <Link
                         className={`text-white text-decoration-none ${styles['forgot-password-link']}`}
                         href="./forget-password"
-                      >
+                        >
                         <svg className={styles['link-icon']} viewBox="0 0 24 24" fill="none">
                           <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
@@ -277,6 +270,7 @@ export default function LogIn() {
               </form>
               .
             </div>
+                          {/* </div> */}
           </div>
         </div>
       </div>

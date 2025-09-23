@@ -230,7 +230,7 @@ export default function Signup() {
 
             {/* 右側註冊表單 */}
             <div className="col-lg-5 col-md-8 col-sm-12">
-              <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25">
+              <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25 m-3 ">
                 {/* 頁籤切換 */}
                 <div className="d-flex justify-content-center mb-4">
                   <div className="btn-group" role="group">
@@ -261,7 +261,11 @@ export default function Signup() {
                 <form
                   onSubmit={handleSubmit}
                   className="needs-validation"
+                  // Bootstrap 5 的 CSS 類別
+                  // 啟用 Bootstrap 自訂驗證樣式
+                  // 與 noValidate 搭配使用
                   noValidate
+                  // noValidate 是關閉瀏覽器原生表單驗證，改用自訂驗證邏輯
                 >
                   <div className="mb-3">
                     <label htmlFor="email" className="text-white fw-semibold">
