@@ -246,8 +246,8 @@ router.put('/:id/profile', authenticate, async function (req, res) {
   }
 
   // 有些特殊欄位的值沒有時要略過更新，不然會造成資料庫錯誤
-  if (!user.birth_date) {
-    delete user.birth_date
+  if (!user.birthdate) {
+    delete user.birthdate
   }
 
   // 對資料庫執行update
@@ -301,13 +301,13 @@ router.delete('/:id', async function (req, res) {
 router.get('/chat/users', async (req, res) => {
   try {
     const [users] = await db.execute(`
-      SELECT 
-        user_id, 
-        name, 
-        email, 
+      SELECT
+        user_id,
+        name,
+        email,
         image_path,
         created_at
-      FROM users 
+      FROM users
       WHERE valid = 1
     `)
 

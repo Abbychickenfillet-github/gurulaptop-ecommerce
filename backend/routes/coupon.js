@@ -9,7 +9,7 @@ const upload = multer()
 router.get('/', async (req, res) => {
   try {
     const { rows: coupons } = await pool.query(`
-      SELECT 
+      SELECT
         coupon_id,
         coupon_code,
         coupon_content,
@@ -30,9 +30,16 @@ router.get('/', async (req, res) => {
       })
     }
 
+    // 格式化優惠券數據，特別是日期格式
+    const formattedCoupons = coupons.map(coupon => ({
+      ...coupon,
+      coupon_start_time: coupon.coupon_start_time ? new Date(coupon.coupon_start_time).toISOString().split('T')[0] : '',
+      coupon_end_time: coupon.coupon_end_time ? new Date(coupon.coupon_end_time).toISOString().split('T')[0] : ''
+    }))
+
     res.json({
       status: 'success',
-      data: { coupons }
+      data: { coupons: formattedCoupons }
     })
   } catch (error) {
     console.error('Error:', error)
@@ -49,7 +56,7 @@ router.get('/:coupon_id', async (req, res) => {
 
   try {
     const { rows: coupons } = await pool.query(`
-      SELECT * FROM coupon 
+      SELECT * FROM coupon
       WHERE coupon_id = $1
     `, [coupon_id])
 
@@ -61,9 +68,16 @@ router.get('/:coupon_id', async (req, res) => {
       })
     }
 
+    // 格式化單個優惠券數據
+    const formattedCoupon = {
+      ...coupons[0],
+      coupon_start_time: coupons[0].coupon_start_time ? new Date(coupons[0].coupon_start_time).toISOString().split('T')[0] : '',
+      coupon_end_time: coupons[0].coupon_end_time ? new Date(coupons[0].coupon_end_time).toISOString().split('T')[0] : ''
+    }
+
     res.json({
       status: 'success',
-      data: { coupon: coupons[0] }
+      data: { coupon: formattedCoupon }
     })
   } catch (error) {
     console.error('Error:', error)
@@ -88,9 +102,9 @@ router.put('/update', async (req, res) => {
     }
 
     const { rows: [coupon] } = await pool.query(`
-      UPDATE coupon 
-      SET valid = FALSE 
-      WHERE coupon_id = $1 
+      UPDATE coupon
+      SET valid = FALSE
+      WHERE coupon_id = $1
       RETURNING *
     `, [coupon_id])
 

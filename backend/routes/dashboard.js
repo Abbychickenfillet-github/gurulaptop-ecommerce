@@ -13,7 +13,7 @@ const upload = multer()
 router.get('/:user_id', authenticate, async function (req, res) {
   try {
     const { user_id } = req.params
-    
+
     // 驗證請求的用戶ID與當前登入用戶是否一致
     if (req.user.user_id != user_id) {
       return res.status(403).json({
@@ -21,12 +21,12 @@ router.get('/:user_id', authenticate, async function (req, res) {
         message: '無權限訪問其他用戶資料'
       })
     }
-    
+
     const { rows: users } = await pool.query(
       'SELECT * FROM users WHERE user_id = $1 AND valid = TRUE;',
       [user_id]
     )
-    
+
     if (users.length === 0) {
       return res.status(404).json({
         status: 'error',
@@ -34,9 +34,15 @@ router.get('/:user_id', authenticate, async function (req, res) {
       })
     }
 
+    // 格式化用戶數據，特別是日期格式
+    const formattedUser = {
+      ...users[0],
+      birthdate: users[0].birthdate ? new Date(users[0].birthdate).toISOString().split('T')[0] : ''
+    }
+
     res.json({
       status: 'success',
-      data: users[0]
+      data: formattedUser
     })
   } catch (error) {
     console.error('無法取得資料:', error)
@@ -51,13 +57,17 @@ router.get('/:user_id', authenticate, async function (req, res) {
 router.put('/:user_id', authenticate, async (req, res) => {
   try {
     const { user_id } = req.params
-    const { 
-      name, gender, birthdate, phone, email, country, city, district, road_name, detailed_address, image_path, remarks, valid 
+    const {
+      name, gender, birthdate, phone, email, country, city, district, road_name, detailed_address, image_path, remarks, valid
     } = req.body
 
+    // 🔍 調試：記錄接收到的生日數據
+    console.log('📅 接收到的 birthday 數據:', birthdate, typeof birthdate)
+    console.log('📋 完整的 req.body:', req.body)
+
     const { rows: [updatedUser] } = await pool.query(`
-      UPDATE users 
-      SET 
+      UPDATE users
+      SET
         name = $1,
         gender = $2,
         birthdate = $3,
@@ -114,7 +124,7 @@ router.put('/pwdCheck/:user_id', authenticate, async (req, res) => {
     }
 
     const isMatch = await compareHash(currentPassword, users[0].password)
-    
+
     if (!isMatch) {
       return res.status(400).json({
         status: 'error',
@@ -158,8 +168,8 @@ router.put('/:user_id/pwdReset', authenticate, async (req, res) => {
     const hashedPassword = await generateHash(newPassword2)
 
     const { rows: [updatedUser] } = await pool.query(`
-      UPDATE users 
-      SET password = $1 
+      UPDATE users
+      SET password = $1
       WHERE user_id = $2
       RETURNING *
     `, [hashedPassword, user_id])

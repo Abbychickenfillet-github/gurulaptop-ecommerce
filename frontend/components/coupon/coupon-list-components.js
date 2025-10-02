@@ -75,6 +75,7 @@ export default function CouponList() {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/add/${userId}`,
         {
           method: 'POST',
+          credentials: 'include', // 🔑 重要：讓 fetch 發送 cookies
           headers: {
             'Content-Type': 'application/json',
           },
@@ -85,7 +86,7 @@ export default function CouponList() {
         },
       )
 
-     
+
 
       const getUserCoupons = async (userId) => {
         try {
@@ -253,6 +254,7 @@ export default function CouponList() {
               `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/add/${userId}`,
               {
                 method: 'POST',
+                credentials: 'include', // 🔑 重要：讓 fetch 發送 cookies
                 headers: {
                   'Content-Type': 'application/json',
                 },

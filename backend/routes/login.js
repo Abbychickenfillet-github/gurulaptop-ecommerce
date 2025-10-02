@@ -114,7 +114,7 @@ router.post('/', upload.none(), async (req, res, next) => {
         phone: user.phone || '',
         email: user.email || '',
         gender: user.gender || '',
-        birthdate: user.birthdate || '',
+        birthdate: user.birthdate ? new Date(user.birthdate).toISOString().split('T')[0] : '',
         country: user.country || '',
         city: user.city || '',
         district: user.district || '',
