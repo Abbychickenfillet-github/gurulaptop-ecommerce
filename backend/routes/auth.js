@@ -144,70 +144,68 @@ router.post('/', upload.none(), async (req, res) => {
   }
 })
 
-router.post('/login', upload.none(), async (req, res) => {
-  const { email, password } = req.body
+// router.post('/login', upload.none(), async (req, res) => {
+//   const { email, password } = req.body
 
-  if (!email || !password) {
-    return res.status(400).json({
-      status: 'error',
-      message: '缺少必要資料'
-    })
-  }
+//   if (!email || !password) {
+//     return res.status(400).json({
+//       status: 'error',
+//       message: '缺少必要資料'
+//     })
+//   }
 
-  try {
-    const { rows: [user] } = await pool.query(
-      'SELECT * FROM users WHERE email = $1;',
-      [email]
-    )
+//   try {
+//     const { rows: [user] } = await pool.query(
+//       'SELECT * FROM users WHERE email = $1;',
+//       [email]
+//     )
 
-    if (!user) {
-      return res.status(401).json({
-        status: 'error',
-        message: '帳號或密碼錯誤'
-      })
-    }
+//     if (!user) {
+//       return res.status(401).json({
+//         status: 'error',
+//         message: '帳號或密碼錯誤'
+//       })
+//     }
 
- 
+//     if (!passwordMatch(password, user.password)) {
+//       return res.status(401).json({
+//         status: 'error',
+//         message: '帳號或密碼錯誤'
+//       })
+//     }
 
-    if (!passwordMatch(password, user.password)) {
-      return res.status(401).json({
-        status: 'error',
-        message: '帳號或密碼錯誤'
-      })
-    }
+//     const tokenData = {
+//       user_id: user.user_id,
+//       email: user.email,
+//       city: user.city
+//     }
+//     // 設定一個變數叫做accessToken，裡面用jwt簽章方法，把tokenData和accessTokenSecret(process.env.ACCESS_TOKEN_SECRET)傳進去，設定expiresIn為3天
+//     const accessToken = jwt.sign(tokenData, accessTokenSecret, {
+//       expiresIn: '3d'
+//     })
+//     // 這邊是只有生產環境的accessToken設定?還是所有環境都設定?
+//     res.cookie('accessToken', accessToken, {
+//       httpOnly: false, // 改為 false，讓前端可以讀取
+//       secure: process.env.NODE_ENV === 'production', // 生產環境使用 HTTPS
+//       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 生產環境使用 none
+//       maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+//       path: '/'
+//       // 移除 domain 設定，讓瀏覽器自動處理
+//     })
 
-    const tokenData = {
-      user_id: user.user_id,
-      email: user.email,
-      city: user.city
-    }
-
-    const accessToken = jwt.sign(tokenData, accessTokenSecret, {
-      expiresIn: '3d'
-    })
-
-    res.cookie('accessToken', accessToken, {
-      httpOnly: false, // 改為 false，讓前端可以讀取
-      secure: process.env.NODE_ENV === 'production', // 生產環境使用 HTTPS
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 生產環境使用 none
-      maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
-      path: '/'
-      // 移除 domain 設定，讓瀏覽器自動處理
-    })
-
-    return res.json({
-      status: 'success',
-      data: { accessToken },
-      message: '登入成功'
-    })
-  } catch (error) {
-    console.error('登入失敗:', error)
-    return res.status(500).json({
-      status: 'error',
-      message: '登入失敗'
-    })
-  }
-})
+//     return res.json({
+//       status: 'success',
+//       data: { accessToken },
+//       message: '登入成功'
+//     })
+//   } catch (error) {
+//     console.error('登入失敗:', error)
+//     return res.status(500).json({
+//       status: 'error',
+//       message: '登入失敗'
+//     })
+//   }
+// })
 
 router.post('/logout', authenticate, (req, res) => {
   console.log('🚪 後端收到登出請求')

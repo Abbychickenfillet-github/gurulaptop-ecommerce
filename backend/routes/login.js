@@ -11,7 +11,7 @@ import {passwordMatch} from './auth.js'
 // - 登入 (POST /)
 // - 登出 (POST /logout)
 // - JWT token 生成和驗證
-// 
+//
 // 其他文件中的重複邏輯已被註解掉：
 // - auth.js 中的登入/登出邏輯
 // - authenticate.js 中的重複驗證邏輯
@@ -33,7 +33,7 @@ router.post('/', upload.none(), async (req, res, next) => {
     console.log('🔐 登入請求開始')
     console.log('📧 接收到的 email:', email)
     console.log('🔑 接收到的 password:', password ? '[已隱藏]' : '未提供')
-    
+
     // 從資料庫查詢使用者，並確保帳號是有效的
     console.log('🔍 查詢資料庫中的使用者...')
     const { rows: users } = await pool.query(
@@ -50,12 +50,12 @@ router.post('/', upload.none(), async (req, res, next) => {
         message: '帳號或密碼錯誤。或已停用本帳號，請聯繫客服',
       })
     }
-    
+
     // 如果密碼不匹配，返回錯誤訊息
     console.log('🔐 驗證密碼...')
     const isPasswordValid = passwordMatch(password, user.password)
     console.log('🔐 密碼驗證結果:', isPasswordValid ? '正確' : '錯誤')
-    
+
     if (!isPasswordValid) {
       console.log('❌ 密碼驗證失敗')
       return res.json({
@@ -84,8 +84,9 @@ router.post('/', upload.none(), async (req, res, next) => {
 
     // 设置 JWT token 到 cookie
     console.log('🍪 設置 JWT Token 到 Cookie...')
+
     res.cookie('accessToken', token, {
-      httpOnly: false, // 改為 false，讓前端可以讀取
+      httpOnly: false, // 前端需要讀取
       secure: process.env.NODE_ENV === 'production', // 生產環境使用 HTTPS
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 生產環境使用 none
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2天
@@ -96,6 +97,13 @@ router.post('/', upload.none(), async (req, res, next) => {
 
     // 登入成功，這裡是負責看JWT有沒有問題。如果有問題可能是這裡。返回 JWT Token 和用户数据
     console.log('✅ 登入成功，準備返回用戶資料')
+
+
+    // 🔄 構建用戶數據結構 (與前端 use-auth.js 第119-139行相同)
+    // ========================================
+    // 這段代碼的作用與前端 use-auth.js 中的 userData 結構完全一致
+    // 都是將用戶資料組織成統一的格式，確保前後端數據結構一致
+    // 後端：將資料庫原始資料轉換成 API 標準格式
     return res.json({
       status: 'success',
       token,
@@ -135,43 +143,13 @@ router.post('/', upload.none(), async (req, res, next) => {
 
 router.post('/logout', authenticate, (req, res) => {
   console.log('🚪 後端收到登出請求')
-  
-  // 強制清除 cookie，使用多種參數組合確保清除
-  // 第一次清除：使用與設置時完全相同的參數
+
+  // 清除 cookie，使用與設置時完全相同的參數
   res.clearCookie('accessToken', {
-    httpOnly: true,
-    secure: false, // 明確設置為 false，與設置時一致
-    sameSite: 'lax',
-    path: '/',
-    domain: 'localhost'
-  })
-  
-  // 第二次清除：不帶 domain
-  res.clearCookie('accessToken', {
-    httpOnly: true,
-    secure: false,
-    sameSite: 'lax',
-    path: '/'
-  })
-  
-  // 第三次清除：嘗試不同的 secure 值
-  res.clearCookie('accessToken', {
-    httpOnly: true,
+    httpOnly: false, // 與設置時一致
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    domain: 'localhost'
-  })
-  
-  // 設置過期的 cookie 來覆蓋
-  res.cookie('accessToken', '', {
-    httpOnly: true,
-    secure: false, // 明確設置為 false
-    sameSite: 'lax',
-    path: '/',
-    domain: 'localhost',
-    maxAge: 0,
-    expires: new Date(0)
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    path: '/'
   })
 
   console.log('✅ 後端登出完成')

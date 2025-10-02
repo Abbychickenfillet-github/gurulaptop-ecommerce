@@ -8,6 +8,7 @@ import { apiBaseUrl } from '@/configs/index.js'
 // ========================================
 // 這個 Context 用於在整個應用中共享用戶的認證狀態
 // 包括：是否已登入、用戶數據、登入/登出函數等
+// 有人已經建議我使用zustand來管理認證狀態，因為不建議
 const AuthContext = createContext()
 
 // ========================================
@@ -58,13 +59,13 @@ export const AuthProvider = ({ children }) => {
   // 🚀 路由相關
   // ========================================
   const router = useRouter()
-  
+
   // 登入頁面路由
   const loginRoute = '/member/login'
-  
+
   // 受保護的路由（需要登入才能訪問）
   const protectedRoutes = useMemo(() => ['/dashboard', '/coupon/coupon-user'], [])
-  
+
   // 已登入用戶不能訪問的路由（需要先登出）
   const loggedInBlockedRoutes = useMemo(() => ['/member/login', '/member/signup'], [])
 
@@ -78,7 +79,7 @@ export const AuthProvider = ({ children }) => {
       console.log('🚀 前端開始登入請求...')
       console.log('📧 登入 email:', email)
       console.log('🔑 登入 password:', password ? '[已隱藏]' : '未提供')
-      
+
       // 向後端發送登入請求
       const response = await fetch(`${apiBaseUrl}/api/login`, {
         method: 'POST',
@@ -88,30 +89,34 @@ export const AuthProvider = ({ children }) => {
         credentials: 'include',  // 包含 cookies
         body: JSON.stringify({ email, password }),
       })
-      
+
       console.log('Response status:', response.status)
       console.log('Response ok:', response.ok)
-      
+
       // 檢查 HTTP 響應狀態
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      
+
       // 解析響應數據
       const result = await response.json()
       console.log('API 回應結果:', result)
       console.log('Response headers:', response.headers)
       console.log('Cookies after login:', document.cookie)
-      
+
       // 檢查登入是否成功
       if (result.status === 'success') {
         console.log('✅ 前端登入成功，設定狀態...')
-        
+
         // 使用函數式更新確保狀態正確設置
         setAuth(prevAuth => {
           console.log('更新前的狀態:', prevAuth)
-          
-          // 構建新的認證狀態
+
+          // 🔄 構建新的認證狀態 (與後端 login.js 第103-123行相同)
+
+          // 這段代碼的作用與後端 login.js 中的 data 結構完全一致
+          // 都是將用戶資料組織成統一的格式
+          // 前端：將 API 資料轉換成 React 狀態格式
           const newState = {
             isAuth: true,  // 設置為已登入
             userData: {
@@ -137,17 +142,17 @@ export const AuthProvider = ({ children }) => {
             isLoading: false,
             hasChecked: true
           }
-          
+
           console.log('更新後的狀態:', newState)
           return newState
         })
-        
+
         // 等待狀態更新完成後再跳轉
         console.log('🔄 等待認證狀態更新完成...')
         await waitForAuthUpdate()
         console.log('🔄 認證狀態更新完成，導向 dashboard 頁面...')
         router.replace('/dashboard')  // 跳轉到儀表板
-        
+
       } else {
         console.error('登入失敗:', result.message || result)
       }
@@ -177,10 +182,10 @@ export const AuthProvider = ({ children }) => {
   const logout = useCallback(async () => {
     try {
       console.log('🚪 開始登出流程...')
-      
+
       // 先清除本地認證狀態
       clearAuthState()
-      
+
       // 強制清除瀏覽器中的 accessToken cookie（多種方式確保清除）
       console.log('🧹 清除瀏覽器 cookie...')
       // 清除所有可能的 cookie 組合
@@ -192,7 +197,7 @@ export const AuthProvider = ({ children }) => {
       document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure;'
       document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost; httpOnly;'
       document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; httpOnly;'
-      
+
       // 向後端發送登出請求
       const response = await fetch(`${apiBaseUrl}/api/auth/logout`, {
         method: 'POST',
@@ -203,7 +208,7 @@ export const AuthProvider = ({ children }) => {
       })
 
       console.log('📡 後端登出回應:', response.status)
-      
+
       // 如果後端成功，顯示成功訊息
       if (response.ok) {
         const result = await response.json()
@@ -243,19 +248,19 @@ export const AuthProvider = ({ children }) => {
   // ========================================
   // 功能：檢查用戶是否仍然保持登入狀態
   // 每次重新訪問網站或刷新頁面時都會執行
-  
+
   // ========================================
   // 📍 handleCheckAuth 使用情況分析
   // ========================================
-  // 
+  //
   // 🎯 1. 在 use-auth.js 內部使用：
   //    - 第292行：在 AuthContext.Provider 中提供給子組件
   //    - 作為 Context 值的一部分，供外部組件調用
-  // 
+  //
   // 🌐 2. 在外部檔案中的使用情況：
   //    - 目前沒有直接調用 handleCheckAuth 的組件
   //    - 大部分組件都是通過 useAuth() 獲取 auth 狀態
-  // 
+  //
   // 🔗 3. 調用 auth 路由的組件：
   //    - 登入頁面：/pages/member/login.js (使用 login 函數)
   //    - 註冊頁面：/pages/member/signup.js (使用 auth 狀態)
@@ -265,18 +270,18 @@ export const AuthProvider = ({ children }) => {
   //    - 產品頁：/pages/product/[pid].js (使用 auth 狀態)
   //    - 群組管理：/components/group/GroupManagement.js (使用 auth 狀態)
   //    - 優惠券：/components/coupon/**/*.js (使用 auth 狀態)
-  // 
+  //
   // 📊 4. 使用 useAuth() 的組件統計：
   //    - 總計約 30+ 個組件使用 useAuth()
   //    - 主要用於檢查用戶登入狀態 (auth.isAuth)
   //    - 獲取用戶數據 (auth.userData)
   //    - 執行登入/登出操作 (login/logout 函數)
-  // 
+  //
   // ⚠️ 5. 注意事項：
   //    - handleCheckAuth 主要用於頁面刷新後的認證狀態檢查
   //    - 大部分組件不需要直接調用此函數
   //    - 組件只需要使用 useAuth() 獲取當前狀態即可
-  // 
+  //
   const handleCheckAuth = useCallback(async () => {
     // 如果已經檢查過且不在載入中，直接返回
     if (auth.hasChecked && !auth.isLoading) {
@@ -293,7 +298,7 @@ export const AuthProvider = ({ children }) => {
       console.log('🛡️ 受保護路由:', protectedRoutes)
       console.log('🔍 是否在受保護路由:', protectedRoutes.includes(router.pathname))
       console.log('🍪 是否有 accessToken:', document.cookie.includes('accessToken'))
-      
+
       // 檢查是否在受保護路由且沒有token
       console.log('🔍 檢查受保護路由條件...')
       if (protectedRoutes.includes(router.pathname) && !document.cookie.includes('accessToken')) {
@@ -303,7 +308,7 @@ export const AuthProvider = ({ children }) => {
         return
       }
       console.log('✅ 通過受保護路由檢查')
-      
+
       // 檢查是否已登入但嘗試訪問登入/註冊頁面
       console.log('🔍 檢查已登入用戶阻擋路由條件...')
       if (document.cookie.includes('accessToken') && loggedInBlockedRoutes.includes(router.pathname)) {
@@ -317,7 +322,7 @@ export const AuthProvider = ({ children }) => {
         // return
       }
       console.log('✅ 通過已登入用戶阻擋路由檢查')
-      
+
       // 如果沒有 accessToken，直接返回
       if (!document.cookie.includes('accessToken')) {
         console.log('❌ 沒有 accessToken')
@@ -326,7 +331,7 @@ export const AuthProvider = ({ children }) => {
         setAuth(prev => ({ ...prev, isLoading: false, hasChecked: true }))
         return
       }
-    
+
       // 向後端驗證 token 有效性
       console.log('🔍 向後端驗證 token...')
       const response = await fetch(`${apiBaseUrl}/api/auth/verify`, {
@@ -336,19 +341,19 @@ export const AuthProvider = ({ children }) => {
           'Content-Type': 'application/json',
         },
       })
-      
+
       if (response.ok) {
         const result = await response.json()
         if (result.status === 'success') {
           console.log('✅ Token 有效，設置為已登入狀態')
-          setAuth(prev => ({ 
-            ...prev, 
+          setAuth(prev => ({
+            ...prev,
             isAuth: true,
             userData: result.data || prev.userData,
             isLoading: false,
             hasChecked: true
           }))
-          
+
           // 如果已登入但當前在登入/註冊頁面，跳轉到 dashboard
           if (loggedInBlockedRoutes.includes(router.pathname)) {
             console.log('🔄 已登入用戶在登入頁面，跳轉到 dashboard')
@@ -360,18 +365,18 @@ export const AuthProvider = ({ children }) => {
       } else {
         throw new Error(`Token 驗證失敗: ${response.status}`)
       }
-      
+
     } catch (error) {
       console.error('檢查認證失敗:', error)
       // 清除無效的 cookie
       document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-      setAuth(prev => ({ 
-        ...prev, 
+      setAuth(prev => ({
+        ...prev,
         isAuth: false,
         isLoading: false,
         hasChecked: true
       }))
-      
+
       // 如果在受保護路由，跳轉到登入頁面
       if (protectedRoutes.includes(router.pathname)) {
         router.push(loginRoute)

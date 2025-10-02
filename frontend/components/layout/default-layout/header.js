@@ -119,6 +119,8 @@ export default function Header() {
     <header className="tech-nav">
       {isMobile ? (
         <>
+        `
+        {/* 這控制手機版漢堡菜單的頂部 */}
           <div className="mobile-header">
             {/* 左側logo */}
             <Link href="/" className="logo-link">
@@ -130,7 +132,7 @@ export default function Header() {
                 height={39}
               />
             </Link>
-
+            {/* 這控制手機版漢堡菜單的開關 */}
             <div className="mobile-controls">
               <button
                 className="menu-btn"
@@ -141,6 +143,7 @@ export default function Header() {
             </div>
           </div>
 
+          {/* 這控制手機版漢堡菜單的內容 */}
           <div
             className={`nav-menu ${isMenuOpen ? 'open' : ''}`}
             style={{ zIndex: '1000' }}
