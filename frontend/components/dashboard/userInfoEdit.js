@@ -198,13 +198,13 @@ export default function UserProfile() {
             },
           }
         )
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
-        
+
         const result = await response.json()
-        
+
         if (result.status === 'success') {
           const userData = result.data
           setEditableUser(userData)
@@ -259,7 +259,7 @@ export default function UserProfile() {
     }
     // 當性別欄位改變時，同時更新 auth 中的 userData
     if (name === 'gender') {
-      setAuth((prev) => ({ 
+      setAuth((prev) => ({
         // This line was removed as per the edit hint
         ...prev,
         userData: {
@@ -324,13 +324,13 @@ export default function UserProfile() {
           body: JSON.stringify(dataToSubmit),
         },
       )
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      
+
       const result = await response.json()
-      
+
       if (result.status === 'success') {
         Swal.fire('成功', '用戶資料更新成功', 'success')
         setAuth((prev) => ({
@@ -392,7 +392,7 @@ export default function UserProfile() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      
+
       const result = await response.json()
 
       if (result.status === 'success') {
@@ -448,19 +448,21 @@ export default function UserProfile() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      
+
       const result = await response.json()
 
       if (result.status === 'success') {
         setUploadStatus('頭像更新成功！') //有文字算true,沒有算none?
-        //除非想防風報攻擊才需要寫得很認真@@
-        // setAuth((prev) => ({ // This line was removed as per the edit hint
-        //   ...prev, //prev是React的useState更新函數的一個特殊參數。他代表當前的state值
-        //   userData: {
-        //     ...prev.userData,
-        //     image_path: selectedImg,
-        //   },
-        // }))
+
+        // 立即更新認證狀態中的頭像路徑，讓其他位置的頭像能夠同步更新
+        setAuth((prev) => ({
+          ...prev, //prev是React的useState更新函數的一個特殊參數。他代表當前的state值
+          userData: {
+            ...prev.userData,
+            image_path: selectedImg,
+          },
+        }))
+
         const headerResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header`,
           {

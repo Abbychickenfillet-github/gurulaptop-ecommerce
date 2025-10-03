@@ -283,12 +283,15 @@ export const AuthProvider = ({ children }) => {
   //    - 組件只需要使用 useAuth() 獲取當前狀態即可
   //
   const handleCheckAuth = useCallback(async () => {
-    // 如果已經檢查過且不在載入中，直接返回
-    if (auth.hasChecked && !auth.isLoading) {
+    // 如果已經檢查過認證狀態，避免重複執行
+    if (auth.hasChecked) {
       return
     }
 
     try {
+      // 設置已檢查，避免重複執行
+      setAuth(prev => ({ ...prev, hasChecked: true, isLoading: true }))
+
       console.log('🔍use-auth.js Line 272 開始檢查認證狀態...')
       console.log('📍 use-auth.js Line 273 當前路徑:', router.pathname)
       console.log('🍪 use-auth.js Line 274 Cookie:', document.cookie)
@@ -328,7 +331,18 @@ export const AuthProvider = ({ children }) => {
         console.log('❌ 沒有 accessToken')
         console.log('🍪 完整 Cookie 內容:', document.cookie)
         console.log('🔍 檢查 accessToken 是否存在:', document.cookie.includes('accessToken'))
-        setAuth(prev => ({ ...prev, isLoading: false, hasChecked: true }))
+        setAuth(prev => ({
+          ...prev,
+          isLoading: false,
+          hasChecked: true,
+          isAuth: false
+        }))
+
+        // 如果在受保護路由，跳轉到登入頁面
+        if (protectedRoutes.includes(router.pathname)) {
+          console.log('⚠️ 沒有token且在受保護路由，跳轉登入')
+          router.push(loginRoute)
+        }
         return
       }
 
@@ -368,18 +382,28 @@ export const AuthProvider = ({ children }) => {
 
     } catch (error) {
       console.error('檢查認證失敗:', error)
-      // 清除無效的 cookie
-      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-      setAuth(prev => ({
-        ...prev,
-        isAuth: false,
-        isLoading: false,
-        hasChecked: true
-      }))
 
-      // 如果在受保護路由，跳轉到登入頁面
+      // ⚠️ 重要：只有在受保護路由時才進行登出處理
+      // 因為網路問題或暫時的API不可用不應該導致用戶被登出
       if (protectedRoutes.includes(router.pathname)) {
+        console.log('⚠️ 在受保護路由且認證失敗，清除認證狀態')
+        // 只有當在受保護路由且確實有authenticate問題時才清除
+        setAuth(prev => ({
+          ...prev,
+          isAuth: false,
+          isLoading: false,
+          hasChecked: true
+        }))
         router.push(loginRoute)
+      } else {
+        // 如果不在受保護路由，保持當前狀態，不強制登出
+        console.log('⚠️ 不在受保護路由，保持當前認證狀態，避免誤登出')
+        setAuth(prev => ({
+          ...prev,
+          isLoading: false,
+          hasChecked: true
+          // 不修改 isAuth，保持之前的狀態
+        }))
       }
     }
   }, [auth.hasChecked, auth.isLoading, router.pathname])
