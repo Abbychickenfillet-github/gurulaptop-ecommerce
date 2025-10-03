@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { FaPenFancy } from 'react-icons/fa'
 import Image from 'next/image'
 export default function CouponPage() {
-
   return (
     <div className="container">
       <div className="row d-flex justify-content-center">
@@ -101,8 +100,6 @@ export default function CouponPage() {
               <Tab.Pane eventKey="coupon-record">
                 <div className="container">
                   <CouponUser />
-
-
                 </div>
               </Tab.Pane>
 

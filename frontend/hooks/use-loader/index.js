@@ -36,7 +36,7 @@ export const LoaderProvider = ({
       // 改進路徑檢查邏輯
       const currentPath = router.pathname
       const shouldShowLoader = !excludePaths.some(
-        (path) => currentPath === path || currentPath.startsWith(`${path}/`)
+        (path) => currentPath === path || currentPath.startsWith(`${path}/`),
       )
 
       if (global && shouldShowLoader) {
@@ -58,7 +58,7 @@ export const LoaderProvider = ({
     const initialCheck = () => {
       const currentPath = router.pathname
       const shouldHideLoader = excludePaths.some(
-        (path) => currentPath === path || currentPath.startsWith(`${path}/`)
+        (path) => currentPath === path || currentPath.startsWith(`${path}/`),
       )
       if (shouldHideLoader) {
         setShow(false)
@@ -86,7 +86,8 @@ export const LoaderProvider = ({
         showLoader: () => {
           const currentPath = router.pathname
           const shouldShowLoader = !excludePaths.some(
-            (path) => currentPath === path || currentPath.startsWith(`${path}/`)
+            (path) =>
+              currentPath === path || currentPath.startsWith(`${path}/`),
           )
 
           if (shouldShowLoader) {

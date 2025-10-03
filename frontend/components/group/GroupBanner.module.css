@@ -1,62 +1,66 @@
 .wrapper {
-    padding: 20px;
+  padding: 20px;
 }
 
 .banner {
-    background: linear-gradient(to right, rgba(45, 16, 84, 0.3), rgba(13, 13, 37, 0.8));
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    backdrop-filter: blur(10px);
+  background: linear-gradient(
+    to right,
+    rgba(45, 16, 84, 0.3),
+    rgba(13, 13, 37, 0.8)
+  );
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  backdrop-filter: blur(10px);
 }
 
 .content {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    color: white;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: white;
 }
 
 .image {
-    width: 80px;
-    height: 80px;
-    border-radius: 12px;
-    object-fit: cover;
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
 }
 
 .text {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .title {
-    font-size: 1.25rem;
-    margin-bottom: 5px;
-    font-weight: bold;
+  font-size: 1.25rem;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
 .subtitle {
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .actions {
-    display: flex;
-    gap: 18px;
+  display: flex;
+  gap: 18px;
 }
 
 @media (max-width: 576px) {
-    .wrapper {
-        padding: 10px;
-    }
+  .wrapper {
+    padding: 10px;
+  }
 
-    .content {
-        flex-direction: column;
-        text-align: center;
-    }
+  .content {
+    flex-direction: column;
+    text-align: center;
+  }
 
-    .actions {
-        margin-top: 10px;
-        width: 100%;
-        justify-content: center;
-    }
+  .actions {
+    margin-top: 10px;
+    width: 100%;
+    justify-content: center;
+  }
 }

@@ -12,7 +12,9 @@
 
 .navLink {
   color: #b39ddb;
-  transition: color 0.3s ease, transform 0.3s ease;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
   padding: 10px 10px;
   border-radius: 3px;
 }

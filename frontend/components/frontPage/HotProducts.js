@@ -6,9 +6,10 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 
 // 根據環境動態選擇基礎 URL
-const baseUrl = process.env.NODE_ENV === 'production' 
-  ? 'https://yunlavendar-guru-smart-laptop.zeabur.app'
-  : 'http://localhost:3000'
+const baseUrl =
+  process.env.NODE_ENV === 'production'
+    ? 'https://yunlavendar-guru-smart-laptop.zeabur.app'
+    : 'http://localhost:3000'
 
 const HotProducts = () => {
   const products = [

@@ -185,7 +185,7 @@ export default function UserProfile() {
             : '/Vector.svg'),
     )
   }, [editableUser.gender, editableUser.image_path]) // 加入相依性
-// 這邊是先取使用者資料 也不用點擊任何按鈕
+  // 這邊是先取使用者資料 也不用點擊任何按鈕
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -197,7 +197,7 @@ export default function UserProfile() {
             headers: {
               'Content-Type': 'application/json',
             },
-          }
+          },
         )
 
         if (!response.ok) {
@@ -218,11 +218,7 @@ export default function UserProfile() {
       } catch (error) {
         console.error('無法獲取資料:', error)
         console.error('錯誤詳情:', error.message)
-        Swal.fire(
-          '錯誤',
-          `獲取用戶資料失敗: ${error.message}`,
-          'error',
-        )
+        Swal.fire('錯誤', `獲取用戶資料失敗: ${error.message}`, 'error')
       }
     }
     if (auth?.userData?.user_id) {
@@ -347,14 +343,10 @@ export default function UserProfile() {
 
         // 改變的結果是輸入的狀態的物件
       }
-          } catch (error) {
-        console.error('更新失敗:', error)
-        Swal.fire(
-          '錯誤',
-          error.message || '更新失敗，請稍後再試',
-          'error',
-        )
-      }
+    } catch (error) {
+      console.error('更新失敗:', error)
+      Swal.fire('錯誤', error.message || '更新失敗，請稍後再試', 'error')
+    }
   }
   // 在 userInfoEdit.js 中
 
@@ -375,19 +367,19 @@ export default function UserProfile() {
         return
       }
       //停用button跟更新button用的是同一個路由所以停用
-             const response = await fetch(
-         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
-         {
-           method: 'PUT',
-           credentials: 'include', // 🔑 重要：讓 fetch 發送 cookies
-           headers: {
-             'Content-Type': 'application/json',
-           },
-           body: JSON.stringify({
-             ...editableUser,
-             valid: 0,
-           }),
-         }
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
+        {
+          method: 'PUT',
+          credentials: 'include', // 🔑 重要：讓 fetch 發送 cookies
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...editableUser,
+            valid: 0,
+          }),
+        },
       )
 
       if (!response.ok) {
@@ -431,19 +423,19 @@ export default function UserProfile() {
     }
 
     try {
-             const response = await fetch(
-         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
-         {
-           method: 'PUT',
-           credentials: 'include', // 🔑 重要：讓 fetch 發送 cookies
-           headers: {
-             'Content-Type': 'application/json',
-           },
-           body: JSON.stringify({
-             ...editableUser,
-             image_path: selectedImg,
-           }),
-         }
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/${auth.userData.user_id}`,
+        {
+          method: 'PUT',
+          credentials: 'include', // 🔑 重要：讓 fetch 發送 cookies
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...editableUser,
+            image_path: selectedImg,
+          }),
+        },
       )
 
       if (!response.ok) {
@@ -470,11 +462,7 @@ export default function UserProfile() {
       }
     } catch (error) {
       console.error('上傳失敗:', error)
-      Swal.fire(
-        '錯誤',
-        error.message || '上傳失敗，請稍後再試',
-        'error',
-      )
+      Swal.fire('錯誤', error.message || '上傳失敗，請稍後再試', 'error')
     }
   }
 

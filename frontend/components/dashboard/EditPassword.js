@@ -137,13 +137,13 @@ export default function EditPassword() {
             newPassword1: editableUser.newPassword1,
             newPassword2: editableUser.newPassword2,
           }),
-        }
+        },
       )
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      
+
       const result = await response.json()
 
       if (result.status === 'resetPwd success') {
@@ -159,11 +159,7 @@ export default function EditPassword() {
       }
     } catch (error) {
       console.error('密碼更新失敗:', error)
-      Swal.fire(
-        '錯誤',
-        error.message || '密碼更新失敗',
-        'error',
-      )
+      Swal.fire('錯誤', error.message || '密碼更新失敗', 'error')
     }
   }
 
@@ -322,7 +318,7 @@ export default function EditPassword() {
       </div>
 
       {/* 可以考慮加入一些自定義 CSS */}
-      <style jsx>{`
+      <style jsx global>{`
         .form-control-lg {
           padding-right: 2.5rem;
         }

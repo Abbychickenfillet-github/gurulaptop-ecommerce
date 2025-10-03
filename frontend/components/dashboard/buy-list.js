@@ -175,7 +175,7 @@ export default function BuyList(order) {
         </Accordion.Item>
       </Accordion>
 
-      <style jsx>{`
+      <style jsx global>{`
         .text-red {
           color: red;
         }

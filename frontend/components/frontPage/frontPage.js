@@ -627,7 +627,10 @@ export default function FrontPage() {
                   </p>
                 </div>
                 <div className="home-activity-card-footer3">
-                  <Link href="/event/eventDetail/37" className="home-activity-btn">
+                  <Link
+                    href="/event/eventDetail/37"
+                    className="home-activity-btn"
+                  >
                     <Image
                       src="/images/index/arrow.svg"
                       alt="arrow"
@@ -647,7 +650,10 @@ export default function FrontPage() {
                   </p>
                 </div>
                 <div className="home-activity-card-footer3">
-                  <Link href="/event/eventDetail/10" className="home-activity-btn">
+                  <Link
+                    href="/event/eventDetail/10"
+                    className="home-activity-btn"
+                  >
                     <Image
                       src="/images/index/arrow.svg"
                       alt="arrow"

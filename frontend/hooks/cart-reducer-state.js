@@ -70,7 +70,7 @@ export const decrementOne = (items, id) => {
 export const addOne = (items, newItem) => {
   // 尋找是否有已存在的索引值
   const foundIndex = items.findIndex(
-    (item) => String(item.id) === String(newItem.id)
+    (item) => String(item.id) === String(newItem.id),
   )
 
   // 如果有存在，加入項目(以給定的quantity相加，或沒給定時quantity+1)

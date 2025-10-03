@@ -166,13 +166,22 @@ export default function Event() {
   }, []) // 只在組件掛載時執行一次
 
   // 當篩選器改變時重新獲取數據 - 使用 useMemo 優化依賴項
-  const filterDependencies = useMemo(() => [
-    filters.type,
-    filters.platform,
-    filters.teamType,
-    filters.search,
-    activeTab,
-  ], [filters.type, filters.platform, filters.teamType, filters.search, activeTab])
+  const filterDependencies = useMemo(
+    () => [
+      filters.type,
+      filters.platform,
+      filters.teamType,
+      filters.search,
+      activeTab,
+    ],
+    [
+      filters.type,
+      filters.platform,
+      filters.teamType,
+      filters.search,
+      activeTab,
+    ],
+  )
 
   useEffect(() => {
     if (filters.type !== undefined) {
@@ -181,21 +190,27 @@ export default function Event() {
   }, filterDependencies)
 
   // 處理分頁變更 - 使用 useCallback 優化
-  const handlePageChange = useCallback((page) => {
-    setCurrentPage(page)
-    fetchEvents(page, activeTab)
-    // 滾動到頁面頂部，但保持在卡片區域
-    document
-      .querySelector('.event-container')
-      ?.scrollIntoView({ behavior: 'smooth' })
-  }, [activeTab, fetchEvents])
+  const handlePageChange = useCallback(
+    (page) => {
+      setCurrentPage(page)
+      fetchEvents(page, activeTab)
+      // 滾動到頁面頂部，但保持在卡片區域
+      document
+        .querySelector('.event-container')
+        ?.scrollIntoView({ behavior: 'smooth' })
+    },
+    [activeTab, fetchEvents],
+  )
 
   // 處理分類變更 - 使用 useCallback 優化
-  const handleTabChange = useCallback((tab) => {
-    setActiveTab(tab)
-    setCurrentPage(1)
-    fetchEvents(1, tab)
-  }, [fetchEvents])
+  const handleTabChange = useCallback(
+    (tab) => {
+      setActiveTab(tab)
+      setCurrentPage(1)
+      fetchEvents(1, tab)
+    },
+    [fetchEvents],
+  )
 
   // 處理篩選變更 - 使用 useCallback 優化
   const handleFilterChange = useCallback((newFilters) => {

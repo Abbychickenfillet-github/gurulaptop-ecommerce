@@ -7,11 +7,12 @@ const ArticleSection = () => {
   const articlesPerView = 1
 
   // 根據環境動態選擇基礎 URL
-const baseUrl = process.env.NODE_ENV === 'production' 
-  ? 'https://yunlavendar-guru-smart-laptop.zeabur.app'
-  : 'http://localhost:3000'
+  const baseUrl =
+    process.env.NODE_ENV === 'production'
+      ? 'https://yunlavendar-guru-smart-laptop.zeabur.app'
+      : 'http://localhost:3000'
 
-const articles = [
+  const articles = [
     {
       id: 1,
       image: '/images/index/banner_20.jpg',

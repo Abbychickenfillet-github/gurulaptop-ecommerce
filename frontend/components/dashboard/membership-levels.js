@@ -36,15 +36,15 @@ export default function MembershipLevels() {
             headers: {
               'Content-Type': 'application/json',
             },
-          }
+          },
         )
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
-        
+
         const result = await response.json()
-        
+
         setMembershipData(() => ({
           ...result,
           totalSpent: Number(result.totalSpent) || 0,
@@ -136,7 +136,6 @@ export default function MembershipLevels() {
         background: 'linear-gradient(135deg, #6C4CCE 0%, #805AF5 100%)',
       }}
     >
-
       <div className="row mb-4 ">
         <div className="col">
           <h2 className="text-white mb-0 d-flex justify-content-center align-items-center">
@@ -153,18 +152,19 @@ export default function MembershipLevels() {
       <div className="row">
         <div className="col">
           <h3 className="text-white d-flex justify-content-center">
-             累計消費: NT${Number(membershipData.totalSpent || 0).toLocaleString()}
+            累計消費: NT$
+            {Number(membershipData.totalSpent || 0).toLocaleString()}
           </h3>
           <p className="text-white">
             升級至 <strong>銅牌會員</strong>，還需消費 NT$
             {membershipData.nextLevelRequired.toLocaleString()}
           </p>
-          <ProgressBar 
-            style={{ 
-              height: '20px', 
+          <ProgressBar
+            style={{
+              height: '20px',
               backgroundColor: 'rgba(255, 255, 255, 0.2)',
               borderRadius: '10px',
-              overflow: 'hidden'
+              overflow: 'hidden',
             }}
           >
             {calculateProgress().map((progress, index) => (
@@ -175,11 +175,15 @@ export default function MembershipLevels() {
                 variant={getVariants()[index]}
                 now={progress}
                 style={{
-                  background: index === 0 ? 'linear-gradient(90deg, #E0B0FF, #805AF5)' : 
-                             index === 1 ? 'linear-gradient(90deg, #C0C0C0, #808080)' :
-                             index === 2 ? 'linear-gradient(90deg, #FFD700, #FFA500)' :
-                             'linear-gradient(90deg, #B9F2FF, #4169E1)',
-                  borderRadius: '10px'
+                  background:
+                    index === 0
+                      ? 'linear-gradient(90deg, #E0B0FF, #805AF5)'
+                      : index === 1
+                        ? 'linear-gradient(90deg, #C0C0C0, #808080)'
+                        : index === 2
+                          ? 'linear-gradient(90deg, #FFD700, #FFA500)'
+                          : 'linear-gradient(90deg, #B9F2FF, #4169E1)',
+                  borderRadius: '10px',
                 }}
               />
             ))}
@@ -216,63 +220,82 @@ export default function MembershipLevels() {
           // 這是一個巢狀三元運算子，類似switch的功能
           // 如果 level.name === '銅牌會員' 則 className = 'bronze'
           // 如果不是銅牌，則檢查是否為銀牌，以此類推
-          let levelClass = '';
+          let levelClass = ''
           if (level.name === '銅牌會員') {
-            levelClass = 'bronze';
+            levelClass = 'bronze'
           } else if (level.name === '銀牌會員') {
-            levelClass = 'silver';
+            levelClass = 'silver'
           } else if (level.name === '金牌會員') {
-            levelClass = 'gold';
+            levelClass = 'gold'
           } else if (level.name === '鑽石會員') {
-            levelClass = 'diamond';
+            levelClass = 'diamond'
           }
-          
+
           // 檢查是否為當前用戶的會員等級，如果是則加上 active-card 類別
-          const isActiveCard = level.level === auth?.userData?.level ? 'active-card' : '';
-          
+          const isActiveCard =
+            level.level === auth?.userData?.level ? 'active-card' : ''
+
           return (
             <div key={index} className="col">
               <div
                 className={`membership-card ${levelClass} p-4 d-flex flex-column justify-content-center ${isActiveCard}`}
               >
                 {/* SVG 星星圖標解析 */}
-              <div className="membership-icon">
-                <svg viewBox="0 0 24 24" fill="none" className="icon-svg">
-                  <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z" 
-                        stroke="currentColor" 
-                        strokeWidth="2" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round"/>
-                </svg>
-              </div>
+                <div className="membership-icon">
+                  <svg viewBox="0 0 24 24" fill="none" className="icon-svg">
+                    <path
+                      d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
 
-              <h3 className="text-white mb-3 z-3">{level.name}</h3>
-              <p className={`text-white flex-grow-1 z-2 ${
-                level.name === getMembershipLevel(totalSpent) ? 
-                  level.name === '銅牌會員' ? 'bronze-glow' :
-                  level.name === '銀牌會員' ? 'silver-glow' :
-                  level.name === '金牌會員' ? 'gold-glow' :
-                  level.name === '鑽石會員' ? 'diamond-glow' : '' : ''
-              }`}>
-                {level.criteria}
-              </p>
-              <p className={`text-white flex-grow-1 z-2 small ${
-                level.name === getMembershipLevel(totalSpent) ? 
-                  level.name === '銅牌會員' ? 'bronze-glow' :
-                  level.name === '銀牌會員' ? 'silver-glow' :
-                  level.name === '金牌會員' ? 'gold-glow' :
-                  level.name === '鑽石會員' ? 'diamond-glow' : '' : ''
-              }`}>
-                {level.benefits}
-              </p>
+                <h3 className="text-white mb-3 z-3">{level.name}</h3>
+                <p
+                  className={`text-white flex-grow-1 z-2 ${
+                    level.name === getMembershipLevel(totalSpent)
+                      ? level.name === '銅牌會員'
+                        ? 'bronze-glow'
+                        : level.name === '銀牌會員'
+                          ? 'silver-glow'
+                          : level.name === '金牌會員'
+                            ? 'gold-glow'
+                            : level.name === '鑽石會員'
+                              ? 'diamond-glow'
+                              : ''
+                      : ''
+                  }`}
+                >
+                  {level.criteria}
+                </p>
+                <p
+                  className={`text-white flex-grow-1 z-2 small ${
+                    level.name === getMembershipLevel(totalSpent)
+                      ? level.name === '銅牌會員'
+                        ? 'bronze-glow'
+                        : level.name === '銀牌會員'
+                          ? 'silver-glow'
+                          : level.name === '金牌會員'
+                            ? 'gold-glow'
+                            : level.name === '鑽石會員'
+                              ? 'diamond-glow'
+                              : ''
+                      : ''
+                  }`}
+                >
+                  {level.benefits}
+                </p>
+              </div>
             </div>
-          </div>
-          );
+          )
         })}
       </div>
 
-      <style jsx>{`
-      // 基礎的會員卡片樣式，不確定會不會覆蓋到底下的。這邊的設置意義是什麼？
+      <style jsx global>{`
+        // 基礎的會員卡片樣式，不確定會不會覆蓋到底下的。這邊的設置意義是什麼？
         .membership-card {
           // background: rgba(148, 54, 54, 0.1);
           // backdrop-filter: blur(10px);
@@ -284,31 +307,55 @@ export default function MembershipLevels() {
           transition: all 0.3s ease;
           // box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-          // 銅等級的會員卡片樣式 - 加強銅色效果
+        // 銅等級的會員卡片樣式 - 加強銅色效果
         .membership-card.bronze {
-          background: linear-gradient(135deg, rgba(205, 127, 50, 0.7), rgba(184, 134, 11, 0.9)) !important;
+          background: linear-gradient(
+            135deg,
+            rgba(205, 127, 50, 0.7),
+            rgba(184, 134, 11, 0.9)
+          ) !important;
           backdrop-filter: blur(15px) !important;
           border: 2px solid rgba(255, 215, 0, 0.8) !important;
-          box-shadow: 0 4px 25px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+          box-shadow:
+            0 4px 25px rgba(255, 215, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
         }
         .membership-card.silver {
-          background: linear-gradient(135deg, rgba(192, 192, 192, 0.6), rgba(128, 128, 128, 0.6)) !important;
+          background: linear-gradient(
+            135deg,
+            rgba(192, 192, 192, 0.6),
+            rgba(128, 128, 128, 0.6)
+          ) !important;
           backdrop-filter: blur(15px) !important;
           border: 2px solid rgba(230, 230, 250, 0.8) !important;
-          box-shadow: 0 4px 25px rgba(230, 230, 250, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+          box-shadow:
+            0 4px 25px rgba(230, 230, 250, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
         }
         .membership-card.gold {
-          background: linear-gradient(135deg, rgba(255, 215, 0, 0.6), rgba(255, 165, 0, 0.6)) !important;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 215, 0, 0.6),
+            rgba(255, 165, 0, 0.6)
+          ) !important;
           backdrop-filter: blur(15px) !important;
           border: 2px solid rgba(255, 255, 0, 0.8) !important;
-          box-shadow: 0 4px 25px rgba(255, 255, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+          box-shadow:
+            0 4px 25px rgba(255, 255, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
         }
-          // 鑽石等級的會員卡片樣式
+        // 鑽石等級的會員卡片樣式
         .membership-card.diamond {
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(200, 200, 255, 0.6)) !important;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.6),
+            rgba(200, 200, 255, 0.6)
+          ) !important;
           backdrop-filter: blur(15px) !important;
           border: 2px solid rgba(255, 255, 255, 0.8) !important;
-          box-shadow: 0 4px 25px rgba(255, 255, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+          box-shadow:
+            0 4px 25px rgba(255, 255, 255, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
         }
         .membership-card::before {
           content: '';
@@ -343,7 +390,7 @@ export default function MembershipLevels() {
         .membership-title {
           font-size: 2rem;
           font-weight: 700;
-          background: linear-gradient(45deg, #E0B0FF, #805AF5, #FFFFFF);
+          background: linear-gradient(45deg, #e0b0ff, #805af5, #ffffff);
           background-size: 200% 200%;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -380,7 +427,7 @@ export default function MembershipLevels() {
         .icon-svg {
           width: 100%;
           height: 100%;
-          color: #E0B0FF;
+          color: #e0b0ff;
           filter: drop-shadow(0 0 8px rgba(224, 176, 255, 0.6));
           transition: all 0.3s ease;
         }
@@ -401,7 +448,7 @@ export default function MembershipLevels() {
           box-shadow: 0 8px 30px rgba(0, 191, 255, 0.5);
         }
         .membership-card:hover .icon-svg {
-          color: #FFFFFF;
+          color: #ffffff;
           transform: scale(1.1);
           filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.8));
         }
@@ -424,41 +471,41 @@ export default function MembershipLevels() {
         @keyframes bronzeGlow {
           0% {
             text-shadow: 0 0 5px rgba(255, 215, 0, 0.6);
-            color: #FFFFFF;
+            color: #ffffff;
           }
           100% {
             text-shadow: 0 0 15px rgba(255, 215, 0, 1);
-            color: #FFD700;
+            color: #ffd700;
           }
         }
         @keyframes silverGlow {
           0% {
             text-shadow: 0 0 5px rgba(192, 192, 192, 0.6);
-            color: #FFFFFF;
+            color: #ffffff;
           }
           100% {
             text-shadow: 0 0 15px rgba(192, 192, 192, 1);
-            color: #C0C0C0;
+            color: #c0c0c0;
           }
         }
         @keyframes goldGlow {
           0% {
             text-shadow: 0 0 5px rgba(255, 215, 0, 0.6);
-            color: #FFFFFF;
+            color: #ffffff;
           }
           100% {
             text-shadow: 0 0 15px rgba(255, 215, 0, 1);
-            color: #FFD700;
+            color: #ffd700;
           }
         }
         @keyframes diamondGlow {
           0% {
             text-shadow: 0 0 5px rgba(0, 191, 255, 0.6);
-            color: #FFFFFF;
+            color: #ffffff;
           }
           100% {
             text-shadow: 0 0 15px rgba(0, 191, 255, 1);
-            color: #00BFFF;
+            color: #00bfff;
           }
         }
       `}</style>

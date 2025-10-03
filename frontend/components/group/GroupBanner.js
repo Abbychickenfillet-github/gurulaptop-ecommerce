@@ -13,7 +13,7 @@ export default function GroupBanner({ groupData, onOpenDetail, onOpenJoin }) {
       const diffMins = Math.floor(diffMs / 60000)
       const diffHours = Math.floor(diffMins / 60)
       const diffDays = Math.floor(diffHours / 24)
-  
+
       if (diffDays > 0) {
         setTimeAgo(`${diffDays}天前發起揪團`)
       } else if (diffHours > 0) {
@@ -26,8 +26,6 @@ export default function GroupBanner({ groupData, onOpenDetail, onOpenJoin }) {
     }
     calculateTimeAgo()
   }, [groupData])
-
-  
 
   // 處理圖片路徑
   const getImageUrl = (imagePath) => {

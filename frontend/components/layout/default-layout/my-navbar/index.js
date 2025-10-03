@@ -71,7 +71,7 @@ export default function MyNavbar() {
         <ToturialPanel show={show} handleClose={handleClose} />
       </header>
       {/* hover動畫(下底線)，需要覆蓋原本global.scss樣式 */}
-      <style global jsx>{`
+      <style jsx global>{`
         @media screen and (min-width: 992px) {
           .navbar {
             padding: 0;

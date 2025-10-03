@@ -40,11 +40,11 @@ export default function CouponBtn({ price, setCouponValue }) {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
         {
           method: 'GET',
-          credentials: 'include',  // 添加這行來包含 c誤誤ookies
+          credentials: 'include', // 添加這行來包含 c誤誤ookies
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       )
 
       // if (!res.ok) {
@@ -136,11 +136,11 @@ export default function CouponBtn({ price, setCouponValue }) {
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
             {
               method: 'GET',
-              credentials: 'include',  // 添加這行來包含 cookies
+              credentials: 'include', // 添加這行來包含 cookies
               headers: {
                 'Content-Type': 'application/json',
               },
-            }
+            },
           )
 
           // if (!res.ok) {

@@ -37,93 +37,103 @@
 }
 
 /* 霓虹效果 */
-.alphabet:nth-child(5n+1).active {
+.alphabet:nth-child(5n + 1).active {
   animation-name: jumpCyber1;
 }
-.alphabet:nth-child(5n+2).active {
+.alphabet:nth-child(5n + 2).active {
   animation-name: jumpCyber2;
 }
-.alphabet:nth-child(5n+3).active {
+.alphabet:nth-child(5n + 3).active {
   animation-name: jumpCyber3;
 }
-.alphabet:nth-child(5n+4).active {
+.alphabet:nth-child(5n + 4).active {
   animation-name: jumpCyber4;
 }
-.alphabet:nth-child(5n+5).active {
+.alphabet:nth-child(5n + 5).active {
   animation-name: jumpCyber5;
 }
 
 @keyframes jumpCyber1 {
-  0%, 100% { 
-      transform: translateY(0) scale(1);
-      color: #ffffff;
-      text-shadow: none;
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    color: #ffffff;
+    text-shadow: none;
   }
   50% {
-      transform: translateY(-50px) scale(1.1);
-      color: #FF2E93;
-      text-shadow: 0 0 10px #FF2E93,
-                   0 0 20px #FF2E93,
-                   0 0 30px #FF2E93;
+    transform: translateY(-50px) scale(1.1);
+    color: #ff2e93;
+    text-shadow:
+      0 0 10px #ff2e93,
+      0 0 20px #ff2e93,
+      0 0 30px #ff2e93;
   }
 }
 
 @keyframes jumpCyber2 {
-  0%, 100% { 
-      transform: translateY(0) scale(1);
-      color: #ffffff;
-      text-shadow: none;
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    color: #ffffff;
+    text-shadow: none;
   }
   50% {
-      transform: translateY(-50px) scale(1.1);
-      color: #B829FF;
-      text-shadow: 0 0 10px #B829FF,
-                   0 0 20px #B829FF,
-                   0 0 30px #B829FF;
+    transform: translateY(-50px) scale(1.1);
+    color: #b829ff;
+    text-shadow:
+      0 0 10px #b829ff,
+      0 0 20px #b829ff,
+      0 0 30px #b829ff;
   }
 }
 
 @keyframes jumpCyber3 {
-  0%, 100% { 
-      transform: translateY(0) scale(1);
-      color: #ffffff;
-      text-shadow: none;
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    color: #ffffff;
+    text-shadow: none;
   }
   50% {
-      transform: translateY(-50px) scale(1.1);
-      color: #17E7FF;
-      text-shadow: 0 0 10px #17E7FF,
-                   0 0 20px #17E7FF,
-                   0 0 30px #17E7FF;
+    transform: translateY(-50px) scale(1.1);
+    color: #17e7ff;
+    text-shadow:
+      0 0 10px #17e7ff,
+      0 0 20px #17e7ff,
+      0 0 30px #17e7ff;
   }
 }
 
 @keyframes jumpCyber4 {
-  0%, 100% { 
-      transform: translateY(0) scale(1);
-      color: #ffffff;
-      text-shadow: none;
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    color: #ffffff;
+    text-shadow: none;
   }
   50% {
-      transform: translateY(-50px) scale(1.1);
-      color: #37ff1421;
-      text-shadow: 0 0 10px #37ff1421,
-                   0 0 20px #37ff1421,
-                   0 0 30px #37ff1421;
+    transform: translateY(-50px) scale(1.1);
+    color: #37ff1421;
+    text-shadow:
+      0 0 10px #37ff1421,
+      0 0 20px #37ff1421,
+      0 0 30px #37ff1421;
   }
 }
 
 @keyframes jumpCyber5 {
-  0%, 100% { 
-      transform: translateY(0) scale(1);
-      color: #ffffff;
-      text-shadow: none;
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    color: #ffffff;
+    text-shadow: none;
   }
   50% {
-      transform: translateY(-50px) scale(1.1);
-      color: #FFFFFF;
-      text-shadow: 0 0 10px #FFFFFF,
-                   0 0 20px #FFFFFF,
-                   0 0 30px #FFFFFF;
+    transform: translateY(-50px) scale(1.1);
+    color: #ffffff;
+    text-shadow:
+      0 0 10px #ffffff,
+      0 0 20px #ffffff,
+      0 0 30px #ffffff;
   }
 }

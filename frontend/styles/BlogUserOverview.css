@@ -12,7 +12,13 @@
 }
 
 .BlogUserOverviewCard:hover {
-  background: linear-gradient(270deg, #a793e9 0%, #5346b6 35%, #34246d 70%, #271948 100%);
+  background: linear-gradient(
+    270deg,
+    #a793e9 0%,
+    #5346b6 35%,
+    #34246d 70%,
+    #271948 100%
+  );
 }
 
 .BlogUserOverviewCardBodyContent {
@@ -97,4 +103,4 @@
   font-size: 2rem;
 }
 
-/* ------------------------------------搜尋欄------------------------------------ *//*# sourceMappingURL=BlogUserOverview.css.map */
+/* ------------------------------------搜尋欄------------------------------------ */ /*# sourceMappingURL=BlogUserOverview.css.map */

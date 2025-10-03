@@ -31,7 +31,13 @@
   height: 100vh;
   min-width: 1000px;
   filter: blur(80px);
-  background: conic-gradient(from 180deg at 50% 50%, #ae00ff 0deg, #000000 120deg, #10035c 240deg, #7500c4 360deg);
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    #ae00ff 0deg,
+    #000000 120deg,
+    #10035c 240deg,
+    #7500c4 360deg
+  );
   transform-origin: center;
   animation: spinBlob 8s linear infinite;
 }
@@ -39,14 +45,22 @@
 .glow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(0, 0, 0, 0) 70%
+  );
   animation: pulse 4s ease-in-out infinite;
 }
 
 .particles {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle at 20% 30%, #fff 1px, transparent 1px), radial-gradient(circle at 80% 40%, #fff 1px, transparent 1px), radial-gradient(circle at 40% 70%, #fff 1px, transparent 1px), radial-gradient(circle at 60% 20%, #fff 1px, transparent 1px);
+  background-image:
+    radial-gradient(circle at 20% 30%, #fff 1px, transparent 1px),
+    radial-gradient(circle at 80% 40%, #fff 1px, transparent 1px),
+    radial-gradient(circle at 40% 70%, #fff 1px, transparent 1px),
+    radial-gradient(circle at 60% 20%, #fff 1px, transparent 1px);
   background-size: 100% 100%;
   opacity: 0.3;
   animation: sparkle 6s linear infinite;
@@ -61,7 +75,8 @@
   }
 }
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.3;
   }
   50% {
@@ -103,7 +118,8 @@
   bottom: 70px;
   right: 0;
   z-index: 2;
-  animation: slideInRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards 0.3s;
+  animation: slideInRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards
+    0.3s;
 }
 
 .home-laptop {
@@ -118,7 +134,8 @@
   bottom: 0;
   right: 0;
   z-index: 2;
-  animation: slideInRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards 0.3s;
+  animation: slideInRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards
+    0.3s;
 }
 
 .home-welcome span,
@@ -287,7 +304,7 @@
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   transition: all 0.5s ease;
 }
 
@@ -368,15 +385,36 @@
 
 /* 背景圖片*/
 .home-two {
-  background: linear-gradient(0deg, rgba(154, 122, 204, 0.9) 0%, rgba(154, 122, 204, 0.9) 100%), url(/images/index/laptop-banner.jpg) lightgray -684.93px 0px/1495.391% 100% no-repeat;
+  background:
+    linear-gradient(
+      0deg,
+      rgba(154, 122, 204, 0.9) 0%,
+      rgba(154, 122, 204, 0.9) 100%
+    ),
+    url(/images/index/laptop-banner.jpg) lightgray -684.93px 0px/1495.391% 100%
+      no-repeat;
 }
 
 .home-three {
-  background: linear-gradient(0deg, rgba(110, 50, 203, 0.9) 0%, rgba(110, 50, 203, 0.9) 100%), url(/images/index/laptop-banner.jpg) lightgray -1191.113px -65.651px/1495.391% 100% no-repeat;
+  background:
+    linear-gradient(
+      0deg,
+      rgba(110, 50, 203, 0.9) 0%,
+      rgba(110, 50, 203, 0.9) 100%
+    ),
+    url(/images/index/laptop-banner.jpg)
+      lightgray -1191.113px -65.651px/1495.391% 100% no-repeat;
 }
 
 .home-four {
-  background: linear-gradient(0deg, rgba(101, 32, 239, 0.9) 0%, rgba(101, 32, 239, 0.9) 100%), url(/images/index/laptop-banner.jpg) lightgray -684.93px 0px/1495.391% 100% no-repeat;
+  background:
+    linear-gradient(
+      0deg,
+      rgba(101, 32, 239, 0.9) 0%,
+      rgba(101, 32, 239, 0.9) 100%
+    ),
+    url(/images/index/laptop-banner.jpg) lightgray -684.93px 0px/1495.391% 100%
+      no-repeat;
 }
 
 /* RWD 設置 */
@@ -495,8 +533,20 @@
   overflow: hidden;
   width: 100%;
   position: relative;
-  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
 }
 
 .home-marquee-content3 {
@@ -697,13 +747,17 @@
 }
 
 .home-pic div::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(128, 90, 245, 0.7));
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.7),
+    rgba(128, 90, 245, 0.7)
+  );
   opacity: 0;
   transition: all 0.3s ease;
   transform: translateY(100%);
@@ -773,13 +827,17 @@
 }
 
 .home-pic-box::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(128, 90, 245, 0.7));
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.7),
+    rgba(128, 90, 245, 0.7)
+  );
   opacity: 0;
   transition: all 0.3s ease;
   transform: translateY(100%);
@@ -1022,7 +1080,7 @@
   max-width: 100%;
   height: auto;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 
 .home-nav-arrows {
@@ -1187,7 +1245,7 @@
   height: 100%;
   transition: all 0.3s ease;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 
 .home-pic1:hover img,
@@ -1313,7 +1371,7 @@
   background: rgba(255, 255, 255, 0.6);
   box-shadow: 0px 0px 20px 2px #8c6fe5;
   -webkit-backdrop-filter: blur(5px);
-          backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
   transition: all 0.3s ease;
   position: absolute;
   bottom: 5%;
@@ -1351,7 +1409,7 @@
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   transition: transform 0.3s ease;
 }
 
@@ -1383,7 +1441,7 @@
 }
 
 .home-article-text {
-  color: #B4B4B4;
+  color: #b4b4b4;
   font-size: var(--h9-font-size);
   line-height: 1.5;
   letter-spacing: 3.2px;
@@ -1394,13 +1452,17 @@
 }
 
 .home-article-content::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at center, rgba(183, 0, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+  background: radial-gradient(
+    circle at center,
+    rgba(183, 0, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -1426,7 +1488,7 @@
 }
 
 .home-article-content::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -1704,7 +1766,7 @@
   background: rgba(255, 255, 255, 0.6);
   box-shadow: 0px 0px 20px 2px #8c6fe5;
   -webkit-backdrop-filter: blur(5px);
-          backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
   transition: all 0.3s ease;
   display: flex;
   justify-content: center;
@@ -1852,13 +1914,17 @@
 }
 
 .home-activity-frame::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5));
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.5)
+  );
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 1;
@@ -1891,13 +1957,17 @@
 }
 
 .home-activity-card3::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5));
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.5)
+  );
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 1;
@@ -2063,7 +2133,8 @@
 }
 /* 基本樣式設定 */
 .home-activity-card-content1,
-.home-activity-card-content2 { /* 移除 p，直接選擇整個 content 區塊 */
+.home-activity-card-content2 {
+  /* 移除 p，直接選擇整個 content 區塊 */
   opacity: 0;
   transform: translateY(20px);
   transition: all 0.3s ease;
@@ -2076,7 +2147,8 @@
 .home-activity-frame:hover .home-activity-card-content1,
 .home-activity-card3:hover .home-activity-card-title,
 .home-activity-card3:hover .home-activity-card-content2,
-.home-activity-card4:hover .home-activity-card-content2 { /* 修改這裡，移除 p */
+.home-activity-card4:hover .home-activity-card-content2 {
+  /* 修改這裡，移除 p */
   opacity: 1;
   transform: translateY(0);
 }
@@ -2085,13 +2157,17 @@
 .home-activity-frame::before,
 .home-activity-card3::before,
 .home-activity-card4::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.7));
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.7)
+  );
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 1;
@@ -2099,7 +2175,8 @@
 
 .home-activity-frame:hover::before,
 .home-activity-card3:hover::before,
-.home-activity-card4:hover::before { /* 加上 hover */
+.home-activity-card4:hover::before {
+  /* 加上 hover */
   opacity: 1;
 }
 
@@ -2112,14 +2189,17 @@
 }
 
 .home-activity-card4::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--Linear-6, linear-gradient(270deg, #8678c9 0%, #00013a 49%, #00013a 100%));
+  background: var(
+    --Linear-6,
+    linear-gradient(270deg, #8678c9 0%, #00013a 49%, #00013a 100%)
+  );
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 0;
-}/*# sourceMappingURL=frontPage.css.map */
+} /*# sourceMappingURL=frontPage.css.map */

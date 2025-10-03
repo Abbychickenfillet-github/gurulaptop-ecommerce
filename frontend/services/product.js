@@ -9,11 +9,11 @@ import { useState } from 'react'
 export const getProducts = async (
   searchCriteria = {},
   pageNow = 1,
-  perpage = 10
+  perpage = 10,
 ) => {
   const searchParams = new URLSearchParams(searchCriteria)
   return await axiosInstance.get(
-    `/products?&page=${pageNow}&perpage=${perpage}&${searchParams.toString()}`
+    `/products?&page=${pageNow}&perpage=${perpage}&${searchParams.toString()}`,
   )
 }
 
@@ -51,7 +51,7 @@ export const useProduct = (searchCriteria = {}, pageNow = 1, perpage = 10) => {
 
   const { data, error, isLoading } = useSWR(
     `/products?&page=${pageNow}&perpage=${perpage}&${searchParams.toString()}`,
-    fetchProducts
+    fetchProducts,
   )
 
   return {
@@ -91,7 +91,7 @@ const loadProductItems = async (
   startCursor = 0, // 開始指標 startCursor / perpage + 1 = pageNow
   searchCriteria = {},
   perpage = 20,
-  maxItems = 400
+  maxItems = 400,
 ) => {
   const searchParams = new URLSearchParams(searchCriteria)
 
@@ -99,7 +99,7 @@ const loadProductItems = async (
   const page = startCursor ? startCursor / perpage + 1 : 1
 
   const res = await axiosInstance.get(
-    `/products?&page=${page}&perpage=${perpage}&${searchParams.toString()}`
+    `/products?&page=${page}&perpage=${perpage}&${searchParams.toString()}`,
   )
 
   // 發生錯誤時，停止無限載入
@@ -122,7 +122,7 @@ const loadProductItems = async (
 export function useLoadProductItems(
   searchCriteria = {},
   perpage = 20,
-  maxItems = 400
+  maxItems = 400,
 ) {
   // TODO: 這裡要能在searchCriteria改變時，重置資料
   // implement resetAll function when searchCriteria changed
@@ -139,7 +139,7 @@ export function useLoadProductItems(
         items.length,
         searchCriteria,
         perpage,
-        maxItems
+        maxItems,
       )
       setItems((current) => [...current, ...data])
       setHasNextPage(newHasNextPage)
@@ -190,7 +190,7 @@ export function useLoadItems() {
     setLoading(true)
     try {
       const { data, hasNextPage: newHasNextPage } = await loadItems(
-        items.length
+        items.length,
       )
       setItems((current) => [...current, ...data])
       setHasNextPage(newHasNextPage)

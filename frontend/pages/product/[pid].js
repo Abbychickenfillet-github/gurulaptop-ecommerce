@@ -61,7 +61,7 @@ export default function Detail() {
   // 初始化
   // useEffect(() => {
   //   init()
-    // 這個初始化函式是做什麼用的？是原生的嗎？
+  // 這個初始化函式是做什麼用的？是原生的嗎？
   // }, [userData, pid, init]) // 確保在 userData 和 pid 改變時重新執行
 
   // 新增訊息到陣列
@@ -118,15 +118,11 @@ export default function Detail() {
 
   // 使用 useCallback 優化圖片切換函數
   const preImage = useCallback(() => {
-    setCurrentImageIndex(prev => 
-      prev === 0 ? imgData.length - 1 : prev - 1
-    )
+    setCurrentImageIndex((prev) => (prev === 0 ? imgData.length - 1 : prev - 1))
   }, [imgData.length])
 
   const nextImage = useCallback(() => {
-    setCurrentImageIndex(prev => 
-      prev === imgData.length - 1 ? 0 : prev + 1
-    )
+    setCurrentImageIndex((prev) => (prev === imgData.length - 1 ? 0 : prev + 1))
   }, [imgData.length])
   // 取得相關商品
   const [relatedProducts, setRelatedProducts] = useState(null)

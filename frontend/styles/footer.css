@@ -1,6 +1,10 @@
 @charset "UTF-8";
 footer {
-  background: radial-gradient(135.76% 131.62% at 50% 158.38%, #5A2D98 0%, #000 100%);
+  background: radial-gradient(
+    135.76% 131.62% at 50% 158.38%,
+    #5a2d98 0%,
+    #000 100%
+  );
   width: 100%;
 }
 
@@ -44,4 +48,4 @@ footer {
   .footer-logo {
     height: 50px;
   }
-}/*# sourceMappingURL=footer.css.map */
+} /*# sourceMappingURL=footer.css.map */

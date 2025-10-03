@@ -2,7 +2,7 @@
 .eventDetail-wrapper {
   min-height: 100vh;
   background-color: #0a0a0a;
-  background-image: url("../public/images/event/event-bg.jpg");
+  background-image: url('../public/images/event/event-bg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -16,7 +16,7 @@
 }
 
 .eventDetail-wrapper::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -32,7 +32,7 @@
 
 .eventDetail-navbar {
   -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
@@ -47,7 +47,7 @@
   height: auto;
   border-radius: 12px;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 
 .eventDetail-infoBox {
@@ -70,7 +70,7 @@
 }
 
 .eventDetail-rulesList li::before {
-  content: "•";
+  content: '•';
   position: absolute;
   left: 0;
   color: #a2050d;
@@ -97,4 +97,4 @@
   .eventDetail-content .row {
     margin: 0;
   }
-}/*# sourceMappingURL=eventDetail.css.map */
+} /*# sourceMappingURL=eventDetail.css.map */

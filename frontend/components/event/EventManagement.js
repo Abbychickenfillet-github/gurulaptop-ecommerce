@@ -76,16 +76,16 @@ const EventManagement = () => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events/${eventId}/registration`,
-        { 
+        {
           method: 'DELETE',
           credentials: 'include',
-        }
+        },
       )
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      
+
       const result = await response.json()
 
       if (result.code === 200) {
@@ -181,64 +181,24 @@ const EventManagement = () => {
           </div>
         </div>
 
-        {events && events.length > 0 ? events.map((event) => (
-          <div key={event.id} className={styles.listRow}>
-            {/* 桌面版視圖 */}
-            <div className="row align-items-center d-none d-md-flex">
-              <div className="col-2">
-                <Link href={`/event/eventDetail/${event.id}`}>
-                  <Image
-                    src={getImageUrl(event.picture)}
-                    alt={event.name}
-                    className={styles.groupImg}
-                    onError={(e) => {
-                      e.target.src = '/images/event-default.png'
-                    }}
-                  />
-                </Link>
-              </div>
-              <div className="col-3">
-                <Link
-                  href={`/event/eventDetail/${event.id}`}
-                  className={styles.eventLink}
-                >
-                  {event.name}
-                </Link>
-              </div>
-              <div className="col-2">{formatDate(event.eventStartTime)}</div>
-              <div className="col-2">
-                {event.currentParticipants}/{event.maxPeople}
-              </div>
-              <div className="col-2">{event.status}</div>
-              <div className="col-1">
-                {event.status !== '已結束' && (
-                  <button
-                    className={styles.actionBtn}
-                    onClick={() => handleCancelRegistration(event.id)}
-                    title="取消報名"
-                  >
-                    <i className="bi bi-x-circle"></i>
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* 手機版視圖 */}
-            <div className={`${styles.mobileLayout} d-block d-md-none`}>
-              <div className={styles.mobileImgWrapper}>
-                <Link href={`/event/eventDetail/${event.id}`}>
-                  <Image
-                    src={getImageUrl(event.picture)}
-                    alt={event.name}
-                    className={styles.groupImg}
-                    onError={(e) => {
-                      e.target.src = '/images/event-default.png'
-                    }}
-                  />
-                </Link>
-              </div>
-              <div className={styles.mobileInfo}>
-                <div className={styles.mobileTitle}>
+        {events && events.length > 0 ? (
+          events.map((event) => (
+            <div key={event.id} className={styles.listRow}>
+              {/* 桌面版視圖 */}
+              <div className="row align-items-center d-none d-md-flex">
+                <div className="col-2">
+                  <Link href={`/event/eventDetail/${event.id}`}>
+                    <Image
+                      src={getImageUrl(event.picture)}
+                      alt={event.name}
+                      className={styles.groupImg}
+                      onError={(e) => {
+                        e.target.src = '/images/event-default.png'
+                      }}
+                    />
+                  </Link>
+                </div>
+                <div className="col-3">
                   <Link
                     href={`/event/eventDetail/${event.id}`}
                     className={styles.eventLink}
@@ -246,37 +206,79 @@ const EventManagement = () => {
                     {event.name}
                   </Link>
                 </div>
-                <div className={styles.mobileDetails}>
-                  <div className={styles.mobileStats}>
-                    <span>
-                      <i className="bi bi-clock"></i>
-                      {formatDate(event.eventStartTime)}
-                    </span>
-                    <span>
-                      <i className="bi bi-people"></i>
-                      {event.currentParticipants}/{event.maxPeople}
-                    </span>
-                    <span>
-                      <i className="bi bi-flag"></i>
-                      {event.status}
-                    </span>
-                  </div>
+                <div className="col-2">{formatDate(event.eventStartTime)}</div>
+                <div className="col-2">
+                  {event.currentParticipants}/{event.maxPeople}
+                </div>
+                <div className="col-2">{event.status}</div>
+                <div className="col-1">
                   {event.status !== '已結束' && (
-                    <div className={styles.mobileActions}>
-                      <button
-                        className={styles.actionBtn}
-                        onClick={() => handleCancelRegistration(event.id)}
-                        title="取消報名"
-                      >
-                        <i className="bi bi-x-circle"></i>
-                      </button>
-                    </div>
+                    <button
+                      className={styles.actionBtn}
+                      onClick={() => handleCancelRegistration(event.id)}
+                      title="取消報名"
+                    >
+                      <i className="bi bi-x-circle"></i>
+                    </button>
                   )}
                 </div>
               </div>
+
+              {/* 手機版視圖 */}
+              <div className={`${styles.mobileLayout} d-block d-md-none`}>
+                <div className={styles.mobileImgWrapper}>
+                  <Link href={`/event/eventDetail/${event.id}`}>
+                    <Image
+                      src={getImageUrl(event.picture)}
+                      alt={event.name}
+                      className={styles.groupImg}
+                      onError={(e) => {
+                        e.target.src = '/images/event-default.png'
+                      }}
+                    />
+                  </Link>
+                </div>
+                <div className={styles.mobileInfo}>
+                  <div className={styles.mobileTitle}>
+                    <Link
+                      href={`/event/eventDetail/${event.id}`}
+                      className={styles.eventLink}
+                    >
+                      {event.name}
+                    </Link>
+                  </div>
+                  <div className={styles.mobileDetails}>
+                    <div className={styles.mobileStats}>
+                      <span>
+                        <i className="bi bi-clock"></i>
+                        {formatDate(event.eventStartTime)}
+                      </span>
+                      <span>
+                        <i className="bi bi-people"></i>
+                        {event.currentParticipants}/{event.maxPeople}
+                      </span>
+                      <span>
+                        <i className="bi bi-flag"></i>
+                        {event.status}
+                      </span>
+                    </div>
+                    {event.status !== '已結束' && (
+                      <div className={styles.mobileActions}>
+                        <button
+                          className={styles.actionBtn}
+                          onClick={() => handleCancelRegistration(event.id)}
+                          title="取消報名"
+                        >
+                          <i className="bi bi-x-circle"></i>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        )) : (
+          ))
+        ) : (
           <div className="alert alert-info m-3" role="alert">
             <i className="bi bi-info-circle me-2"></i>
             目前沒有報名的活動

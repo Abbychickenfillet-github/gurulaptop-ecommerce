@@ -10,7 +10,15 @@
 .compare_container {
   box-sizing: border-box;
   padding: 0px;
-  background: linear-gradient(333deg, #6835a6 9.79%, #150928 27.32%, #000 49.97%, #1b1956 72.85%, #402bb0 86.53%, #d0bcff 98.34%);
+  background: linear-gradient(
+    333deg,
+    #6835a6 9.79%,
+    #150928 27.32%,
+    #000 49.97%,
+    #1b1956 72.85%,
+    #402bb0 86.53%,
+    #d0bcff 98.34%
+  );
 }
 
 /* Container for Boxes */
@@ -106,4 +114,4 @@
 
 .clear_compare.active {
   display: flex;
-}/*# sourceMappingURL=compare.module.css.map */
+} /*# sourceMappingURL=compare.module.css.map */

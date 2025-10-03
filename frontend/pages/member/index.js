@@ -4,18 +4,21 @@ import { useEffect } from 'react'
 // only redirect to member/login
 export default function MemberIndex() {
   const router = useRouter()
-  
+
   useEffect(() => {
     // 延遲重定向，避免與認證檢查衝突
     const timer = setTimeout(() => {
       router.push('/member/login')
     }, 100)
-    
+
     return () => clearTimeout(timer)
   }, [router])
-  
+
   return (
-    <div className="d-flex justify-content-center align-items-center" style={{ height: '50vh' }}>
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: '50vh' }}
+    >
       <div className="spinner-border text-primary" role="status">
         <span className="visually-hidden">載入中...</span>
       </div>

@@ -4,8 +4,12 @@ import dynamic from 'next/dynamic'
 import { PacmanLoader } from 'react-spinners'
 
 // 動態載入元件（client only）
-export const CatLoader = dynamic(() => import('./CatLoaderOnlyClient'), { ssr: false })
-export const NikeLoader = dynamic(() => import('./NikeLoaderOnlyClient'), { ssr: false })
+export const CatLoader = dynamic(() => import('./CatLoaderOnlyClient'), {
+  ssr: false,
+})
+export const NikeLoader = dynamic(() => import('./NikeLoaderOnlyClient'), {
+  ssr: false,
+})
 
 export function DefaultLoader({ show = true }) {
   return (

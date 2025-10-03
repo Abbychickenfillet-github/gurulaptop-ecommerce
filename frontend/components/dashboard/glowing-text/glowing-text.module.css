@@ -97,14 +97,27 @@
 }
 
 @keyframes animate {
-  0%, 100% {
+  0%,
+  100% {
     color: #fff;
     filter: blur(2px);
-    text-shadow: 0 0 10px #8b5cf6, 0 0 20px #8b5cf6, 0 0 40px #8b5cf6, 0 0 60px #8b5cf6, 0 0 80px #8b5cf6, 0 0 100px #8b5cf6, 0 0 120px #8b5cf6, 0 0 140px #8b5cf6, 0 0 160px #8b5cf6, 0 0 180px #8b5cf6, 0 0 200px #8b5cf6;
+    text-shadow:
+      0 0 10px #8b5cf6,
+      0 0 20px #8b5cf6,
+      0 0 40px #8b5cf6,
+      0 0 60px #8b5cf6,
+      0 0 80px #8b5cf6,
+      0 0 100px #8b5cf6,
+      0 0 120px #8b5cf6,
+      0 0 140px #8b5cf6,
+      0 0 160px #8b5cf6,
+      0 0 180px #8b5cf6,
+      0 0 200px #8b5cf6;
   }
-  5%, 95% {
+  5%,
+  95% {
     color: #f1f1f1;
     filter: blur(0px);
     text-shadow: none;
   }
-}/*# sourceMappingURL=glowing-text.module.css.map */
+} /*# sourceMappingURL=glowing-text.module.css.map */

@@ -23,33 +23,37 @@ export default function UserList({
     if (currentUser) {
       const fetchInitialData = async () => {
         try {
-          const [pendingResponse, historyResponse, chatsResponse, groupsResponse] =
-            await Promise.all([
-              fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/pending`,
-                {
-                  credentials: 'include',
-                },
-              ),
-              fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/history`,
-                {
-                  credentials: 'include',
-                },
-              ),
-              fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/messages/private`,
-                {
-                  credentials: 'include',
-                },
-              ),
-              fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/user/groups`,
-                {
-                  credentials: 'include',
-                },
-              ),
-            ])
+          const [
+            pendingResponse,
+            historyResponse,
+            chatsResponse,
+            groupsResponse,
+          ] = await Promise.all([
+            fetch(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/pending`,
+              {
+                credentials: 'include',
+              },
+            ),
+            fetch(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/requests/history`,
+              {
+                credentials: 'include',
+              },
+            ),
+            fetch(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/messages/private`,
+              {
+                credentials: 'include',
+              },
+            ),
+            fetch(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/user/groups`,
+              {
+                credentials: 'include',
+              },
+            ),
+          ])
 
           const [pendingData, historyData, chatsData, groupsData] =
             await Promise.all([
@@ -73,7 +77,9 @@ export default function UserList({
               }
             })
 
-            const activeUsers = users.filter((user) => chatUsers.has(user.user_id))
+            const activeUsers = users.filter((user) =>
+              chatUsers.has(user.user_id),
+            )
             setMyPrivateChats(activeUsers)
           }
 

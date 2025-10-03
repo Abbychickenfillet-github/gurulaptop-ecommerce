@@ -30,7 +30,9 @@ export default function BlogComment() {
 
   useEffect(() => {
     if (blog_id) {
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-comment/${blog_id}`)
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blog/blog-comment/${blog_id}`,
+      )
         .then((response) => response.json())
         .then((data) => {
           const commentArray = Array.isArray(data) ? data : []
@@ -70,7 +72,7 @@ export default function BlogComment() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(commentData),
-        }
+        },
       )
 
       if (response.ok) {
@@ -122,11 +124,12 @@ export default function BlogComment() {
                 <Image
                   className="w-100 h-100 object-fit-cover"
                   src={
-                    comment.image_path && comment.image_path.startsWith('data:image')
+                    comment.image_path &&
+                    comment.image_path.startsWith('data:image')
                       ? comment.image_path
                       : comment.image_path
-                      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${comment.image_path}`
-                      : 'https://th.bing.com/th/id/R.88c444f63f40cfa9b49801f826befa80?rik=QAme0H3xbxieEQ&pid=ImgRaw&r=0'
+                        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${comment.image_path}`
+                        : 'https://th.bing.com/th/id/R.88c444f63f40cfa9b49801f826befa80?rik=QAme0H3xbxieEQ&pid=ImgRaw&r=0'
                   }
                   alt={comment.name || '匿名用戶'}
                   width={50}

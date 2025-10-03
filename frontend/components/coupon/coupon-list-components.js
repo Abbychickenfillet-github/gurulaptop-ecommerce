@@ -48,9 +48,9 @@ export default function CouponList() {
        */
       const resData = await res.json()
 
-             if (resData.data?.coupons) {
-         setCouponDataList(resData.data.coupons)
-       }
+      if (resData.data?.coupons) {
+        setCouponDataList(resData.data.coupons)
+      }
     } catch (err) {
       setError('獲取優惠券資料失敗')
       console.error(err)
@@ -86,8 +86,6 @@ export default function CouponList() {
         },
       )
 
-
-
       const getUserCoupons = async (userId) => {
         try {
           const res = await fetch(
@@ -108,14 +106,14 @@ export default function CouponList() {
 
       const addResult = await addResponse.json()
 
-             if (addResult.status === 'success') {
-         MySwal.fire({
-           icon: 'success',
-           title: '領取成功！',
-           text: '優惠券已加入您的帳戶',
-         })
-         getCouponData()
-       } else {
+      if (addResult.status === 'success') {
+        MySwal.fire({
+          icon: 'success',
+          title: '領取成功！',
+          text: '優惠券已加入您的帳戶',
+        })
+        getCouponData()
+      } else {
         MySwal.fire({
           icon: 'error',
           title: '領取失敗',

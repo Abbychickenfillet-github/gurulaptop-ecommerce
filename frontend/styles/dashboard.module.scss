@@ -1,16 +1,16 @@
-.aside{
+.aside {
   float: left;
 }
-.right{
-  float:right;
+.right {
+  float: right;
 }
 /* 我是想說邊緣都要一樣  */
-.purple-border{
-  border: #805AF5 solid 1px;
+.purple-border {
+  border: #805af5 solid 1px;
   background-color: aliceblue;
 }
-.profile-button{
-  &:hover{
+.profile-button {
+  &:hover {
     color: white;
   }
 }

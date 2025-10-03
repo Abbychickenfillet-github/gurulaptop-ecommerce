@@ -18,7 +18,7 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
           },
         )
         const data = await response.json()
-  
+
         if (data.status === 'success') {
           setMembers(data.data.group.members || [])
         }
@@ -30,8 +30,6 @@ const GroupDetailModal = ({ onClose, groupData, onJoin }) => {
     }
     fetchGroupMembers()
   }, [groupData.id])
-
-  
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) return DEFAULT_AVATAR

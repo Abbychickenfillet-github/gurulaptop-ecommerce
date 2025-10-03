@@ -33,6 +33,7 @@
     "import/no-unresolved": "off",
     "import/namespace": "off",
     "import/default": "off",
-    "import/named": "off"
+    "import/named": "off",
+    "react/no-unknown-property": ["error", {"ignore": ["jsx", "global"]}]
   }
 }

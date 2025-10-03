@@ -8,7 +8,6 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 
 export default function CouponPageJquery() {
-
   return (
     <div className="container">
       <div className="row d-flex justify-content-center">

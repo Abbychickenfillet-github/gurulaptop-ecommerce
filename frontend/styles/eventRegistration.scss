@@ -1,35 +1,35 @@
 .eventRegistration-wrapper {
-    min-height: 100vh;
-    background-color: #0a0a0a;
-    background-image: url("../public/images/event/event-bg.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    min-height: 100vh;
-    position: relative;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 0;
-    margin: 0; 
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  background-image: url('../public/images/event/event-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  position: relative;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0;
+  margin: 0;
 }
 
 .eventRegistration-wrapper::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(55, 5, 67, 0.3);
-  }
-  
-  /* 確保內容在遮罩上層 */
-  .eventRegistration-wrapper > * {
-    position: relative;
-    z-index: 1;
-  }
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(55, 5, 67, 0.3);
+}
+
+/* 確保內容在遮罩上層 */
+.eventRegistration-wrapper > * {
+  position: relative;
+  z-index: 1;
+}
 
 .eventRegistration-card {
   background: rgba(255, 255, 255, 0.1);
@@ -164,7 +164,7 @@
 }
 
 /* Placeholder 選項樣式 */
-.groupRegistration-select option[value=""] {
+.groupRegistration-select option[value=''] {
   color: rgba(255, 255, 255, 0.5) !important;
 }
 

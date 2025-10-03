@@ -30,17 +30,17 @@ export default function Compare() {
 
     async function fetchProduct() {
       if (compareProduct.length === 0) return
-      
+
       try {
         if (compareProduct.length === 1) {
           const responseFirst = await fetch(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/${compareProduct[0]}`,
           )
-          
+
           if (!responseFirst.ok) {
             throw new Error(`HTTP error! status: ${responseFirst.status}`)
           }
-          
+
           const dataFirst = await responseFirst.json()
           // 檢查回應結構，支援兩種格式
           const productFirst = dataFirst?.data?.product || dataFirst?.data
@@ -54,20 +54,22 @@ export default function Compare() {
               `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/${compareProduct[1]}`,
             ),
           ])
-          
+
           if (!responseFirst.ok || !responseSecond.ok) {
-            throw new Error(`HTTP error! status: ${responseFirst.status || responseSecond.status}`)
+            throw new Error(
+              `HTTP error! status: ${responseFirst.status || responseSecond.status}`,
+            )
           }
-          
+
           const [dataFirst, dataSecond] = await Promise.all([
             responseFirst.json(),
             responseSecond.json(),
           ])
-          
+
           // 檢查回應結構，支援兩種格式
           const productFirst = dataFirst?.data?.product || dataFirst?.data
           const productSecond = dataSecond?.data?.product || dataSecond?.data
-          
+
           setProductDataFirst(productFirst)
           setProductDataSecond(productSecond)
         }
@@ -201,27 +203,27 @@ export default function Compare() {
               height={300}
             />
             <div className={`${styles.compare_specifications}`}>
-                             <p>名稱：{productDataSecond?.product_name}</p>
-               <p>型號： {productDataSecond?.model}</p>
-               <p>廠牌： {productDataSecond?.product_brand}</p>
+              <p>名稱：{productDataSecond?.product_name}</p>
+              <p>型號： {productDataSecond?.model}</p>
+              <p>廠牌： {productDataSecond?.product_brand}</p>
 
-               <p>
-                 價格：{' '}
-                 {`NT ${new Intl.NumberFormat('zh-TW').format(
-                   productDataSecond?.list_price,
-                 )}元`}
-               </p>
-               <p>用途： {productDataSecond?.affordance}</p>
-               <p>處理器： {productDataSecond?.product_CPU}</p>
+              <p>
+                價格：{' '}
+                {`NT ${new Intl.NumberFormat('zh-TW').format(
+                  productDataSecond?.list_price,
+                )}元`}
+              </p>
+              <p>用途： {productDataSecond?.affordance}</p>
+              <p>處理器： {productDataSecond?.product_CPU}</p>
 
-               <p>記憶體： {productDataSecond?.product_RAM}</p>
+              <p>記憶體： {productDataSecond?.product_RAM}</p>
 
-               <p>
-                 硬碟： {productDataSecond?.product_hardisk_type}{' '}
-                 {productDataSecond?.product_hardisk_volume}
-               </p>
+              <p>
+                硬碟： {productDataSecond?.product_hardisk_type}{' '}
+                {productDataSecond?.product_hardisk_volume}
+              </p>
 
-               <p>作業系統： {productDataSecond?.product_OS}</p>
+              <p>作業系統： {productDataSecond?.product_OS}</p>
 
               {productDataSecond?.discrete_display_card == 'yes' ? (
                 <p>顯示卡： {productDataSecond?.product_display_card}</p>

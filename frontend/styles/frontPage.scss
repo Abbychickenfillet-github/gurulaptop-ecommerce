@@ -55,11 +55,8 @@
 .particles {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(
-      circle at 20% 30%,
-      #fff 1px,
-      transparent 1px
-    ),
+  background-image:
+    radial-gradient(circle at 20% 30%, #fff 1px, transparent 1px),
     radial-gradient(circle at 80% 40%, #fff 1px, transparent 1px),
     radial-gradient(circle at 40% 70%, #fff 1px, transparent 1px),
     radial-gradient(circle at 60% 20%, #fff 1px, transparent 1px);
@@ -407,17 +404,19 @@
 
 /* 背景圖片*/
 .home-two {
-  background: linear-gradient(
+  background:
+    linear-gradient(
       0deg,
       rgba(154, 122, 204, 0.9) 0%,
       rgba(154, 122, 204, 0.9) 100%
     ),
-    url(/images/index/laptop-banner.jpg) lightgray -684.93px 0px / 1495.391% 100%
-      no-repeat;
+    url(/images/index/laptop-banner.jpg) lightgray -684.93px 0px / 1495.391%
+      100% no-repeat;
 }
 
 .home-three {
-  background: linear-gradient(
+  background:
+    linear-gradient(
       0deg,
       rgba(110, 50, 203, 0.9) 0%,
       rgba(110, 50, 203, 0.9) 100%
@@ -427,13 +426,14 @@
 }
 
 .home-four {
-  background: linear-gradient(
+  background:
+    linear-gradient(
       0deg,
       rgba(101, 32, 239, 0.9) 0%,
       rgba(101, 32, 239, 0.9) 100%
     ),
-    url(/images/index/laptop-banner.jpg) lightgray -684.93px 0px / 1495.391% 100%
-      no-repeat;
+    url(/images/index/laptop-banner.jpg) lightgray -684.93px 0px / 1495.391%
+      100% no-repeat;
 }
 
 /* RWD 設置 */
@@ -842,8 +842,6 @@
   transition: all 0.3s ease 0.2s;
 }
 
-
-
 .home-pic div:hover .home-content {
   opacity: 1;
   transform: translate(-50%, -50%);
@@ -1190,7 +1188,8 @@
 .product-title h3 {
   margin: 0;
   font-size: 18px;
-  text-shadow: 0px 0px 5px rgba(0, 0, 0, 2);}
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 2);
+}
 
 .home-laptop-item {
   position: relative;
@@ -1520,12 +1519,12 @@
   padding: 0 40px;
 }
 
-.home-article-title2 h3{
+.home-article-title2 h3 {
   font-size: 20px;
 }
 
 .home-article-text {
-  color: #B4B4B4;
+  color: #b4b4b4;
   font-size: var(--h9-font-size);
   line-height: 1.5;
   letter-spacing: 3.2px;
@@ -2112,13 +2111,11 @@
 .home-activity-card-content1 {
   transition: transform 0.3s ease;
   text-shadow: 0px 4px 4px #000;
-
 }
 
 .home-activity-frame:hover .home-activity-card-title {
   transform: translateY(-5px);
   text-shadow: 0px 4px 4px #000;
-
 }
 
 .home-activity-frame:hover .home-activity-card-content1 {
@@ -2170,7 +2167,6 @@
     font-size: 14px;
     padding: 10px;
     text-shadow: 0px 4px 4px #000;
-
   }
 
   .home-activity-card-content1,
@@ -2262,21 +2258,21 @@
   .home-activity-card4 {
     min-height: 150px;
   }
-
 }
-.frontpage-footer{
+.frontpage-footer {
   margin-top: 50px;
 }
 
 @media (max-width: 480px) {
-  .frontpage-footer{
+  .frontpage-footer {
     margin-top: 30px;
   }
 }
 
 /* 基本樣式設定 */
 .home-activity-card-content1,
-.home-activity-card-content2 {  /* 移除 p，直接選擇整個 content 區塊 */
+.home-activity-card-content2 {
+  /* 移除 p，直接選擇整個 content 區塊 */
   opacity: 0;
   transform: translateY(20px);
   transition: all 0.3s ease;
@@ -2289,7 +2285,8 @@
 .home-activity-frame:hover .home-activity-card-content1,
 .home-activity-card3:hover .home-activity-card-title,
 .home-activity-card3:hover .home-activity-card-content2,  /* 修改這裡，移除 p */
-.home-activity-card4:hover .home-activity-card-content2 {  /* 修改這裡，移除 p */
+.home-activity-card4:hover .home-activity-card-content2 {
+  /* 修改這裡，移除 p */
   opacity: 1;
   transform: translateY(0);
 }
@@ -2316,7 +2313,8 @@
 
 .home-activity-frame:hover::before,
 .home-activity-card3:hover::before,
-.home-activity-card4:hover::before {  /* 加上 hover */
+.home-activity-card4:hover::before {
+  /* 加上 hover */
   opacity: 1;
 }
 

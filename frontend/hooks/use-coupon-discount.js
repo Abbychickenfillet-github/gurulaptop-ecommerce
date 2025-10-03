@@ -6,7 +6,7 @@ export const useDiscount = (originalPrice) => {
   // 計算折扣後金額
   const calculateFinalPrice = (price, coupon) => {
     if (!coupon) return price
-    
+
     // discount_method: 1 = 固定金額折扣, 0 = 折扣比例
     if (coupon.discount_method === 1) {
       // 固定金額折扣
@@ -27,6 +27,6 @@ export const useDiscount = (originalPrice) => {
     appliedCoupon,
     setAppliedCoupon,
     calculateFinalPrice,
-    calculateDiscountAmount
+    calculateDiscountAmount,
   }
 }

@@ -37,8 +37,6 @@ export default function GroupCreat() {
           },
         )
 
-        
-
         if (!response.ok) {
           await Swal.fire({
             icon: 'warning',
@@ -251,15 +249,15 @@ export default function GroupCreat() {
 
       /*
        * 🔧 修復說明：
-       * 
+       *
        * ❌ 原本錯誤的地方：
        * - 第 237 行：'process.env.NEXT_PUBLIC_API_BASE_URL/api/group'
        * - 缺少 ${} 語法來正確引用環境變數
-       * 
+       *
        * ✅ 修復後的寫法：
        * - 第 237 行：`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/group`
        * - 使用 ${} 語法正確引用環境變數
-       * 
+       *
        * 💡 為什麼會錯：
        * - 沒有 ${} 的話，JavaScript 會將 process.env.NEXT_PUBLIC_API_BASE_URL 當作字串字面量
        * - 最終 URL 會變成：process.env.NEXT_PUBLIC_API_BASE_URL/api/group

@@ -127,7 +127,13 @@ const EventNavbar = ({ onFilterChange }) => {
     if (isInitialized) {
       updateFilters(searchTerm)
     }
-  }, [selectedType, selectedPlatform, selectedTeamType, searchTerm, isInitialized])
+  }, [
+    selectedType,
+    selectedPlatform,
+    selectedTeamType,
+    searchTerm,
+    isInitialized,
+  ])
 
   return (
     <nav className={`navbar ${styles.eventNavbar} navbar-dark`}>

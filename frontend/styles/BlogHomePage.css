@@ -1,6 +1,6 @@
 @charset "UTF-8";
 .BlogSectionContainer {
-  background-image: url("../public/images/blog/artical2.jpg");
+  background-image: url('../public/images/blog/artical2.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -92,7 +92,13 @@
 
 /* --------------點擊 Search 變成漸層-------------- */
 .BlogSearchBox:has(.BlogSearchInputStyle:focus) {
-  background: linear-gradient(0deg, #a793e9 0%, #5346b6 35%, #34246d 70%, #271948 100%);
+  background: linear-gradient(
+    0deg,
+    #a793e9 0%,
+    #5346b6 35%,
+    #34246d 70%,
+    #271948 100%
+  );
 }
 
 /* --------------點擊 search 變成漸層-------------- */
@@ -123,7 +129,7 @@
 
 /* ------------------------------------------ArticleCheckbox + 小菱形 checkbpx------------------------------------------ */
 /* 隱藏預設的 checkbox 行為*/
-.ArticleCheckbox input[type=checkbox] {
+.ArticleCheckbox input[type='checkbox'] {
   display: none;
 }
 
@@ -136,7 +142,7 @@
 }
 
 .ArticleCheckbox label::before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0.5rem;
   top: 0.4rem;
@@ -151,7 +157,7 @@
 }
 
 /* checkbox 勾選後的樣式自定義 */
-.ArticleCheckbox input[type=checkbox]:checked + label::before {
+.ArticleCheckbox input[type='checkbox']:checked + label::before {
   background-color: #805af5;
   /* 填充背景色 */
   border-color: transparent;
@@ -176,7 +182,7 @@
 
 /* ------------------------------------------BlogCheckbox + 小菱形 checkbpx------------------------------------------ */
 /* 隱藏預設的 checkbox 行為*/
-.BlogTypeCheckbox input[type=checkbox] {
+.BlogTypeCheckbox input[type='checkbox'] {
   display: none;
 }
 
@@ -189,7 +195,7 @@
 }
 
 .BlogTypeCheckbox label::before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0.5rem;
   top: 0.4rem;
@@ -204,7 +210,7 @@
 }
 
 /* checkbox 勾選後的樣式自定義 */
-.BlogTypeCheckbox input[type=checkbox]:checked + label::before {
+.BlogTypeCheckbox input[type='checkbox']:checked + label::before {
   background-color: #805af5;
   /* 填充背景色 */
   border-color: transparent;
@@ -276,7 +282,13 @@
 }
 
 .BlogCard:hover .card-body {
-  background: linear-gradient(270deg, #a793e9 0%, #5346b6 35%, #34246d 70%, #271948 100%);
+  background: linear-gradient(
+    270deg,
+    #a793e9 0%,
+    #5346b6 35%,
+    #34246d 70%,
+    #271948 100%
+  );
 }
 
 .ArticleSectionTitle {
@@ -328,7 +340,13 @@
 }
 
 .BlogHomePageSmallerCardBody:hover {
-  background: linear-gradient(270deg, #a793e9 0%, #5346b6 35%, #34246d 70%, #271948 100%);
+  background: linear-gradient(
+    270deg,
+    #a793e9 0%,
+    #5346b6 35%,
+    #34246d 70%,
+    #271948 100%
+  );
 }
 
 .BlogSmallerCardTwoGroup {
@@ -540,4 +558,4 @@
     margin-left: 0rem !important;
   }
 }
-/* ------------------------------------------------RWD------------------------------------------------ *//*# sourceMappingURL=BlogHomePage.css.map */
+/* ------------------------------------------------RWD------------------------------------------------ */ /*# sourceMappingURL=BlogHomePage.css.map */

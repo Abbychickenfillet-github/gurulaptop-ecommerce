@@ -58,7 +58,7 @@ export default function CouponUser() {
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       )
 
       console.log('API 回應狀態:', res.status, res.statusText)

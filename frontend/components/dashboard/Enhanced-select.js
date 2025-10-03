@@ -189,7 +189,7 @@ export default function EnhancedSelect({
         {children}
       </select>
 
-      <style jsx>{`
+      <style jsx global>{`
         @keyframes fadeIn {
           from {
             opacity: 0;

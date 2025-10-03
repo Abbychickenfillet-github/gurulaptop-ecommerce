@@ -10,7 +10,8 @@
   padding: 0;
   line-height: 1.2;
 }
-.text::before, .text::after {
+.text::before,
+.text::after {
   position: absolute;
   top: 0;
   left: 0;
@@ -91,4 +92,4 @@
   100% {
     clip: rect(19px, auto, 112px, 10px);
   }
-}/*# sourceMappingURL=glitch-text.module.css.map */
+} /*# sourceMappingURL=glitch-text.module.css.map */

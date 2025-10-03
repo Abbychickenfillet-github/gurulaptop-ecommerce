@@ -1,7 +1,15 @@
 @charset "UTF-8";
 /* 標題區 */
 .ArticleBackground {
-  background: linear-gradient(333deg, #6835a6 9.79%, #150928 27.32%, #000 49.97%, #1b1956 72.85%, #402bb0 86.53%, #d0bcff 98.34%);
+  background: linear-gradient(
+    333deg,
+    #6835a6 9.79%,
+    #150928 27.32%,
+    #000 49.97%,
+    #1b1956 72.85%,
+    #402bb0 86.53%,
+    #d0bcff 98.34%
+  );
 }
 
 .ArticleDetailMain {
@@ -35,7 +43,15 @@
 
 .ArticleDetailSectionContentArea {
   margin-bottom: 40vh;
-  background: linear-gradient(333deg, #6835a6 9.79%, #150928 27.32%, #000 49.97%, #1b1956 72.85%, #402bb0 86.53%, #d0bcff 98.34%);
+  background: linear-gradient(
+    333deg,
+    #6835a6 9.79%,
+    #150928 27.32%,
+    #000 49.97%,
+    #1b1956 72.85%,
+    #402bb0 86.53%,
+    #d0bcff 98.34%
+  );
 }
 
 .ArticleDetailSectionContentAreaTitle {
@@ -44,4 +60,4 @@
   color: #fff;
 }
 
-/* -----------------------------------新 Article 小卡----------------------------------- *//*# sourceMappingURL=ArticleDetail.css.map */
+/* -----------------------------------新 Article 小卡----------------------------------- */ /*# sourceMappingURL=ArticleDetail.css.map */

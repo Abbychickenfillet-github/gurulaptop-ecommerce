@@ -14,9 +14,9 @@
       "    </>",
       "  )",
       "}",
-      ""
+      "",
     ],
-    "description": "React Client Component (Functional)"
+    "description": "React Client Component (Functional)",
   },
   "React Server Component": {
     "scope": "typescript,javascript,jsx",
@@ -30,8 +30,8 @@
       "    </>",
       "  )",
       "}",
-      ""
+      "",
     ],
-    "description": "React Server Component"
-  }
+    "description": "React Server Component",
+  },
 }

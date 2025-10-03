@@ -18,7 +18,7 @@ export function useShip711StoreOpener(
     autoCloseMins = 5, //自動關閉
     enableLocalStorage = true, //是否didMount時要讀取localStorage中資料
     keyLocalStorage = 'store711', // localStorage中的key
-  } = {}
+  } = {},
 ) {
   // 除錯用
   //console.log(serverCallbackUrl, title, h, w, autoCloseMins, enableLocalStorage,keyLocalStorage )
@@ -108,7 +108,7 @@ export function useShip711StoreOpener(
 
       setContDown(countDown - 1)
     },
-    startCountDown ? 1000 : null
+    startCountDown ? 1000 : null,
   )
 
   const openWindow = () => {
@@ -122,7 +122,7 @@ export function useShip711StoreOpener(
         serverCallbackUrl,
       title,
       w,
-      h
+      h,
     )
 
     // 啟動計時器
@@ -173,7 +173,7 @@ export function useShip711StoreCallback(keyLocalStorage = 'store711') {
       window.opener.document.dispatchEvent(
         new CustomEvent('set-store', {
           detail: router.query,
-        })
+        }),
       )
 
       // 設定到localStorage

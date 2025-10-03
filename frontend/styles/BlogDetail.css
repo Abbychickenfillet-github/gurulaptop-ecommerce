@@ -87,7 +87,13 @@
 }
 
 .ArticleSmallerCard:hover .ArticleSmallerCardHeadHover {
-  background: linear-gradient(90deg, #a793e9 0%, #5346b6 35%, #34246d 70%, #271948 100%);
+  background: linear-gradient(
+    90deg,
+    #a793e9 0%,
+    #5346b6 35%,
+    #34246d 70%,
+    #271948 100%
+  );
 }
 
 .ArticleSmallerCard:hover .ArticleSmallerCardHeadHoverP {
@@ -150,4 +156,4 @@
     font-size: 2rem;
     color: #805af5;
   }
-}/*# sourceMappingURL=BlogDetail.css.map */
+} /*# sourceMappingURL=BlogDetail.css.map */

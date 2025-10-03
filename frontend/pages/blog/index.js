@@ -161,7 +161,9 @@ export default function BlogSearchPage() {
         {/* 紫線 */}
 
         {/* 品牌選擇 */}
-        <div className={`${styles.ArticleBrandSearch} bg-transparent mt-5 mb-3`}>
+        <div
+          className={`${styles.ArticleBrandSearch} bg-transparent mt-5 mb-3`}
+        >
           <form>
             <div className="row justify-content-between gap-3">
               {['Acer', 'Asus', 'Gigabyte', 'HP', 'MSI', 'Raser'].map(

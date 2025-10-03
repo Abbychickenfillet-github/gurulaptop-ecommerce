@@ -14,8 +14,8 @@
 ```javascript
 // ✅ 前端認證狀態正常
 const { auth } = useAuth()
-console.log(auth.isAuth)  // true
-console.log(auth.userData.user_id)  // 6
+console.log(auth.isAuth) // true
+console.log(auth.userData.user_id) // 6
 
 // ❌ 但 API 請求沒有包含 cookies
 const res = await fetch(`/api/coupon-user/${userId}`)
@@ -31,6 +31,7 @@ const res = await fetch(`/api/coupon-user/${userId}`)
 ## 解決方案
 
 ### 修復前
+
 ```javascript
 const res = await fetch(
   `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
@@ -38,27 +39,30 @@ const res = await fetch(
 ```
 
 ### 修復後
+
 ```javascript
 const res = await fetch(
   `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/coupon-user/${userId}`,
   {
     method: 'GET',
-    credentials: 'include',  // 🔑 關鍵修復
+    credentials: 'include', // 🔑 關鍵修復
     headers: {
       'Content-Type': 'application/json',
     },
-  }
+  },
 )
 ```
 
 ## Cookie 認證流程
 
 ### 1. 登入流程
+
 ```
 用戶登入 → 後端驗證 → 生成 JWT → 設置 accessToken cookie → 瀏覽器儲存
 ```
 
 ### 2. API 請求流程
+
 ```
 前端發起請求 → 瀏覽器檢查 credentials: 'include' → 自動發送 cookies → 後端驗證 token
 ```
@@ -90,6 +94,7 @@ const res = await fetch(
 ## 測試結果
 
 ✅ **修復後**：
+
 - 優惠券 API 請求成功
 - 不再出現「授權失敗」錯誤
 - 購物車功能正常運作

@@ -5,7 +5,7 @@
   right: 30px;
   width: 60px;
   height: 60px;
-  background-color: #8B00FF;
+  background-color: #8b00ff;
   color: white;
   border: none;
   border-radius: 50%;
@@ -15,13 +15,17 @@
   z-index: 1000;
   border-radius: 100px;
   background: rgba(255, 255, 255, 0.52);
-  box-shadow: 0px 0px 20px 2px #6854C7;
+  box-shadow: 0px 0px 20px 2px #6854c7;
   backdrop-filter: blur(5px);
 }
 
 .backToTop:hover {
   border-radius: 100px;
-  background: var(--Linear-7, linear-gradient(0deg, #A793E9 0%, #5346B6 35%, #34246D 70%, #271948 100%));  transform: translateY(-3px);
+  background: var(
+    --Linear-7,
+    linear-gradient(0deg, #a793e9 0%, #5346b6 35%, #34246d 70%, #271948 100%)
+  );
+  transform: translateY(-3px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 

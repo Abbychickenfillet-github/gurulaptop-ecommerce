@@ -4,7 +4,9 @@
   border: 1px solid #805af5; /* 邊框顏色 */
   border-radius: 25px 0px; /* 圓角邊框 */
   overflow: hidden; /* 隱藏溢出部分 */
-  transition: transform 0.3s, box-shadow 0.3s; /* 鼠標懸停時的轉換效果 */
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s; /* 鼠標懸停時的轉換效果 */
   width: 300px;
   height: 400px;
   margin: 0 0 42px 42px; /* 產品卡片間距 */
@@ -150,11 +152,9 @@
   .product_card {
     margin: 0 21px 42px 21px;
   }
-  
 }
 @media (max-width: 500px) {
   .product_card {
     margin: 0 0 42px 0;
   }
-  
 }

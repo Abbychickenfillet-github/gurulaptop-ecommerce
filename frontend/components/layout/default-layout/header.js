@@ -45,15 +45,15 @@ export default function Header() {
       })
 
       if (!result.isConfirmed) return
-      
+
       // 先處理 Firebase 登出
       if (auth?.userData?.google_uid) {
         await logoutFirebase()
       }
-      
+
       // 執行登出（logout 函數會處理所有清理和跳轉）
       await logout()
-      
+
       // 登出成功後顯示訊息（不等待，讓登出流程繼續）
       Swal.fire({
         title: '登出成功',
@@ -62,7 +62,6 @@ export default function Header() {
         icon: 'success',
         confirmButtonColor: '#805AF5',
       })
-      
     } catch (error) {
       console.error('登出失敗:', error)
       Swal.fire({
@@ -87,7 +86,6 @@ export default function Header() {
     window.addEventListener('resize', checkIfMobile)
     return () => window.removeEventListener('resize', checkIfMobile)
   }, [])
-
 
   // 為什麼需要檢查 userData 和 userData.user_id
   // 為什麼這麼嚴格？
@@ -119,8 +117,7 @@ export default function Header() {
     <header className="tech-nav">
       {isMobile ? (
         <>
-        `
-        {/* 這控制手機版漢堡菜單的頂部 */}
+          `{/* 這控制手機版漢堡菜單的頂部 */}
           <div className="mobile-header">
             {/* 左側logo */}
             <Link href="/" className="logo-link">
@@ -142,7 +139,6 @@ export default function Header() {
               </button>
             </div>
           </div>
-
           {/* 這控制手機版漢堡菜單的內容 */}
           <div
             className={`nav-menu ${isMenuOpen ? 'open' : ''}`}
@@ -195,12 +191,18 @@ export default function Header() {
               ) : (
                 <div className="mobile-auth-buttons">
                   <Link href="/member/login">
-                    <button className="mobile-auth-btn login" onClick={() => setIsMenuOpen(false)}>
+                    <button
+                      className="mobile-auth-btn login"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
                       登入
                     </button>
                   </Link>
                   <Link href="/member/signup">
-                    <button className="mobile-auth-btn signup" onClick={() => setIsMenuOpen(false)}>
+                    <button
+                      className="mobile-auth-btn signup"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
                       註冊
                     </button>
                   </Link>
@@ -246,13 +248,13 @@ export default function Header() {
               <div className="auth-section">
                 <Link href="/dashboard">
                   <div className="user-avatar">
-                    <Image 
+                    <Image
                       src={
                         auth?.userData?.image_path ||
                         getDefaultImage(auth?.userData?.gender)
-                      } 
-                      alt="User" 
-                      width={40} 
+                      }
+                      alt="User"
+                      width={40}
                       height={40}
                       key={auth?.userData?.image_path} // 添加 key 強制重新渲染
                     />
@@ -282,8 +284,7 @@ export default function Header() {
         </div>
       )}
 
-      <style jsx>{`
-       
+      <style jsx global>{`
         .tech-nav {
           background: linear-gradient(
             90deg,

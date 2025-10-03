@@ -1,141 +1,149 @@
 .modalBackdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(76, 29, 149, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .customModal {
-    position: relative;
-    width: 400px;
-    background: rgba(97, 4, 4, 0.2);
-    border-radius: 12px;
-    border: 2px solid rgba(147, 197, 253, 0.6);
-    box-shadow: 0 8px 32px rgba(76, 29, 149, 0.3);
-    backdrop-filter: blur(8px);
-  }
-  
-  .closeButton {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: transparent;
-    border: none;
-    color: rgba(147, 197, 253, 0.8);
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-  }
-  
-  .closeButton:hover {
-    color: #93c5fd;
-    background: rgba(147, 197, 253, 0.2);
-    transform: rotate(90deg);
-  }
-  
-  .modalContent {
-    padding: 24px;
-  }
-  
-  .modalTitle {
-    color: #93c5fd;
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    text-align: center;
-  }
-  
-  .eventTitle {
-    color: white;
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 24px;
-    text-align: center;
-    padding: 12px;
-    background: rgba(147, 197, 253, 0.1);
-    border-radius: 8px;
-  }
-  
-  .formSection {
-    background: rgba(147, 197, 253, 0.05);
-    padding: 20px;
-    border-radius: 8px;
-  }
-  
-  .inputGroup {
-    margin-bottom: 20px;
-  }
-  
-  .label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-  }
-  
-  .inputIcon {
-    color: rgba(147, 197, 253, 0.8);
-    flex-shrink: 0;
-  }
-  
-  .input,
-  .textarea {
-    width: 100%;
-    padding: 12px;
-    background: rgba(147, 197, 253, 0.1);
-    border: 1px solid rgba(147, 197, 253, 0.3);
-    border-radius: 6px;
-    color: white;
-    font-size: 14px;
-    transition: all 0.3s ease;
-  }
-  
-  .input:focus,
-  .textarea:focus {
-    outline: none;
-    border-color: rgba(147, 197, 253, 0.6);
-    background: rgba(147, 197, 253, 0.15);
-  }
-  
-  .input::placeholder,
-  .textarea::placeholder {
-    color: rgba(147, 197, 253, 0.5);
-  }
-  
-  .textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
-  
-  .submitButton {
-    display: block;
-    width: 40%;
-    padding: 12px;
-    background: linear-gradient(to right, rgba(147, 197, 253, 0.5), rgba(121, 64, 254, 0.8));
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin: 0 auto;
-    font-size: 16px;
-  }
-  
-  .submitButton:hover {
-    background: linear-gradient(to right, rgba(147, 197, 253, 0.9), rgba(139, 92, 246, 0.9));
-    box-shadow: 0 2px 8px rgba(147, 197, 253, 0.3);
-  }
-  
-  .submitButton:active {
-    transform: scale(0.98);
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(76, 29, 149, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.customModal {
+  position: relative;
+  width: 400px;
+  background: rgba(97, 4, 4, 0.2);
+  border-radius: 12px;
+  border: 2px solid rgba(147, 197, 253, 0.6);
+  box-shadow: 0 8px 32px rgba(76, 29, 149, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+.closeButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: rgba(147, 197, 253, 0.8);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.closeButton:hover {
+  color: #93c5fd;
+  background: rgba(147, 197, 253, 0.2);
+  transform: rotate(90deg);
+}
+
+.modalContent {
+  padding: 24px;
+}
+
+.modalTitle {
+  color: #93c5fd;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.eventTitle {
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  text-align: center;
+  padding: 12px;
+  background: rgba(147, 197, 253, 0.1);
+  border-radius: 8px;
+}
+
+.formSection {
+  background: rgba(147, 197, 253, 0.05);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.inputIcon {
+  color: rgba(147, 197, 253, 0.8);
+  flex-shrink: 0;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 12px;
+  background: rgba(147, 197, 253, 0.1);
+  border: 1px solid rgba(147, 197, 253, 0.3);
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: rgba(147, 197, 253, 0.6);
+  background: rgba(147, 197, 253, 0.15);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: rgba(147, 197, 253, 0.5);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.submitButton {
+  display: block;
+  width: 40%;
+  padding: 12px;
+  background: linear-gradient(
+    to right,
+    rgba(147, 197, 253, 0.5),
+    rgba(121, 64, 254, 0.8)
+  );
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 auto;
+  font-size: 16px;
+}
+
+.submitButton:hover {
+  background: linear-gradient(
+    to right,
+    rgba(147, 197, 253, 0.9),
+    rgba(139, 92, 246, 0.9)
+  );
+  box-shadow: 0 2px 8px rgba(147, 197, 253, 0.3);
+}
+
+.submitButton:active {
+  transform: scale(0.98);
+}

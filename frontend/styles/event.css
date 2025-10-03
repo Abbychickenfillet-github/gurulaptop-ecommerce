@@ -14,7 +14,7 @@ main {
 }
 
 .event-wrapper::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -111,7 +111,7 @@ main {
 }
 
 .event-nav-link.active::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -272,4 +272,4 @@ main {
     margin-top: 2rem;
     margin-bottom: 2rem;
   }
-}/*# sourceMappingURL=event.css.map */
+} /*# sourceMappingURL=event.css.map */

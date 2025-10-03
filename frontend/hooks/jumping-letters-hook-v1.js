@@ -47,7 +47,7 @@ export const useJumpingLetters = () => {
         </div>
       )
     },
-    [activeLetters, handleMouseEnter, handleAnimationEnd]
+    [activeLetters, handleMouseEnter, handleAnimationEnd],
   )
 
   return { renderJumpingText }

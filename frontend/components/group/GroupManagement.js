@@ -36,7 +36,10 @@ const GroupManagement = () => {
          * 2. 將參加者的群組和創建者的群組合併
          * 3. 去除重複的群組
          */
-        if (memberData.status === 'success' && creatorData.status === 'success') {
+        if (
+          memberData.status === 'success' &&
+          creatorData.status === 'success'
+        ) {
           const combinedGroups = [
             ...memberData.data.groups.map((group) => ({
               ...group,
@@ -227,104 +230,106 @@ const GroupManagement = () => {
           </div>
         </div>
 
-        {groups && groups.length > 0 ? groups.map((group) => (
-          <div key={group.group_id} className={styles.listRow}>
-            <div className="row align-items-center d-none d-md-flex">
-              <div className="col-2">
-                <Image
-                  src={getImageUrl(group.group_img)}
-                  alt="揪團圖片"
-                  className={styles.groupImg}
-                  width={80}
-                  height={60}
-                  onError={(e) => {
-                    e.target.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
-                  }}
-                />
-              </div>
-              <div className="col-3">{group.group_name}</div>
-              <div className="col-2">
-                {new Date(group.creat_time).toLocaleString()}
-              </div>
-              <div className="col-1">
-                {group.member_count}/{group.max_members}
-              </div>
-              <div className="col-2">
-                {group.role === 'creator' ? '創建者' : '參加者'}
-              </div>
-              <div className="col-2">
-                <div className="d-flex gap-2">
-                  {group.role === 'creator' && (
-                    <>
-                      <button
-                        className={styles.actionBtn}
-                        onClick={() => handleEditClick(group)}
-                      >
-                        <i className="bi bi-pencil-square"></i>
-                      </button>
-                      <button
-                        className={styles.actionBtn}
-                        onClick={() => handleDeleteGroup(group.group_id)}
-                      >
-                        <i className="bi bi-trash"></i>
-                      </button>
-                    </>
-                  )}
+        {groups && groups.length > 0 ? (
+          groups.map((group) => (
+            <div key={group.group_id} className={styles.listRow}>
+              <div className="row align-items-center d-none d-md-flex">
+                <div className="col-2">
+                  <Image
+                    src={getImageUrl(group.group_img)}
+                    alt="揪團圖片"
+                    className={styles.groupImg}
+                    width={80}
+                    height={60}
+                    onError={(e) => {
+                      e.target.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
+                    }}
+                  />
                 </div>
-              </div>
-            </div>
-
-            <div className={`${styles.mobileLayout} d-block d-md-none`}>
-              <div className={styles.mobileImgWrapper}>
-                <Image
-                  src={getImageUrl(group.group_img)}
-                  alt="揪團圖片"
-                  className={styles.groupImg}
-                  width={80}
-                  height={60}
-                  onError={(e) => {
-                    e.target.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
-                  }}
-                />
-              </div>
-              <div className={styles.mobileInfo}>
-                <div className={styles.mobileTitle}>{group.group_name}</div>
-                <div className={styles.mobileDetails}>
-                  <div className={styles.mobileStats}>
-                    <span>
-                      <i className="bi bi-clock"></i>{' '}
-                      {new Date(group.creat_time).toLocaleString()}
-                    </span>
-                    <span>
-                      <i className="bi bi-people"></i> {group.member_count}/
-                      {group.max_members}
-                    </span>
-                    <span>
-                      <i className="bi bi-person-badge"></i>{' '}
-                      {group.role === 'creator' ? '創建者' : '參加者'}
-                    </span>
+                <div className="col-3">{group.group_name}</div>
+                <div className="col-2">
+                  {new Date(group.creat_time).toLocaleString()}
+                </div>
+                <div className="col-1">
+                  {group.member_count}/{group.max_members}
+                </div>
+                <div className="col-2">
+                  {group.role === 'creator' ? '創建者' : '參加者'}
+                </div>
+                <div className="col-2">
+                  <div className="d-flex gap-2">
+                    {group.role === 'creator' && (
+                      <>
+                        <button
+                          className={styles.actionBtn}
+                          onClick={() => handleEditClick(group)}
+                        >
+                          <i className="bi bi-pencil-square"></i>
+                        </button>
+                        <button
+                          className={styles.actionBtn}
+                          onClick={() => handleDeleteGroup(group.group_id)}
+                        >
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </>
+                    )}
                   </div>
-                  {group.role === 'creator' && (
-                    <div className={styles.mobileActions}>
-                      <button
-                        className={styles.actionBtn}
-                        onClick={() => handleEditClick(group)}
-                      >
-                        <i className="bi bi-pencil-square"></i>
-                      </button>
-                      <button
-                        className={styles.actionBtn}
-                        onClick={() => handleDeleteGroup(group.group_id)}
-                      >
-                        <i className="bi bi-trash"></i>
-                      </button>
+                </div>
+              </div>
+
+              <div className={`${styles.mobileLayout} d-block d-md-none`}>
+                <div className={styles.mobileImgWrapper}>
+                  <Image
+                    src={getImageUrl(group.group_img)}
+                    alt="揪團圖片"
+                    className={styles.groupImg}
+                    width={80}
+                    height={60}
+                    onError={(e) => {
+                      e.target.src = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/groups/group-default.png`
+                    }}
+                  />
+                </div>
+                <div className={styles.mobileInfo}>
+                  <div className={styles.mobileTitle}>{group.group_name}</div>
+                  <div className={styles.mobileDetails}>
+                    <div className={styles.mobileStats}>
+                      <span>
+                        <i className="bi bi-clock"></i>{' '}
+                        {new Date(group.creat_time).toLocaleString()}
+                      </span>
+                      <span>
+                        <i className="bi bi-people"></i> {group.member_count}/
+                        {group.max_members}
+                      </span>
+                      <span>
+                        <i className="bi bi-person-badge"></i>{' '}
+                        {group.role === 'creator' ? '創建者' : '參加者'}
+                      </span>
                     </div>
-                  )}
+                    {group.role === 'creator' && (
+                      <div className={styles.mobileActions}>
+                        <button
+                          className={styles.actionBtn}
+                          onClick={() => handleEditClick(group)}
+                        >
+                          <i className="bi bi-pencil-square"></i>
+                        </button>
+                        <button
+                          className={styles.actionBtn}
+                          onClick={() => handleDeleteGroup(group.group_id)}
+                        >
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )) : (
+          ))
+        ) : (
           <div className="alert alert-info m-3" role="alert">
             <i className="bi bi-info-circle me-2"></i>
             目前沒有參加的揪團

@@ -18,7 +18,7 @@
 .mario .walk {
   position: absolute;
   z-index: 1;
-  background-image: url("https://www.spriters-resource.com/resources/sheets/173/176365.png");
+  background-image: url('https://www.spriters-resource.com/resources/sheets/173/176365.png');
   background-size: 1079px;
   background-position: -80px -299px;
   height: 100%;
@@ -27,7 +27,7 @@
 .mario .jump {
   position: absolute;
   z-index: 2;
-  background-image: url("https://www.spriters-resource.com/resources/sheets/173/176365.png");
+  background-image: url('https://www.spriters-resource.com/resources/sheets/173/176365.png');
   background-size: 1079px;
   background-position: -773px -299px;
   height: 100%;
@@ -45,13 +45,16 @@
   }
 }
 @keyframes jump {
-  0%, 100% {
+  0%,
+  100% {
     translate: 0;
   }
-  44.9%, 55.1% {
+  44.9%,
+  55.1% {
     visibility: hidden;
   }
-  45%, 55% {
+  45%,
+  55% {
     visibility: visible;
     translate: 0;
   }
@@ -60,10 +63,13 @@
   }
 }
 @keyframes toggle {
-  0%, 55%, 100% {
+  0%,
+  55%,
+  100% {
     visibility: visible;
   }
-  45.7%, 54.5% {
+  45.7%,
+  54.5% {
     visibility: hidden;
   }
 }
@@ -85,7 +91,7 @@
 .ground {
   position: absolute;
   bottom: 0;
-  background-image: url("https://raw.githubusercontent.com/leochiu-a/assets-for-codepen/main/mario/ground-block.png");
+  background-image: url('https://raw.githubusercontent.com/leochiu-a/assets-for-codepen/main/mario/ground-block.png');
   background-size: 32px;
   width: var(--world-size);
   height: calc(50vh - var(--mario-height) / 2 - 12px);
@@ -102,7 +108,7 @@
 }
 
 .brick {
-  background-image: url("https://www.spriters-resource.com/resources/sheets/196/198709.png?updated=1685997822");
+  background-image: url('https://www.spriters-resource.com/resources/sheets/196/198709.png?updated=1685997822');
   background-size: 464px;
   background-position: -40px -2px;
   height: var(--block-size);
@@ -110,7 +116,7 @@
 }
 
 .questionblock {
-  background-image: url("https://www.spriters-resource.com/resources/sheets/196/198709.png?updated=1685997822");
+  background-image: url('https://www.spriters-resource.com/resources/sheets/196/198709.png?updated=1685997822');
   background-size: 464px;
   background-position: -2px -383px;
   height: var(--block-size);
@@ -128,7 +134,8 @@
   }
 }
 @keyframes get-coin {
-  0%, 100% {
+  0%,
+  100% {
     translate: 0 -25px;
     visibility: visible;
   }
@@ -138,19 +145,22 @@
 }
 .coin {
   position: absolute;
-  background-image: url("https://www.spriters-resource.com/resources/sheets/174/177030.png?updated=1655225758");
+  background-image: url('https://www.spriters-resource.com/resources/sheets/174/177030.png?updated=1655225758');
   background-size: 1068px;
   background-position: -581px -165px;
   height: 28px;
   width: 28px;
-  animation: flip-coin 0.3s infinite steps(3), get-coin;
+  animation:
+    flip-coin 0.3s infinite steps(3),
+    get-coin;
   animation-timeline: auto, view(inline 50%);
   translate: 0 -20px;
   visibility: hidden;
 }
 
 @keyframes shine {
-  0%, 100% {
+  0%,
+  100% {
     background-position: -2px -383px;
   }
   50% {
@@ -158,13 +168,16 @@
   }
 }
 @keyframes pause-shine {
-  0%, 100% {
+  0%,
+  100% {
     background-position: -117px -383px;
   }
 }
 .questionblock {
   view-timeline: --question-block inline;
   view-timeline-inset: 72px;
-  animation: shine 1s infinite steps(1), pause-shine forwards steps(1);
+  animation:
+    shine 1s infinite steps(1),
+    pause-shine forwards steps(1);
   animation-timeline: auto, view(inline 50%);
-}/*# sourceMappingURL=MarioGame.module.css.map */
+} /*# sourceMappingURL=MarioGame.module.css.map */

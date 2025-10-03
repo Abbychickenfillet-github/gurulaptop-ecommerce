@@ -74,7 +74,9 @@
   cursor: pointer;
   z-index: 10;
   /* background-color: transparent; */
-  transition: background-color 0.2s ease, opacity 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .leftBtn {
@@ -96,7 +98,9 @@
   background-color: #805af5;
   transform: translateY(-50%) scale(0.8);
   transform-origin: center;
-  transition: background-color 0.2s ease, opacity 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .carouselBtn:hover img {

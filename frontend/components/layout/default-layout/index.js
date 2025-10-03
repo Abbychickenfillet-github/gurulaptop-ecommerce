@@ -14,7 +14,6 @@ export default function DefaultLayout({ children }) {
       </Head>
       <Header />
       <main className="flex-shrink-0">
-
         {children}
         {/* </div> */}
         {loader()}

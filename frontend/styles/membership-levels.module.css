@@ -1,5 +1,5 @@
 .membershipContainer {
-  background: linear-gradient(135deg, #6C4CCE 0%, #805AF5 100%);
+  background: linear-gradient(135deg, #6c4cce 0%, #805af5 100%);
   padding: 2rem;
   min-height: 100vh;
 }
@@ -18,7 +18,7 @@
 .membershipContainer .statusInfo {
   background: rgba(255, 255, 255, 0.1);
   -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 2rem;
   margin-bottom: 3rem;
@@ -46,7 +46,7 @@
 .membershipContainer .membershipCards .card {
   background: rgba(0, 0, 0, 0.3);
   -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -68,4 +68,4 @@
   font-size: 1rem;
   line-height: 1.6;
   opacity: 0.9;
-}/*# sourceMappingURL=membership-levels.module.css.map */
+} /*# sourceMappingURL=membership-levels.module.css.map */

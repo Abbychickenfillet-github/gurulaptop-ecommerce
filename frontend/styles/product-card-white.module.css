@@ -4,7 +4,9 @@
   border: 1px solid #ddd; /* 邊框顏色 */
   border-radius: 25px 0px; /* 圓角邊框 */
   overflow: hidden; /* 隱藏溢出部分 */
-  transition: transform 0.3s, box-shadow 0.3s; /* 鼠標懸停時的轉換效果 */
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s; /* 鼠標懸停時的轉換效果 */
   width: 270px;
   height: 360px;
   margin: 0 0 42px 42px; /* 產品卡片間距 */
@@ -150,4 +152,4 @@
 
 .arrow:hover {
   background: linear-gradient(270deg, #7b65ed 0%, #2c2887 50%, #00013a 100%);
-}/*# sourceMappingURL=product-card-white.module.css.map */
+} /*# sourceMappingURL=product-card-white.module.css.map */

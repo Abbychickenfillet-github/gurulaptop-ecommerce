@@ -69,7 +69,7 @@ export default function Checkout() {
         </Link>
       </div>
 
-      <style jsx>{`
+      <style jsx global>{`
         .vh-100 {
           height: 90vh;
         }

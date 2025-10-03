@@ -128,10 +128,7 @@ export default function Signup() {
         return
       }
 
-      const response = await axios.post(
-        `${apiBaseUrl}/api/signup`,
-        user,
-      )
+      const response = await axios.post(`${apiBaseUrl}/api/signup`, user)
 
       if (response.data.status === 'success') {
         setUser({
@@ -428,10 +425,30 @@ export default function Signup() {
                       value={user.gender}
                       onChange={handleFieldChange}
                     >
-                      <option value="" style={{ color: '#333', backgroundColor: 'white' }}>請選擇</option>
-                      <option value="female" style={{ color: '#333', backgroundColor: 'white' }}>女</option>
-                      <option value="male" style={{ color: '#333', backgroundColor: 'white' }}>男</option>
-                      <option value="undisclosed" style={{ color: '#333', backgroundColor: 'white' }}>不透漏</option>
+                      <option
+                        value=""
+                        style={{ color: '#333', backgroundColor: 'white' }}
+                      >
+                        請選擇
+                      </option>
+                      <option
+                        value="female"
+                        style={{ color: '#333', backgroundColor: 'white' }}
+                      >
+                        女
+                      </option>
+                      <option
+                        value="male"
+                        style={{ color: '#333', backgroundColor: 'white' }}
+                      >
+                        男
+                      </option>
+                      <option
+                        value="undisclosed"
+                        style={{ color: '#333', backgroundColor: 'white' }}
+                      >
+                        不透漏
+                      </option>
                     </select>
                   </div>
 
@@ -496,7 +513,7 @@ export default function Signup() {
 
       <MyFooter />
 
-      <style jsx>{`
+      <style jsx global>{`
         .hover-text-white:hover {
           color: white !important;
         }
@@ -512,14 +529,16 @@ export default function Signup() {
         }
 
         /* 統一所有輸入框樣式 */
-        .form-control, .form-select {
+        .form-control,
+        .form-select {
           background-color: rgba(255, 255, 255, 0.1) !important;
           border: 1px solid rgba(255, 255, 255, 0.25) !important;
           color: white !important;
           backdrop-filter: blur(10px);
         }
 
-        .form-control:focus, .form-select:focus {
+        .form-control:focus,
+        .form-select:focus {
           background-color: rgba(255, 255, 255, 0.15) !important;
           border-color: #e0b0ff !important;
           box-shadow: 0 0 0 0.2rem rgba(224, 176, 255, 0.25) !important;
@@ -533,7 +552,8 @@ export default function Signup() {
         }
 
         /* 確保所有輸入框文字都是白色 */
-        .form-control, .form-select {
+        .form-control,
+        .form-select {
           color: white !important;
         }
 

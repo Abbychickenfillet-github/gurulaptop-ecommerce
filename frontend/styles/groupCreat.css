@@ -2,7 +2,7 @@
 .group-creat-wrapper {
   min-height: 100vh;
   background-color: #0a0a0a;
-  background-image: url("../public/images/event/event-bg.jpg");
+  background-image: url('../public/images/event/event-bg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -17,7 +17,7 @@
 }
 
 .group-creat-wrapper::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -34,7 +34,7 @@
 .group-creat-card {
   background: rgba(255, 255, 255, 0.1);
   -webkit-backdrop-filter: blur(8px);
-          backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   color: #fff;
@@ -69,8 +69,8 @@
 .group-creat-select {
   cursor: pointer;
   -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
@@ -96,7 +96,8 @@
 }
 
 /* Placeholder 樣式 */
-.group-creat-input::-moz-placeholder, .group-creat-select::-moz-placeholder {
+.group-creat-input::-moz-placeholder,
+.group-creat-select::-moz-placeholder {
   color: rgba(255, 255, 255, 0.5) !important;
 }
 .group-creat-input::placeholder,
@@ -152,7 +153,7 @@
   max-width: 100%;
   max-height: 100%;
   -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 
 .group-creat-file-input {
@@ -202,4 +203,4 @@
   background: rgba(255, 255, 255, 0.05) !important;
   color: rgba(255, 255, 255, 0.4) !important;
   cursor: not-allowed;
-}/*# sourceMappingURL=groupCreat.css.map */
+} /*# sourceMappingURL=groupCreat.css.map */
