@@ -5,9 +5,10 @@ import 'swiper/css/navigation'
 import Image from 'next/image'
 
 // 根據環境動態選擇基礎 URL
-const baseUrl = process.env.NODE_ENV === 'production'
-  ? 'https://yunlavendar-guru-smart-laptop.zeabur.app'
-  : 'http://localhost:3000'
+const baseUrl =
+  process.env.NODE_ENV === 'production'
+    ? 'https://yunlavendar-guru-smart-laptop.zeabur.app'
+    : 'http://localhost:3000'
 
 const NewProducts = () => {
   const products = [
@@ -97,7 +98,9 @@ const NewProducts = () => {
                       wordBreak: 'break-word',
                     }}
                     dangerouslySetInnerHTML={{
-                      __html: product.description ? product.description.replace(/\n/g, '<br>') : ''
+                      __html: product.description
+                        ? product.description.replace(/\n/g, '<br>')
+                        : '',
                     }}
                   />
                 </div>

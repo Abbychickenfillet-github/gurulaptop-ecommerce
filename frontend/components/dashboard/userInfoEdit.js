@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
 import { useAuth } from '@/hooks/use-auth'
@@ -463,19 +464,8 @@ export default function UserProfile() {
           },
         }))
 
-        const headerResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header`,
-          {
-            method: 'POST',
-            credentials: 'include', // 🔑 重要：讓 fetch 發送 cookies
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              user_id: user_id,
-            }),
-          }
-        )
+        // 移除對不存在的 /api/header 路由的調用
+        // Cookie 驗證現在由後端的 authenticate 中間件自動處理
         Swal.fire('成功', '頭像更新成功', 'success')
       }
     } catch (error) {
