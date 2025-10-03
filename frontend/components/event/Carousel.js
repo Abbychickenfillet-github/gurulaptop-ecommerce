@@ -14,7 +14,7 @@ const Carousel = () => {
   const fetchUpcomingEvents = useCallback(async () => {
     setIsLoading(true)
     setError(null)
-    
+
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/events`,
@@ -72,7 +72,7 @@ const Carousel = () => {
         prevIndex === upcomingEvents.length - 1 ? 0 : prevIndex + 1,
       )
     }, 5000) // 每5秒切換一次
-    
+
     return () => clearInterval(timer)
   }, [upcomingEvents.length])
 
@@ -178,6 +178,8 @@ const Carousel = () => {
                 <Image
                   src={event.picture || '/images/event/default-event.jpg'}
                   alt={event.name}
+                  width={1200}
+                  height={600}
                   onError={(e) => {
                     e.target.src = '/images/event/default-event.jpg'
                   }}

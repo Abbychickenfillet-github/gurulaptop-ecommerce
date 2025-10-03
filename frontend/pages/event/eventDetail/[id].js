@@ -220,7 +220,11 @@ const EventDetail = () => {
                 />
                 <div className="eventDetail-infoBox">
                   <h2 className="h5 mb-3">活動介紹</h2>
-                  <p>{event.content}</p>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: event.content ? event.content.replace(/\n/g, '<br>') : '',
+                    }}
+                  />
                 </div>
                 <div className="eventDetail-infoBox">
                   <h2 className="h5 mb-3">規則</h2>

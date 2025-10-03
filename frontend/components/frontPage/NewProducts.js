@@ -5,7 +5,7 @@ import 'swiper/css/navigation'
 import Image from 'next/image'
 
 // 根據環境動態選擇基礎 URL
-const baseUrl = process.env.NODE_ENV === 'production' 
+const baseUrl = process.env.NODE_ENV === 'production'
   ? 'https://yunlavendar-guru-smart-laptop.zeabur.app'
   : 'http://localhost:3000'
 
@@ -96,9 +96,10 @@ const NewProducts = () => {
                       whiteSpace: 'pre-line',
                       wordBreak: 'break-word',
                     }}
-                  >
-                    {product.description}
-                  </p>
+                    dangerouslySetInnerHTML={{
+                      __html: product.description ? product.description.replace(/\n/g, '<br>') : ''
+                    }}
+                  />
                 </div>
                 <Image
                   src={product.image}
