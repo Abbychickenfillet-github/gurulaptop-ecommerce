@@ -7,7 +7,9 @@ import useSWR from 'swr'
 export const checkAuth = async () => {
   try {
     // ✅ 正確：使用反引號和 ${} 插值
-    const response = await axiosInstance.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/check`)
+    const response = await axiosInstance.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/check`,
+    )
     return response
   } catch (error) {
     console.error('checkAuth 請求失敗:', error)
@@ -15,8 +17,8 @@ export const checkAuth = async () => {
     return {
       data: {
         status: 'error',
-        message: '認證檢查失敗'
-      }
+        message: '認證檢查失敗',
+      },
     }
   }
 }
@@ -24,7 +26,10 @@ export const checkAuth = async () => {
  * Google Login(Firebase)登入用，providerData為登入後得到的資料
  */
 export const googleLogin = async (providerData = {}) => {
-  return await axiosInstance.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/google-login`, providerData)
+  return await axiosInstance.post(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/google-login`,
+    providerData,
+  )
 }
 
 /**
