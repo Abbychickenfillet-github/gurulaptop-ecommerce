@@ -1,10 +1,13 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import EventCard from '@/components/event/EventCard'
 import Carousel from '@/components/event/Carousel'
 import EventNavbar from '@/components/event/EventNavbar'
 import axios from 'axios'
 import EventTabs from '@/components/event/EventTabs'
 import Head from 'next/head'
+import Overlay from 'react-bootstrap/Overlay'
+import Popover from 'react-bootstrap/Popover'
+import Button from 'react-bootstrap/Button'
 
 // 分頁導航組件
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {

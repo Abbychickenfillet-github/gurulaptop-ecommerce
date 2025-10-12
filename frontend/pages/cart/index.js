@@ -41,6 +41,7 @@ export default function CartIndex() {
   //   returnMessage: '',
   // })
   // 載入狀態(控制是否顯示載入中的訊息，和伺服器回傳時間點未完成不同步的呈現問題)
+  // eslint-disable-next-line no-unused-vars
   const [isLoading, setIsLoading] = useState(true)
 
   const handlePaymentMethod = (e) => {
@@ -66,7 +67,8 @@ export default function CartIndex() {
 
   // 處理遞增
   const handle = (itemId, newQuantity) => {
-    const nextProducts = cartdata.map((v, i) => {
+    // eslint-disable-next-line no-unused-vars
+    const nextProducts = cartdata.map((v, _) => {
       // 這裡判斷id值是否等於productId，如果是就count屬性遞增
 
       if (v.id === itemId) {
@@ -203,21 +205,95 @@ export default function CartIndex() {
   }
 
   // 生成line pay訂單
-  const goLinePay = () => {
-    MySwal.fire({
+  const goLinePay = async () => {
+    const result = await MySwal.fire({
       icon: 'info',
-      title: '確認要導向至LINE Pay進行付款?',
+      title: '確認要使用LINE Pay進行付款?',
       showCancelButton: true,
       confirmButtonText: '確認',
       cancelButtonText: '取消',
-    }).then((result) => {
+    })
+
+    if (result.isConfirmed) {
       setCartdata([])
       setAddress('')
       localStorage.removeItem('store711')
-      if (result.isConfirmed) {
-        window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/line-pay/reserve?orderId=${lineOrder.orderId}`
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/line-pay/reserve?orderId=${lineOrder.orderId}`,
+        )
+        const data = await response.json()
+
+        if (data.status === 'success') {
+          // 顯示 QR code 和付款選項
+          showLinePayOptions(data.data)
+        } else {
+          MySwal.fire({
+            icon: 'error',
+            title: '付款失敗',
+            text: data.message || '無法建立付款，請稍後再試',
+          })
+        }
+      } catch (error) {
+        MySwal.fire({
+          icon: 'error',
+          title: '付款失敗',
+          text: '網路錯誤，請稍後再試',
+        })
       }
-    })
+    }
+  }
+
+  // 顯示 Line Pay 付款選項
+  const showLinePayOptions = (paymentData) => {
+    const { paymentUrl } = paymentData
+
+    // 檢測是否為手機設備
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      )
+
+    if (isMobile) {
+      // 手機直接跳轉到 Line Pay App
+      MySwal.fire({
+        icon: 'info',
+        title: '即將跳轉到 LINE Pay',
+        text: '請確認您的手機已安裝 LINE Pay App',
+        showCancelButton: true,
+        confirmButtonText: '前往 LINE Pay',
+        cancelButtonText: '取消',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = paymentUrl.mobile
+        }
+      })
+    } else {
+      // 桌面顯示 QR code
+      MySwal.fire({
+        icon: 'info',
+        title: 'LINE Pay 付款',
+        html: `
+          <div style="text-align: center;">
+            <p>請使用 LINE Pay App 掃描下方 QR Code</p>
+            <div style="margin: 20px 0;">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(paymentUrl.web)}"
+                   alt="LINE Pay QR Code"
+                   style="border: 1px solid #ddd; border-radius: 8px;">
+            </div>
+            <p style="font-size: 14px; color: #666;">或點擊下方按鈕在新視窗開啟</p>
+            <button onclick="window.open('${paymentUrl.web}', '_blank')"
+                    style="background: #00C300; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+              開啟 LINE Pay 付款頁面
+            </button>
+          </div>
+        `,
+        showConfirmButton: false,
+        showCancelButton: true,
+        cancelButtonText: '關閉',
+      })
+    }
   }
 
   const createLinePayOrder = async () => {

@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
     } = req.query
 
     const offset = (parseInt(page) - 1) * parseInt(pageSize)
-    
+
     // 構建查詢條件
     let whereConditions = []
     let queryParams = []
@@ -87,14 +87,14 @@ router.get('/', async (req, res) => {
 
     // 查詢活動列表
     const eventsQuery = `
-      SELECT 
+      SELECT
         et.*,
-        (SELECT COUNT(*) 
-         FROM event_registration er 
-         WHERE er.event_id = et.event_id 
+        (SELECT COUNT(*)
+         FROM event_registration er
+         WHERE er.event_id = et.event_id
          AND er.registration_status = 'active'
         ) as current_participants,
-        CASE 
+        CASE
           WHEN NOW() < et.apply_start_time THEN '即將開始報名'
           WHEN NOW() BETWEEN et.apply_start_time AND et.apply_end_time THEN '報名中'
           WHEN NOW() BETWEEN et.apply_end_time AND et.event_end_time THEN '進行中'
@@ -105,7 +105,7 @@ router.get('/', async (req, res) => {
       ${orderClause}
       LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
     `
-    
+
     queryParams.push(parseInt(pageSize), offset)
     const { rows: events } = await pool.query(eventsQuery, queryParams)
 
@@ -201,16 +201,16 @@ router.get('/filters/platforms', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params
-    
+
     const { rows: events } = await pool.query(`
-      SELECT 
+      SELECT
         et.*,
-        (SELECT COUNT(*) 
-         FROM event_registration er 
-         WHERE er.event_id = et.event_id 
+        (SELECT COUNT(*)
+         FROM event_registration er
+         WHERE er.event_id = et.event_id
          AND er.registration_status = 'active'
         ) as current_participants,
-        CASE 
+        CASE
           WHEN NOW() < et.apply_start_time THEN '即將開始報名'
           WHEN NOW() BETWEEN et.apply_start_time AND et.apply_end_time THEN '報名中'
           WHEN NOW() BETWEEN et.apply_end_time AND et.event_end_time THEN '進行中'
@@ -228,7 +228,7 @@ router.get('/:id', async (req, res) => {
     }
 
     const event = events[0]
-    
+
     res.json({
       code: 200,
       message: 'success',
@@ -263,19 +263,19 @@ router.get('/:id', async (req, res) => {
 
 // 獲取使用者報名的活動
 router.get('/user/registered', authenticate, async (req, res) => {
-  
+
   try {
     const { rows: events } = await pool.query(`
-      SELECT 
+      SELECT
         et.*,
-        (SELECT COUNT(*) 
-         FROM event_registration er 
-         WHERE er.event_id = et.event_id 
+        (SELECT COUNT(*)
+         FROM event_registration er
+         WHERE er.event_id = et.event_id
          AND er.registration_status = 'active'
         ) as current_participants,
         er.registration_time,
         er.registration_status,
-        CASE 
+        CASE
           WHEN NOW() < et.apply_start_time THEN '即將開始報名'
           WHEN NOW() BETWEEN et.apply_start_time AND et.apply_end_time THEN '報名中'
           WHEN NOW() BETWEEN et.apply_end_time AND et.event_end_time THEN '進行中'
@@ -320,6 +320,78 @@ router.get('/user/registered', authenticate, async (req, res) => {
       message: '獲取活動列表失敗',
       error: error.message,
     })
+  }
+})
+
+// 團隊註冊 API
+router.post('/:eventId/register/team', authenticate, async (req, res) => {
+  const client = await pool.connect()
+
+  try {
+    const { eventId } = req.params
+    const { teamName, captainInfo, teamMembers } = req.body
+    const userId = req.user.user_id // 從 JWT token 中獲取用戶 ID
+
+    // 驗證必要資料
+    if (!teamName || !captainInfo || !teamMembers) {
+      return res.status(400).json({
+        status: 'error',
+        message: '缺少必要資料'
+      })
+    }
+
+    // 開始事務
+    await client.query('BEGIN')
+
+    // 插入團隊記錄（使用原生 JSON 支援）
+    const { rows: insertResult } = await client.query(`
+      INSERT INTO event_teams (event_id, user_id, team_name, captain_info)
+      VALUES ($1, $2, $3, $4)
+      RETURNING team_id
+    `, [
+      eventId,
+      userId,
+      teamName,
+      captainInfo  // 直接傳入物件，讓 PostgreSQL 自動轉換
+    ])
+
+    const teamId = insertResult[0].team_id
+
+    // 更新活動參與人數
+    await client.query(`
+      UPDATE event_type
+      SET current_participants = current_participants + $1
+      WHERE event_id = $2
+    `, [teamCount, eventId])
+
+    // 提交事務
+    await client.query('COMMIT')
+
+    res.status(200).json({
+      status: 'success',
+      code: 200,
+      message: '團隊註冊成功',
+      data: {
+        teamId,
+        teamName,
+        teamCount: teamCount,
+        captainInfo,
+        teamMembers
+      }
+    })
+
+  } catch (error) {
+    // 回滾事務
+    await client.query('ROLLBACK')
+
+    console.error('團隊註冊錯誤:', error)
+    res.status(500).json({
+      status: 'error',
+      message: '註冊失敗',
+      error: error.message
+    })
+  } finally {
+    client.release()
   }
 })
 

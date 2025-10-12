@@ -4,7 +4,7 @@ const router = express.Router()
 // 資料庫使用
 // import sequelize from '#configs/db.js'
 // const { purchase_order } = sequelize.models
-import db from '##/configs/pgClient.js' 
+import db from '##/configs/pgClient.js'
 
 // 中介軟體，存取隱私會員資料用
 import authenticate from '#middlewares/authenticate.js'
@@ -118,8 +118,15 @@ router.get('/reserve', async (req, res) => {
       [JSON.stringify(reservation), reservation.transactionId, orderId]
     )
 
-    // 導向到付款頁面
-    return res.redirect(linePayResponse.body.info.paymentUrl.web)
+    // 返回付款資訊給前端，讓前端決定如何處理
+    return res.json({
+      status: 'success',
+      data: {
+        paymentUrl: linePayResponse.body.info.paymentUrl,
+        transactionId: reservation.transactionId,
+        paymentAccessToken: reservation.paymentAccessToken
+      }
+    })
   } catch (e) {
     console.log('error', e)
     // 確保只有在回應未發送的情況下發送錯誤訊息

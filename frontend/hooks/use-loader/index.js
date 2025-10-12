@@ -78,7 +78,7 @@ export const LoaderProvider = ({
       router.events.off('routeChangeComplete', handleChangeEnd)
       router.events.off('routeChangeError', handleChangeEnd)
     }
-  }, [router, global, close, showNewLoading, hideNewLoading, excludePaths])
+  }, [router.pathname, global, close, excludePaths])
 
   return (
     <LoaderContext.Provider
