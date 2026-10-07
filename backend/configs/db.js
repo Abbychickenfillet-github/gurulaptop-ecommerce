@@ -1,66 +1,23 @@
-import { Sequelize } from 'sequelize';
-// 移除這裡的 dotenv 載入，讓 app.js 統一處理
-// import 'dotenv/config.js';
+import { Sequelize } from 'sequelize'
+import { dbSsl } from './dbSsl.js'
+// 環境變數由 app.js 與 bin/www.js 統一載入，這裡不載入 dotenv
 
-// 調試：檢查環境變數
-console.log('🔍 db.js 環境變數檢查:')
-console.log('NODE_ENV:', process.env.NODE_ENV)
-console.log('DB_HOST:', process.env.DB_HOST)
-console.log('DB_PORT:', process.env.DB_PORT)
-console.log('DB_NAME:', process.env.DB_NAME)
-console.log('DB_USER:', process.env.DB_USER)
-console.log('DB_PASSWORD:', process.env.DB_PASSWORD ? '✅ 已設置' : '❌ 未設置')
-console.log('ZEABUR_CONNECTION_STRING:', process.env.ZEABUR_CONNECTION_STRING ? '✅ 已設置' : '❌ 未設置')
+// 開發與正式環境共用同一份程式碼，連線字串只來自環境變數 DATABASE_URL
+const connectionString =
+  process.env.DATABASE_URL || 'postgresql://postgres:abc123@localhost:5432/project_db'
 
-// 根据环境选择数据库连接
-let connectionConfig;
+const sequelize = new Sequelize(connectionString, {
+  dialect: 'postgres',
+  dialectOptions: { ssl: dbSsl },
+  // serverless 每個實例只開少量連線，避免耗盡資料庫的連線數
+  pool: { max: 3 },
+  logging: false,
+})
 
-if (process.env.NODE_ENV === 'production') {
-  // 生产环境：使用环境变量或 Zeabur 连接
-  connectionConfig = {
-    connectionString: process.env.ZEABUR_CONNECTION_STRING || process.env.DATABASE_URL,
-    dialect: 'postgres',
-    protocol: 'postgres',
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false 
-      }
-    }
-  };
-  console.log('🚀 使用生產環境配置')
-} else {
-  // 开发环境：使用本地数据库，禁用 SSL
-  connectionConfig = {
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 5432,
-    database: process.env.DB_NAME || 'project_db',
-    username: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD || 'abc123',
-    dialect: 'postgres',
-    protocol: 'postgres',
-    dialectOptions: {
-      // ssl: false  
-      // 本地開發環境禁用 SSL
-    }
-  };
-  console.log('🛠️ 使用開發環境配置')
-}
+// 測試連接：失敗只記錄，不 throw，避免 serverless 函式因為未處理的 Promise 錯誤而結束
+sequelize
+  .authenticate()
+  .then(() => console.log('✅ Sequelize PostgreSQL 連接成功'))
+  .catch((error) => console.error('❌ 無法連線到資料庫:', error.message))
 
-const sequelize = new Sequelize(connectionConfig);
-
-// 測試連接
-const testConnection = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('✅ Sequelize PostgreSQL 連接成功');
-  } catch (error) {
-    console.error('❌ Unable to connect to the database:', error);
-    throw error;
-  }
-};
-
-// 立即測試連接
-testConnection();
-
-export default sequelize;
+export default sequelize
