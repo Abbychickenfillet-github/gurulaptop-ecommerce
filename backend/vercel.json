@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 30,
+      "includeFiles": "{routes,views,configs,services,utils,middlewares,db-helpers,models,controllers,data}/**"
+    }
+  }
+}
