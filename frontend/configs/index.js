@@ -8,14 +8,10 @@ export const config = {
 }
 
 // 前端 API 請求的目標地址 (後端 URL)
-// 部署環境：使用 Zeabur 後端服務地址
-// 開發環境：使用本地後端服務地址
+// 只由環境變數 NEXT_PUBLIC_API_BASE_URL 決定：本機沒設時使用 localhost:3005，
+// 雲端平台（Vercel）在環境變數介面填後端網址。注意：NEXT_PUBLIC_ 變數在 build 時寫進前端，修改後要重新部署
 export const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  (typeof window !== 'undefined' &&
-  window.location.hostname.includes('zeabur.app')
-    ? 'https://guru-laptop-lavendarbug-vqq.zeabur.app' // 生產環境後端服務
-    : 'http://localhost:3005') // 開發環境後端服務
+  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3005'
 export const avatarBaseUrl = apiBaseUrl
 // 使用 8080 是因為生產環境前端運行在 8080，後端也配置為 8080，保持前後端端口一致避免 CORS 問題
 // 開發時前端用 3000，後端用 8080，生產時前後端都用 8080

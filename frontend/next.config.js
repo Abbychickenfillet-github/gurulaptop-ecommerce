@@ -20,15 +20,15 @@ const nextConfig = {
         hostname: 'localhost',
         port: '3005',
       },
-      // 添加部署後的域名
-      {
-        protocol: 'https',
-        hostname: 'guru-laptop-lavendarbug-vqq.zeabur.app',
-      },
-      {
-        protocol: 'https',
-        hostname: 'yunlavendar-guru-smart-laptop.zeabur.app',
-      },
+      // 後端網址（頭像與商品圖由後端提供），由環境變數 NEXT_PUBLIC_API_BASE_URL 決定
+      ...(process.env.NEXT_PUBLIC_API_BASE_URL
+        ? [
+            {
+              protocol: new URL(process.env.NEXT_PUBLIC_API_BASE_URL).protocol.replace(':', ''),
+              hostname: new URL(process.env.NEXT_PUBLIC_API_BASE_URL).hostname,
+            },
+          ]
+        : []),
       {
         protocol: 'https',
         hostname: 'localhost',
@@ -44,7 +44,6 @@ const nextConfig = {
   },
   // 移除 output: 'export'，因為這會影響 SSR 和 API 路由
   trailingSlash: true,
-  distDir: 'dist',
   // avoid cors with proxy
   // async rewrites() {
   //   // 根據環境選擇 API 地址

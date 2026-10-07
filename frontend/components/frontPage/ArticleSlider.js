@@ -6,11 +6,8 @@ const ArticleSection = () => {
   const containerRef = useRef(null)
   const articlesPerView = 1
 
-  // 根據環境動態選擇基礎 URL
-  const baseUrl =
-    process.env.NODE_ENV === 'production'
-      ? 'https://yunlavendar-guru-smart-laptop.zeabur.app'
-      : 'http://localhost:3000'
+  // 連結都在同一個站內，使用相對路徑，開發與正式環境不需要區分網址
+  const baseUrl = ''
 
   const articles = [
     {
@@ -36,7 +33,7 @@ const ArticleSection = () => {
       title: '設計師筆電開箱與專業測試分享',
       text: '身為設計師，螢幕色彩表現是最重要的考量。這台筆電擁有100% DCI-P3色域，4K解析度帶來極致細節，觸控筆更是得心應手，完美符合創作需求。',
       imageLeft: true,
-      link: 'http://localhost:https://yunlavendar-guru-smart-laptop.zeabur.app//blog/blog-detail/5',
+      link: `${baseUrl}/blog/blog-detail/5`,
     },
     {
       id: 4,
