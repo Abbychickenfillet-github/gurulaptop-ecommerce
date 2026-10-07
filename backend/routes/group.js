@@ -9,6 +9,7 @@ import cors from 'cors'
 import { checkAuth } from './auth.js'
 import 'dotenv/config.js'
 import pool from '##/configs/pgClient.js'
+import { corsOrigins } from '##/configs/corsOrigins.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -23,22 +24,9 @@ try {
   console.error('建立上傳目錄失敗:', error)
 }
 
-// 設定 CORS - 使用與主應用程式一致的設定
+// 設定 CORS - 使用與主應用程式一致的設定（來源由環境變數 CORS_ORIGINS 決定）
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? [
-        'https://yunlavendar-guru-smart-laptop.zeabur.app',
-        'https://guru-laptop-lavendarbug-vqq.zeabur.app',
-        'https://localhost:8080'
-      ]
-    : [
-        'http://localhost:3000', 
-        'http://localhost:3001', 
-        'https://localhost:8080', 
-        'http://localhost:8080',
-        'http://localhost:3005',
-        'https://guru-laptop-lavendarbug-vqq.zeabur.app'
-      ],
+  origin: corsOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }

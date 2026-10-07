@@ -12,6 +12,7 @@ import createError from 'http-errors'
 import express from 'express'
 // import db from '##/configs/mysql.js'
 import pool from '##/configs/pgClient.js'
+import { corsOrigins } from '##/configs/corsOrigins.js'
 
 // 調試：確認環境變數是否被載入
 console.log('🔍 環境變數載入檢查:')
@@ -66,27 +67,7 @@ const app = express()
 // 所有請求都會經過這些中間件：
 
 // cors設定，參數為必要，注意不要只寫`app.use(cors())`
-// 根據環境動態設定 CORS origin
-const corsOrigins = process.env.NODE_ENV === 'production' 
-  ? [
-      'https://yunlavendar-guru-smart-laptop.zeabur.app',
-      'https://guru-laptop-lavendarbug-vqq.zeabur.app',
-      'https://localhost:8080',
-      'https://gurulaptop-backend.zeabur.app',
-      'http://localhost:3000', 
-      'http://localhost:3001', 
-      'http://localhost:8080',
-      'http://localhost:3005',
-    ]
-  : [
-      'http://localhost:3000', 
-      'http://localhost:3001', 
-      'https://localhost:8080', 
-      'http://localhost:8080',
-      'http://localhost:3005',
-      'https://guru-laptop-lavendarbug-vqq.zeabur.app'
-    ]
-
+// 允許的來源由環境變數 CORS_ORIGINS 決定，見 configs/corsOrigins.js
 app.use(
   cors({
     origin: corsOrigins,
