@@ -17,10 +17,8 @@ class WebSocketService {
     if (this.isConnecting || (this.ws && this.ws.readyState === WebSocket.OPEN)) return
     this.isConnecting = true
     try {
-      // 根據環境動態選擇 WebSocket URL
-      const wsUrl = process.env.NODE_ENV === 'production' 
-        ? 'wss://guru-laptop-lavendarbug-vqq.zeabur.app'
-        : 'ws://localhost:3005'
+      // WebSocket 網址只由環境變數 WS_URL 決定，沒設時使用本機預設值
+      const wsUrl = process.env.WS_URL || 'ws://localhost:3005'
       this.ws = new WebSocket(wsUrl)
       // [事件] 連線成功：重置狀態並向伺服器送出註冊訊息
       this.ws.onopen = () => {

@@ -1,7 +1,5 @@
-// 根據環境動態選擇基礎 URL
-const baseUrl = process.env.NODE_ENV === 'production' 
-  ? 'https://yunlavendar-guru-smart-laptop.zeabur.app'
-  : 'http://localhost:3000'
+// 前端網址只由環境變數 FRONTEND_URL 決定，沒設時使用本機預設值
+const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000'
 
 let options = {
   amount: 1500,

@@ -36,11 +36,9 @@ class WebSocketService {
     this.currentUserId = userId
     this.isConnecting = true
 
-    // 根據環境決定 WebSocket URL
-    const wsUrl =
-      process.env.NODE_ENV === 'production'
-        ? 'wss://guru-laptop-lavendarbug-vqq.zeabur.app'
-        : 'ws://localhost:3005'
+    // WebSocket 網址只由環境變數 NEXT_PUBLIC_WS_URL 決定，沒設時使用本機預設值
+    // 注意：Vercel 不支援自架 WebSocket 伺服器，正式環境要改用 Supabase Realtime 或輪詢
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3005'
 
     console.log('🔌 WebSocket 連線到:', wsUrl)
 
