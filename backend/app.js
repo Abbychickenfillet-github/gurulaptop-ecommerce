@@ -258,11 +258,9 @@ app.use(function (err, req, res, next) {
 // 設定靜態檔案提供
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')))
 
-// 確保上傳目錄存在
-const uploadDir = path.join(__dirname, 'public', 'uploads')
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true })
-}
+// 不在啟動時建立上傳目錄：Vercel 的檔案系統唯讀，mkdirSync 會讓函式啟動就報錯。
+// 目錄需要時由上傳的那支路由自己處理（routes/group.js 已用 try/catch 包起來），
+// 上傳檔案長期要改存 Cloudinary 或 Vercel Blob。
 
 // 使用聊天室路由
 app.use('/api/chat', chatRoutes)
