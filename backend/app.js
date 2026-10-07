@@ -149,8 +149,9 @@ async function testConnection() {
     console.log('✅ PostgreSQL 資料庫連線成功')
     connection.release()
   } catch (error) {
+    // serverless 環境下呼叫 process.exit 會讓整個函式實例掛掉，只記錄錯誤，
+    // 之後每個請求自己的查詢失敗時才回傳錯誤
     console.error('❌ PostgreSQL 資料庫連線失敗:', error)
-    process.exit(1) // 如果連線失敗就終止程式
   }
 }
 
